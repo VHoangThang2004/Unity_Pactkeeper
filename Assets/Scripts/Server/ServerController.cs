@@ -22,7 +22,7 @@ public class ServerController : MonoBehaviour
     {
         while (true)
         {
-            if (trialErrorCount > 10 || totalErrorCount > 5000)
+            if (trialErrorCount > 10 || totalErrorCount > 50)
             {
                 Debug.LogError("[ServerController] Too many errors — shutting down to prevent further damage!");
                 // TODO: send clients to main menu
@@ -83,6 +83,16 @@ public class ServerController : MonoBehaviour
     // Handlers (called by SyncedBridge)
     // -------------------------------------------------------
 
+    public void HandleActWaitDecision(ulong clientId, bool wantsToAct)
+    {
+        timeline.HandleActWaitDecision(clientId, wantsToAct);
+    }
+
+    public void HandleActionDecision(ulong clientId, int unitId, Vector3Int target)
+    {
+        timeline.HandleActionDecision(clientId, unitId, target);
+    }
+
     public void HandleTestCell(ulong clientId, int x, int y)
     {
         bool walkable = session.Map.IsWalkable(x, y);
@@ -111,6 +121,7 @@ public class ServerController : MonoBehaviour
 
         SessionSnapshotData snapshot = new SessionSnapshotData
         {
+            Type              = SnapshotType.Full,  // full rebuild on initial state
             MapId             = session.MapId,
             Turn              = session.Turn,
             CurrentPlayerTurn = session.CurrentPlayerTurn,

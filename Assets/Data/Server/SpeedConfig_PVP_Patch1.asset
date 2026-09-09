@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpeedConfig_PVP_Patch1
   m_EditorClassIdentifier: Assembly-CSharp::SpeedConfig
   tiers:
-  - speedRange: {x: 100, y: 109}
+  - speedRange: {x: 0, y: 109}
     stepRange: {x: 10, y: 10}
   - speedRange: {x: 110, y: 119}
     stepRange: {x: 10, y: 9}

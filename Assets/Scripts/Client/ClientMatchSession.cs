@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,26 +26,43 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
 
     public TimelineData Timeline { get; private set; }
-    public DecisionRequestData LastDecisionRequest { get; private set; }
+    public DecisionRequestData LastDecisionRequest;
+    public int waitDur = 0;
+    public int overtimeDur = 0;
+
+    public void CountDownDurations()
+    {
+        if (waitDur > 0)
+            waitDur--;
+        else
+            overtimeDur = Mathf.Max(0, overtimeDur - 1);
+    }
+
+
 
     public void ApplyTimelineTick(TimelineData data)
     {
         Timeline = data;
 
-        if (data.readyUnitIds != null)
-        {
-            foreach (int id in data.readyUnitIds)
-            {
-                var unit = GetUnit(id);
-                if (unit != null)
-                    unit.CurrentStep = 0;
-            }
-        }
+        // Decrement all unit steps locally — mirrors server tick
+        // Mid snapshot corrects any drift before decisions are made
+        foreach (var unit in units)
+            if (unit.CurrentStep > 0)
+                unit.CurrentStep--;
     }
 
     public void ApplyDecisionRequest(DecisionRequestData data)
     {
         LastDecisionRequest = data;
+        waitDur = Mathf.Max(data.ActWaitDuration, data.ActionDuration);
+        if (data.DecisionTeam == 0)
+        {
+            overtimeDur = data.OvertimeTeam0;
+        }
+        else
+        {
+            overtimeDur = data.OvertimeTeam1;
+        }
     }
 
     public void ApplyUnitStepReset(int unitId, int newStep)
@@ -110,17 +128,28 @@ public class ClientMatchSession : MonoBehaviour
     public UnitData GetUnitInTeam(int unitId, TeamData team) => team.units.Find(u => u.Id == unitId);
 
     public UnitData GetUnitDataAt(Vector3Int cell) => units.Find(u => u.CurrentCell == cell);
+    public int GetCurrentTeamDecisionOvertime()
+    {
+        if (LastDecisionRequest.DecisionTeam == 0)
+        {
+            return LastDecisionRequest.OvertimeTeam0;
+        }
+        else
+        {
+            return LastDecisionRequest.OvertimeTeam1;
+        }
+    }
 
     public TeamData GetOwnedTeamData()
     {
         return teams.Find(t => t.clientId == NetworkManager.Singleton.LocalClientId);
     }
 
-    public bool IsUnitUnderPermission(int unitId)
-    {
-        TeamData team = GetOwnedTeamData();
-        return team != null && team.units.Exists(u => u.Id == unitId);
-    }
+    public bool IsMyTurn() => LastDecisionRequest.DecisionTeam == GetMyTeam();
+
+    public int GetMyTeam() => teams.IndexOf(GetOwnedTeamData());
+    public bool IsMyUnit(int unitId) => GetOwnedTeamData() != null && GetOwnedTeamData().units.Exists(u => u.Id == unitId);
+
 
     public List<int> GetOwnedReadyUnitIds()
     {

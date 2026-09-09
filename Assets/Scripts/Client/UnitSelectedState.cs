@@ -19,7 +19,7 @@ public class UnitSelectedState : IInteractionState
         controller.visualController.ClearShadowBrute();
 
         selectedUnit = unit;
-        isOwned = controller.clientSession.IsUnitUnderPermission(unit.data.Id);
+        isOwned = controller.clientSession.IsMyUnit(unit.data.Id);
 
         controller.SetSelectedUnit(selectedUnit);
         controller.SetIsOwnedUnit(isOwned);
@@ -27,7 +27,7 @@ public class UnitSelectedState : IInteractionState
         // ShowRange computes rangeTilesData and paints rangeTilemap
         controller.visualController.ShowRange(isOwned);
 
-        controller.ActionMenu.ShowForUnit(selectedUnit, isOwned);
+        controller.ActionMenu.ShowForUnit(unit);
 
         Debug.Log($"[State] -> UnitSelected (unit {unit.data.Id}, owned={isOwned})");
     }

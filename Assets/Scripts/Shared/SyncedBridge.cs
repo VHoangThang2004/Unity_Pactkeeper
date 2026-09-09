@@ -5,7 +5,6 @@ public class SyncedBridge : NetworkBehaviour
 {
     [SerializeField] private ClientController client;
     [SerializeField] private ServerController server;
-    [SerializeField] private ServerTimelineManager timeline;
 
     // -------------------------------------------------------
     // CLIENT → SERVER
@@ -33,14 +32,14 @@ public class SyncedBridge : NetworkBehaviour
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SendActWaitDecisionServerRpc(bool wantsToAct, RpcParams rpcParams = default)
     {
-        timeline.HandleActWaitDecision(rpcParams.Receive.SenderClientId, wantsToAct);
+        server.HandleActWaitDecision(rpcParams.Receive.SenderClientId, wantsToAct);
     }
 
     /// <summary>Client submits which unit to act with and where to move.</summary>
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SendActionDecisionServerRpc(int unitId, Vector3Int target, RpcParams rpcParams = default)
     {
-        timeline.HandleActionDecision(rpcParams.Receive.SenderClientId, unitId, target);
+        server.HandleActionDecision(rpcParams.Receive.SenderClientId, unitId, target);
     }
 
     // -------------------------------------------------------
@@ -110,12 +109,32 @@ public class SyncedBridge : NetworkBehaviour
 
     /// <summary>
     /// Sent to all clients when a unit's step resets after acting.
-    /// Keeps ClientMatchSession in sync without a full snapshot.
     /// </summary>
     [ClientRpc]
     public void BroadcastUnitStepResetClientRpc(int unitId, int newStep)
     {
         if (client == null) return;
         client.OnUnitStepReset(unitId, newStep);
+    }
+
+    /// <summary>
+    /// Mid snapshot bundled with decision request — sent on every DecisionWaiting enter.
+    /// All clients sync unit state before any decision is submitted.
+    /// </summary>
+    [ClientRpc]
+    public void BroadcastMidSnapshotWithDecisionClientRpc(SessionSnapshotData snapshot, DecisionRequestData decision)
+    {
+        if (client == null) return;
+        client.OnMidSnapshotWithDecision(snapshot, decision);
+    }
+
+    /// <summary>
+    /// Full snapshot broadcast — sent on match end or full resync.
+    /// </summary>
+    [ClientRpc]
+    public void BroadcastSnapshotClientRpc(SessionSnapshotData snapshot)
+    {
+        if (client == null) return;
+        client.OnInitialStateReceived(snapshot);
     }
 }

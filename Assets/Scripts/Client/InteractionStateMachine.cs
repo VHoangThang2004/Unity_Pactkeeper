@@ -60,7 +60,6 @@ public class InteractionStateMachine
     //exposure
     //-------------------------------------------------------
     public void OnActionStandBy() => (currentState as MovePreviewState)?.StandBy();
-    // public void OnActionWait() => (currentState as ??)?.Wait();
     public void OnActionSkill(int skillId) => (currentState as MovePreviewState)?.UseSkill(skillId);
     public void OnActionCancel() => (currentState as MovePreviewState)?.Cancel();
 }

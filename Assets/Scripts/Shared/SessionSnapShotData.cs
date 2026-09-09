@@ -1,9 +1,20 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 
+/// <summary>
+/// Full — reload map + despawn/respawn all units. On connect/reconnect/match end.
+/// Mid  — keep map + despawn/respawn all units. Bundled with every DecisionWaiting notice.
+/// </summary>
+public enum SnapshotType : byte
+{
+    Full = 0,
+    Mid  = 1,
+}
+
 public struct SessionSnapshotData : INetworkSerializable
 {
-    public string MapId;            // clients use this to look up GridMapAsset in their MapRegistry
+    public SnapshotType Type;
+    public string MapId;
     public int Turn;
     public int CurrentPlayerTurn;
     public List<TeamData> Teams;
@@ -12,6 +23,10 @@ public struct SessionSnapshotData : INetworkSerializable
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
+        byte typeByte = (byte)Type;
+        serializer.SerializeValue(ref typeByte);
+        Type = (SnapshotType)typeByte;
+
         serializer.SerializeValue(ref MapId);
         serializer.SerializeValue(ref Turn);
         serializer.SerializeValue(ref CurrentPlayerTurn);

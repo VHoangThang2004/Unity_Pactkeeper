@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +29,8 @@ public class ClientController : MonoBehaviour
     [SerializeField] public ClientMatchSession clientSession;
     [SerializeField] public ClientVisualController visualController;
     [SerializeField] public ActionMenuUI ActionMenu;
+
+    [SerializeField] public GameObject ActWaitDecisionCanvas;
     [SerializeField] private ClientMapLoader mapLoader;
 
     // -------------------------------------------------------
@@ -39,20 +43,15 @@ public class ClientController : MonoBehaviour
 
     public void SetMapRefs(Tilemap movable, Tilemap range, GameObject highlight)
     {
-        tilemap        = movable;
-        rangeTilemap   = range;
+        tilemap = movable;
+        rangeTilemap = range;
         hoverHighlight = highlight;
     }
 
     // -------------------------------------------------------
-    // Range Data (pure data — source of truth for reachability)
+    // Range Data
     // -------------------------------------------------------
 
-    /// <summary>
-    /// Reachable cells for the currently selected unit.
-    /// Computed from GridMap — not from rangeTilemap.
-    /// rangeTilemap is painted FROM this, never read for logic.
-    /// </summary>
     public HashSet<Vector3Int> rangeTilesData { get; private set; } = new HashSet<Vector3Int>();
 
     public void ComputeRangeData(ClientUnit unit)
@@ -63,35 +62,23 @@ public class ClientController : MonoBehaviour
             rangeTilesData = new HashSet<Vector3Int>();
             return;
         }
-
         var occupiedCells = GetOccupiedCells(unit);
-        rangeTilesData = GridPathfinder.FloodFill(
-            clientSession.Map,
-            unit.data.CurrentCell,
-            unit.data.MoveRange,
-            occupiedCells
-        );
+        rangeTilesData = GridPathfinder.FloodFill(clientSession.Map, unit.data.CurrentCell, unit.data.MoveRange, occupiedCells);
     }
 
-    public void ClearRangeData()
-    {
-        rangeTilesData = new HashSet<Vector3Int>();
-    }
-
+    public void ClearRangeData() => rangeTilesData = new HashSet<Vector3Int>();
     public bool IsInRange(Vector3Int cell) => rangeTilesData.Contains(cell);
 
     // -------------------------------------------------------
-    // Occupied Cells Helper
+    // Occupied Cells
     // -------------------------------------------------------
 
     public HashSet<Vector3Int> GetOccupiedCells(ClientUnit excludeUnit)
     {
         var occupied = new HashSet<Vector3Int>();
         foreach (var u in spawnedUnits)
-        {
             if (u != excludeUnit)
                 occupied.Add(u.data.CurrentCell);
-        }
         return occupied;
     }
 
@@ -107,6 +94,10 @@ public class ClientController : MonoBehaviour
     private List<ClientUnit> spawnedUnits = new();
     private bool receivedInitialSnapshot = false;
     private bool mapLoaded = false;
+    private bool initDone = false;
+
+    private int trialErrorCount = 0;
+    private int totalErrorCount = 0;
 
     public void OnActionStandBy()
     {
@@ -114,21 +105,24 @@ public class ClientController : MonoBehaviour
         interactionSystem.stateMachine.OnActionStandBy();
     }
 
+    public void OnDecisionActWait(bool wantsToAct)
+    {
+        Debug.Log($"[ClientController] Requesting action:...{wantsToAct}");
+        SendActWaitDecision(wantsToAct);
+    }
+
+
     // -------------------------------------------------------
     // Unit Registry
     // -------------------------------------------------------
 
     public List<ClientUnit> GetAllUnits() => spawnedUnits;
-
-    public ClientUnit GetClientUnit(int instanceId)
-        => spawnedUnits.Find(u => u.data.Id == instanceId);
-
-    public ClientUnit GetClientUnitAt(Vector3Int cell)
-        => spawnedUnits.Find(u => u.data.CurrentCell == cell);
+    public ClientUnit GetClientUnit(int instanceId) => spawnedUnits.Find(u => u.data.Id == instanceId);
+    public ClientUnit GetClientUnitAt(Vector3Int cell) => spawnedUnits.Find(u => u.data.CurrentCell == cell);
 
     public void RegisterUnit(int instanceId, ClientUnit unit)
     {
-        if (spawnedUnits.Contains(unit))
+        if (spawnedUnits.Exists(u => u.data.Id == instanceId))
         {
             Debug.LogWarning($"[ClientController] Unit {instanceId} already registered!");
             return;
@@ -150,10 +144,8 @@ public class ClientController : MonoBehaviour
 
     void Start()
     {
-        unitLibrary.Init();
-        unitPrefabRegistry.Init(unitLibrary);
-        input.OnLeftClick += HandleClick;
-        bridge.RequestInitialStateServerRpc();
+        StartCoroutine(ClientGuard());
+        StartCoroutine(InitSequence());
     }
 
     void OnDestroy()
@@ -178,33 +170,77 @@ public class ClientController : MonoBehaviour
     }
 
     // -------------------------------------------------------
+    // Guard
+    // -------------------------------------------------------
+
+    IEnumerator ClientGuard()
+    {
+        while (true)
+        {
+            if (trialErrorCount > 10 || totalErrorCount > 50)
+            {
+                Debug.LogError("[ClientController] Too many errors — something is critically wrong!");
+                // TODO: disconnect and return to main menu
+                yield break;
+            }
+            yield return new WaitForSeconds(60f);
+            trialErrorCount = 0;
+        }
+    }
+
+    void IncrementErrors()
+    {
+        trialErrorCount++;
+        totalErrorCount++;
+    }
+
+    // -------------------------------------------------------
+    // Init Sequence
+    // -------------------------------------------------------
+
+    IEnumerator InitSequence()
+    {
+        while (!TryInitRegistries())
+        {
+            Debug.LogError("[ClientController] Registry init failed, retrying...");
+            IncrementErrors();
+            yield return new WaitForSeconds(1f);
+        }
+
+        input.OnLeftClick += HandleClick;
+        bridge.RequestInitialStateServerRpc();
+
+        // Wait for map — loaded by ApplyFull when Full snapshot arrives
+        yield return new WaitUntil(() => mapLoaded);
+
+        initDone = true;
+        Debug.Log("[ClientController] Client initialized successfully.");
+        visualController.StartUILoop();
+    }
+
+    bool TryInitRegistries()
+    {
+        try
+        {
+            unitLibrary.Init();
+            unitPrefabRegistry.Init(unitLibrary);
+            return true;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[ClientController] Registry init exception: {e.Message}");
+            return false;
+        }
+    }
+
+    // -------------------------------------------------------
     // Bridge -> Server
     // -------------------------------------------------------
 
-    public void TryMoveAndStandBy(int unitId, Vector3Int target)
-    {
-        bridge.SendMoveServerRpc(unitId, target);
-    }
-
-    public void TryMoveAndSkill(int unitId, Vector3Int target, int skillId)
-    {
-        Debug.Log($"[ClientController] TryMoveAndSkill: unit {unitId} -> {target} with skill {skillId}");
-    }
-
-    public void TryTestCell(Vector3Int target)
-    {
-        bridge.TestCellServerRpc(target.x, target.y);
-    }
-
-    public void SendActWaitDecision(bool wantsToAct)
-    {
-        bridge.SendActWaitDecisionServerRpc(wantsToAct);
-    }
-
-    public void SendActionDecision(int unitId, Vector3Int target)
-    {
-        bridge.SendActionDecisionServerRpc(unitId, target);
-    }
+    public void TryMoveAndSkill(int unitId, Vector3Int target, int skillId) => Debug.Log($"[ClientController] TryMoveAndSkill: unit {unitId} -> {target} skill {skillId}");
+    public void TryTestCell(Vector3Int target) => bridge.TestCellServerRpc(target.x, target.y);
+    public void SendActWaitDecision(bool wantsToAct) => bridge.SendActWaitDecisionServerRpc(wantsToAct);
+    public void SendActionDecision(int unitId, Vector3Int target) => bridge.SendActionDecisionServerRpc(unitId, target);
 
     // -------------------------------------------------------
     // Bridge -> Client
@@ -219,8 +255,7 @@ public class ClientController : MonoBehaviour
             Debug.LogError($"[ClientController] OnMoveConfirmed: unit {instanceId} not found!");
             return;
         }
-        var occupied = GetOccupiedCells(unit);
-        unit.MoveTo(tilemap, target, occupied);
+        unit.MoveTo(tilemap, target, GetOccupiedCells(unit));
     }
 
     public void OnServerResult(int x, int y, bool walkable)
@@ -240,24 +275,74 @@ public class ClientController : MonoBehaviour
         interactionSystem.ForceNoneState();
     }
 
+    /// <summary>
+    /// Full snapshot — rebuild everything: map + all units.
+    /// Called on connect, reconnect, or match end.
+    /// </summary>
     public void OnInitialStateReceived(SessionSnapshotData snapshot)
     {
-        Debug.Log($"[Client] Received snapshot with {snapshot.Units?.Count ?? 0} units");
+        Debug.Log($"[Client] Full snapshot received with {snapshot.Units?.Count ?? 0} units");
         receivedInitialSnapshot = true;
         clientSession.ApplySnapshot(snapshot);
+        StartCoroutine(ApplyFull(snapshot));
+    }
 
-        if (!mapLoaded)
+    /// <summary>
+    /// Mid snapshot bundled with decision request.
+    /// Data layer only — reposition existing units, spawn missing ones.
+    /// No despawn/respawn — no visual interruption.
+    /// </summary>
+    public void OnMidSnapshotWithDecision(SessionSnapshotData snapshot, DecisionRequestData decision)
+    {
+        Debug.Log($"[Client] Mid snapshot + decision (team {decision.DecisionTeam})");
+
+        // Update data layer
+        clientSession.ApplySnapshot(snapshot);
+
+        // Update visual layer — reposition only, no despawn/respawn
+        if (snapshot.Units != null && mapLoaded)
         {
-            bool ok = mapLoader.LoadMap(clientSession.MapAsset);
-            if (!ok)
+            foreach (var unitData in snapshot.Units)
             {
-                Debug.LogError("[ClientController] Map load failed.");
-                return;
+                var existing = GetClientUnit(unitData.Id);
+                if (existing == null)
+                    spawner.SpawnUnit(unitData);
+                else
+                    existing.SetPosition(tilemap, unitData.CurrentCell);
             }
-            mapLoaded = true;
-            interactionSystem.Init();
         }
 
+        // Decision UI
+        clientSession.ApplyDecisionRequest(decision);
+    }
+
+    // -------------------------------------------------------
+    // Full Snapshot Apply (map + units)
+    // -------------------------------------------------------
+
+    IEnumerator ApplyFull(SessionSnapshotData snapshot)
+    {
+        // Reload map
+        mapLoaded = false;
+        DespawnAllUnits();
+
+        while (!mapLoaded)
+        {
+            bool ok = mapLoader.LoadMap(clientSession.MapAsset);
+            if (ok)
+            {
+                mapLoaded = true;
+                interactionSystem.Init();
+            }
+            else
+            {
+                Debug.LogError("[ClientController] Full snapshot: map load failed, retrying...");
+                IncrementErrors();
+                yield return new WaitForSeconds(1f);
+            }
+        }
+
+        // Spawn all units fresh
         if (snapshot.Units != null)
             foreach (var unitData in snapshot.Units)
                 spawner.SpawnUnit(unitData);
@@ -265,25 +350,42 @@ public class ClientController : MonoBehaviour
         interactionSystem.ForceNoneState();
     }
 
+    // -------------------------------------------------------
+    // Spawn Helpers
+    // -------------------------------------------------------
+
+    void DespawnAllUnits()
+    {
+        foreach (var unit in spawnedUnits)
+            if (unit != null)
+                Destroy(unit.gameObject);
+        spawnedUnits.Clear();
+    }
+
+    // -------------------------------------------------------
+    // Timeline / Decision Handlers
+    // -------------------------------------------------------
+
     public void OnTimelineTick(TimelineData data)
     {
         clientSession.ApplyTimelineTick(data);
+        // Update step UI on all units
+        foreach (var unit in spawnedUnits)
+            unit.UpdateStepUI(unit.data.CurrentStep);
         Debug.Log($"[Client] Timeline tick instant {data.currentInstant}/{data.maxInstant}, ready: {data.readyUnitIds?.Count ?? 0}");
     }
 
     public void OnDecisionRequest(DecisionRequestData data)
     {
         clientSession.ApplyDecisionRequest(data);
-        var ownedTeam = clientSession.GetOwnedTeamData();
-        if (ownedTeam == null) return;
-        int myTeam = clientSession.teams.IndexOf(ownedTeam);
-        bool isMyTurn = (myTeam == data.DecisionTeam);
-        Debug.Log($"[Client] Decision request team {data.DecisionTeam} deciding. My turn: {isMyTurn}");
     }
 
     public void OnUnitStepReset(int unitId, int newStep)
     {
         clientSession.ApplyUnitStepReset(unitId, newStep);
+        var unit = GetClientUnit(unitId);
+        if (unit != null)
+            unit.UpdateStepUI(newStep);
         Debug.Log($"[Client] Unit {unitId} step reset to {newStep}");
     }
 }

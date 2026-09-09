@@ -15,3 +15,4 @@ MonoBehaviour:
   uId: 1
   unitName: DefaultRibbit
   moveRange: 4
+  speed: 100

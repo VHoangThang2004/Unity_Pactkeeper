@@ -1,3 +1,4 @@
+using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,12 +22,25 @@ public class ClientUnit : MonoBehaviour
     public void Init(UnitData unitData)
     {
         data = unitData;
+        UpdateStepUI(data.CurrentStep);
     }
 
     public void SetPosition(Tilemap tilemap, Vector3Int cell)
     {
         data.CurrentCell = cell;
         transform.position = tilemap.GetCellCenterWorld(cell);
+    }
+
+    // -------------------------------------------------------
+    // UI
+    // -------------------------------------------------------
+
+    [SerializeField] private TextMeshProUGUI stepText;
+
+    public void UpdateStepUI(int step)
+    {
+        if (stepText == null) return;
+        stepText.text = step.ToString();
     }
 
     // -------------------------------------------------------
@@ -63,10 +77,7 @@ public class ClientUnit : MonoBehaviour
             Vector3 end = tilemap.GetCellCenterWorld(cell);
 
             if (animator != null)
-            {
                 animator.SetFloat("MoveX", end.x - start.x);
-                animator.SetFloat("MoveY", end.y - start.y);
-            }
 
             float t = 0f;
             while (t < 1f)

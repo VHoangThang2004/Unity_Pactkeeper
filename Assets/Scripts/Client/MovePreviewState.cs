@@ -59,7 +59,7 @@ public class MovePreviewState : IInteractionState
 
     public void StandBy()
     {
-        controller.TryMoveAndStandBy(selectedUnit.data.Id, targetTile);
+        controller.SendActionDecision(selectedUnit.data.Id, targetTile); // for now it only moves (needs enum to decide between move/use any skill slot))
         sm.GoToNone();
     }
 
