@@ -4,11 +4,12 @@ using UnityEngine;
 public class UnitDefinition : ScriptableObject
 {
     [Header("Identity")]
-    public int uId;           // Matches DB uid later
+    public int uId;
     public string unitName;
 
     [Header("Stats")]
     public int moveRange;
+    public int speed; 
 
     // Future: public int hp, armor, ap...
     // Future: public SkillDefinition[] skills;

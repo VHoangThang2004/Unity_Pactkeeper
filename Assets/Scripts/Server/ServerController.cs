@@ -9,50 +9,74 @@ public class ServerController : MonoBehaviour
 
     [SerializeField] ServerMatchSession session;
     [SerializeField] ServerSpawnManager spawnManager;
+    [SerializeField] ServerTimelineManager timeline;
 
-    /// <summary>
-    /// SessionGuard is a safety mechanism to prevent the server from getting stuck in an infinite error loop, which can happen when there is an unexpected critical error in the code. It will monitor the number of errors that occur during the initialization phase and if it exceeds a certain threshold, it will force shutdown the server to prevent further damage.
-    /// </summary>
-    private int trialErrorCount = 0;
+    private int trialErrorCount = 0;   // resets every 60s — burst detection
+    private int totalErrorCount = 0;   // never resets — absolute limit
+
+    // -------------------------------------------------------
+    // Session Guard
+    // -------------------------------------------------------
+
     IEnumerator SessionGuard()
     {
         while (true)
         {
-            if (trialErrorCount > 10000)
+            if (trialErrorCount > 10 || totalErrorCount > 5000)
             {
-                //force shutdown server to protect server from infinite error loop, which can happen when there is an unexpected critical error in the code
-                Debug.LogError("[ServerController] Too many errors, shutting down server to prevent further damage!");
-                //TODO: sends clients to main menu
-                //shuts down the server
+                Debug.LogError("[ServerController] Too many errors — shutting down to prevent further damage!");
+                // TODO: send clients to main menu
                 NetworkManager.Singleton.Shutdown();
                 Application.Quit();
             }
             yield return new WaitForSeconds(60f);
             trialErrorCount = 0;
+            // totalErrorCount intentionally never resets
         }
     }
+
+    void IncrementErrors()
+    {
+        trialErrorCount++;
+        totalErrorCount++;
+    }
+
+    // -------------------------------------------------------
+    // Init
+    // -------------------------------------------------------
 
     private void Start()
     {
         StartCoroutine(SessionGuard());
+        StartCoroutine(InitSequence());
+    }
 
+    IEnumerator InitSequence()
+    {
+        // --- Init session ---
         while (!session.Init())
         {
-            Debug.LogError("[ServerController] Failed to initialize MatchSession, retrying...");
-            trialErrorCount++;
+            Debug.LogError("[ServerController] MatchSession failed to initialize, retrying...");
+            IncrementErrors();
+            yield return new WaitForSeconds(1f);
         }
 
+        // --- Spawn units ---
         while (!spawnManager.spawnAll())
         {
-            Debug.LogError("[ServerController] Failed to initialize SpawnManager, retrying...");
-            trialErrorCount++;
+            Debug.LogError("[ServerController] SpawnManager failed, retrying...");
+            IncrementErrors();
+            yield return new WaitForSeconds(1f);
         }
 
-        // Send snapshot to all connected clients
+        // --- Send snapshot to all connected clients ---
         foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-        {
             HandleAllInitialStateRequest(clientId);
-        }
+
+        // --- Start timeline ---
+        timeline.StartTimeline();
+
+        Debug.Log("[ServerController] Server initialized successfully.");
     }
 
     // -------------------------------------------------------
@@ -77,21 +101,21 @@ public class ServerController : MonoBehaviour
         }
 
         session.ApplyMove(unitId, target);
-
         Debug.Log($"[Server] Unit {unitId} moved to {target}");
         bridge.MoveConfirmedClientRpc(unitId, target);
     }
 
     public void HandleAllInitialStateRequest(ulong clientId)
     {
-        Debug.Log($"[Server] Received initial state request from client {clientId}");
+        Debug.Log($"[Server] Sending initial state to client {clientId}");
 
         SessionSnapshotData snapshot = new SessionSnapshotData
         {
-            Turn = session.Turn,
+            MapId             = session.MapId,
+            Turn              = session.Turn,
             CurrentPlayerTurn = session.CurrentPlayerTurn,
-            Teams = session.teams,
-            Units = session.GetAllUnits()
+            Teams             = session.teams,
+            Units             = session.GetAllUnits(),
         };
 
         bridge.SendInitialStateClientRpc(snapshot, clientId);

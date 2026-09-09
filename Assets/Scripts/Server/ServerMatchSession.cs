@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
 public class ServerMatchSession : MonoBehaviour
@@ -8,15 +7,17 @@ public class ServerMatchSession : MonoBehaviour
     public int Turn;
     public int CurrentPlayerTurn;
     public GridMap Map { get; private set; }
+    public string MapId { get; private set; }
+    public GridMapAsset MapAsset { get; private set; }
 
     [Header("Config")]
     [SerializeField] private string mapId = "defaultPvpMap";
 
     [Header("Data")]
+    [SerializeField] private MapRegistry mapRegistry;
     [SerializeField] public UnitLibrary unitLibrary;
 
-    public List<TeamData> teams; // index = team number
-
+    public List<TeamData> teams;
     public List<UnitData> units;
 
     // -------------------------------------------------------
@@ -25,13 +26,26 @@ public class ServerMatchSession : MonoBehaviour
 
     public bool Init()
     {
-        Map = MapLoader.Load(mapId + ".json");
+        mapRegistry.Init();
+
+        MapAsset = mapRegistry.Get(mapId);
+        if (MapAsset == null)
+        {
+            Debug.LogError($"[MatchSession] MapRegistry has no entry for mapId '{mapId}'!");
+            return false;
+        }
+
+        MapId = mapId;
+        Map = new GridMap();
+        Map.Init(MapAsset);
+
         unitLibrary.Init();
         teams = new List<TeamData>();
         units = new List<UnitData>();
         SetTeamExcludeServer();
         return true;
     }
+
     private void SetTeamExcludeServer()
     {
         var ids = NetworkManager.Singleton.ConnectedClientsIds;
@@ -41,13 +55,11 @@ public class ServerMatchSession : MonoBehaviour
             Debug.Log($"[MatchSession] Connected client: {id}");
             if (id != NetworkManager.Singleton.LocalClientId)
             {
-                //set team for players that arent server 
                 teams.Add(new TeamData { teamId = teamNum, clientId = id, units = new List<UnitData>() });
                 teamNum++;
             }
-            if (teamNum >= 2) return; // Only support 2 teams, for now dont have player steamId from backend (no backend yet) so this method is used, will be removed when steamId is implemented and we can get player team data from backend instead of setting it here on server
+            if (teamNum >= 2) return;
         }
-
     }
 
     // -------------------------------------------------------
@@ -80,10 +92,25 @@ public class ServerMatchSession : MonoBehaviour
     }
 
     // -------------------------------------------------------
+    // Occupied Cells
+    // -------------------------------------------------------
+
+    public HashSet<Vector3Int> GetOccupiedCells(int excludeUnitId)
+    {
+        var occupied = new HashSet<Vector3Int>();
+        foreach (var u in units)
+        {
+            if (u.Id != excludeUnitId)
+                occupied.Add(u.CurrentCell);
+        }
+        return occupied;
+    }
+
+    // -------------------------------------------------------
     // Movement Authorization
     // -------------------------------------------------------
 
-    public enum MoveResult { Ok, NotYourUnit, OutOfRange, NotWalkable, UnitNotFound, PlayerNotFound, CellOccupied }
+    public enum MoveResult { Ok, NotYourUnit, OutOfRange, NotWalkable, UnitNotFound, PlayerNotFound, CellOccupied, NoPath }
 
     public MoveResult AuthorizeMove(ulong clientId, int unitId, Vector3Int target)
     {
@@ -91,7 +118,6 @@ public class ServerMatchSession : MonoBehaviour
         if (unit == null)
             return MoveResult.UnitNotFound;
 
-        // Check team ownership — not clientId
         int team = GetTeamNumber(clientId);
         if (team == -1)
             return MoveResult.PlayerNotFound;
@@ -102,23 +128,19 @@ public class ServerMatchSession : MonoBehaviour
         if (!Map.IsWalkable(target.x, target.y))
             return MoveResult.NotWalkable;
 
-        int dist = Mathf.Abs(target.x - unit.CurrentCell.x)
-                 + Mathf.Abs(target.y - unit.CurrentCell.y);
+        var occupiedCells = GetOccupiedCells(unitId);
 
-        if (dist > unit.MoveRange)
+        if (occupiedCells.Contains(target))
+            return MoveResult.CellOccupied;
+
+        // Pathfind using GridMap directly — no prefab, no Tilemap needed
+        var path = GridPathfinder.FindPath(Map, unit.CurrentCell, target, occupiedCells);
+
+        if (path == null)
+            return MoveResult.NoPath;
+
+        if (path.Count > unit.MoveRange)
             return MoveResult.OutOfRange;
-
-        // Add unit collision check
-        foreach (var otherUnit in units)
-        {
-            Debug.Log($"[AuthorizeMove] Checking collision with Unit {otherUnit.Id} at {otherUnit.CurrentCell}");
-            if (otherUnit.Id != unitId &&
-                otherUnit.CurrentCell.x == target.x &&
-                otherUnit.CurrentCell.y == target.y)
-            {
-                return MoveResult.CellOccupied;  // Add this to enum
-            }
-        }
 
         return MoveResult.Ok;
     }

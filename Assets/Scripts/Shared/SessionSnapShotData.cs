@@ -3,32 +3,48 @@ using Unity.Netcode;
 
 public struct SessionSnapshotData : INetworkSerializable
 {
+    public string MapId;            // clients use this to look up GridMapAsset in their MapRegistry
     public int Turn;
     public int CurrentPlayerTurn;
     public List<TeamData> Teams;
     public List<UnitData> Units;
+    public TimelineData Timeline;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
+        serializer.SerializeValue(ref MapId);
         serializer.SerializeValue(ref Turn);
         serializer.SerializeValue(ref CurrentPlayerTurn);
-        
+
+        // Teams
         if (serializer.IsReader)
         {
-            var teamsCount = 0;
-            serializer.SerializeValue(ref teamsCount);
-            Teams = new List<TeamData>(teamsCount);
-            for (var i = 0; i < teamsCount; i++)
+            int count = 0;
+            serializer.SerializeValue(ref count);
+            Teams = new List<TeamData>(count);
+            for (int i = 0; i < count; i++)
             {
                 var team = new TeamData();
                 team.NetworkSerialize(serializer);
                 Teams.Add(team);
             }
-            
-            var unitsCount = 0;
-            serializer.SerializeValue(ref unitsCount);
-            Units = new List<UnitData>(unitsCount);
-            for (var i = 0; i < unitsCount; i++)
+        }
+        else
+        {
+            int count = Teams?.Count ?? 0;
+            serializer.SerializeValue(ref count);
+            if (Teams != null)
+                foreach (var team in Teams)
+                    team.NetworkSerialize(serializer);
+        }
+
+        // Units
+        if (serializer.IsReader)
+        {
+            int count = 0;
+            serializer.SerializeValue(ref count);
+            Units = new List<UnitData>(count);
+            for (int i = 0; i < count; i++)
             {
                 var unit = new UnitData();
                 unit.NetworkSerialize(serializer);
@@ -37,21 +53,14 @@ public struct SessionSnapshotData : INetworkSerializable
         }
         else
         {
-            var teamsCount = Teams?.Count ?? 0;
-            serializer.SerializeValue(ref teamsCount);
-            if (Teams != null)
-            {
-                foreach (var team in Teams)
-                    team.NetworkSerialize(serializer);
-            }
-            
-            var unitsCount = Units?.Count ?? 0;
-            serializer.SerializeValue(ref unitsCount);
+            int count = Units?.Count ?? 0;
+            serializer.SerializeValue(ref count);
             if (Units != null)
-            {
                 foreach (var unit in Units)
                     unit.NetworkSerialize(serializer);
-            }
         }
+
+        // Timeline
+        Timeline.NetworkSerialize(serializer);
     }
 }

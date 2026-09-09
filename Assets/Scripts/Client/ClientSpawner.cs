@@ -4,11 +4,23 @@ using UnityEngine.Tilemaps;
 public class ClientSpawner : MonoBehaviour
 {
     [SerializeField] private ClientController controller;
-    [SerializeField] private Tilemap tilemap;
+
+    // Wired at runtime by ClientMapLoader
+    private Tilemap tilemap;
+
+    public void SetTilemap(Tilemap t)
+    {
+        tilemap = t;
+    }
 
     public void SpawnUnit(UnitData unitData)
     {
-        // Get prefab from registry
+        if (tilemap == null)
+        {
+            Debug.LogError("[ClientSpawner] Tilemap not set — map not loaded yet!");
+            return;
+        }
+
         var prefab = controller.unitPrefabRegistry.Get(unitData.UId);
         if (prefab == null)
         {
@@ -16,7 +28,6 @@ public class ClientSpawner : MonoBehaviour
             return;
         }
 
-        // Get definition from library
         var def = controller.unitLibrary.Get(unitData.UId);
         if (def == null)
         {
@@ -24,12 +35,10 @@ public class ClientSpawner : MonoBehaviour
             return;
         }
 
-        // Instantiate at cell position
         Vector3 worldPos = tilemap.GetCellCenterWorld(unitData.CurrentCell);
         var go = Instantiate(prefab, worldPos, Quaternion.identity);
         go.name = $"Unit_{unitData.Id}_{def.unitName}";
 
-        // Setup ClientUnit
         var clientUnit = go.GetComponent<ClientUnit>();
         if (clientUnit == null)
         {
@@ -39,8 +48,6 @@ public class ClientSpawner : MonoBehaviour
         }
 
         clientUnit.Init(unitData);
-
-        // Register in controller so everyone can find it
         controller.RegisterUnit(unitData.Id, clientUnit);
 
         Debug.Log($"[ClientSpawner] Spawned unit {unitData.Id} ({def.unitName}) at {unitData.CurrentCell}");

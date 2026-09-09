@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b998acec6f7fe2945a417107be02824a, type: 3}
+  m_Name: SpeedConfig_PVP_Patch1
+  m_EditorClassIdentifier: Assembly-CSharp::SpeedConfig
+  tiers:
+  - speedRange: {x: 100, y: 109}
+    stepRange: {x: 10, y: 10}
+  - speedRange: {x: 110, y: 119}
+    stepRange: {x: 10, y: 9}
+  - speedRange: {x: 120, y: 129}
+    stepRange: {x: 9, y: 9}
+  - speedRange: {x: 130, y: 139}
+    stepRange: {x: 9, y: 8}
+  - speedRange: {x: 140, y: 149}
+    stepRange: {x: 8, y: 8}
+  - speedRange: {x: 150, y: 159}
+    stepRange: {x: 8, y: 7}
