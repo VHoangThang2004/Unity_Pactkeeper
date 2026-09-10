@@ -1,14 +1,17 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.EventSystems;
 
 public class ClientInteractionSystem : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private ClientController controller;
+    [SerializeField] private ClientMatchSession session;
+    [SerializeField] private ClientScene scene;
 
     public InteractionStateMachine stateMachine;
+    // this state machine will affect most of the visible of UI elements to control the input & flow of UI for inputs. One of the main-most important state machine beside sync-machine
 
-    // Wired at runtime by ClientMapLoader
     private Tilemap tilemap;
 
     public void SetTilemap(Tilemap t)
@@ -17,13 +20,53 @@ public class ClientInteractionSystem : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // Init (called by ClientController after map is loaded)
+    // Init (called by ClientMapLoader after map is loaded)
     // -------------------------------------------------------
 
     public void Init()
     {
-        stateMachine = new InteractionStateMachine(controller);
-        stateMachine.Start();
+        stateMachine = new InteractionStateMachine(session, scene);
+        stateMachine.Init();
+        scene.input.OnLeftClick += HandleClick;
+        StartCoroutine(InteractionManagingLoop());
+    }
+
+    void HandleClick()
+    {
+        if (scene.movableTilemap == null) return;
+        // if (!session.isOnCell) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+        HandleTileClick(session.currentCellMouseOn);
+    }
+
+    private Coroutine unlockCoroutine = null;
+    public void PromiseUnlock()
+    {
+        if (unlockCoroutine != null)
+            StopCoroutine(unlockCoroutine);
+        unlockCoroutine = StartCoroutine(UnlockOnSyncAndResolveCompleted());
+    }
+    IEnumerator UnlockOnSyncAndResolveCompleted()
+    {
+        while (true)
+        {
+            if (session.PendingToken == session.CurrentToken && session.SyncState == 0)
+            {
+                stateMachine.GoToNone();
+                yield break;
+            }
+            yield return null;
+        }
+    }
+    IEnumerator InteractionManagingLoop()
+    {
+        while (true)
+        {
+            HandleTileHover();
+            if (session.CurrentToken != session.PendingToken)
+                ForceLockedInputState();
+            yield return null;
+        }
     }
 
     // -------------------------------------------------------
@@ -34,38 +77,67 @@ public class ClientInteractionSystem : MonoBehaviour
     {
         if (tilemap == null) return;
 
-        Vector3 worldPos = controller.cam.ScreenToWorldPoint(controller.input.MouseScreenPosition);
+        Vector3 worldPos = scene.cam.ScreenToWorldPoint(scene.input.MouseScreenPosition);
         worldPos.z = 0;
 
-        controller.currentCell = tilemap.WorldToCell(worldPos);
+        session.currentCellMouseOn = tilemap.WorldToCell(worldPos);
 
-        if (!tilemap.HasTile(controller.currentCell))
+        if (!tilemap.HasTile(session.currentCellMouseOn))
         {
-            if (controller.hoverHighlight != null && controller.hoverHighlight.activeSelf)
-                controller.hoverHighlight.SetActive(false);
-            controller.isOnCell = false;
+            if (scene.hoverHighlight != null && scene.hoverHighlight.activeSelf)
+                scene.hoverHighlight.SetActive(false);
+            session.isOnCell = false;
             return;
         }
 
-        controller.isOnCell = true;
-        Vector3 center = tilemap.GetCellCenterWorld(controller.currentCell);
+        session.isOnCell = true;
+        Vector3 center = tilemap.GetCellCenterWorld(session.currentCellMouseOn);
 
-        if (controller.hoverHighlight != null && !controller.hoverHighlight.activeSelf)
-            controller.hoverHighlight.SetActive(true);
+        if (scene.hoverHighlight != null && !scene.hoverHighlight.activeSelf)
+            scene.hoverHighlight.SetActive(true);
 
-        if (controller.hoverHighlight != null)
-            controller.hoverHighlight.transform.position = center + controller.offset;
+        if (scene.hoverHighlight != null)
+            scene.hoverHighlight.transform.position = center + scene.offset;
 
-        stateMachine.OnTileHover(controller.currentCell);
+        stateMachine.OnTileHover(session.currentCellMouseOn);
+    }
+
+    public void ForceLockedInputState()
+    {
+        stateMachine.GoToLocked();
     }
 
     public void ForceNoneState()
     {
         stateMachine?.GoToNone();
     }
-
     public void HandleTileClick(Vector3Int cell)
     {
         stateMachine?.OnTileClick(cell);
     }
+    public void HandleDecisionSelectSkill(int skillId)
+    {
+        stateMachine?.OnDecisionSelectSkill(skillId);
+    }
+    public void HandleDecisionMoveOrSkill()
+    {
+        if (stateMachine.currentState is SkillPreviewState or MovePreviewState)
+        {
+            stateMachine?.OnDecision();
+            return;
+        }
+    }
+    public void HandleWait()
+    {
+        stateMachine?.OnWait();
+    }
+    public void HandleCancel()
+    {
+        stateMachine?.OnCancel();
+    }
+    void OnDestroy()
+    {
+        scene.input.OnLeftClick -= HandleClick;
+    }
+
 }

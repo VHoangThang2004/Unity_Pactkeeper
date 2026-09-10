@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitLibrary
   definitions:
   - {fileID: 11400000, guid: cf4428063ba52e143a2535f5a876dd35, type: 2}
+  - {fileID: 11400000, guid: 5b5b99a705b57b14295a834e597d8cc1, type: 2}

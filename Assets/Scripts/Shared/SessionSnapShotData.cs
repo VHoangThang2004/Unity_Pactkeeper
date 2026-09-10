@@ -1,35 +1,21 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 
-/// <summary>
-/// Full — reload map + despawn/respawn all units. On connect/reconnect/match end.
-/// Mid  — keep map + despawn/respawn all units. Bundled with every DecisionWaiting notice.
-/// </summary>
-public enum SnapshotType : byte
-{
-    Full = 0,
-    Mid  = 1,
-}
-
 public struct SessionSnapshotData : INetworkSerializable
 {
-    public SnapshotType Type;
     public string MapId;
-    public int Turn;
-    public int CurrentPlayerTurn;
+    public int CurrentTeamTurn;
     public List<TeamData> Teams;
     public List<UnitData> Units;
     public TimelineData Timeline;
+    // Token removed — lives on the RPC call itself, not inside snapshot data
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        byte typeByte = (byte)Type;
-        serializer.SerializeValue(ref typeByte);
-        Type = (SnapshotType)typeByte;
-
+        if (!serializer.IsReader)
+            MapId = MapId ?? string.Empty;
         serializer.SerializeValue(ref MapId);
-        serializer.SerializeValue(ref Turn);
-        serializer.SerializeValue(ref CurrentPlayerTurn);
+        serializer.SerializeValue(ref CurrentTeamTurn);
 
         // Teams
         if (serializer.IsReader)
@@ -75,7 +61,6 @@ public struct SessionSnapshotData : INetworkSerializable
                     unit.NetworkSerialize(serializer);
         }
 
-        // Timeline
         Timeline.NetworkSerialize(serializer);
     }
 }

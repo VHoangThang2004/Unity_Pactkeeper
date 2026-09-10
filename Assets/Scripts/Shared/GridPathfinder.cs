@@ -70,7 +70,7 @@ public class GridPathfinder
     /// Flood-fill BFS using GridMap — returns all cells reachable within maxSteps.
     /// Occupied cells are hard walls.
     /// </summary>
-    public static HashSet<Vector3Int> FloodFill(
+    public static HashSet<Vector3Int> FloodFillBlockable(
         GridMap map,
         Vector3Int start,
         int maxSteps,
@@ -97,6 +97,83 @@ public class GridPathfinder
                 var next = current + dir;
                 if (!map.IsWalkable(next.x, next.y)) continue;
                 if (occupiedCells != null && occupiedCells.Contains(next)) continue;
+
+                int nextSteps = steps + 1;
+                if (visited.TryGetValue(next, out int best) && best <= nextSteps) continue;
+
+                visited[next] = nextSteps;
+                queue.Enqueue((next, nextSteps));
+            }
+        }
+
+        return reachable;
+    }
+
+    public enum FloodFillTarget
+    {
+        AnyCell,        // all cells with range
+        EmptyCell,      // all cells without a unit
+        EnemyUnit,      // only cells with enemy units
+        AllyUnit,       // only cells with ally units
+    }
+
+    public static HashSet<Vector3Int> FloodFill(
+        GridMap map,
+        Vector3Int start,
+        int range,
+        FloodFillTarget target = FloodFillTarget.AnyCell,
+        bool blockableByUnits = true,
+        ICollection<Vector3Int> alliedCells = null,
+        ICollection<Vector3Int> enemyCells = null)
+    {
+        var reachable = new HashSet<Vector3Int>();
+        var queue = new Queue<(Vector3Int cell, int steps)>();
+        var visited = new Dictionary<Vector3Int, int>();
+
+        queue.Enqueue((start, 0));
+        visited[start] = 0;
+
+        while (queue.Count > 0)
+        {
+            var (current, steps) = queue.Dequeue();
+
+            if (current != start)
+            {
+                // Filter output based on target type
+                switch (target)
+                {
+                    case FloodFillTarget.AnyCell:
+                        reachable.Add(current);
+                        break;
+                    case FloodFillTarget.EmptyCell:
+                        bool hasUnit = (alliedCells != null && alliedCells.Contains(current))
+                                    || (enemyCells != null && enemyCells.Contains(current));
+                        if (!hasUnit) reachable.Add(current);
+                        break;
+                    case FloodFillTarget.EnemyUnit:
+                        if (enemyCells != null && enemyCells.Contains(current))
+                            reachable.Add(current);
+                        break;
+                    case FloodFillTarget.AllyUnit:
+                        if (alliedCells != null && alliedCells.Contains(current))
+                            reachable.Add(current);
+                        break;
+                }
+            }
+
+            if (steps >= range) continue;
+
+            foreach (var dir in directions)
+            {
+                var next = current + dir;
+                if (!map.IsWalkable(next.x, next.y)) continue;
+
+                // Block traversal through occupied cells if blockable
+                if (blockableByUnits)
+                {
+                    if (alliedCells != null && alliedCells.Contains(next)) continue;
+                    if (enemyCells != null && enemyCells.Contains(next)) continue;
+                }
 
                 int nextSteps = steps + 1;
                 if (visited.TryGetValue(next, out int best) && best <= nextSteps) continue;

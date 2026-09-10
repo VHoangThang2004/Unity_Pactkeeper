@@ -11,8 +11,8 @@ public class ServerController : MonoBehaviour
     [SerializeField] ServerSpawnManager spawnManager;
     [SerializeField] ServerTimelineManager timeline;
 
-    private int trialErrorCount = 0;   // resets every 60s — burst detection
-    private int totalErrorCount = 0;   // never resets — absolute limit
+    private int trialErrorCount = 0;
+    private int totalErrorCount = 0;
 
     // -------------------------------------------------------
     // Session Guard
@@ -24,14 +24,13 @@ public class ServerController : MonoBehaviour
         {
             if (trialErrorCount > 10 || totalErrorCount > 50)
             {
-                Debug.LogError("[ServerController] Too many errors — shutting down to prevent further damage!");
+                Debug.LogError("[ServerController] Too many errors — shutting down!");
                 // TODO: send clients to main menu
                 NetworkManager.Singleton.Shutdown();
                 Application.Quit();
             }
             yield return new WaitForSeconds(60f);
             trialErrorCount = 0;
-            // totalErrorCount intentionally never resets
         }
     }
 
@@ -53,7 +52,6 @@ public class ServerController : MonoBehaviour
 
     IEnumerator InitSequence()
     {
-        // --- Init session ---
         while (!session.Init())
         {
             Debug.LogError("[ServerController] MatchSession failed to initialize, retrying...");
@@ -61,7 +59,6 @@ public class ServerController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        // --- Spawn units ---
         while (!spawnManager.spawnAll())
         {
             Debug.LogError("[ServerController] SpawnManager failed, retrying...");
@@ -69,11 +66,9 @@ public class ServerController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        // --- Send snapshot to all connected clients ---
         foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             HandleAllInitialStateRequest(clientId);
 
-        // --- Start timeline ---
         timeline.StartTimeline();
 
         Debug.Log("[ServerController] Server initialized successfully.");
@@ -83,52 +78,17 @@ public class ServerController : MonoBehaviour
     // Handlers (called by SyncedBridge)
     // -------------------------------------------------------
 
-    public void HandleActWaitDecision(ulong clientId, bool wantsToAct)
+    /// <summary>
+    /// Single entry point for all client decisions.
+    /// unitId = -1 means wait. Valid unitId means act.
+    /// </summary>
+    public void HandleDecision(ulong clientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken)
     {
-        timeline.HandleActWaitDecision(clientId, wantsToAct);
-    }
-
-    public void HandleActionDecision(ulong clientId, int unitId, Vector3Int target)
-    {
-        timeline.HandleActionDecision(clientId, unitId, target);
-    }
-
-    public void HandleTestCell(ulong clientId, int x, int y)
-    {
-        bool walkable = session.Map.IsWalkable(x, y);
-        bridge.SendTestCellResultClientRpc(clientId, x, y, walkable);
-    }
-
-    public void HandleMoveRequest(ulong clientId, int unitId, Vector3Int target)
-    {
-        var result = session.AuthorizeMove(clientId, unitId, target);
-
-        if (result != ServerMatchSession.MoveResult.Ok)
-        {
-            Debug.LogWarning($"[Server] Move denied for client {clientId}: {result}");
-            bridge.SendMoveDeniedClientRpc(clientId, unitId);
-            return;
-        }
-
-        session.ApplyMove(unitId, target);
-        Debug.Log($"[Server] Unit {unitId} moved to {target}");
-        bridge.MoveConfirmedClientRpc(unitId, target);
+        timeline.HandleDecision(clientId, unitId, target, decisionType, skillCardId, clientToken);
     }
 
     public void HandleAllInitialStateRequest(ulong clientId)
     {
-        Debug.Log($"[Server] Sending initial state to client {clientId}");
-
-        SessionSnapshotData snapshot = new SessionSnapshotData
-        {
-            Type              = SnapshotType.Full,  // full rebuild on initial state
-            MapId             = session.MapId,
-            Turn              = session.Turn,
-            CurrentPlayerTurn = session.CurrentPlayerTurn,
-            Teams             = session.teams,
-            Units             = session.GetAllUnits(),
-        };
-
-        bridge.SendInitialStateClientRpc(snapshot, clientId);
+        timeline.SendSnapshotToClient(clientId);
     }
 }

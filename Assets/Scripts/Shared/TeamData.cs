@@ -5,34 +5,42 @@ public class TeamData : INetworkSerializable
 {
     public int teamId;
     public ulong clientId;
-    public List<UnitData> units;
+    public List<int> unitIds;
+
+    // Instant decision data
+    public int WaitDuration;
+    public int Overtime;
+    public bool isInstantEnded;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref teamId);
         serializer.SerializeValue(ref clientId);
-        
+        serializer.SerializeValue(ref WaitDuration);
+        serializer.SerializeValue(ref Overtime);
+
         if (serializer.IsReader)
         {
-            var count = 0;
+            int count = 0;
             serializer.SerializeValue(ref count);
-            units = new List<UnitData>(count);
-            for (var i = 0; i < count; i++)
+            unitIds = new List<int>(count);
+            for (int i = 0; i < count; i++)
             {
-                var unit = new UnitData();
-                unit.NetworkSerialize(serializer);
-                units.Add(unit);
+                int id = 0;
+                serializer.SerializeValue(ref id);
+                unitIds.Add(id);
             }
         }
         else
         {
-            var count = units?.Count ?? 0;
+            int count = unitIds?.Count ?? 0;
             serializer.SerializeValue(ref count);
-            if (units != null)
-            {
-                foreach (var unit in units)
-                    unit.NetworkSerialize(serializer);
-            }
+            if (unitIds != null)
+                foreach (int id in unitIds)
+                {
+                    int copy = id;
+                    serializer.SerializeValue(ref copy);
+                }
         }
     }
 }

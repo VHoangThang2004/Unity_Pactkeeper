@@ -3,9 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
+public enum ServerSessionState
+{
+    None,
+    Flowing,
+    InstantPaused,
+    DecisionWaiting,
+    Resolving,
+    Finished,
+}
+
 /// <summary>
 /// Server-only. Drives the match timeline with an explicit state machine.
-/// Controls all sync decisions based on current state.
 /// </summary>
 public class ServerTimelineManager : MonoBehaviour
 {
@@ -17,18 +26,20 @@ public class ServerTimelineManager : MonoBehaviour
     [SerializeField] private SyncedBridge bridge;
     [SerializeField] private ServerMatchSession session;
     [SerializeField] private SpeedConfig speedConfig;
+    [SerializeField] private ActionLibrary actionLibrary;
 
     [Header("Timeline Config")]
     [SerializeField] private int maxInstant = 100;
     [SerializeField] private float instantDuration = 2f;
 
     [Header("Decision Timeouts")]
-    [SerializeField] private float actWaitWindow = 5f;
-    [SerializeField] private float actionWindow = 30f;
+    [SerializeField] private float actWaitWindowPerInstant = 60f;
     [SerializeField] private float overtimePerTeam = 200f;
 
     [Header("Resolving")]
     [SerializeField] private float resolveDuration = 2.5f;
+
+    private int Token = 0;
 
     // -------------------------------------------------------
     // State Machine
@@ -38,7 +49,7 @@ public class ServerTimelineManager : MonoBehaviour
 
     void TransitionTo(ServerSessionState next)
     {
-        Debug.Log($"[Timeline] {State} -> {next}");
+        Debug.Log($"[Timeline] {State} -> {next} at instant : {currentInstant}");
         State = next;
     }
 
@@ -47,16 +58,18 @@ public class ServerTimelineManager : MonoBehaviour
     // -------------------------------------------------------
 
     private int currentInstant = 0;
-    private int flag = 0;
-    private int consecutiveWaits = 0;
+    private int flagedTeamId = 0;
     private List<int> readyUnitIds = new List<int>();
-    private float[] overtimeRemaining;
-
-    private int activeDecisionTeam = -1;
     private bool waitingForDecision = false;
-    private bool? pendingDecision = null;
-    private bool waitingForAction = false;
-    private (int unitId, Vector3Int target)? pendingAction = null;
+    private (int unitId, Vector3Int target, DecisionType action, int skillCardId)? pendingDecision = null;
+
+    // Action record — every decision this instant, for step cost calculation
+    private List<(int unitId, ActionDefinition actionDef, List<EffectResult> results)> actionRecord
+        = new List<(int, ActionDefinition, List<EffectResult>)>();
+
+    // Effect record — non-instant effects only, resolved at end of instant by speed order
+    private List<(int unitId, Vector3Int target, EffectBase effect, int skillCardId)> effectRecord
+        = new List<(int, Vector3Int, EffectBase, int)>();
 
     // -------------------------------------------------------
     // Init
@@ -64,9 +77,31 @@ public class ServerTimelineManager : MonoBehaviour
 
     public void StartTimeline()
     {
-        overtimeRemaining = new float[] { overtimePerTeam, overtimePerTeam };
+        List<TeamData> teams = session.GetAllTeamData();
+        foreach (var team in teams)
+            team.Overtime = (int)overtimePerTeam;
+        flagedTeamId = session.GetOtherTeamId(0);
+        actionLibrary.Init();
         TransitionTo(ServerSessionState.Flowing);
         StartCoroutine(TimelineLoop());
+        StartCoroutine(WaitingTimeProcess());
+    }
+
+    IEnumerator WaitingTimeProcess()
+    {
+        while (true)
+        {
+            TeamData currentTeam = session.GetCurrentTurnTeamData();
+            if (waitingForDecision && currentTeam!=null)
+            {
+                if (currentTeam.WaitDuration > 0)
+                    currentTeam.WaitDuration--;
+                else
+                    currentTeam.Overtime--;
+            }
+            yield return new WaitForSeconds(1f);
+        }
+
     }
 
     // -------------------------------------------------------
@@ -75,15 +110,22 @@ public class ServerTimelineManager : MonoBehaviour
 
     IEnumerator TimelineLoop()
     {
+        List<TeamData> teams = session.GetAllTeamData();
         while (currentInstant <= maxInstant)
         {
             TransitionTo(ServerSessionState.Flowing);
+            session.CurrentTeamTurnId = -1;
+
+            // Reset WaitDuration and instant tracking at instant start
+            foreach (var team in teams)
+                team.WaitDuration = (int)actWaitWindowPerInstant;
+            actionRecord.Clear();
+            effectRecord.Clear();
 
             TickAllUnits();
             bool newUnitsReady = UpdateReadyQueue();
             BroadcastTick();
 
-            // Pause if new units hit 0 OR all alive units are in the ready queue
             bool allReady = session.units.Count > 0 && readyUnitIds.Count >= session.units.Count;
             if (!newUnitsReady && !allReady)
             {
@@ -92,9 +134,15 @@ public class ServerTimelineManager : MonoBehaviour
                 continue;
             }
 
-            // Pause this instant
             TransitionTo(ServerSessionState.InstantPaused);
             yield return RunDecisionLoop();
+
+            // End of instant — resolve effect record then apply step costs
+            yield return ResolveEffectRecord();
+            ApplyStepCosts();
+
+            GetSetNewToken();
+            BroadcastSnapshot(); // after resolving this, sends the state after resolving all
 
             currentInstant++;
             yield return new WaitForSeconds(instantDuration);
@@ -102,7 +150,10 @@ public class ServerTimelineManager : MonoBehaviour
 
         TransitionTo(ServerSessionState.Finished);
         Debug.Log("[Timeline] Match ended — max instant reached.");
-        BroadcastFullSnapshot();
+        BuildSnapshot();
+
+        BroadcastSnapshot();
+
         // TODO: trigger match end flow
     }
 
@@ -112,237 +163,297 @@ public class ServerTimelineManager : MonoBehaviour
 
     IEnumerator RunDecisionLoop()
     {
-        consecutiveWaits = 0;
+        List<TeamData> teams = session.GetAllTeamData();
+        teams[0].isInstantEnded = false;
+        teams[1].isInstantEnded = false;
+        session.CurrentTeamTurnId = flagedTeamId;
 
         while (true)
         {
             if (!TeamHasReady(0) && !TeamHasReady(1))
                 yield break;
-
-            if (consecutiveWaits >= 2)
+            if (teams[0].isInstantEnded && teams[1].isInstantEnded)
                 yield break;
+
 
             for (int i = 0; i < 2; i++)
             {
-                int team = (flag + i) % 2;
+                int currentTeam = session.CurrentTeamTurnId;
 
-                if (TeamHasReady(team))
+                if (!teams[currentTeam].isInstantEnded && TeamHasReady(currentTeam))
                 {
                     TransitionTo(ServerSessionState.DecisionWaiting);
-                    BroadcastMidSnapshotWithDecision(team, (int)actWaitWindow, -1);
-                    yield return WaitForActWait(team);
+                    BuildSnapshot();
+                    BroadcastSnapshot();
+                    yield return WaitForDecision(currentTeam);
 
-                    if (pendingDecision == true)
+                    if (pendingDecision != null)
                     {
-                        TransitionTo(ServerSessionState.ActionWaiting);
-                        BroadcastMidSnapshotWithDecision(team, -1, (int)actionWindow);
-                        yield return WaitForAction(team);
-                        yield return Resolve(team);
-
-                        consecutiveWaits = 0;
-                        flag = 1 - team;
+                        yield return ResolveActionInstantEffects(currentTeam);
+                        flagedTeamId = session.GetOtherTeamId(flagedTeamId);
                     }
                     else
                     {
-                        consecutiveWaits++;
+                        teams[currentTeam].isInstantEnded = true;
                     }
                 }
                 else
                 {
-                    consecutiveWaits++;
+                    teams[currentTeam].isInstantEnded = true;
                 }
 
-                if (consecutiveWaits >= 2) yield break;
+                session.CurrentTeamTurnId = 1 - session.CurrentTeamTurnId;
             }
         }
     }
 
     // -------------------------------------------------------
-    // Wait For Act/Wait
+    // Wait For Decision
     // -------------------------------------------------------
 
-    IEnumerator WaitForActWait(int team)
+    IEnumerator WaitForDecision(int team)
     {
-        activeDecisionTeam = team;
+        List<TeamData> teams = session.GetAllTeamData();
         pendingDecision = null;
         waitingForDecision = true;
+        session.CurrentTeamTurnId = team;
 
-        // Normal window — check every frame, count down every second
-        float remaining = actWaitWindow;
-        while (waitingForDecision && remaining > 0f)
-        {
-            remaining -= Time.deltaTime;
+        while (waitingForDecision && (teams[team].WaitDuration > 0 || teams[team].Overtime > 0))
             yield return null;
-        }
 
-        // Overtime — only if no decision yet
-        while (waitingForDecision && overtimeRemaining[team] > 0f)
-        {
-            DrainOvertime(team, Time.deltaTime);
-            yield return null;
-        }
+        waitingForDecision = false;
+
 
         if (pendingDecision == null)
         {
-            Debug.Log($"[Timeline] Team {team} timed out on act/wait — auto-wait.");
-            pendingDecision = false;
+            if (teams[team].WaitDuration <= 0 && teams[team].Overtime <= 0)
+                Debug.Log($"[Timeline] Team {team} timed out — auto-wait.");
+            else Debug.Log($"[Timeline] Team {team} Decided to wait.");
         }
-
-        waitingForDecision = false;
+        else
+        {
+            Debug.Log($"WaitDecision result: [Team{team}] decided to {pendingDecision.ToString()}");
+        }
     }
 
     // -------------------------------------------------------
-    // Wait For Action
+    // Resolve (per decision)
     // -------------------------------------------------------
 
-    IEnumerator WaitForAction(int team)
+    IEnumerator ResolveActionInstantEffects(int team)
     {
-        pendingAction = null;
-        waitingForAction = true;
+        if (pendingDecision == null) yield break;
 
-        // Normal window — check every frame, count down every second
-        float remaining = actionWindow;
-        while (waitingForAction && remaining > 0f)
+        var (unitId, target, action, skillCardId) = pendingDecision.Value;
+        ActionDefinition actionDef = actionLibrary.Get(skillCardId != -1 ? skillCardId : (int)action);
+
+        if (actionDef == null)
         {
-            remaining -= Time.deltaTime;
-            yield return null;
+            Debug.LogError($"[Timeline] No ActionDefinition found for action {action} skillCardId {skillCardId}!");
+            yield break;
         }
 
-        // Overtime — only if no action yet
-        while (waitingForAction && overtimeRemaining[team] > 0f)
-        {
-            DrainOvertime(team, Time.deltaTime);
-            yield return null;
-        }
+        // Add to actionRecord for step cost calculation at end of instant
+        var actionResults = new List<EffectResult>();
+        actionRecord.Add((unitId, actionDef, actionResults));
 
-        waitingForAction = false;
+        // Check if any effect is non-instant — if so, remove unit from ready queue
+        if (actionDef.HasNonInstantEffect())
+            readyUnitIds.Remove(unitId);
 
-        if (pendingAction == null)
+        // Process each effect
+        foreach (var effect in actionDef.effects)
         {
-            int fallbackId = GetFirstReadyUnitForTeam(team);
-            if (fallbackId != -1)
+            if (effect == null) continue;
+
+            if (!effect.IsInstant)
             {
-                var unit = session.GetUnit(fallbackId);
-                pendingAction = (fallbackId, unit.CurrentCell);
-                Debug.Log($"[Timeline] Team {team} timed out — StandByWithoutAction unit {fallbackId}.");
+                // Queue for end of instant
+                effectRecord.Add((unitId, target, effect, skillCardId));
+            }
+            else
+            {
+                // Apply instantly
+                TransitionTo(ServerSessionState.Resolving);
+
+                // Capture before, apply, capture after — no LastSnapshot shuffling
+                var beforeSnap = GetSnapshot();
+                var result = effect.Apply(session, unitId, target);
+                actionResults.Add(result);
+                var afterSnap = GetSnapshot();
+
+                session.LastSnapshot = beforeSnap;
+                session.LastResolve = new ResolveData
+                {
+                    HasResolve = true,
+                    UnitId = unitId,
+                    Target = target,
+                    decision = action,
+                    SkillCardId = skillCardId,
+                    EffectResults = new List<EffectResult> { result },
+                    AfterSnapshot = afterSnap,
+                };
+                GetSetNewToken();
+                BroadcastSnapshot();
+
+                yield return new WaitForSeconds(effect.resolveDuration);
+                TransitionTo(ServerSessionState.DecisionWaiting);
             }
         }
     }
 
     // -------------------------------------------------------
-    // Resolve
+    // Resolve Effect Record (end of instant)
     // -------------------------------------------------------
 
-    IEnumerator Resolve(int team)
+    IEnumerator ResolveEffectRecord()
     {
-        if (pendingAction == null) yield break;
+        if (effectRecord.Count == 0) yield break;
 
-        TransitionTo(ServerSessionState.Resolving);
+        // Sort by unit speed descending
+        effectRecord.Sort((a, b) =>
+        {
+            var unitA = session.GetUnit(a.unitId);
+            var unitB = session.GetUnit(b.unitId);
+            return (unitB?.Speed ?? 0).CompareTo(unitA?.Speed ?? 0);
+        });
 
-        var (unitId, target) = pendingAction.Value;
-        ApplyUnitAction(unitId, target);
+        foreach (var (unitId, target, effect, skillCardId) in effectRecord)
+        {
+            TransitionTo(ServerSessionState.Resolving);
 
-        yield return new WaitForSeconds(resolveDuration);
+            var beforeSnap = GetSnapshot();
+            var result = effect.Apply(session, unitId, target);
+
+            foreach (var record in actionRecord)
+                if (record.unitId == unitId) { record.results.Add(result); break; }
+
+            var afterSnap = GetSnapshot();
+
+            var actionDef = actionRecord.Find(r => r.unitId == unitId).actionDef;
+
+            session.LastSnapshot = beforeSnap;
+            session.LastResolve = new ResolveData
+            {
+                HasResolve = true,
+                UnitId = unitId,
+                Target = target,
+                SkillCardId = skillCardId,
+                EffectResults = new List<EffectResult> { result },
+                AfterSnapshot = afterSnap,
+            };
+            GetSetNewToken();
+            BroadcastSnapshot();
+
+            yield return new WaitForSeconds(resolveDuration);
+        }
     }
 
     // -------------------------------------------------------
-    // Apply Action
+    // Step Costs (end of instant)
     // -------------------------------------------------------
 
-    void ApplyUnitAction(int unitId, Vector3Int target)
+    void ApplyStepCosts()
     {
-        var unit = session.GetUnit(unitId);
-        if (unit == null)
+        // Sum effect multipliers per unit from actionRecord
+        var totals = new Dictionary<int, float>();
+
+        foreach (var (unitId, actionDef, results) in actionRecord)
         {
-            Debug.LogError($"[Timeline] ApplyUnitAction: unit {unitId} not found!");
-            return;
+            if (!totals.ContainsKey(unitId)) totals[unitId] = 0f;
+
+            var unit = session.GetUnit(unitId);
+            for (int i = 0; i < actionDef.effects.Length && i < results.Count; i++)
+            {
+                var effect = actionDef.effects[i];
+                if (effect == null) continue;
+                totals[unitId] += effect.GetStepMultiplier(results[i], unit);
+            }
         }
 
-        session.ApplyMove(unitId, target);
-        bridge.MoveConfirmedClientRpc(unitId, target);
-
-        Vector2Int stepRange = speedConfig.GetStepRange(unit.Speed);
-        int newStep = unit.stepAlt ? stepRange.y : stepRange.x;
-        unit.stepAlt = !unit.stepAlt;
-        unit.CurrentStep = newStep;
-
-        readyUnitIds.Remove(unitId);
-
-        if (newStep == 0)
+        foreach (var kvp in totals)
         {
-            readyUnitIds.Add(unitId);
-            Debug.Log($"[Timeline] Unit {unitId} step reset to 0 — immediately re-ready.");
-        }
+            var unit = session.GetUnit(kvp.Key);
+            if (unit == null) continue;
 
-        bridge.BroadcastUnitStepResetClientRpc(unitId, newStep);
-        Debug.Log($"[Timeline] Unit {unitId} acted -> {target}, new step={newStep}");
+            Vector2Int stepRange = speedConfig.GetStepRange(unit.Speed);
+            float baseStep = unit.stepAlt ? stepRange.y : stepRange.x;
+            unit.stepAlt = !unit.stepAlt;
+
+            int newStep = Mathf.Max(0, Mathf.RoundToInt(baseStep * kvp.Value));
+            unit.CurrentStep = newStep;
+
+            if (newStep == 0)
+                readyUnitIds.Add(unit.Id);
+
+            Debug.Log($"[Timeline] Unit {unit.Id} step: baseStep={baseStep} x multiplier={kvp.Value} = {newStep}");
+        }
     }
 
     // -------------------------------------------------------
-    // Handlers (called by ServerController)
+    // Handler (called by ServerController)
     // -------------------------------------------------------
 
-    public void HandleActWaitDecision(ulong senderClientId, bool wantsToAct)
+    public void HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillcardId, int clientToken)
     {
-        if (State != ServerSessionState.DecisionWaiting)
+        int senderTeam = session.GetTeamNumberByClientId(senderClientId);
+        Debug.Log($"[Server] Received decision response: {senderClientId}-{unitId}-{target}-{decisionType}-{skillcardId}");
+        // Token mismatch — client is out of sync, resend without incrementing token
+        if (clientToken != Token)
         {
-            Debug.LogWarning($"[Timeline] ActWait received in wrong state ({State}). Ignored.");
-            return;
-        }
-        if (!waitingForDecision) return;
-
-        int senderTeam = session.GetTeamNumber(senderClientId);
-        if (senderTeam != activeDecisionTeam)
-        {
-            Debug.LogWarning($"[Timeline] Team {senderTeam} sent decision but team {activeDecisionTeam}'s turn. Ignored.");
+            Debug.LogWarning($"[Timeline] Client {senderClientId} token mismatch (client={clientToken} server={Token}) — resyncing.");
+            SendSnapshotToClient(senderClientId);
             return;
         }
 
-        pendingDecision = wantsToAct;
-        waitingForDecision = false;
-    }
-
-    public void HandleActionDecision(ulong senderClientId, int unitId, Vector3Int target)
-    {
-        if (State != ServerSessionState.ActionWaiting)
+        Debug.Log($"[Server] State={State} waitingForDecision={waitingForDecision}");
+        if (State != ServerSessionState.DecisionWaiting || !waitingForDecision)
         {
-            Debug.LogWarning($"[Timeline] Action received in wrong state ({State}). Ignored.");
-            return;
-        }
-        if (!waitingForAction) return;
-
-        int senderTeam = session.GetTeamNumber(senderClientId);
-        if (senderTeam != activeDecisionTeam)
-        {
-            Debug.LogWarning($"[Timeline] Team {senderTeam} sent action but team {activeDecisionTeam}'s turn. Ignored.");
+            Debug.LogWarning($"[Timeline] Decision received in wrong state ({State}) By client[{senderClientId}]-team[{senderTeam}] Ignored.");
+            SendSnapshotToClient(senderClientId);
             return;
         }
 
+        Debug.Log($"[Server] senderTeam={senderTeam} currentTeamTurn={session.CurrentTeamTurnId}");
+        if (senderTeam != session.CurrentTeamTurnId)
+        {
+            Debug.LogWarning($"[Timeline] Team {senderTeam} sent decision but team {session.CurrentTeamTurnId}'s turn. Ignored.");
+            SendSnapshotToClient(senderClientId);
+            return;
+        }
+
+        Debug.Log($"[Server] unitId={unitId}");
+        if (unitId == -1)
+        {
+            pendingDecision = null;
+            waitingForDecision = false;
+            Debug.Log($"Server authorized the wait decision By client[{senderClientId}]-team[{senderTeam}]");
+            return;
+        }
+
+        Debug.Log($"[Server] readyUnitIds=[{string.Join(",", readyUnitIds)}] contains {unitId}={readyUnitIds.Contains(unitId)}");
         if (!readyUnitIds.Contains(unitId))
         {
-            Debug.LogWarning($"[Timeline] Unit {unitId} not in ready list. Rejected.");
+            Debug.LogWarning($"[Server] Unit {unitId} not in readyUnitIds");
+            SendSnapshotToClient(senderClientId);
             return;
         }
+
+
+        Debug.Log("Validated decision, about to apply");
 
         var unit = session.GetUnit(unitId);
-        if (unit == null || unit.team != senderTeam)
-        {
-            Debug.LogWarning($"[Timeline] Unit {unitId} not owned by team {senderTeam}. Rejected.");
-            return;
-        }
+        Debug.Log($"[Server] unit={unit?.Id} unit.team={unit?.team} senderTeam={senderTeam}");
+        if (unit == null || unit.team != senderTeam) { Debug.LogWarning($"[Server] Unit null or wrong team"); return; }
 
         var moveResult = session.AuthorizeMove(senderClientId, unitId, target);
-        if (moveResult != ServerMatchSession.MoveResult.Ok)
-        {
-            Debug.LogWarning($"[Timeline] Move denied for unit {unitId}: {moveResult}");
-            BroadcastMidSnapshotWithDecision(senderTeam, -1, (int)actionWindow);
-            return;
-        }
+        Debug.Log($"[Server] moveResult={moveResult}");
+        if (moveResult != ServerMatchSession.MoveResult.Ok) { Debug.LogWarning($"[Server] Move denied: {moveResult}"); return; }
 
-        pendingAction = (unitId, target);
-        waitingForAction = false;
+        pendingDecision = (unitId, target, decisionType, skillcardId);
+        waitingForDecision = false;
+        Debug.Log($"[Server] Decision accepted: unit={unitId} target={target}");
     }
-
     // -------------------------------------------------------
     // Tick
     // -------------------------------------------------------
@@ -368,17 +479,12 @@ public class ServerTimelineManager : MonoBehaviour
                 readyUnitIds.Add(unit.Id);
                 anyNew = true;
             }
+            if (unit.CurrentStep > 0 && readyUnitIds.Contains(unit.Id))
+            {
+                readyUnitIds.Remove(unit.Id);
+            }
         }
         return anyNew;
-    }
-
-    List<int> GetReadyUnitIds()
-    {
-        var ready = new List<int>();
-        foreach (var unit in session.units)
-            if (unit.CurrentStep == 0)
-                ready.Add(unit.Id);
-        return ready;
     }
 
     bool TeamHasReady(int team)
@@ -391,16 +497,6 @@ public class ServerTimelineManager : MonoBehaviour
         return false;
     }
 
-    int GetFirstReadyUnitForTeam(int team)
-    {
-        foreach (int id in readyUnitIds)
-        {
-            var unit = session.GetUnit(id);
-            if (unit != null && unit.team == team) return id;
-        }
-        return -1;
-    }
-
     // -------------------------------------------------------
     // Broadcasts
     // -------------------------------------------------------
@@ -409,89 +505,94 @@ public class ServerTimelineManager : MonoBehaviour
     {
         bridge.BroadcastTimelineTickClientRpc(new TimelineData
         {
-            currentInstant   = currentInstant,
-            maxInstant       = maxInstant,
-            flag             = flag,
-            consecutiveWaits = consecutiveWaits,
-            isPaused         = State != ServerSessionState.Flowing,
-            readyUnitIds     = new List<int>(readyUnitIds),
+            currentInstant = currentInstant,
+            maxInstant = maxInstant,
+            flag = flagedTeamId,
+            isPaused = State != ServerSessionState.Flowing,
         });
     }
 
-    void BroadcastMidSnapshotWithDecision(int team, int actWaitDuration, int actionDuration)
+    private DecisionRequestData NullDecision;
+
+    /// <summary>
+    /// Builds snapshot and stores as LastSnapshot + clears LastResolve.
+    /// Use for decision snapshots where no resolve is needed.
+    /// </summary>
+    void BuildSnapshot()
     {
-        var snapshot = new SessionSnapshotData
-        {
-            Type              = SnapshotType.Mid,
-            MapId             = session.MapId,
-            Turn              = session.Turn,
-            CurrentPlayerTurn = session.CurrentPlayerTurn,
-            Teams             = session.teams,
-            Units             = session.GetAllUnits(),
-            Timeline          = new TimelineData
-            {
-                currentInstant   = currentInstant,
-                maxInstant       = maxInstant,
-                flag             = flag,
-                consecutiveWaits = consecutiveWaits,
-                isPaused         = true,
-                readyUnitIds     = new List<int>(readyUnitIds),
-            }
-        };
-
-        var decision = new DecisionRequestData
-        {
-            Instant         = currentInstant,
-            DecisionTeam    = team,
-            ActWaitDuration = actWaitDuration,
-            ActionDuration  = actionDuration,
-            OvertimeTeam0   = (int)overtimeRemaining[0],
-            OvertimeTeam1   = (int)overtimeRemaining[1],
-        };
-
-        bridge.BroadcastMidSnapshotWithDecisionClientRpc(snapshot, decision);
+        GetSetNewToken();
+        session.LastSnapshot = GetSnapshot();
+        session.LastResolve = default;
     }
 
-    void BroadcastFullSnapshot()
+    /// <summary>
+    /// Builds and returns snapshot without storing or touching LastSnapshot/LastResolve.
+    /// Use in resolve contexts where you need before/after snapshots separately.
+    /// </summary>
+    SessionSnapshotData GetSnapshot()
     {
-        bridge.BroadcastSnapshotClientRpc(new SessionSnapshotData
+        return new SessionSnapshotData
         {
-            Type              = SnapshotType.Full,
-            MapId             = session.MapId,
-            Turn              = session.Turn,
-            CurrentPlayerTurn = session.CurrentPlayerTurn,
-            Teams             = session.teams,
-            Units             = session.GetAllUnits(),
-            Timeline          = new TimelineData
+            MapId = session.MapId ?? string.Empty,
+            CurrentTeamTurn = session.CurrentTeamTurnId,
+            Teams = session.GetAllTeamData(),
+            Units = session.GetAllUnits(),
+            Timeline = new TimelineData
             {
-                currentInstant   = currentInstant,
-                maxInstant       = maxInstant,
-                flag             = flag,
-                consecutiveWaits = consecutiveWaits,
-                isPaused         = false,
-                readyUnitIds     = new List<int>(readyUnitIds),
+                currentInstant = currentInstant,
+                maxInstant = maxInstant,
+                flag = flagedTeamId,
+                isPaused = State != ServerSessionState.Flowing,
             }
-        });
+        };
     }
 
-    // -------------------------------------------------------
-    // Overtime
-    // -------------------------------------------------------
+    /// <summary>Send latest snapshot to a specific client — for initial state and resync.</summary>
+    public void SendSnapshotToClient(ulong clientId) => SendSnapshot(clientId);
 
-    void DrainOvertime(int team, float delta)
+    /// <summary>Send session.LastSnapshot to one specific client.</summary>
+    public void SendSnapshot(ulong clientId)
     {
-        overtimeRemaining[team] = Mathf.Max(0f, overtimeRemaining[team] - delta);
-        if (overtimeRemaining[team] <= 0f)
+        int team = session.GetTeamNumberByClientId(clientId);
+        if (team == -1)
         {
-            if (waitingForDecision) { pendingDecision = false; waitingForDecision = false; }
-            if (waitingForAction)   { waitingForAction = false; }
-            Debug.LogWarning($"[Timeline] Team {team} overtime exhausted — forcing resolution.");
+            Debug.Log($"[Timeline] SendSnapshot: client {clientId} has no team. Maybe this client is specating the match.");
         }
+        SecretData secret = session.GetSecretData(team);
+
+        ClientRpcParams rpcParams = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { clientId } }
+        };
+        var snapshotToSend = session.LastResolve.HasResolve ? session.LastSnapshot : GetSnapshot();
+        bridge.SendSnapshotToClientRpc(snapshotToSend, session.LastResolve, secret, BuildDecision(), Token, rpcParams);
     }
 
-    ulong GetClientIdForTeam(int team)
+    /// <summary>Broadcast session.LastSnapshot to all clients.</summary>
+    public void BroadcastSnapshot()
     {
-        if (team < 0 || team >= session.teams.Count) return 0;
-        return session.teams[team].clientId;
+        //broadcast to all connected clients (except self, server doesnt receive this)
+        foreach (var team in session.GetAllTeamData())
+            SendSnapshot(team.clientId);
+    }
+
+    DecisionRequestData BuildDecision()
+    {
+        List<TeamData> teams = session.GetAllTeamData();
+        return session.CurrentTeamTurnId == -1 ? NullDecision : new DecisionRequestData
+        {
+            Instant = currentInstant,
+            DecisionTeam = session.CurrentTeamTurnId,
+            WaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
+            Overtime = teams[session.CurrentTeamTurnId].Overtime
+        };
+    }
+
+    public int GetSetNewToken() => Token++;
+
+    ulong GetClientIdForTeam(int teamId)
+    {
+        if (teamId < 0 || teamId >= session.GetAllTeamData().Count) return 0;
+        return session.GetTeamDataByTeamId(teamId).clientId;
     }
 }

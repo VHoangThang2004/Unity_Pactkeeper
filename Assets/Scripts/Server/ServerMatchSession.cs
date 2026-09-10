@@ -1,11 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class ServerMatchSession : MonoBehaviour
 {
-    public int Turn;
-    public int CurrentPlayerTurn;
+    public int CurrentTeamTurnId = -1; // -1 : not a turn, time flowing, if a team's turn, this value equals to TeamData.teamId
     public GridMap Map { get; private set; }
     public string MapId { get; private set; }
     public GridMapAsset MapAsset { get; private set; }
@@ -17,8 +17,38 @@ public class ServerMatchSession : MonoBehaviour
     [SerializeField] private MapRegistry mapRegistry;
     [SerializeField] public UnitLibrary unitLibrary;
 
-    public List<TeamData> teams;
+    private List<TeamData> teams;
     public List<UnitData> units;
+    // Testing phase — hardcoded loadouts
+    // Backend phase: replace this with data received from backend
+    private List<TeamLoadout> loadouts = new List<TeamLoadout>
+    {
+        new TeamLoadout { teamId = 0, clientId = 0, unitUIds = new List<int> { 1, 2 } },
+        new TeamLoadout { teamId = 1, clientId = 0, unitUIds = new List<int> { 1, 2 } }
+    };
+
+    // Last sent state — always up to date, used for targeted sends and resync
+    public SessionSnapshotData LastSnapshot;
+    public ResolveData LastResolve;
+
+    // Secret data per team — never inside TeamData, never accidentally broadcast
+    private SecretData[] secretData = new SecretData[]
+{
+    new SecretData { Data = string.Empty },
+    new SecretData { Data = string.Empty }
+};
+
+    public SecretData GetSecretData(int team)
+    {
+        if (team < 0 || team >= secretData.Length) return default;
+        return secretData[team];
+    }
+
+    public void SetSecretData(int team, SecretData data)
+    {
+        if (team < 0 || team >= secretData.Length) return;
+        secretData[team] = data;
+    }
 
     // -------------------------------------------------------
     // Init
@@ -40,25 +70,28 @@ public class ServerMatchSession : MonoBehaviour
         Map.Init(MapAsset);
 
         unitLibrary.Init();
-        teams = new List<TeamData>();
-        units = new List<UnitData>();
         SetTeamExcludeServer();
         return true;
     }
 
     private void SetTeamExcludeServer()
     {
-        var ids = NetworkManager.Singleton.ConnectedClientsIds;
-        int teamNum = 0;
-        foreach (var id in ids)
+        teams = new List<TeamData>();
+        units = new List<UnitData>();
+
+        // Build TeamData from loadouts — clientId assigned from connected clients for now
+        var connectedIds = new List<ulong>(NetworkManager.Singleton.ConnectedClientsIds);
+        connectedIds.Remove(NetworkManager.Singleton.LocalClientId); // exclude server
+
+        for (int i = 0; i < loadouts.Count && i < connectedIds.Count; i++)
         {
-            Debug.Log($"[MatchSession] Connected client: {id}");
-            if (id != NetworkManager.Singleton.LocalClientId)
+            loadouts[i].clientId = connectedIds[i]; // testing: assign real clientId here
+            teams.Add(new TeamData
             {
-                teams.Add(new TeamData { teamId = teamNum, clientId = id, units = new List<UnitData>() });
-                teamNum++;
-            }
-            if (teamNum >= 2) return;
+                teamId = loadouts[i].teamId,
+                clientId = loadouts[i].clientId,
+                unitIds = new List<int>()
+            });
         }
     }
 
@@ -66,17 +99,46 @@ public class ServerMatchSession : MonoBehaviour
     // Team & Player Management
     // -------------------------------------------------------
 
-    public int GetTeamNumber(ulong clientId)
+    public int GetTeamNumberByClientId(ulong clientId)
     {
         return teams[0].clientId == clientId ? 0 :
                teams[1].clientId == clientId ? 1 : -1;
     }
 
-    public TeamData GetTeamData(int team)
+    public TeamData GetCurrentTurnTeamData()
     {
-        return teams[team];
+        return teams[0].teamId == CurrentTeamTurnId ? teams[0] :
+                teams[1].teamId == CurrentTeamTurnId ? teams[1] : null;
     }
 
+    public TeamData GetTeamDataByTeamId(int teamId)
+    {
+        return teams[0].teamId == teamId ? teams[0] :
+               teams[1].teamId == teamId ? teams[1] : null;
+    }
+    public TeamLoadout GetTeamLoadoutDataByTeamId(int teamId)
+    {
+        return loadouts[0].teamId == teamId ? loadouts[0] :
+               loadouts[1].teamId == teamId ? loadouts[1] : null;
+    }
+    public TeamData GetTeamDataByClientId(ulong clientId)
+    {
+        return teams[0].clientId == clientId ? teams[0] :
+               teams[1].clientId == clientId ? teams[1] : null;
+    }
+    public TeamLoadout GetTeamLoadoutDataByClientId(ulong clientId)
+    {
+        return loadouts[0].clientId == clientId ? loadouts[0] :
+               loadouts[1].clientId == clientId ? loadouts[1] : null;
+    }
+    public List<TeamData> GetAllTeamData()
+    {
+        return teams;
+    }
+    public int GetOtherTeamId(int currentTeamId)
+    {
+        return teams[0].teamId == currentTeamId ? teams[0].teamId : teams[1].teamId;
+    }
     // -------------------------------------------------------
     // Lookup
     // -------------------------------------------------------
@@ -118,7 +180,7 @@ public class ServerMatchSession : MonoBehaviour
         if (unit == null)
             return MoveResult.UnitNotFound;
 
-        int team = GetTeamNumber(clientId);
+        int team = GetTeamNumberByClientId(clientId);
         if (team == -1)
             return MoveResult.PlayerNotFound;
 
@@ -151,4 +213,5 @@ public class ServerMatchSession : MonoBehaviour
         if (unit == null) return;
         unit.CurrentCell = target;
     }
+
 }

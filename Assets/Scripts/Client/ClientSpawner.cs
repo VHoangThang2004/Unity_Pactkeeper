@@ -1,54 +1,98 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
+/// <summary>
+/// Pure unit sync worker. Called by ClientSyncMachine.
+/// No token awareness — SyncMachine handles that.
+/// Diffs scene units vs session units: spawns missing, removes stale, repositions existing.
+/// </summary>
 public class ClientSpawner : MonoBehaviour
 {
-    [SerializeField] private ClientController controller;
+    [Header("Refs")]
+    [SerializeField] private ClientMatchSession session;
+    [SerializeField] private ClientScene scene;
+    [SerializeField] private UnitLibrary unitLibrary;
+    [SerializeField] private UnitPrefabRegistry unitPrefabRegistry;
 
-    // Wired at runtime by ClientMapLoader
-    private Tilemap tilemap;
-
-    public void SetTilemap(Tilemap t)
+    /// <summary>
+    /// Called by ClientSyncMachine. Syncs scene units to session units, calls onComplete(success).
+    /// </summary>
+    public IEnumerator Sync(Action<bool> onComplete)
     {
-        tilemap = t;
-    }
-
-    public void SpawnUnit(UnitData unitData)
-    {
-        if (tilemap == null)
+        if (scene.movableTilemap == null)
         {
-            Debug.LogError("[ClientSpawner] Tilemap not set — map not loaded yet!");
-            return;
+            Debug.LogError("[ClientSpawner] Tilemap not ready!");
+            onComplete(false);
+            yield break;
         }
 
-        var prefab = controller.unitPrefabRegistry.Get(unitData.UId);
+        List<UnitData> sessionUnits = session.units;
+        List<ClientUnit> sceneUnits = scene.GetAllSceneUnits();
+        List<int> sessionUnitIds = session.GetAllUnitIds();
+
+        //delete all clientUnit that is not supposed to be in scene
+        foreach (ClientUnit cu in new List<ClientUnit>(sceneUnits))
+        {
+            if (!sessionUnitIds.Contains(cu.unitId))
+            {
+                scene.UnregisterUnit(cu);
+                Destroy(cu.gameObject);
+            }
+        }
+
+        foreach (var unitData in sessionUnits)
+        {
+            ClientUnit existing = scene.GetSceneUnitById(unitData.Id);
+            if (existing != null)
+            {
+                // //if the spawned unit at wrong position
+                // if (existing.unitId.CurrentCell != unitData.CurrentCell)
+                //     existing.SetPosition(scene.movableTilemap, unitData.CurrentCell);
+                // => above is truncated, because as unit data synced - unit will automatically sync to destination once
+            }
+            else
+            {
+                SpawnUnit(unitData);
+            }
+        }
+
+        Debug.Log($"[ClientSpawner] Units synced.");
+        onComplete(true);
+        yield break;
+    }
+
+    void SpawnUnit(UnitData unitData)
+    {
+        var prefab = unitPrefabRegistry.Get(unitData.UId);
         if (prefab == null)
         {
             Debug.LogError($"[ClientSpawner] No prefab for uId {unitData.UId}!");
             return;
         }
 
-        var def = controller.unitLibrary.Get(unitData.UId);
+        var def = unitLibrary.Get(unitData.UId);
         if (def == null)
         {
             Debug.LogError($"[ClientSpawner] No definition for uId {unitData.UId}!");
             return;
         }
 
-        Vector3 worldPos = tilemap.GetCellCenterWorld(unitData.CurrentCell);
+        var worldPos = scene.movableTilemap.GetCellCenterWorld(unitData.CurrentCell);
         var go = Instantiate(prefab, worldPos, Quaternion.identity);
         go.name = $"Unit_{unitData.Id}_{def.unitName}";
 
         var clientUnit = go.GetComponent<ClientUnit>();
         if (clientUnit == null)
         {
-            Debug.LogError($"[ClientSpawner] Prefab for uId {unitData.UId} has no ClientUnit component!");
+            Debug.LogError($"[ClientSpawner] Prefab for uId {unitData.UId} has no ClientUnit!");
             Destroy(go);
             return;
         }
 
-        clientUnit.Init(unitData);
-        controller.RegisterUnit(unitData.Id, clientUnit);
+        clientUnit.Init(unitData, session, scene);
+        scene.RegisterUnit(clientUnit);
 
         Debug.Log($"[ClientSpawner] Spawned unit {unitData.Id} ({def.unitName}) at {unitData.CurrentCell}");
     }

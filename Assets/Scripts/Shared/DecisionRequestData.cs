@@ -9,18 +9,14 @@ public struct DecisionRequestData : INetworkSerializable
 {
     public int Instant;          // which instant this decision belongs to
     public int DecisionTeam;     // which team is currently being asked (0 or 1)
-    public int ActWaitDuration;  // seconds remaining for act/wait decision (-1 if not in act/wait phase)
-    public int ActionDuration;   // seconds remaining for action decision (-1 if not in action phase)
-    public int OvertimeTeam0;    // remaining overtime seconds for team 0
-    public int OvertimeTeam1;    // remaining overtime seconds for team 1
+    public int WaitDuration;  // seconds remaining for act/wait decision
+    public int Overtime;    // remaining overtime seconds for current team
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref Instant);
         serializer.SerializeValue(ref DecisionTeam);
-        serializer.SerializeValue(ref ActWaitDuration);
-        serializer.SerializeValue(ref ActionDuration);
-        serializer.SerializeValue(ref OvertimeTeam0);
-        serializer.SerializeValue(ref OvertimeTeam1);
+        serializer.SerializeValue(ref WaitDuration);
+        serializer.SerializeValue(ref Overtime);
     }
 }

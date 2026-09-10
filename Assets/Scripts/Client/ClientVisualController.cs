@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,135 +7,236 @@ using UnityEngine.Tilemaps;
 public class ClientVisualController : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private ClientController controller;
+    [SerializeField] private ClientMatchSession session;
+    [SerializeField] private ClientScene scene;
+
+    [Header("Camera")]
+    public ClientCameraController cameraController;
+
+    [Header("Tile Assets")]
+    [SerializeField] private TileBase rangeTileBase;
+    [SerializeField] private TileBase enemyRangeTileBase;
 
     [Header("UI Elements")]
-    [SerializeField] public TextMeshProUGUI instantStatusText;
-    [SerializeField] public TextMeshProUGUI instantCounterText;
-    [SerializeField] public TextMeshProUGUI waitCounterText;
-
-    // Wired at runtime by ClientMapLoader
-    private Tilemap tilemap;
-    private Tilemap rangeTilemap;
-
-    public void SetMapRefs(Tilemap movable, Tilemap range)
-    {
-        tilemap = movable;
-        rangeTilemap = range;
-    }
+    [SerializeField] private TextMeshProUGUI instantStatusText;
+    [SerializeField] private TextMeshProUGUI instantCounterText;
+    [SerializeField] private TextMeshProUGUI waitCounterText;
+    [SerializeField] public GameObject waitButtonLayer;
+    [SerializeField] public GameObject cancelButtonLayer;
+    [SerializeField] public GameObject confirmButton;
 
     // -------------------------------------------------------
     // Range Display
     // -------------------------------------------------------
-
-    public void ShowRange(bool isOwned)
+    public void UpdateVisualOnStateChange()
     {
-        TileBase tileToUse = isOwned ? controller.rangeTileBase : controller.enemyRangeTileBase;
+        if (scene?.clientInteractionSystem?.stateMachine?.currentState is MovePreviewState)
+        {
+            bool isOwned = session.IsMyUnit(session.selectedUnitId);
+            ShowMoveRange(isOwned);
+            ShowWaitButton(false);
+            ShowCancelButton(true);
+            ShowConfirmButton(true);
+            ClearShadowBrute();
+            scene.visualController.HoverShadow();
+        }
+
+
+        if (scene?.clientInteractionSystem?.stateMachine?.currentState is SkillPreviewState)
+        {
+            // bool isOwned = session.IsMyUnit(session.selectedUnitId);
+            ShowSkillRange();
+            ShowWaitButton(false);
+            ShowCancelButton(true);
+            ShowConfirmButton(true);
+            ClearShadowBrute();
+            //hoverSkillEffect
+        }
+        if (scene?.clientInteractionSystem?.stateMachine?.currentState is UnitSelectedState)
+        {
+            bool isOwned = session.IsMyUnit(session.selectedUnitId);
+            ShowMoveRange(isOwned);
+            ShowWaitButton(false);
+            ShowCancelButton(true);
+            ShowConfirmButton(true);
+        }
+        if (scene?.clientInteractionSystem?.stateMachine?.currentState is NoneState)
+        {
+            ClearRange();
+            ClearShadowBrute();
+            ShowWaitButton(true);
+            ShowCancelButton(false);
+            ShowConfirmButton(false);
+        }
+        if (scene?.clientInteractionSystem?.stateMachine?.currentState is LockedInputState)
+        {
+            ClearRange();
+            ClearShadowBrute();
+            ShowWaitButton(false);
+            ShowCancelButton(false);
+            ShowConfirmButton(false);
+        }
+    }
+    private void ShowSkillRange()
+    {
+        Vector3Int startCell = session.GetUnitDataById(session.selectedUnitId).CurrentCell;
+        ActionDefinition skill = scene.actionLibrary.Get(session.currentSkillId);
+        if (skill == null) return;
+        if (scene.rangeTilemap == null || session.Map == null) return;
+
         ClearRange();
-        controller.ComputeRangeData(controller.selectedUnit);
-        foreach (var cell in controller.rangeTilesData)
-            rangeTilemap.SetTile(cell, tileToUse);
+
+        var alliedCells = new HashSet<Vector3Int>();
+        var enemyCells = new HashSet<Vector3Int>();
+
+        foreach (UnitData u in session.units)
+        {
+            if (session.IsMyUnit(u.Id))
+                alliedCells.Add(u.CurrentCell);
+            else
+                enemyCells.Add(u.CurrentCell);
+        }
+
+        var range = GridPathfinder.FloodFill(
+            session.Map,
+            startCell,
+            skill.range, // <- + unit skill range buff/debuff (in the future scales)
+            skill.targeting,
+            !skill.isUnblockable,
+            alliedCells,
+            enemyCells);
+
+        scene.SetRangeData(range); // set range data to unit, Interaction StateMachine will fetch from there
+
+        foreach (var cell in scene.rangeTilesData)
+            scene.rangeTilemap.SetTile(cell, rangeTileBase); // for now only show range of owned units skills.
+    }
+
+    private void ShowMoveRange(bool isOwned)
+    {
+        if (scene.rangeTilemap == null) return;
+
+        TileBase tile = isOwned ? rangeTileBase : enemyRangeTileBase;
+        ClearRange();
+        UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+        if (unit == null || session.Map == null) return;
+
+        var alliedCells = new HashSet<Vector3Int>();
+        var enemyCells = new HashSet<Vector3Int>();
+
+        foreach (UnitData u in session.units)
+        {
+            if (session.IsMyUnit(u.Id))
+                alliedCells.Add(u.CurrentCell);
+            else
+                enemyCells.Add(u.CurrentCell);
+        }
+
+
+        var range = GridPathfinder.FloodFill(
+            session.Map,
+            unit.CurrentCell,
+            unit.MoveRange,
+            GridPathfinder.FloodFillTarget.EmptyCell,
+            true,
+            alliedCells,
+            enemyCells);
+        scene.SetRangeData(range);
+
+        foreach (var cell in scene.rangeTilesData)
+            scene.rangeTilemap.SetTile(cell, tile);
     }
 
     public void ClearRange()
     {
-        rangeTilemap.ClearAllTiles();
-        controller.ClearRangeData();
+        if (scene.rangeTilemap != null)
+            scene.rangeTilemap.ClearAllTiles();
+        scene.ClearRangeData();
     }
 
     // -------------------------------------------------------
     // Hover Shadow
     // -------------------------------------------------------
+    private List<GameObject> activeShadows = new List<GameObject>();
 
-    public void HoverShadow(Tilemap tilemap, Vector3Int cell)
+    //special complex case: hover shadow depends heavily on InteractionState
+    public void HoverShadow()
     {
-        UnitData data = controller.selectedUnit.data;
-        ClientUnit clientUnit = controller.selectedUnit;
-        if (cell == data.CurrentCell)
-        {
-            ClearShadow();
-            return;
-        }
-        clientUnit.hoverUnit.SetActive(true);
-        clientUnit.hoverUnit.transform.position = tilemap.GetCellCenterWorld(cell);
-    }
+        Vector3Int cell = session.currentCellMouseOn;
+        UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+        if (unit == null || scene.movableTilemap == null) return;
+        if (cell == unit.CurrentCell) { ClearShadowBrute(); return; }
 
-    public void ClearShadow()
-    {
-        if (controller.selectedUnit != null)
-            controller.selectedUnit.hoverUnit.SetActive(false);
+        GameObject shadow = scene.GetSceneUnitById(session.selectedUnitId).hoverUnit;
+        shadow.SetActive(true);
+        if (!activeShadows.Contains(shadow))
+            activeShadows.Add(shadow);
+        shadow.transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
     }
-
-    public void ClearShadow(ClientUnit unit)
-    {
-        if (unit != null)
-            unit.hoverUnit.SetActive(false);
-    }
-
     public void ClearShadowBrute()
     {
-        foreach (var unit in controller.GetAllUnits())
-            unit.hoverUnit.SetActive(false);
+        foreach (var shadow in activeShadows)
+            if (shadow != null) shadow.SetActive(false);
+        activeShadows.Clear();
     }
 
-    // -------------------------------------------------------
-    // UI
-    // -------------------------------------------------------
-    public void ClearInstantStatus()
+    // UI element display
+    public void ShowWaitButton(bool isShown)
     {
-        if (instantStatusText == null) return;
-        instantStatusText.text = "Time is flowing...";
+        bool isMyTurn = session.IsMyTurn();
+        waitButtonLayer.SetActive(isMyTurn && isShown);
+    }
+    public void ShowCancelButton(bool isShown)
+    {
+        bool isMyTurn = session.IsMyTurn();
+        cancelButtonLayer.SetActive(isMyTurn && isShown);
+    }
+    public void ShowConfirmButton(bool isShown)
+    {
+        bool isMyTurn = session.IsMyTurn();
+        confirmButton.SetActive(isMyTurn && isShown);
     }
 
 
+    // -------------------------------------------------------
+    // UI Loop : Keep this rule so future scale will clean: These UI loops only updates - pass data from session to target UI elements, it does not control the isActive or anyfunction inside that may affect the timing of visibility. 
+    // ONLY DATA to the ONLY TARGET (or the data defines the target) In all case, the DATA PASSING MUST BE SIMPLE enough to be observed and has expected behaviour.
+    // -------------------------------------------------------
 
-    bool uiLoopEnded = false;
     public void StartUILoop() => StartCoroutine(UILoop());
-    public void EndUILoop() => uiLoopEnded = true;
+
+    bool turnFlip = false;
+
     IEnumerator UILoop()
     {
-        int c = 0;
-        uiLoopEnded = false;
-        controller.ActWaitDecisionCanvas.SetActive(false);
-        while (!uiLoopEnded)
+        while (true)
         {
-            if (controller.clientSession.Timeline.isPaused)
-            {
-                waitCounterText.gameObject.SetActive(true);
-                if (c >= 10)
-                {
-                    controller.clientSession.CountDownDurations();
-                    c = 0;
-                }
-                DecisionRequestData currentDecision = controller.clientSession.LastDecisionRequest;
-                waitCounterText.text = $"Timeleft : {controller.clientSession.waitDur} | Overtime : {controller.clientSession.overtimeDur}";
-                if (controller.clientSession.IsMyTurn())
-                {
-                    controller.ActWaitDecisionCanvas.SetActive(currentDecision.ActWaitDuration > 0);
-                    instantStatusText.text = currentDecision.ActionDuration > 0 ? "Act or Wait?" : "Waiting for action...";
-                }
-                else
-                {
-                    controller.ActWaitDecisionCanvas.SetActive(false);
-                    instantStatusText.text = currentDecision.ActionDuration > 0 ? "Enemy deciding..." : "Enemy deciding on action....";
-                }
+            if (waitCounterText != null)
+                waitCounterText.text = $"Time: {session.waitDur} | OT: {session.overtimeDur}";
 
+            bool isMyTurn = session.IsMyTurn();
+
+            if (instantCounterText != null)
+                instantCounterText.text = $"{session.Timeline.currentInstant}/{session.Timeline.maxInstant}";
+
+            if (!session.Timeline.isPaused)
+            {
+                if (instantStatusText != null)
+                    instantStatusText.text = "Time is flowing...";
             }
             else
             {
-                instantStatusText.text = "Time is flowing...";
-                waitCounterText.gameObject.SetActive(false);
-                controller.ActWaitDecisionCanvas.SetActive(false);
+                if (instantStatusText != null)
+                    instantStatusText.text = (session.LastResolve.HasResolve && session.SyncState == 0) ? "Resolving...." : (isMyTurn ? "Your turn to make decision..." : "Enemy deciding...");
             }
-            instantCounterText.text = $"{controller.clientSession.Timeline.currentInstant}/150";
-            c++;
+
+            if (turnFlip != isMyTurn)
+            {
+                UpdateVisualOnStateChange();
+                turnFlip = isMyTurn;
+            }
             yield return new WaitForSeconds(0.1f);
         }
-    }
-
-    public void DecidedActWait()
-    {
-        controller.ActWaitDecisionCanvas.SetActive(false);
     }
 
 }

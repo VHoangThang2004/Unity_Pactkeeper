@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class ServerSpawnManager : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class ServerSpawnManager : MonoBehaviour
     [SerializeField] private SpeedConfig speedConfig;
 
     [Header("Config")]
-    [SerializeField] private int defaultUId = 1;
+    //testing period only, future will have data from server backend to load team
+    // [SerializeField] private List<int> spawningUnitIds = new List<int>();
 
     private bool suppressSpawnRpcs = true;
     private int nextUnitId = 1;
@@ -21,16 +23,22 @@ public class ServerSpawnManager : MonoBehaviour
         return true;
     }
 
-    public bool SpawnTeam(int teamNumber)
+    public bool SpawnTeam(int teamId)
     {
         // Spawn point comes from GridMapAsset — no separate SpawnConfig needed
-        Vector2Int spawnPoint = session.MapAsset.GetSpawn(teamNumber);
 
-        UnitData unit = SpawnUnit(teamNumber, defaultUId, spawnPoint.x, spawnPoint.y);
-        if (unit.IsUnityNull())
+        int spawnPointer = 0;
+        foreach (int id in session.GetTeamLoadoutDataByTeamId(teamId).unitUIds)
         {
-            Debug.LogError($"[SpawnManager] Failed to spawn unit for team {teamNumber} at ({spawnPoint.x},{spawnPoint.y})!");
-            return false;
+            Vector2Int spawnPoint = session.MapAsset.GetSpawn(teamId, spawnPointer);
+
+            UnitData unit = SpawnUnit(teamId, id, spawnPoint.x, spawnPoint.y);
+            if (unit.IsUnityNull())
+            {
+                Debug.LogError($"[SpawnManager] Failed to spawn unit for team {teamId} at ({spawnPoint.x},{spawnPoint.y})!");
+                return false;
+            }
+            spawnPointer++;
         }
 
         suppressSpawnRpcs = false;
@@ -39,7 +47,7 @@ public class ServerSpawnManager : MonoBehaviour
 
     public UnitData SpawnUnit(int teamNumber, int uId, int worldX, int worldY)
     {
-        TeamData team = session.GetTeamData(teamNumber);
+        TeamData team = session.GetTeamDataByTeamId(teamNumber);
         if (team == null)
         {
             Debug.LogError($"[SpawnManager] SpawnUnit: Team {teamNumber} not found!");
@@ -63,17 +71,17 @@ public class ServerSpawnManager : MonoBehaviour
 
         var unit = new UnitData
         {
-            Id          = nextUnitId++,
-            UId         = uId,
-            team        = teamNumber,
+            Id = nextUnitId++,
+            UId = uId,
+            team = teamNumber,
             CurrentCell = new Vector3Int(worldX, worldY, 0),
-            MoveRange   = def.moveRange,
-            Speed       = def.speed,
+            MoveRange = def.moveRange,
+            Speed = def.speed,
             CurrentStep = stepRange.x,
-            stepAlt     = false,
+            stepAlt = false,
         };
 
-        team.units.Add(unit);
+        team.unitIds.Add(unit.Id);
         session.units.Add(unit);
 
         if (!suppressSpawnRpcs)

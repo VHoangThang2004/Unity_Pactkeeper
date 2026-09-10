@@ -1,65 +1,73 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Instantiates the map prefab from GridMapAsset and wires all references
-/// into ClientController and its subsystems via the MapPrefab component.
-/// Called by ClientController after the snapshot is received.
+/// Pure map loading worker. Called by ClientSyncMachine.
+/// No token awareness — SyncMachine handles that.
+/// Loads map prefab, wires ClientScene refs, signals completion.
 /// </summary>
 public class ClientMapLoader : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private ClientController controller;
-    [SerializeField] private ClientVisualController visualController;
+    [SerializeField] private ClientMatchSession session;
+    [SerializeField] private ClientScene scene;
     [SerializeField] private ClientInteractionSystem interactionSystem;
-    [SerializeField] private ClientSpawner spawner;
 
-    private GameObject spawnedMap;
+    private string loadedMapId = null;
+    private GameObject spawnedMap = null;
 
-    public bool LoadMap(GridMapAsset asset)
+    /// <summary>
+    /// Called by ClientSyncMachine. Loads map if changed, wires refs, calls onComplete(success).
+    /// </summary>
+    public IEnumerator Load(Action<bool> onComplete)
     {
-        if (asset == null)
+        string targetMapId = session.MapId;
+
+        // No map change needed
+        if (targetMapId == loadedMapId)
         {
-            Debug.LogError("[ClientMapLoader] GridMapAsset is null!");
-            return false;
+            onComplete(true);
+            yield break;
         }
 
-        if (asset.tilemapPrefab == null)
+        if (string.IsNullOrEmpty(targetMapId) || session.MapAsset == null)
         {
-            Debug.LogError($"[ClientMapLoader] GridMapAsset '{asset.name}' has no tilemapPrefab assigned!");
-            return false;
+            Debug.LogError("[ClientMapLoader] No map asset to load!");
+            onComplete(false);
+            yield break;
         }
 
-        // Destroy previous map if any (rematch / map change)
+        // Destroy previous
         if (spawnedMap != null)
+        {
             Destroy(spawnedMap);
+            scene.ClearMapRefs();
+            scene.ClearUnits();
+        }
 
-        // Instantiate prefab
-        spawnedMap = Instantiate(asset.tilemapPrefab, Vector3.zero, Quaternion.identity);
-        spawnedMap.name = $"Map_{asset.name}";
+        // Instantiate
+        spawnedMap      = Instantiate(session.MapAsset.tilemapPrefab, Vector3.zero, Quaternion.identity);
+        spawnedMap.name = $"Map_{session.MapAsset.name}";
 
-        // Get MapPrefab component — all refs are pre-wired on the prefab
         var mapPrefab = spawnedMap.GetComponent<MapPrefab>();
-        if (mapPrefab == null)
+        if (mapPrefab == null || mapPrefab.movableTilemap == null || mapPrefab.rangeTilemap == null)
         {
-            Debug.LogError("[ClientMapLoader] Instantiated prefab has no MapPrefab component!");
+            Debug.LogError("[ClientMapLoader] MapPrefab missing or incomplete!");
             Destroy(spawnedMap);
-            return false;
+            onComplete(false);
+            yield break;
         }
 
-        if (mapPrefab.movableTilemap == null || mapPrefab.rangeTilemap == null)
-        {
-            Debug.LogError("[ClientMapLoader] MapPrefab is missing tilemap references!");
-            Destroy(spawnedMap);
-            return false;
-        }
-
-        // Wire all subsystems
-        controller.SetMapRefs(mapPrefab.movableTilemap, mapPrefab.rangeTilemap, mapPrefab.highlighter);
-        visualController.SetMapRefs(mapPrefab.movableTilemap, mapPrefab.rangeTilemap);
+        // Wire scene refs
+        scene.SetMapRefs(mapPrefab.movableTilemap, mapPrefab.rangeTilemap, mapPrefab.highlighter);
         interactionSystem.SetTilemap(mapPrefab.movableTilemap);
-        spawner.SetTilemap(mapPrefab.movableTilemap);
+        interactionSystem.Init();
 
-        Debug.Log($"[ClientMapLoader] Map '{asset.name}' loaded and wired.");
-        return true;
+        loadedMapId = targetMapId;
+        Debug.Log($"[ClientMapLoader] Map '{loadedMapId}' loaded.");
+
+        onComplete(true);
+        yield break;
     }
 }

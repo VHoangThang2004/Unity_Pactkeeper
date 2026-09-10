@@ -2,82 +2,72 @@ using UnityEngine;
 
 public class UnitSelectedState : IInteractionState
 {
-    private readonly ClientController controller;
+    private readonly ClientMatchSession session;
+    private readonly ClientScene scene;
     private readonly InteractionStateMachine sm;
 
-    private ClientUnit selectedUnit;
-    private bool isOwned;
-
-    public UnitSelectedState(ClientController controller, InteractionStateMachine sm)
+    public UnitSelectedState(ClientMatchSession session, ClientScene scene, InteractionStateMachine sm)
     {
-        this.controller = controller;
+        this.session = session;
+        this.scene = scene;
         this.sm = sm;
+
     }
 
-    public void OnEnter(ClientUnit unit = null, Vector3Int? targetTile = null)
+    private int translator(int? num)
     {
-        controller.visualController.ClearShadowBrute();
-
-        selectedUnit = unit;
-        isOwned = controller.clientSession.IsMyUnit(unit.data.Id);
-
-        controller.SetSelectedUnit(selectedUnit);
-        controller.SetIsOwnedUnit(isOwned);
-
-        // ShowRange computes rangeTilesData and paints rangeTilemap
-        controller.visualController.ShowRange(isOwned);
-
-        controller.ActionMenu.ShowForUnit(unit);
-
-        Debug.Log($"[State] -> UnitSelected (unit {unit.data.Id}, owned={isOwned})");
+        if (num == null) return -1;
+        return (int)num;
     }
 
-    public void OnExit() { }
+    public void OnEnter(int? unitId = null, Vector3Int? targetTile = null, int? skillId = null)
+    {
+        session.selectedUnitId = translator(unitId);
+
+        scene.visualController.UpdateVisualOnStateChange();
+        Debug.Log($"[State] -> UnitSelected (unit {unitId}, owned={session.IsMyUnit(session.selectedUnitId)})");
+    }
+
+    public void OnExit() {}
 
     public void OnTileClick(Vector3Int cell)
     {
-        if (cell == selectedUnit.data.CurrentCell)
-        {
-            sm.GoToNone();
-            return;
-        }
+        if (cell == session.GetUnitDataById(session.selectedUnitId).CurrentCell) { sm.GoToNone(); return; }
 
-        var unitAtCell = controller.GetClientUnitAt(cell);
-        if (unitAtCell != null)
-        {
-            sm.GoToUnitSelected(unitAtCell);
-            return;
-        }
+        UnitData unitAtCell = session.GetUnitDataAt(cell);
+        if (unitAtCell != null) { sm.GoToUnitSelected(unitAtCell.Id); return; }
 
-        // Use rangeTilesData — not rangeTilemap
-        if (isOwned && controller.IsInRange(cell))
-        {
-            sm.GoToMovePreview(cell);
-            return;
-        }
+        if (session.IsMyUnit(session.selectedUnitId) && scene.IsInRange(cell)) { sm.GoToMovePreview(cell); return; }
 
         sm.GoToNone();
     }
 
     public void OnTileHover(Vector3Int cell)
     {
-        if (!isOwned) return;
+        if (!session.IsMyUnit(session.selectedUnitId)) return;
 
-        // Use rangeTilesData — not rangeTilemap
-        if (controller.IsInRange(cell))
-            controller.visualController.HoverShadow(controller.tilemap, cell);
+        if (scene.IsInRange(cell))
+            scene.visualController.HoverShadow();
         else
-            controller.visualController.ClearShadow();
+            scene.visualController.ClearShadowBrute();
     }
 
-    public void UseSkill(int skillId)
+    // -------------------------------------------------------
+    // Actions (called by UI buttons through interactInteractionStateMachine)
+    // -------------------------------------------------------
+    public void OnDecision(int skillCardId)
     {
-        controller.TryMoveAndSkill(selectedUnit.data.Id, selectedUnit.data.CurrentCell, skillId);
-        sm.GoToNone();
+        session.currentSkillId = skillCardId;
+        sm.GoToSkillPreview(skillCardId);
+    }
+    public void OnDecision()
+    {
+        // not used, just be here so doesnt appears as syntax error.
+        Debug.LogError("[SM- UnitSelectedState] Place should not be reached is reached.");
     }
 
     public void Cancel()
     {
-        sm.GoToUnitSelected(selectedUnit);
+        sm.GoToNone();
     }
 }

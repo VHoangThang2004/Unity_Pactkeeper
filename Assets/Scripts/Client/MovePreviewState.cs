@@ -2,51 +2,48 @@ using UnityEngine;
 
 public class MovePreviewState : IInteractionState
 {
-    private readonly ClientController controller;
+    private readonly ClientMatchSession session;
+    private readonly ClientScene scene;
     private readonly InteractionStateMachine sm;
 
-    private ClientUnit selectedUnit;
-    private Vector3Int targetTile;
-
-    public MovePreviewState(ClientController controller, InteractionStateMachine sm)
+    public MovePreviewState(ClientMatchSession session, ClientScene scene, InteractionStateMachine sm)
     {
-        this.controller = controller;
+        this.session = session;
+        this.scene = scene;
         this.sm = sm;
     }
 
-    public void OnEnter(ClientUnit unit = null, Vector3Int? targetTile = null)
+    public void OnEnter(int? unitId = null, Vector3Int? targetTile = null, int? skillId = null)
     {
-        selectedUnit = controller.selectedUnit;
-        this.targetTile = targetTile ?? selectedUnit.data.CurrentCell;
+        if (targetTile.HasValue)
+            session.currentPreviewCell = targetTile.Value;
 
-        controller.visualController.HoverShadow(controller.tilemap, this.targetTile);
-
-        Debug.Log($"[State] -> MovePreview (unit {selectedUnit.data.Id} -> {this.targetTile})");
+        scene.visualController.UpdateVisualOnStateChange();
+        Debug.Log($"[State] -> MovePreview (unit {session.selectedUnitId} at preview {session.currentPreviewCell})");
     }
 
-    public void OnExit() { }
-
-    public void OnTileClick(Vector3Int cell)
+    public void OnExit()
     {
-        if (cell == selectedUnit.data.CurrentCell)
-        {
-            sm.GoToNone();
-            return;
-        }
+        scene.visualController.ClearShadowBrute();
+        if (session.selectedUnitId != -1)
+            session.currentPreviewCell = session.GetUnitDataById(session.selectedUnitId).CurrentCell;
+    }
 
-        var unitAtCell = controller.GetClientUnitAt(cell);
-        if (unitAtCell != null)
-        {
-            sm.GoToUnitSelected(unitAtCell);
-            return;
-        }
+    public void OnTileClick(Vector3Int targetCell)
+    {
+        UnitData selectedUnit = session.GetUnitDataById(session.selectedUnitId);
+        if (selectedUnit == null) { sm.GoToNone(); return; }
 
-        // Use rangeTilesData — not rangeTilemap
-        if (controller.IsInRange(cell))
+        if (targetCell == selectedUnit.CurrentCell) { sm.GoToUnitSelected(session.selectedUnitId); return; }
+
+        var unitAtCell = scene.GetSceneUnitAt(targetCell);
+        if (unitAtCell != null) { sm.GoToUnitSelected(session.GetUnitDataAt(targetCell).Id); return; }
+
+        if (scene.IsInRange(targetCell))
         {
-            sm.GoToMovePreview(cell);
+            sm.GoToMovePreview(targetCell);
             return;
-        }
+        } //keep state, doesnt change state, keep it simple
 
         sm.GoToNone();
     }
@@ -54,23 +51,24 @@ public class MovePreviewState : IInteractionState
     public void OnTileHover(Vector3Int cell) { }
 
     // -------------------------------------------------------
-    // Actions (called by UI buttons)
+    // Actions (called by UI buttons through interactInteractionStateMachine)
     // -------------------------------------------------------
-
-    public void StandBy()
+    public void OnDecision()
     {
-        controller.SendActionDecision(selectedUnit.data.Id, targetTile); // for now it only moves (needs enum to decide between move/use any skill slot))
-        sm.GoToNone();
-    }
+        UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+        if (unit == null) return;
 
-    public void UseSkill(int skillId)
-    {
-        controller.TryMoveAndSkill(selectedUnit.data.Id, targetTile, skillId);
-        sm.GoToNone();
+
+        scene.bridge.SendDecisionServerRpc(
+            unit.Id,
+            session.currentPreviewCell,
+            DecisionType.ActivateAction,
+            1,
+            session.CurrentToken); // move to cell -> skill id = 1
     }
 
     public void Cancel()
     {
-        sm.GoToUnitSelected(selectedUnit);
+        sm.GoToUnitSelected(session.selectedUnitId);
     }
 }

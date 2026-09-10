@@ -4,99 +4,99 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+/// <summary>
+/// Visual representation of a unit. Wired to ClientMatchSession via Init().
+/// Auto-update loop watches own UnitData entry in session — reacts automatically
+/// when data changes (step count, position, hp, etc.). No one needs to call this directly.
+/// </summary>
 public class ClientUnit : MonoBehaviour
 {
-    [Header("Unit Data")]
-    public UnitData data;
-
+    [Header("Visuals")]
     [SerializeField] public GameObject hoverUnit;
     [SerializeField] public float moveDuration = 0.2f;
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator UnitAnimator;
+    [SerializeField] private Animator VFXAnimator;
+    [SerializeField] private TextMeshProUGUI stepText;
 
-    private bool isMoving = false;
+    [Header("InitRefs")] //put here so notice when something is not initiallized
+    private ClientMatchSession session;
+    private ClientScene scene;
 
     // -------------------------------------------------------
-    // Init
+    // Data
     // -------------------------------------------------------
 
-    public void Init(UnitData unitData)
+    public int unitId; // pointer to data in session
+
+    public bool isResolvingAnimation = false; // can be fetched from afar
+    public bool isAtBeforeSnapshot = false; // a mark that makes sure only 1 animation process is running for this unit only.
+
+    // -------------------------------------------------------
+    // Init (called by ClientSpawner)
+    // -------------------------------------------------------
+
+    public void Init(UnitData unitData, ClientMatchSession session, ClientScene scene)
     {
-        data = unitData;
-        UpdateStepUI(data.CurrentStep);
+        this.session = session;
+        this.scene = scene;
+        if (unitData == null)
+        {
+            Debug.LogError("NULL data at initallizer, FATAL ERROR!!!!");
+            return;
+        }
+        unitId = unitData.Id;
+        SyncPosition();
+
+        StartCoroutine(AutoUpdate());
     }
 
-    public void SetPosition(Tilemap tilemap, Vector3Int cell)
+    IEnumerator AutoUpdate()
     {
-        data.CurrentCell = cell;
-        transform.position = tilemap.GetCellCenterWorld(cell);
+        while (true)
+        {
+            //an exception, does not affect the other processes
+            UpdateStepUI();
+
+            yield return new WaitForSeconds(0.1f);
+            //emergency sync: stop all animations and starts brute sync
+            //sync only once, so that the resolve from other place can take place smoothly and uninterrupted
+            if (session.PendingToken != session.CurrentToken)
+            {
+                if (!isAtBeforeSnapshot)
+                {
+                    isAtBeforeSnapshot = true;
+                    SyncPosition(); // position is synced here because it only runs once (isBeforeSnapshot)
+                }
+                //ignores the part after if sync is not done (might be in resolving progress)
+                continue;
+            }
+
+            isAtBeforeSnapshot = false; //gets here means syncing completed, flip this back so it can be reused in future syncs
+            Vector3Int currentCellFromTransform = scene.movableTilemap.WorldToCell(transform.position);
+            if (currentCellFromTransform != session.GetUnitDataById(unitId).CurrentCell)
+            {
+                SyncPosition();
+            }
+
+        }
     }
 
     // -------------------------------------------------------
     // UI
     // -------------------------------------------------------
 
-    [SerializeField] private TextMeshProUGUI stepText;
-
-    public void UpdateStepUI(int step)
+    public void UpdateStepUI()
     {
         if (stepText == null) return;
-        stepText.text = step.ToString();
+        stepText.text = session.GetUnitDataById(unitId).CurrentStep.ToString();
     }
 
     // -------------------------------------------------------
-    // Movement (visual only — server already authorized)
+    // Position
     // -------------------------------------------------------
 
-    public void MoveTo(Tilemap tilemap, Vector3Int targetCell, ICollection<Vector3Int> occupiedCells = null)
+    public void SyncPosition()
     {
-        if (isMoving) return;
-        var path = GridPathfinder.FindPath(tilemap, data.CurrentCell, targetCell, occupiedCells);
-        if (path == null)
-        {
-            Debug.LogWarning($"[ClientUnit] No path found to {targetCell} — teleporting.");
-            data.CurrentCell = targetCell;
-            transform.position = tilemap.GetCellCenterWorld(targetCell);
-            return;
-        }
-        StartCoroutine(MovePathRoutine(tilemap, path));
-    }
-
-    IEnumerator MovePathRoutine(Tilemap tilemap, List<Vector3Int> path)
-    {
-        isMoving = true;
-
-        if (animator != null)
-        {
-            animator.SetBool("IsMoving", true);
-            animator.SetBool("IsIdling", false);
-        }
-
-        foreach (var cell in path)
-        {
-            Vector3 start = transform.position;
-            Vector3 end = tilemap.GetCellCenterWorld(cell);
-
-            if (animator != null)
-                animator.SetFloat("MoveX", end.x - start.x);
-
-            float t = 0f;
-            while (t < 1f)
-            {
-                t += Time.deltaTime / moveDuration;
-                transform.position = Vector3.Lerp(start, end, t);
-                yield return null;
-            }
-
-            transform.position = end;
-            data.CurrentCell = cell;
-        }
-
-        isMoving = false;
-
-        if (animator != null)
-        {
-            animator.SetBool("IsMoving", false);
-            animator.SetBool("IsIdling", true);
-        }
+        transform.position = scene.movableTilemap.GetCellCenterWorld(session.GetUnitDataById(unitId).CurrentCell);
     }
 }
