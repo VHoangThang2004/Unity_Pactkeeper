@@ -20,7 +20,21 @@ public class ServerSpawnManager : MonoBehaviour
     {
         if (!SpawnTeam(0)) return false;
         if (!SpawnTeam(1)) return false;
+        RecalculateAll();
+        suppressSpawnRpcs = false;
         return true;
+    }
+
+    public void RecalculateAll()
+    {
+        foreach (var unit in session.units)
+        {
+            var def = session.unitLibrary.Get(unit.UId);
+            if (def == null) continue;
+            var activeEffects = session.GetUnitActiveEffects(unit.Id);
+            UnitRecalculator.Recalculate(unit, def, activeEffects);
+        }
+        Debug.Log($"[SpawnManager] All units recalculated.");
     }
 
     public bool SpawnTeam(int teamId)
@@ -41,7 +55,6 @@ public class ServerSpawnManager : MonoBehaviour
             spawnPointer++;
         }
 
-        suppressSpawnRpcs = false;
         return true;
     }
 
@@ -73,14 +86,23 @@ public class ServerSpawnManager : MonoBehaviour
         {
             Id = nextUnitId++,
             UId = uId,
-            team = teamNumber,
             CurrentCell = new Vector3Int(worldX, worldY, 0),
-            MoveRange = def.moveRange,
-            Speed = def.speed,
+            // Live values
+            CurrentHP = def.maxHp,
+            CurrentSkillPoint = def.maxSkillPoint,
             CurrentStep = stepRange.x,
             stepAlt = false,
+            // Recalculated stats
+            Speed = def.speed,
+            MaxHP = def.maxHp,
+            MaxSkillPoint = def.maxSkillPoint,
+            DamageMultiplier = 1f,
+            DamageReduction = 1f,
+            // Skill slots
+            MovementSkillId = def.movementSkill != null ? def.movementSkill.skillId : -1,
         };
-
+        InitPassives(unit, def);
+        InitPatternOverrides(unit, def);
         team.unitIds.Add(unit.Id);
         session.units.Add(unit);
 
@@ -89,5 +111,45 @@ public class ServerSpawnManager : MonoBehaviour
 
         Debug.Log($"[SpawnManager] Spawned unit Id={unit.Id} uId={uId} team={teamNumber} speed={def.speed} step={unit.CurrentStep} at ({worldX},{worldY})");
         return unit;
+    }
+    void InitPassives(UnitData unit, UnitDefinition def)
+    {
+        if (def.passiveSkills == null)
+        {
+            unit.PassiveSkillIds = new int[0];
+            return;
+        }
+
+        var ids = new List<int>();
+        foreach (var skill in def.passiveSkills)
+        {
+            if (skill == null) continue;
+            ids.Add(skill.skillId);
+        }
+
+        unit.PassiveSkillIds = ids.ToArray();
+
+        Debug.Log($"[SpawnManager] Unit {unit.Id} — movementSkillId={unit.MovementSkillId} passives={unit.PassiveSkillIds.Length}");
+    }
+    void InitPatternOverrides(UnitData unit, UnitDefinition def)
+    {
+        var overrides = new List<SkillPatternOverride>();
+
+        // Movement skill pattern
+        if (def.movementSkill != null && def.movementSkill.targetPattern != null)
+        {
+            overrides.Add(new SkillPatternOverride
+            {
+                SkillId = def.movementSkill.skillId,
+                TargetPatternCells = def.movementSkill.targetPattern.cells,
+                AoEPatternCells = null
+            });
+        }
+
+        // Passive skills have no target/aoe patterns — skip
+
+        unit.PatternOverrides = overrides.ToArray();
+
+        Debug.Log($"[SpawnManager] Unit {unit.Id} — {overrides.Count} pattern overrides initialized.");
     }
 }

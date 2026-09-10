@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e962323c5677c4bbd16669fe018bb7, type: 3}
+  m_Name: Unit_001_Default
+  m_EditorClassIdentifier: Assembly-CSharp::UnitDefinition
+  uId: 1
+  unitName: DefaultRibbit
+  speed: 100
+  maxHp: 122
+  maxSkillPoint: 3
+  movementSkill: {fileID: 11400000, guid: 84b83b2e355c4bb47a8222fed0b0c2e6, type: 2}
+  passiveSkills: []

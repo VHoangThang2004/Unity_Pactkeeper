@@ -12,7 +12,6 @@ public class ClientMapLoader : MonoBehaviour
     [Header("Refs")]
     [SerializeField] private ClientMatchSession session;
     [SerializeField] private ClientScene scene;
-    [SerializeField] private ClientInteractionSystem interactionSystem;
 
     private string loadedMapId = null;
     private GameObject spawnedMap = null;
@@ -61,8 +60,7 @@ public class ClientMapLoader : MonoBehaviour
 
         // Wire scene refs
         scene.SetMapRefs(mapPrefab.movableTilemap, mapPrefab.rangeTilemap, mapPrefab.highlighter);
-        interactionSystem.SetTilemap(mapPrefab.movableTilemap);
-        interactionSystem.Init();
+        scene.clientInteractionSystem.Init();
 
         loadedMapId = targetMapId;
         Debug.Log($"[ClientMapLoader] Map '{loadedMapId}' loaded.");

@@ -49,16 +49,24 @@ public class ServerController : MonoBehaviour
         StartCoroutine(SessionGuard());
         StartCoroutine(InitSequence());
     }
+    private int clientsReceivedInit = 0;
+    private int requiredClients = 2;
+
+    [Header("Config")]
+    [SerializeField] private float postInitGracePeriod = 3f;
+    [SerializeField] private float clientInitTimeout = 30f;
 
     IEnumerator InitSequence()
     {
+        // 1. Init session
         while (!session.Init())
         {
-            Debug.LogError("[ServerController] MatchSession failed to initialize, retrying...");
+            Debug.LogError("[ServerController] MatchSession failed, retrying...");
             IncrementErrors();
             yield return new WaitForSeconds(1f);
         }
 
+        // 2. Spawn all units
         while (!spawnManager.spawnAll())
         {
             Debug.LogError("[ServerController] SpawnManager failed, retrying...");
@@ -66,29 +74,53 @@ public class ServerController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
-            HandleAllInitialStateRequest(clientId);
+        // 3. Init timeline — sets up records, inits skill library, transitions to Flowing
+        timeline.InitTimeline();
 
-        timeline.StartTimeline();
+        // 4. Recalculate all units — applies passive buffs onto stats
+        spawnManager.RecalculateAll();
 
-        Debug.Log("[ServerController] Server initialized successfully.");
-    }
+        // 5. Build full pack — snapshot captures fully buffed unit states
+        timeline.PackFinal();
 
-    // -------------------------------------------------------
-    // Handlers (called by SyncedBridge)
-    // -------------------------------------------------------
+        Debug.Log("[ServerController] Ready — waiting for clients to request init.");
 
-    /// <summary>
-    /// Single entry point for all client decisions.
-    /// unitId = -1 means wait. Valid unitId means act.
-    /// </summary>
-    public void HandleDecision(ulong clientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken)
-    {
-        timeline.HandleDecision(clientId, unitId, target, decisionType, skillCardId, clientToken);
+        // 6. Wait for all clients to request init
+        float elapsed = 0f;
+        while (clientsReceivedInit < requiredClients)
+        {
+            elapsed += Time.deltaTime;
+            if (elapsed >= clientInitTimeout)
+            {
+                Debug.LogError($"[ServerController] Timeout — only {clientsReceivedInit}/{requiredClients} clients. Shutting down.");
+                // TODO: signal backend
+                NetworkManager.Singleton.Shutdown();
+                Application.Quit();
+                yield break;
+            }
+            yield return null;
+        }
+
+        // 7. Grace period — let clients finish their own init
+        Debug.Log($"[ServerController] All clients initialized — grace period {postInitGracePeriod}s.");
+        yield return new WaitForSeconds(postInitGracePeriod);
+
+        // 8. Start timeline loop
+        Debug.Log("[ServerController] Starting timeline.");
+        timeline.RunTimeline();
     }
 
     public void HandleAllInitialStateRequest(ulong clientId)
     {
+        if (clientId == NetworkManager.Singleton.LocalClientId) return;
+
         timeline.SendSnapshotToClient(clientId);
+        clientsReceivedInit++;
+
+        Debug.Log($"[ServerController] Client {clientId} received init ({clientsReceivedInit}/{requiredClients})");
+    }
+    public void HandleDecision(ulong clientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken)
+    {
+        timeline.HandleDecision(clientId, unitId, target, decisionType, skillCardId, clientToken);
     }
 }

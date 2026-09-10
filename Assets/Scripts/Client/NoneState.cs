@@ -13,10 +13,12 @@ public class NoneState : IInteractionState
         this.sm = sm;
     }
 
-    public void OnEnter(int? unitId = null, Vector3Int? targetTile = null, int? skillId = null)
+    public void OnEnter(int? unitId = null, int? skillId = null)
     {
         session.selectedUnitId = -1;
         session.currentSkillId = -1;
+        session.currentPreviewCell = default;
+        session.ClearPatternData();
 
         scene.visualController.UpdateVisualOnStateChange();
         Debug.Log("[State] → None");
@@ -31,17 +33,16 @@ public class NoneState : IInteractionState
             sm.GoToUnitSelected(unit.unitId);
     }
 
-    public void OnTileHover(Vector3Int cell)
-    {
-    }
+    public void OnTileHover(Vector3Int cell) { }
+
     public void OnDecision()
     {
-        Debug.Log("What are you trying to decide at none state? You're not selecting a unit, not selecting a tile, nothing here for you to take an action");
-        return;
+        Debug.LogWarning("[NoneState] OnDecision called — nothing to decide.");
     }
+
     public void Cancel()
     {
-        Debug.LogError("WHY? We're in none state already, why, how can you still press cancel?");
+        Debug.LogWarning("[NoneState] Cancel called — already in none state.");
     }
 
     public void ApplyWait()

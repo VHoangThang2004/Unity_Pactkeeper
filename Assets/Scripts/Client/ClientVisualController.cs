@@ -16,6 +16,7 @@ public class ClientVisualController : MonoBehaviour
     [Header("Tile Assets")]
     [SerializeField] private TileBase rangeTileBase;
     [SerializeField] private TileBase enemyRangeTileBase;
+    [SerializeField] private TileBase aoePreviewTileBase;
 
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI instantStatusText;
@@ -26,41 +27,23 @@ public class ClientVisualController : MonoBehaviour
     [SerializeField] public GameObject confirmButton;
 
     // -------------------------------------------------------
-    // Range Display
+    // State Change — controls visibility of UI elements
     // -------------------------------------------------------
+
     public void UpdateVisualOnStateChange()
     {
-        if (scene?.clientInteractionSystem?.stateMachine?.currentState is MovePreviewState)
-        {
-            bool isOwned = session.IsMyUnit(session.selectedUnitId);
-            ShowMoveRange(isOwned);
-            ShowWaitButton(false);
-            ShowCancelButton(true);
-            ShowConfirmButton(true);
-            ClearShadowBrute();
-            scene.visualController.HoverShadow();
-        }
+        var state = scene?.clientInteractionSystem?.stateMachine?.currentState;
 
-
-        if (scene?.clientInteractionSystem?.stateMachine?.currentState is SkillPreviewState)
+        if (state is UnitSelectedState)
         {
-            // bool isOwned = session.IsMyUnit(session.selectedUnitId);
-            ShowSkillRange();
             ShowWaitButton(false);
             ShowCancelButton(true);
-            ShowConfirmButton(true);
-            ClearShadowBrute();
-            //hoverSkillEffect
+            // confirm only if target locked
+            UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+            bool targetLocked = unit != null && session.currentPreviewCell != unit.CurrentCell;
+            ShowConfirmButton(targetLocked);
         }
-        if (scene?.clientInteractionSystem?.stateMachine?.currentState is UnitSelectedState)
-        {
-            bool isOwned = session.IsMyUnit(session.selectedUnitId);
-            ShowMoveRange(isOwned);
-            ShowWaitButton(false);
-            ShowCancelButton(true);
-            ShowConfirmButton(true);
-        }
-        if (scene?.clientInteractionSystem?.stateMachine?.currentState is NoneState)
+        else if (state is NoneState)
         {
             ClearRange();
             ClearShadowBrute();
@@ -68,7 +51,7 @@ public class ClientVisualController : MonoBehaviour
             ShowCancelButton(false);
             ShowConfirmButton(false);
         }
-        if (scene?.clientInteractionSystem?.stateMachine?.currentState is LockedInputState)
+        else if (state is LockedInputState)
         {
             ClearRange();
             ClearShadowBrute();
@@ -77,102 +60,97 @@ public class ClientVisualController : MonoBehaviour
             ShowConfirmButton(false);
         }
     }
-    private void ShowSkillRange()
-    {
-        Vector3Int startCell = session.GetUnitDataById(session.selectedUnitId).CurrentCell;
-        ActionDefinition skill = scene.actionLibrary.Get(session.currentSkillId);
-        if (skill == null) return;
-        if (scene.rangeTilemap == null || session.Map == null) return;
 
-        ClearRange();
+    // -------------------------------------------------------
+    // Range Display — dumb redraw from session data
+    // -------------------------------------------------------
 
-        var alliedCells = new HashSet<Vector3Int>();
-        var enemyCells = new HashSet<Vector3Int>();
+    private HashSet<Vector3Int> lastDrawnTarget = new HashSet<Vector3Int>();
+    private HashSet<Vector3Int> lastDrawnAoE = new HashSet<Vector3Int>();
 
-        foreach (UnitData u in session.units)
-        {
-            if (session.IsMyUnit(u.Id))
-                alliedCells.Add(u.CurrentCell);
-            else
-                enemyCells.Add(u.CurrentCell);
-        }
-
-        var range = GridPathfinder.FloodFill(
-            session.Map,
-            startCell,
-            skill.range, // <- + unit skill range buff/debuff (in the future scales)
-            skill.targeting,
-            !skill.isUnblockable,
-            alliedCells,
-            enemyCells);
-
-        scene.SetRangeData(range); // set range data to unit, Interaction StateMachine will fetch from there
-
-        foreach (var cell in scene.rangeTilesData)
-            scene.rangeTilemap.SetTile(cell, rangeTileBase); // for now only show range of owned units skills.
-    }
-
-    private void ShowMoveRange(bool isOwned)
+    private void RedrawRange(bool isOwned)
     {
         if (scene.rangeTilemap == null) return;
 
-        TileBase tile = isOwned ? rangeTileBase : enemyRangeTileBase;
-        ClearRange();
-        UnitData unit = session.GetUnitDataById(session.selectedUnitId);
-        if (unit == null || session.Map == null) return;
+        // Filter target cells by skill targeting rule
+        var newTarget = new HashSet<Vector3Int>();
+        SkillDefinition skill = scene.skillLibrary.Get(session.currentSkillId);
+        int myTeam = session.GetMyTeam();
 
-        var alliedCells = new HashSet<Vector3Int>();
-        var enemyCells = new HashSet<Vector3Int>();
-
-        foreach (UnitData u in session.units)
+        foreach (var cell in new HashSet<Vector3Int>(session.CurrentTargetPatternCells))
         {
-            if (session.IsMyUnit(u.Id))
-                alliedCells.Add(u.CurrentCell);
-            else
-                enemyCells.Add(u.CurrentCell);
+            var unitAtCell = session.GetUnitDataAt(cell);
+            bool include = skill == null || skill.targeting switch
+            {
+                TargetFilter.EmptyCell => unitAtCell == null,
+                TargetFilter.EnemyUnit => unitAtCell != null && session.GetTeamIdByUnitId(unitAtCell.Id) != myTeam,
+                TargetFilter.AllyUnit => unitAtCell != null && session.GetTeamIdByUnitId(unitAtCell.Id) == myTeam,
+                TargetFilter.UnitCell => unitAtCell != null,
+                TargetFilter.AnyCell => true,
+                _ => true
+            };
+            if (include) newTarget.Add(cell);
+            else session.CurrentTargetPatternCells.Remove(cell);
         }
 
+        var newAoE = new HashSet<Vector3Int>(session.CurrentAoECells);
 
-        var range = GridPathfinder.FloodFill(
-            session.Map,
-            unit.CurrentCell,
-            unit.MoveRange,
-            GridPathfinder.FloodFillTarget.EmptyCell,
-            true,
-            alliedCells,
-            enemyCells);
-        scene.SetRangeData(range);
+        if (newTarget.SetEquals(lastDrawnTarget) && newAoE.SetEquals(lastDrawnAoE)) return;
 
-        foreach (var cell in scene.rangeTilesData)
+        lastDrawnTarget = newTarget;
+        lastDrawnAoE = newAoE;
+
+        scene.rangeTilemap.ClearAllTiles();
+
+        TileBase tile = isOwned ? rangeTileBase : enemyRangeTileBase;
+        foreach (var cell in newTarget)
             scene.rangeTilemap.SetTile(cell, tile);
-    }
 
+        TileBase aoeTile = aoePreviewTileBase != null ? aoePreviewTileBase : enemyRangeTileBase;
+        foreach (var cell in newAoE)
+            scene.rangeTilemap.SetTile(cell, aoeTile);
+
+        scene.SetRangeData(newTarget);
+    }
     public void ClearRange()
     {
         if (scene.rangeTilemap != null)
             scene.rangeTilemap.ClearAllTiles();
         scene.ClearRangeData();
+        lastDrawnTarget.Clear();
+        lastDrawnAoE.Clear();
     }
 
     // -------------------------------------------------------
     // Hover Shadow
     // -------------------------------------------------------
+
     private List<GameObject> activeShadows = new List<GameObject>();
 
-    //special complex case: hover shadow depends heavily on InteractionState
     public void HoverShadow()
     {
-        Vector3Int cell = session.currentCellMouseOn;
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
         if (unit == null || scene.movableTilemap == null) return;
+
+        var sceneUnit = scene.GetSceneUnitById(session.selectedUnitId);
+        if (sceneUnit == null || sceneUnit.hoverUnit == null) return;
+
+        Vector3Int cell = session.isTargetLocked
+            ? session.currentPreviewCell
+            : session.currentCellMouseOn;
+
         if (cell == unit.CurrentCell) { ClearShadowBrute(); return; }
 
-        GameObject shadow = scene.GetSceneUnitById(session.selectedUnitId).hoverUnit;
+        if (!session.CurrentTargetPatternCells.Contains(cell) && !session.isTargetLocked)
+        { ClearShadowBrute(); return; }
+
+        GameObject shadow = sceneUnit.hoverUnit;
         shadow.SetActive(true);
         if (!activeShadows.Contains(shadow))
             activeShadows.Add(shadow);
         shadow.transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
     }
+
     public void ClearShadowBrute()
     {
         foreach (var shadow in activeShadows)
@@ -180,63 +158,77 @@ public class ClientVisualController : MonoBehaviour
         activeShadows.Clear();
     }
 
-    // UI element display
+    // -------------------------------------------------------
+    // Button Visibility
+    // -------------------------------------------------------
+
     public void ShowWaitButton(bool isShown)
     {
-        bool isMyTurn = session.IsMyTurn();
-        waitButtonLayer.SetActive(isMyTurn && isShown);
+        waitButtonLayer.SetActive(session.IsMyTurn() && isShown);
     }
+
     public void ShowCancelButton(bool isShown)
     {
-        bool isMyTurn = session.IsMyTurn();
-        cancelButtonLayer.SetActive(isMyTurn && isShown);
+        cancelButtonLayer.SetActive(session.IsMyTurn() && isShown);
     }
+
     public void ShowConfirmButton(bool isShown)
     {
-        bool isMyTurn = session.IsMyTurn();
-        confirmButton.SetActive(isMyTurn && isShown);
+        confirmButton.SetActive(session.IsMyTurn() && isShown);
     }
 
-
     // -------------------------------------------------------
-    // UI Loop : Keep this rule so future scale will clean: These UI loops only updates - pass data from session to target UI elements, it does not control the isActive or anyfunction inside that may affect the timing of visibility. 
-    // ONLY DATA to the ONLY TARGET (or the data defines the target) In all case, the DATA PASSING MUST BE SIMPLE enough to be observed and has expected behaviour.
+    // UI Loop — data only, dumb updates every tick
     // -------------------------------------------------------
 
     public void StartUILoop() => StartCoroutine(UILoop());
 
-    bool turnFlip = false;
+    private bool turnFlip = false;
 
     IEnumerator UILoop()
     {
         while (true)
         {
+            // Timeline counters
             if (waitCounterText != null)
                 waitCounterText.text = $"Time: {session.waitDur} | OT: {session.overtimeDur}";
-
-            bool isMyTurn = session.IsMyTurn();
 
             if (instantCounterText != null)
                 instantCounterText.text = $"{session.Timeline.currentInstant}/{session.Timeline.maxInstant}";
 
-            if (!session.Timeline.isPaused)
+            // Status text
+            if (instantStatusText != null)
             {
-                if (instantStatusText != null)
+                if (!session.Timeline.isPaused)
                     instantStatusText.text = "Time is flowing...";
-            }
-            else
-            {
-                if (instantStatusText != null)
-                    instantStatusText.text = (session.LastResolve.HasResolve && session.SyncState == 0) ? "Resolving...." : (isMyTurn ? "Your turn to make decision..." : "Enemy deciding...");
+                else if (session.LastResolve.HasResolve && session.SyncState != 0)
+                    instantStatusText.text = "Resolving....";
+                else
+                    instantStatusText.text = session.IsMyTurn() ? "Your turn to decide..." : "Enemy deciding...";
             }
 
+            // Turn flip — update button visibility on turn change
+            bool isMyTurn = session.IsMyTurn();
             if (turnFlip != isMyTurn)
             {
                 UpdateVisualOnStateChange();
                 turnFlip = isMyTurn;
             }
+
+            // Range + shadow — redraw every tick if unit selected
+            if (scene?.clientInteractionSystem?.stateMachine?.currentState is UnitSelectedState)
+            {
+                bool isOwned = session.IsMyUnit(session.selectedUnitId);
+                RedrawRange(isOwned);
+                HoverShadow();
+
+                // Update confirm button based on target lock
+                UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+                bool targetLocked = unit != null && session.currentPreviewCell != unit.CurrentCell;
+                ShowConfirmButton(targetLocked);
+            }
+
             yield return new WaitForSeconds(0.1f);
         }
     }
-
 }

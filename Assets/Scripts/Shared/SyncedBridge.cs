@@ -45,9 +45,9 @@ public class SyncedBridge : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SendSnapshotToClientRpc(SessionSnapshotData snapshot, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token, ClientRpcParams clientRpcParams = default)
+    public void SendSnapshotToClientRpc(SessionSnapshotData before, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token, ClientRpcParams clientRpcParams = default)
     {
         if (client == null) return;
-        client.OnSnapshotReceived(snapshot, resolve, secret, decision, token);
+        client.OnSnapshotReceived(before, resolve, secret, decision, token);
     }
 }

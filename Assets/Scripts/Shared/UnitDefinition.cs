@@ -7,10 +7,17 @@ public class UnitDefinition : ScriptableObject
     public int uId;
     public string unitName;
 
-    [Header("Stats")]
-    public int moveRange;
-    public int speed; 
+    [Header("Base Stats")]
+    public int speed;
+    public int maxHp;
+    public int maxSkillPoint;
 
-    // Future: public int hp, armor, ap...
-    // Future: public SkillDefinition[] skills;
+    [Header("Skills")]
+    public SkillDefinition movementSkill;
+    public SkillDefinition[] passiveSkills;
+
+    // Future:
+    // public SkillDefinition weaponSkill;
+    // public SkillDefinition classSkill;
+    // public SkillDefinition[] activeSkills;
 }

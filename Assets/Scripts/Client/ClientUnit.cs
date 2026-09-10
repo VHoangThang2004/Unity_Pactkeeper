@@ -13,7 +13,6 @@ public class ClientUnit : MonoBehaviour
 {
     [Header("Visuals")]
     [SerializeField] public GameObject hoverUnit;
-    [SerializeField] public float moveDuration = 0.2f;
     [SerializeField] private Animator UnitAnimator;
     [SerializeField] private Animator VFXAnimator;
     [SerializeField] private TextMeshProUGUI stepText;
@@ -45,7 +44,7 @@ public class ClientUnit : MonoBehaviour
             return;
         }
         unitId = unitData.Id;
-        SyncPosition();
+        SyncPositionToCurrentSession();
 
         StartCoroutine(AutoUpdate());
     }
@@ -65,7 +64,7 @@ public class ClientUnit : MonoBehaviour
                 if (!isAtBeforeSnapshot)
                 {
                     isAtBeforeSnapshot = true;
-                    SyncPosition(); // position is synced here because it only runs once (isBeforeSnapshot)
+                    SyncPositionToCurrentSession(); // position is synced here because it only runs once (isBeforeSnapshot)
                 }
                 //ignores the part after if sync is not done (might be in resolving progress)
                 continue;
@@ -75,7 +74,7 @@ public class ClientUnit : MonoBehaviour
             Vector3Int currentCellFromTransform = scene.movableTilemap.WorldToCell(transform.position);
             if (currentCellFromTransform != session.GetUnitDataById(unitId).CurrentCell)
             {
-                SyncPosition();
+                SyncPositionToCurrentSession();
             }
 
         }
@@ -95,8 +94,12 @@ public class ClientUnit : MonoBehaviour
     // Position
     // -------------------------------------------------------
 
-    public void SyncPosition()
+    public void SyncPositionToCurrentSession()
     {
         transform.position = scene.movableTilemap.GetCellCenterWorld(session.GetUnitDataById(unitId).CurrentCell);
+    }
+    public void SyncPositionToTarget(Vector3Int cell)
+    {
+        transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
     }
 }

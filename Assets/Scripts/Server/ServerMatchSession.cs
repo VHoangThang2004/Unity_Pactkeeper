@@ -16,6 +16,20 @@ public class ServerMatchSession : MonoBehaviour
     [Header("Data")]
     [SerializeField] private MapRegistry mapRegistry;
     [SerializeField] public UnitLibrary unitLibrary;
+    [SerializeField] public SkillLibrary skillLibrary;
+    [SerializeField] public ServerEffectRegistry effectRegistry;
+    public List<EffectBase> GlobalActiveEffects { get; set; } = new List<EffectBase>(); public int[] GlobalActiveEffectIds = new int[0];
+    private Dictionary<int, List<EffectBase>> unitActiveEffects = new Dictionary<int, List<EffectBase>>();
+
+    public List<EffectBase> GetUnitActiveEffects(int unitId)
+    {
+        if (!unitActiveEffects.TryGetValue(unitId, out var list))
+        {
+            list = new List<EffectBase>();
+            unitActiveEffects[unitId] = list;
+        }
+        return list;
+    }
 
     private List<TeamData> teams;
     public List<UnitData> units;
@@ -30,6 +44,7 @@ public class ServerMatchSession : MonoBehaviour
     // Last sent state — always up to date, used for targeted sends and resync
     public SessionSnapshotData LastSnapshot;
     public ResolveData LastResolve;
+    public DecisionRequestData LastDecision;
 
     // Secret data per team — never inside TeamData, never accidentally broadcast
     private SecretData[] secretData = new SecretData[]
@@ -49,6 +64,14 @@ public class ServerMatchSession : MonoBehaviour
         if (team < 0 || team >= secretData.Length) return;
         secretData[team] = data;
     }
+    // -------------------------------------------------------
+    // Timeline State (written by TimelineManager, readable by anyone)
+    // -------------------------------------------------------
+    public ServerSessionState TimelineState { get; set; } = ServerSessionState.None;
+    public int CurrentInstant { get; set; } = 0;
+    public int FlaggedTeamId { get; set; } = 0;
+    public List<int> ReadyUnitIds { get; set; } = new List<int>();
+
 
     // -------------------------------------------------------
     // Init
@@ -70,6 +93,7 @@ public class ServerMatchSession : MonoBehaviour
         Map.Init(MapAsset);
 
         unitLibrary.Init();
+        effectRegistry.Init();
         SetTeamExcludeServer();
         return true;
     }
@@ -137,15 +161,59 @@ public class ServerMatchSession : MonoBehaviour
     }
     public int GetOtherTeamId(int currentTeamId)
     {
-        return teams[0].teamId == currentTeamId ? teams[0].teamId : teams[1].teamId;
+        return teams[0].teamId == currentTeamId ? teams[1].teamId : teams[0].teamId;
     }
     // -------------------------------------------------------
     // Lookup
     // -------------------------------------------------------
+    public void AddGlobalEffect(EffectBase effect)
+    {
+        GlobalActiveEffects.Add(effect);
+        SyncGlobalEffectIds();
+    }
+
+    public void RemoveGlobalEffect(EffectBase effect)
+    {
+        GlobalActiveEffects.Remove(effect);
+        SyncGlobalEffectIds();
+    }
+
+    void SyncGlobalEffectIds()
+    {
+        var ids = new List<int>();
+        foreach (var effect in GlobalActiveEffects)
+            ids.Add(effect.effectId);
+        GlobalActiveEffectIds = ids.ToArray();
+    }
+    public int GetTeamIdByUnitId(int unitId)
+    {
+        foreach (var team in teams)
+            if (team.unitIds.Contains(unitId)) return team.teamId;
+        return -1;
+    }
+
+    public TeamData GetTeamByUnitId(int unitId)
+    {
+        return teams.Find(t => t.unitIds.Contains(unitId));
+    }
 
     public UnitData GetUnit(int instanceId)
     {
         return units.Find(u => u.Id == instanceId);
+    }
+    public UnitData GetUnitAt(Vector3Int cell)
+    {
+        return units.Find(u => u.CurrentCell == cell);
+    }
+    public List<UnitData> GetUnitsAt(List<Vector3Int> cells)
+    {
+        var result = new List<UnitData>();
+        foreach (var cell in cells)
+        {
+            var unit = GetUnitAt(cell);
+            if (unit != null) result.Add(unit);
+        }
+        return result;
     }
 
     public List<UnitData> GetAllUnits()
@@ -168,50 +236,61 @@ public class ServerMatchSession : MonoBehaviour
         return occupied;
     }
 
-    // -------------------------------------------------------
-    // Movement Authorization
-    // -------------------------------------------------------
-
-    public enum MoveResult { Ok, NotYourUnit, OutOfRange, NotWalkable, UnitNotFound, PlayerNotFound, CellOccupied, NoPath }
-
-    public MoveResult AuthorizeMove(ulong clientId, int unitId, Vector3Int target)
-    {
-        var unit = GetUnit(unitId);
-        if (unit == null)
-            return MoveResult.UnitNotFound;
-
-        int team = GetTeamNumberByClientId(clientId);
-        if (team == -1)
-            return MoveResult.PlayerNotFound;
-
-        if (unit.team != team)
-            return MoveResult.NotYourUnit;
-
-        if (!Map.IsWalkable(target.x, target.y))
-            return MoveResult.NotWalkable;
-
-        var occupiedCells = GetOccupiedCells(unitId);
-
-        if (occupiedCells.Contains(target))
-            return MoveResult.CellOccupied;
-
-        // Pathfind using GridMap directly — no prefab, no Tilemap needed
-        var path = GridPathfinder.FindPath(Map, unit.CurrentCell, target, occupiedCells);
-
-        if (path == null)
-            return MoveResult.NoPath;
-
-        if (path.Count > unit.MoveRange)
-            return MoveResult.OutOfRange;
-
-        return MoveResult.Ok;
-    }
-
     public void ApplyMove(int unitId, Vector3Int target)
     {
         var unit = GetUnit(unitId);
         if (unit == null) return;
         unit.CurrentCell = target;
+    }
+
+
+    // -------------------------------------------------------
+    // Skill usage
+    // -------------------------------------------------------
+
+    public bool CanUseSkill(int unitId, int skillId, SkillDefinition skill)
+    {
+        var unit = GetUnit(unitId);
+        if (unit == null) return false;
+
+        foreach (var usage in unit.SkillUsages)
+        {
+            if (usage.SkillId != skillId) continue;
+            if (skill.useLimitPerInstant != -1 && usage.UsageThisInstant >= skill.useLimitPerInstant) return false;
+            if (skill.useLimitTotal != -1 && usage.UsageTotal >= skill.useLimitTotal) return false;
+            return true;
+        }
+        return true; // no usage record = never used = allowed
+    }
+
+    public void RecordSkillUsage(int unitId, int skillId)
+    {
+        var unit = GetUnit(unitId);
+        if (unit == null) return;
+
+        for (int i = 0; i < unit.SkillUsages.Length; i++)
+        {
+            if (unit.SkillUsages[i].SkillId == skillId)
+            {
+                unit.SkillUsages[i].UsageThisInstant++;
+                unit.SkillUsages[i].UsageTotal++;
+                return;
+            }
+        }
+
+        // First time using this skill — add new entry
+        var list = new List<SkillUsageData>(unit.SkillUsages)
+    {
+        new SkillUsageData { SkillId = skillId, UsageThisInstant = 1, UsageTotal = 1 }
+    };
+        unit.SkillUsages = list.ToArray();
+    }
+
+    public void ResetInstantSkillUsage()
+    {
+        foreach (var unit in units)
+            for (int i = 0; i < unit.SkillUsages.Length; i++)
+                unit.SkillUsages[i].UsageThisInstant = 0;
     }
 
 }

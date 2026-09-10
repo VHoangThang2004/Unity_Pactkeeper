@@ -3,64 +3,112 @@ using Unity.Netcode;
 
 public struct SessionSnapshotData : INetworkSerializable
 {
+    // Presence flags — false = field not populated, skip on apply
+    public bool HasMapId;
+    public bool HasCurrentTeamTurn;
+    public bool HasTeams;
+    public bool HasUnits;
+    public bool HasTimeline;
+
+    // Data fields
     public string MapId;
     public int CurrentTeamTurn;
     public List<TeamData> Teams;
     public List<UnitData> Units;
     public TimelineData Timeline;
-    // Token removed — lives on the RPC call itself, not inside snapshot data
+
+    public static SessionSnapshotData Partial(List<UnitData> changedUnits)
+    {
+        return new SessionSnapshotData
+        {
+            HasUnits = true,
+            Units = changedUnits
+        };
+    }
+
+    public static SessionSnapshotData Full(string mapId, int teamTurn, List<TeamData> teams, List<UnitData> units, TimelineData timeline)
+    {
+        return new SessionSnapshotData
+        {
+            HasMapId = true,
+            HasCurrentTeamTurn = true,
+            HasTeams = true,
+            HasUnits = true,
+            HasTimeline = true,
+            MapId = mapId,
+            CurrentTeamTurn = teamTurn,
+            Teams = teams,
+            Units = units,
+            Timeline = timeline
+        };
+    }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
-        if (!serializer.IsReader)
-            MapId = MapId ?? string.Empty;
-        serializer.SerializeValue(ref MapId);
-        serializer.SerializeValue(ref CurrentTeamTurn);
+        serializer.SerializeValue(ref HasMapId);
+        serializer.SerializeValue(ref HasCurrentTeamTurn);
+        serializer.SerializeValue(ref HasTeams);
+        serializer.SerializeValue(ref HasUnits);
+        serializer.SerializeValue(ref HasTimeline);
 
-        // Teams
-        if (serializer.IsReader)
+        if (HasMapId)
         {
-            int count = 0;
-            serializer.SerializeValue(ref count);
-            Teams = new List<TeamData>(count);
-            for (int i = 0; i < count; i++)
-            {
-                var team = new TeamData();
-                team.NetworkSerialize(serializer);
-                Teams.Add(team);
-            }
+            if (!serializer.IsReader) MapId = MapId ?? string.Empty;
+            serializer.SerializeValue(ref MapId);
         }
-        else
+
+        if (HasCurrentTeamTurn)
+            serializer.SerializeValue(ref CurrentTeamTurn);
+
+        if (HasTeams)
         {
-            int count = Teams?.Count ?? 0;
-            serializer.SerializeValue(ref count);
-            if (Teams != null)
-                foreach (var team in Teams)
+            if (serializer.IsReader)
+            {
+                int count = 0;
+                serializer.SerializeValue(ref count);
+                Teams = new List<TeamData>(count);
+                for (int i = 0; i < count; i++)
+                {
+                    var team = new TeamData();
                     team.NetworkSerialize(serializer);
-        }
-
-        // Units
-        if (serializer.IsReader)
-        {
-            int count = 0;
-            serializer.SerializeValue(ref count);
-            Units = new List<UnitData>(count);
-            for (int i = 0; i < count; i++)
+                    Teams.Add(team);
+                }
+            }
+            else
             {
-                var unit = new UnitData();
-                unit.NetworkSerialize(serializer);
-                Units.Add(unit);
+                int count = Teams?.Count ?? 0;
+                serializer.SerializeValue(ref count);
+                if (Teams != null)
+                    foreach (var team in Teams)
+                        team.NetworkSerialize(serializer);
             }
         }
-        else
+
+        if (HasUnits)
         {
-            int count = Units?.Count ?? 0;
-            serializer.SerializeValue(ref count);
-            if (Units != null)
-                foreach (var unit in Units)
+            if (serializer.IsReader)
+            {
+                int count = 0;
+                serializer.SerializeValue(ref count);
+                Units = new List<UnitData>(count);
+                for (int i = 0; i < count; i++)
+                {
+                    var unit = new UnitData();
                     unit.NetworkSerialize(serializer);
+                    Units.Add(unit);
+                }
+            }
+            else
+            {
+                int count = Units?.Count ?? 0;
+                serializer.SerializeValue(ref count);
+                if (Units != null)
+                    foreach (var unit in Units)
+                        unit.NetworkSerialize(serializer);
+            }
         }
 
-        Timeline.NetworkSerialize(serializer);
+        if (HasTimeline)
+            Timeline.NetworkSerialize(serializer);
     }
 }

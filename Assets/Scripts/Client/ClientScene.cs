@@ -23,9 +23,10 @@ public class ClientScene : MonoBehaviour
     public ClientCameraController cameraController;
     public ClientSyncMachine syncMachine;
 
-    [SerializeField] public ActionLibrary actionLibrary;
+    [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
     [SerializeField] public UnitLibrary unitLibrary;
+    [SerializeField] public ClientEffectRegistry effectRegistry;
 
     // -------------------------------------------------------
     // Map Refs (wired by ClientMapLoader at runtime)

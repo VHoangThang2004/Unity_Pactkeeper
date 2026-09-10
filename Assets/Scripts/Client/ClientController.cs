@@ -95,8 +95,9 @@ public class ClientController : MonoBehaviour
         {
             scene.unitLibrary.Init();
             scene.unitPrefabRegistry.Init(scene.unitLibrary);
-            scene.actionLibrary.Init();
+            scene.skillLibrary.Init();
             session.mapRegistry.Init();
+            scene.effectRegistry.Init();
             return true;
         }
         catch (System.Exception e)
@@ -110,7 +111,7 @@ public class ClientController : MonoBehaviour
     // -------------------------------------------------------
 
     public void TryDecision(int unitId, Vector3Int target, DecisionType type, int skillId)
-        => bridge.SendDecisionServerRpc(unitId, target, type, skillId, session.CurrentToken);
+        => bridge.SendDecisionServerRpc(unitId, target, type, skillId, session.PendingToken);
 
     // -------------------------------------------------------
     // Bridge -> Client (from SyncedBridge RPCs)

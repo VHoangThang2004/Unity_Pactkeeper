@@ -12,13 +12,6 @@ public class ClientInteractionSystem : MonoBehaviour
     public InteractionStateMachine stateMachine;
     // this state machine will affect most of the visible of UI elements to control the input & flow of UI for inputs. One of the main-most important state machine beside sync-machine
 
-    private Tilemap tilemap;
-
-    public void SetTilemap(Tilemap t)
-    {
-        tilemap = t;
-    }
-
     // -------------------------------------------------------
     // Init (called by ClientMapLoader after map is loaded)
     // -------------------------------------------------------
@@ -75,14 +68,14 @@ public class ClientInteractionSystem : MonoBehaviour
 
     public void HandleTileHover()
     {
-        if (tilemap == null) return;
+        if (scene.movableTilemap == null) return;
 
         Vector3 worldPos = scene.cam.ScreenToWorldPoint(scene.input.MouseScreenPosition);
         worldPos.z = 0;
 
-        session.currentCellMouseOn = tilemap.WorldToCell(worldPos);
+        session.currentCellMouseOn = scene.movableTilemap.WorldToCell(worldPos);
 
-        if (!tilemap.HasTile(session.currentCellMouseOn))
+        if (!scene.movableTilemap.HasTile(session.currentCellMouseOn))
         {
             if (scene.hoverHighlight != null && scene.hoverHighlight.activeSelf)
                 scene.hoverHighlight.SetActive(false);
@@ -91,7 +84,7 @@ public class ClientInteractionSystem : MonoBehaviour
         }
 
         session.isOnCell = true;
-        Vector3 center = tilemap.GetCellCenterWorld(session.currentCellMouseOn);
+        Vector3 center = scene.movableTilemap.GetCellCenterWorld(session.currentCellMouseOn);
 
         if (scene.hoverHighlight != null && !scene.hoverHighlight.activeSelf)
             scene.hoverHighlight.SetActive(true);
@@ -121,7 +114,7 @@ public class ClientInteractionSystem : MonoBehaviour
     }
     public void HandleDecisionMoveOrSkill()
     {
-        if (stateMachine.currentState is SkillPreviewState or MovePreviewState)
+        if (stateMachine.currentState is UnitSelectedState)
         {
             stateMachine?.OnDecision();
             return;
