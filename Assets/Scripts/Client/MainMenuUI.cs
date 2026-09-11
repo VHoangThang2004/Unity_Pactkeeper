@@ -1,7 +1,18 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using TMPro;
+
+// Library of UGS
+using Unity.Services.Core;
+using Unity.Services.Authentication;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public class MainMenuUI : MonoBehaviour
 {
@@ -16,6 +27,9 @@ public class MainMenuUI : MonoBehaviour
 
     void Start()
     {
+        transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        statusText.text = "Đang kết nối tới Unity Services...";
+
         if (NetworkManager.Singleton == null)
         {
             Debug.LogError("❌ NetworkManager missing!");
@@ -56,7 +70,7 @@ public class MainMenuUI : MonoBehaviour
 
         if (string.IsNullOrEmpty(ip))
         {
-            statusText.text = "IP is empty!";
+           statusText.text = "IP is empty!";
             return;
         }
 
