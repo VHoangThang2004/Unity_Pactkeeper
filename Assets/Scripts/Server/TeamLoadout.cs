@@ -11,7 +11,15 @@ using UnityEngine;
 public class TeamLoadout
 {
     public int teamId;
-    public ulong clientId;          // player's network id — known from backend in real case
-    public List<int> unitUIds;      // unit definition ids to spawn (uId references UnitDefinition)
-    //expected to have more data (about unit configurations, skins data, effect skins data, etc. all related to each player preference setting from lobby)
+    public ulong clientId;
+    public List<PlayerUnitLoadout> units;
 }
+
+public class PlayerUnitLoadout
+{
+    public int uId;
+    public int movementSkillId;
+    public int weaponSkillId;
+    public int classSkillId;
+    public int equipmentSkillId; // shoes etc.
+}   

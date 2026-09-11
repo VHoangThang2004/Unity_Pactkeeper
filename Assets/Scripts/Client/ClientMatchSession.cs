@@ -68,12 +68,12 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
     // Pattern Preview Data — written by interaction states, read by visual controller
     // -------------------------------------------------------
-    public List<Vector3Int> CurrentTargetPatternCells { get; set; } = new List<Vector3Int>();
+    public List<Vector3Int> CurrentTargetableCells { get; set; } = new List<Vector3Int>();
     public List<Vector3Int> CurrentAoECells { get; set; } = new List<Vector3Int>();
 
     public void ClearPatternData()
     {
-        CurrentTargetPatternCells.Clear();
+        CurrentTargetableCells.Clear();
         CurrentAoECells.Clear();
         isTargetLocked = false;
     }
@@ -230,6 +230,12 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
 
     public UnitData GetUnitDataById(int unitId) => units.Find(u => u.Id == unitId);
+
+    public bool isUnitReady(int unitId)
+    {
+        UnitData unit = GetUnitDataById(unitId);
+        return unit != null ? unit.CurrentStep == 0 : false;
+    }
     public List<int> GetAllUnitIds()
     {
         var res = new List<int>();

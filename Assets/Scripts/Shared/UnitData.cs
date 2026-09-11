@@ -21,14 +21,16 @@ public class UnitData : INetworkSerializable
     public float DamageMultiplier = 1f;
     public float DamageReduction = 1f;
 
-    // Skill slots — mirrors UnitDefinition
+    // Skill slots
     public int MovementSkillId = -1;
-    public int[] PassiveSkillIds = new int[0];
+    public int WeaponSkillId = -1;
+    public int ClassSkillId = -1;
+    public int EquipmentSkillId = -1;
+    public int PassiveSkillId = -1;
     public SkillUsageData[] SkillUsages = new SkillUsageData[0];
 
-
-    // Pattern overrides — only when passive modified a pattern
-    public SkillPatternOverride[] PatternOverrides = new SkillPatternOverride[0];
+    // Skill patterns — translated + filtered by server, ready for client to read
+    public CurrentPatterns[] SkillPatterns = new CurrentPatterns[0];
 
     // Active effect IDs — client displays buff/debuff icons
     public int[] ActiveEffectIds = new int[0];
@@ -47,45 +49,34 @@ public class UnitData : INetworkSerializable
         serializer.SerializeValue(ref DamageMultiplier);
         serializer.SerializeValue(ref DamageReduction);
         serializer.SerializeValue(ref MovementSkillId);
+        serializer.SerializeValue(ref WeaponSkillId);
+        serializer.SerializeValue(ref ClassSkillId);
+        serializer.SerializeValue(ref EquipmentSkillId);
+        serializer.SerializeValue(ref PassiveSkillId);
 
+        // SkillPatterns
         if (serializer.IsReader)
         {
             int count = 0;
             serializer.SerializeValue(ref count);
-            PassiveSkillIds = new int[count];
-            for (int i = 0; i < count; i++)
-                serializer.SerializeValue(ref PassiveSkillIds[i]);
-        }
-        else
-        {
-            int count = PassiveSkillIds?.Length ?? 0;
-            serializer.SerializeValue(ref count);
-            if (PassiveSkillIds != null)
-                for (int i = 0; i < count; i++)
-                    serializer.SerializeValue(ref PassiveSkillIds[i]);
-        }
-
-        if (serializer.IsReader)
-        {
-            int count = 0;
-            serializer.SerializeValue(ref count);
-            PatternOverrides = new SkillPatternOverride[count];
+            SkillPatterns = new CurrentPatterns[count];
             for (int i = 0; i < count; i++)
             {
-                var o = new SkillPatternOverride();
+                var o = new CurrentPatterns();
                 o.NetworkSerialize(serializer);
-                PatternOverrides[i] = o;
+                SkillPatterns[i] = o;
             }
         }
         else
         {
-            int count = PatternOverrides?.Length ?? 0;
+            int count = SkillPatterns?.Length ?? 0;
             serializer.SerializeValue(ref count);
-            if (PatternOverrides != null)
+            if (SkillPatterns != null)
                 for (int i = 0; i < count; i++)
-                    PatternOverrides[i].NetworkSerialize(serializer);
+                    SkillPatterns[i].NetworkSerialize(serializer);
         }
 
+        // ActiveEffectIds
         if (serializer.IsReader)
         {
             int count = 0;
@@ -102,7 +93,7 @@ public class UnitData : INetworkSerializable
                 for (int i = 0; i < count; i++)
                     serializer.SerializeValue(ref ActiveEffectIds[i]);
         }
-        
+
         // SkillUsages
         if (serializer.IsReader)
         {
@@ -124,7 +115,6 @@ public class UnitData : INetworkSerializable
                 for (int i = 0; i < count; i++)
                     SkillUsages[i].NetworkSerialize(serializer);
         }
-
 
         // stepAlt — SERVER ONLY, never serialized
     }

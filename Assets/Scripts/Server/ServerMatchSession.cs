@@ -36,11 +36,18 @@ public class ServerMatchSession : MonoBehaviour
     // Testing phase — hardcoded loadouts
     // Backend phase: replace this with data received from backend
     private List<TeamLoadout> loadouts = new List<TeamLoadout>
+{
+    new TeamLoadout { teamId = 0, clientId = 0, units = new List<PlayerUnitLoadout>
     {
-        new TeamLoadout { teamId = 0, clientId = 0, unitUIds = new List<int> { 1, 2 } },
-        new TeamLoadout { teamId = 1, clientId = 0, unitUIds = new List<int> { 1, 2 } }
-    };
-
+        new PlayerUnitLoadout { uId = 1, movementSkillId = 1, weaponSkillId = 3, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 2, movementSkillId = 2, weaponSkillId = 4, classSkillId = -1, equipmentSkillId = -1 },
+    }},
+    new TeamLoadout { teamId = 1, clientId = 0, units = new List<PlayerUnitLoadout>
+    {
+        new PlayerUnitLoadout { uId = 1, movementSkillId = 1, weaponSkillId = 3, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 2, movementSkillId = 2, weaponSkillId = 4, classSkillId = -1, equipmentSkillId = -1 },
+    }},
+};
     // Last sent state — always up to date, used for targeted sends and resync
     public SessionSnapshotData LastSnapshot;
     public ResolveData LastResolve;
@@ -93,6 +100,7 @@ public class ServerMatchSession : MonoBehaviour
         Map.Init(MapAsset);
 
         unitLibrary.Init();
+        skillLibrary.Init();
         effectRegistry.Init();
         SetTeamExcludeServer();
         return true;

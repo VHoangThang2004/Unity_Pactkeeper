@@ -39,9 +39,7 @@ public class ClientVisualController : MonoBehaviour
             ShowWaitButton(false);
             ShowCancelButton(true);
             // confirm only if target locked
-            UnitData unit = session.GetUnitDataById(session.selectedUnitId);
-            bool targetLocked = unit != null && session.currentPreviewCell != unit.CurrentCell;
-            ShowConfirmButton(targetLocked);
+            ShowConfirmButton(session.isTargetLocked);
         }
         else if (state is NoneState)
         {
@@ -72,27 +70,7 @@ public class ClientVisualController : MonoBehaviour
     {
         if (scene.rangeTilemap == null) return;
 
-        // Filter target cells by skill targeting rule
-        var newTarget = new HashSet<Vector3Int>();
-        SkillDefinition skill = scene.skillLibrary.Get(session.currentSkillId);
-        int myTeam = session.GetMyTeam();
-
-        foreach (var cell in new HashSet<Vector3Int>(session.CurrentTargetPatternCells))
-        {
-            var unitAtCell = session.GetUnitDataAt(cell);
-            bool include = skill == null || skill.targeting switch
-            {
-                TargetFilter.EmptyCell => unitAtCell == null,
-                TargetFilter.EnemyUnit => unitAtCell != null && session.GetTeamIdByUnitId(unitAtCell.Id) != myTeam,
-                TargetFilter.AllyUnit => unitAtCell != null && session.GetTeamIdByUnitId(unitAtCell.Id) == myTeam,
-                TargetFilter.UnitCell => unitAtCell != null,
-                TargetFilter.AnyCell => true,
-                _ => true
-            };
-            if (include) newTarget.Add(cell);
-            else session.CurrentTargetPatternCells.Remove(cell);
-        }
-
+        var newTarget = new HashSet<Vector3Int>(session.CurrentTargetableCells);
         var newAoE = new HashSet<Vector3Int>(session.CurrentAoECells);
 
         if (newTarget.SetEquals(lastDrawnTarget) && newAoE.SetEquals(lastDrawnAoE)) return;
@@ -102,7 +80,7 @@ public class ClientVisualController : MonoBehaviour
 
         scene.rangeTilemap.ClearAllTiles();
 
-        TileBase tile = isOwned ? rangeTileBase : enemyRangeTileBase;
+        TileBase tile = (isOwned && session.isUnitReady(session.selectedUnitId)) ? rangeTileBase : enemyRangeTileBase;
         foreach (var cell in newTarget)
             scene.rangeTilemap.SetTile(cell, tile);
 
@@ -141,8 +119,11 @@ public class ClientVisualController : MonoBehaviour
 
         if (cell == unit.CurrentCell) { ClearShadowBrute(); return; }
 
-        if (!session.CurrentTargetPatternCells.Contains(cell) && !session.isTargetLocked)
-        { ClearShadowBrute(); return; }
+        if (!session.CurrentTargetableCells.Contains(cell))
+        {
+            ClearShadowBrute();
+            return;
+        }
 
         GameObject shadow = sceneUnit.hoverUnit;
         shadow.SetActive(true);
@@ -150,7 +131,6 @@ public class ClientVisualController : MonoBehaviour
             activeShadows.Add(shadow);
         shadow.transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
     }
-
     public void ClearShadowBrute()
     {
         foreach (var shadow in activeShadows)
@@ -224,7 +204,7 @@ public class ClientVisualController : MonoBehaviour
 
                 // Update confirm button based on target lock
                 UnitData unit = session.GetUnitDataById(session.selectedUnitId);
-                bool targetLocked = unit != null && session.currentPreviewCell != unit.CurrentCell;
+                bool targetLocked = session.isTargetLocked;
                 ShowConfirmButton(targetLocked);
             }
 

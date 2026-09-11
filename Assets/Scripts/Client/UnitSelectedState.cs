@@ -17,14 +17,12 @@ public class UnitSelectedState : IInteractionState
     public void OnEnter(int? unitId = null, int? skillId = null)
     {
         session.selectedUnitId = unitId ?? -1;
-        session.currentPreviewCell = session.GetUnitDataById(session.selectedUnitId)?.CurrentCell ?? default;
 
-        // Default to movement skill
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
         session.currentSkillId = unit?.MovementSkillId ?? -1;
+        session.isTargetLocked = false;
 
-        CalculateTargetPattern();
-        session.CurrentAoECells.Clear();
+        ReloadTargetPattern();
 
         Debug.Log($"[State] → UnitSelected (unit {unitId} owned={session.IsMyUnit(session.selectedUnitId)})");
     }
@@ -40,15 +38,8 @@ public class UnitSelectedState : IInteractionState
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
         if (unit == null) { sm.GoToNone(); return; }
 
-        // Click own unit — deselect
-        if (cell == unit.CurrentCell) { sm.GoToNone(); return; }
-
-        // Click another unit — switch selection
-        UnitData unitAtCell = session.GetUnitDataAt(cell);
-        if (unitAtCell != null) { sm.GoToUnitSelected(unitAtCell.Id); return; }
-
-        // Click valid target cell — lock preview cell
-        if (session.IsMyUnit(session.selectedUnitId) && session.CurrentTargetPatternCells.Contains(cell))
+        // Click valid target cell first — takes priority over unit switching
+        if (session.IsMyUnit(session.selectedUnitId) && session.CurrentTargetableCells.Contains(cell))
         {
             session.currentPreviewCell = cell;
             session.isTargetLocked = true;
@@ -57,6 +48,15 @@ public class UnitSelectedState : IInteractionState
             return;
         }
 
+        // Click another unit — switch selection
+        UnitData unitAtCell = session.GetUnitDataAt(cell);
+        if (unitAtCell != null && unitAtCell.Id != session.selectedUnitId)
+        {
+            sm.GoToUnitSelected(unitAtCell.Id);
+            return;
+        }
+
+        // Click own unit or invalid cell — deselect
         sm.GoToNone();
     }
 
@@ -67,10 +67,10 @@ public class UnitSelectedState : IInteractionState
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
         if (unit == null) return;
 
-        // Only preview AoE if not locked to a cell
-        if (session.currentPreviewCell == unit.CurrentCell)
+        // Only preview AoE if not locked
+        if (!session.isTargetLocked)
         {
-            if (session.CurrentTargetPatternCells.Contains(cell))
+            if (session.CurrentTargetableCells.Contains(cell))
                 CalculateAoECells(cell);
             else
                 session.CurrentAoECells.Clear();
@@ -81,11 +81,10 @@ public class UnitSelectedState : IInteractionState
 
     public void OnDecision()
     {
-        // Confirm — send decision with current preview cell
         int unitId = session.selectedUnitId;
         int skillId = session.currentSkillId;
         if (unitId == -1 || skillId == -1) return;
-        if (session.currentPreviewCell == session.GetUnitDataById(unitId)?.CurrentCell) return; // no target selected
+        if (!session.isTargetLocked) return;
 
         scene.bridge.SendDecisionServerRpc(
             unitId,
@@ -97,11 +96,11 @@ public class UnitSelectedState : IInteractionState
 
     public void OnDecision(int skillId)
     {
-        // Switch skill
         session.currentSkillId = skillId;
-        session.currentPreviewCell = session.GetUnitDataById(session.selectedUnitId)?.CurrentCell ?? default;
-        CalculateTargetPattern();
-        session.CurrentAoECells.Clear();
+        session.isTargetLocked = false;
+        session.currentPreviewCell = default;
+        ReloadTargetPattern();
+        Debug.Log($"[UnitSelected] OnDecision — switched to skillId={skillId}, targetable={session.CurrentTargetableCells.Count}");
         scene.visualController.UpdateVisualOnStateChange();
     }
 
@@ -111,52 +110,56 @@ public class UnitSelectedState : IInteractionState
     }
 
     // -------------------------------------------------------
-    // Pattern Calculation
+    // Pattern
     // -------------------------------------------------------
 
-    void CalculateTargetPattern()
+    public void ReloadTargetPattern()
     {
-        session.CurrentTargetPatternCells.Clear();
+        session.CurrentTargetableCells.Clear();
+        if (!session.isTargetLocked)
+            session.CurrentAoECells.Clear();
 
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
-        if (unit == null || unit.PatternOverrides == null) return;
+        if (unit == null) { Debug.LogWarning("[UnitSelected] unit null"); return; }
+        if (unit.SkillPatterns == null) { Debug.LogWarning("[UnitSelected] SkillPatterns null"); return; }
 
-        foreach (var o in unit.PatternOverrides)
+        Debug.Log($"[UnitSelected] Looking for skillId={session.currentSkillId}, patterns count={unit.SkillPatterns.Length}");
+        foreach (var o in unit.SkillPatterns)
+            Debug.Log($"[UnitSelected] Pattern entry — SkillId={o.SkillId}, TargetCells={o.TargetCells?.Length ?? 0}");
+
+        foreach (var o in unit.SkillPatterns)
         {
             if (o.SkillId != session.currentSkillId) continue;
-            if (o.TargetPatternCells == null) return;
-
-            foreach (var offset in o.TargetPatternCells)
-                session.CurrentTargetPatternCells.Add(new Vector3Int(
-                    unit.CurrentCell.x + offset.x,
-                    unit.CurrentCell.y + offset.y,
-                    0));
+            if (o.TargetCells != null)
+                foreach (var cell in o.TargetCells)
+                    session.CurrentTargetableCells.Add(cell);
+            Debug.Log($"[UnitSelected] Loaded {session.CurrentTargetableCells.Count} targetable cells");
             return;
         }
-    }
 
+        Debug.LogWarning($"[UnitSelected] No pattern found for skillId={session.currentSkillId}");
+    }
     void CalculateAoECells(Vector3Int targetCell)
     {
         session.CurrentAoECells.Clear();
 
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
-        if (unit == null || unit.PatternOverrides == null) return;
+        if (unit?.SkillPatterns == null) return;
 
-        foreach (var o in unit.PatternOverrides)
+        foreach (var o in unit.SkillPatterns)
         {
             if (o.SkillId != session.currentSkillId) continue;
-            if (o.AoEPatternCells == null) return;
+            if (o.AoePattern == null) return;
 
             var tempPattern = ScriptableObject.CreateInstance<SkillPattern>();
-            tempPattern.cells = o.AoEPatternCells;
+            tempPattern.cells = o.AoePattern;
 
             session.CurrentAoECells.AddRange(
-                    ClientPatternResolver.GetAoECells(
+                ClientPatternResolver.GetAoECells(
                     tempPattern,
                     unit.CurrentCell,
                     targetCell,
-                    session)
-                );
+                    session));
             return;
         }
     }

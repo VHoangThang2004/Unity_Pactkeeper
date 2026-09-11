@@ -25,6 +25,7 @@ public class ServerTimelineManager : MonoBehaviour
     [SerializeField] private ServerMatchSession session;
     [SerializeField] private SpeedConfig speedConfig;
     [SerializeField] private SkillLibrary skillLibrary;
+    [SerializeField] private ServerSpawnManager spawnManager;
 
     [Header("Timeline Config")]
     [SerializeField] private int maxInstant = 100;
@@ -94,7 +95,6 @@ public class ServerTimelineManager : MonoBehaviour
             team.Overtime = (int)overtimePerTeam;
 
         session.FlaggedTeamId = session.GetOtherTeamId(0);
-        skillLibrary.Init();
 
         TransitionTo(ServerSessionState.Flowing);
 
@@ -142,6 +142,9 @@ public class ServerTimelineManager : MonoBehaviour
             actionRecord.Clear();
             effectRecord.Clear();
             session.ResetInstantSkillUsage();
+
+            foreach (var unit in session.units)
+                spawnManager.RecalculateSkillPatterns(unit);
 
             // Tick
             TickAllUnits();
@@ -355,6 +358,7 @@ public class ServerTimelineManager : MonoBehaviour
                 var result = serverEffect.Apply(session, unitId, target);
                 actionResults.Add(result);
                 totalDuration += effect.resolveDuration;
+                spawnManager.RecalculateSkillPatterns(session.GetUnit(unitId));
             }
         }
 
@@ -405,6 +409,7 @@ public class ServerTimelineManager : MonoBehaviour
                 var result = serverEffect.Apply(session, unitId, target);
                 allResults.Add(result);
                 totalDuration += effect.resolveDuration;
+                spawnManager.RecalculateSkillPatterns(session.GetUnit(unitId));
 
                 foreach (var record in actionRecord)
                     if (record.unitId == unitId) { record.results.Add(result); break; }
@@ -559,6 +564,7 @@ public class ServerTimelineManager : MonoBehaviour
                 var def = session.unitLibrary.Get(unit.UId);
                 if (def != null)
                     UnitRecalculator.Recalculate(unit, def, activeEffects);
+                spawnManager.RecalculateSkillPatterns(unit);
                 anyChanged = true;
             }
         }

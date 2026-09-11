@@ -16,6 +16,7 @@ public class ClientUnit : MonoBehaviour
     [SerializeField] private Animator UnitAnimator;
     [SerializeField] private Animator VFXAnimator;
     [SerializeField] private TextMeshProUGUI stepText;
+    [SerializeField] private GameObject actionMenuUI;
 
     [Header("InitRefs")] //put here so notice when something is not initiallized
     private ClientMatchSession session;
@@ -44,6 +45,7 @@ public class ClientUnit : MonoBehaviour
             return;
         }
         unitId = unitData.Id;
+        //TODO in the future: data has list of active skillIds, link that onto buttons? Or let the visual controller link that on the main UI, for now using individual UIs
         SyncPositionToCurrentSession();
 
         StartCoroutine(AutoUpdate());
@@ -55,6 +57,15 @@ public class ClientUnit : MonoBehaviour
         {
             //an exception, does not affect the other processes
             UpdateStepUI();
+            if (session.selectedUnitId == unitId && actionMenuUI!=null)
+            {
+                //this unit is selected, shows action menu UI
+                actionMenuUI.SetActive(true);
+            }
+            else
+            {
+                actionMenuUI.SetActive(false);
+            }
 
             yield return new WaitForSeconds(0.1f);
             //emergency sync: stop all animations and starts brute sync
@@ -101,5 +112,13 @@ public class ClientUnit : MonoBehaviour
     public void SyncPositionToTarget(Vector3Int cell)
     {
         transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
+    }
+
+    public void SelectWeaponSkill()
+    {
+        if(session.selectedUnitId!=unitId) return;
+        UnitData data = session.GetUnitDataById(unitId);
+        int skillId = data.WeaponSkillId;
+        scene.clientInteractionSystem.HandleDecisionSelectSkill(skillId);
     }
 }

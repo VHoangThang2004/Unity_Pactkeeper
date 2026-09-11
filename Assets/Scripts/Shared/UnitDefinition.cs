@@ -7,17 +7,11 @@ public class UnitDefinition : ScriptableObject
     public int uId;
     public string unitName;
 
-    [Header("Base Stats")]
+    [Header("Fixed Stats")]
     public int speed;
     public int maxHp;
     public int maxSkillPoint;
 
-    [Header("Skills")]
-    public SkillDefinition movementSkill;
-    public SkillDefinition[] passiveSkills;
-
-    // Future:
-    // public SkillDefinition weaponSkill;
-    // public SkillDefinition classSkill;
-    // public SkillDefinition[] activeSkills;
+    [Header("Fixed Skills")]
+    public SkillDefinition passiveSkill; // only fixed skill — innate to unit type
 }
