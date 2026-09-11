@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Linq;
 
 public class UnitData : INetworkSerializable
 {
@@ -34,6 +35,33 @@ public class UnitData : INetworkSerializable
 
     // Active effect IDs — client displays buff/debuff icons
     public int[] ActiveEffectIds = new int[0];
+
+    public UnitData Clone()
+    {
+        return new UnitData
+        {
+            Id = Id,
+            UId = UId,
+            CurrentCell = CurrentCell,
+            CurrentHP = CurrentHP,
+            CurrentSkillPoint = CurrentSkillPoint,
+            CurrentStep = CurrentStep,
+            stepAlt = stepAlt,
+            Speed = Speed,
+            MaxHP = MaxHP,
+            MaxSkillPoint = MaxSkillPoint,
+            DamageMultiplier = DamageMultiplier,
+            DamageReduction = DamageReduction,
+            MovementSkillId = MovementSkillId,
+            WeaponSkillId = WeaponSkillId,
+            ClassSkillId = ClassSkillId,
+            EquipmentSkillId = EquipmentSkillId,
+            PassiveSkillId = PassiveSkillId,
+            SkillUsages = SkillUsages?.ToArray(),
+            SkillPatterns = SkillPatterns?.ToArray(),
+            ActiveEffectIds = ActiveEffectIds?.ToArray(),
+        };
+    }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {

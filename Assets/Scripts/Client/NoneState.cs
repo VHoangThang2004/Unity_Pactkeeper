@@ -28,9 +28,10 @@ public class NoneState : IInteractionState
 
     public void OnTileClick(Vector3Int cell)
     {
-        var unit = scene.GetSceneUnitAt(cell);
+        UnitData unit = session.GetUnitDataAt(cell);
+        Debug.Log($"Nonstate: detected click on {cell}, unit at this tile is {unit}");
         if (unit != null)
-            sm.GoToUnitSelected(unit.unitId);
+            sm.GoToUnitSelected(unit.Id);
     }
 
     public void OnTileHover(Vector3Int cell) { }

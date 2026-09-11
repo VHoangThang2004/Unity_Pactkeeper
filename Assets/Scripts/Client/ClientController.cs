@@ -79,14 +79,14 @@ public class ClientController : MonoBehaviour
         StartCoroutine(SyncReceiverLoop());
         //Init complete, ready to receive first snapshot of the match session
         scene.syncMachine.Init();
+        session.Init();
         bridge.RequestInitialStateServerRpc();
 
         // Wait until first sync confirmed
-        yield return new WaitUntil(() => session.CurrentToken == session.PendingToken);
+        yield return new WaitUntil(() => session.CurrentToken != -1);
         Debug.Log("[ClientController] Client initialized successfully.");
         //Start the statemachines that requires data from now on
         scene.visualController.StartUILoop();
-        session.Init();
     }
 
     bool TryInitRegistries()
@@ -111,7 +111,7 @@ public class ClientController : MonoBehaviour
     // -------------------------------------------------------
 
     public void TryDecision(int unitId, Vector3Int target, DecisionType type, int skillId)
-        => bridge.SendDecisionServerRpc(unitId, target, type, skillId, session.PendingToken);
+        => bridge.SendDecisionServerRpc(unitId, target, type, skillId, session.CurrentToken);
 
     // -------------------------------------------------------
     // Bridge -> Client (from SyncedBridge RPCs)
@@ -145,7 +145,7 @@ public class ClientController : MonoBehaviour
     {
         while (true)
         {
-            if (session.CurrentToken == session.PendingToken && latestQueuedPackage.HasValue)
+            if ((session.SyncState == 0 || session.SyncState == -1) && latestQueuedPackage.HasValue)
             {
                 var pkg = latestQueuedPackage.Value;
                 latestQueuedPackage = null;

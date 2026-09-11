@@ -38,7 +38,7 @@ public class ServerTimelineManager : MonoBehaviour
     // Internal coroutine control — not observable, not session data
     private bool waitingForDecision = false;
     private bool lastDecisionResolved = false;
-    private (int unitId, Vector3Int target, DecisionType action, int skillCardId)? pendingDecision = null;
+    private (int unitId, Vector3Int target, DecisionType decisionType, int skillCardId)? pendingDecision = null;
 
     // Transient per-instant records — live and die within one instant
     private List<(int unitId, SkillDefinition skilldef, List<ResolveResult> results)> actionRecord;
@@ -66,6 +66,7 @@ public class ServerTimelineManager : MonoBehaviour
     /// </summary>
     public void PackFinal()
     {
+        UnitRecalculator.RecalculateAll(session);
         session.LastSnapshot = GetSnapshot();
         session.LastResolve = default;
         session.LastDecision = BuildDecision();
@@ -77,6 +78,7 @@ public class ServerTimelineManager : MonoBehaviour
     /// </summary>
     void PackResolve(SessionSnapshotData snapshotBefore, ResolveData resolve)
     {
+        UnitRecalculator.RecalculateAll(session);
         session.LastSnapshot = snapshotBefore;
         session.LastResolve = resolve;
         session.LastDecision = default;
@@ -143,9 +145,6 @@ public class ServerTimelineManager : MonoBehaviour
             effectRecord.Clear();
             session.ResetInstantSkillUsage();
 
-            foreach (var unit in session.units)
-                spawnManager.RecalculateSkillPatterns(unit);
-
             // Tick
             TickAllUnits();
             bool effectsChanged = TickAllEffects();
@@ -178,6 +177,10 @@ public class ServerTimelineManager : MonoBehaviour
             // Always broadcast after decision loop — even if no decisions made
             PackFinal();
             BroadcastSnapshot();
+
+
+            foreach (var unit in session.units)
+                Debug.Log($"[PreResolve] Unit {unit.Id} HP={unit.CurrentHP}");
 
             // End of instant — resolve non-instant effects
             yield return ResolveEffectRecord();
@@ -213,7 +216,6 @@ public class ServerTimelineManager : MonoBehaviour
         {
             if (!TeamHasReady(0) && !TeamHasReady(1)) yield break;
             if (teams[0].isInstantEnded && teams[1].isInstantEnded) yield break;
-
             yield return HandleTeamTurn(session.CurrentTeamTurnId, teams);
         }
     }
@@ -294,12 +296,12 @@ public class ServerTimelineManager : MonoBehaviour
         lastDecisionResolved = false;
         if (pendingDecision == null) yield break;
 
-        var (unitId, target, action, skillCardId) = pendingDecision.Value;
-        SkillDefinition skillDef = skillLibrary.Get(skillCardId != -1 ? skillCardId : (int)action);
+        var (unitId, target, decisionType, skillCardId) = pendingDecision.Value;
+        SkillDefinition skillDef = skillLibrary.Get(skillCardId);
 
         if (skillDef == null)
         {
-            Debug.LogError($"[Timeline] No SkillDefinition for action={action} skillCardId={skillCardId}!");
+            Debug.LogError($"[Timeline] No SkillDefinition for action={decisionType} skillCardId={skillCardId}!");
             yield break;
         }
         // Check skill usage limit
@@ -310,8 +312,6 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
         var actionResults = new List<ResolveResult>();
-        actionRecord.Add((unitId, skillDef, actionResults));
-        session.RecordSkillUsage(unitId, skillCardId);
 
         // Sort effects into buckets
         var immediateEffectIds = new List<int>();
@@ -339,11 +339,8 @@ public class ServerTimelineManager : MonoBehaviour
             }
         }
 
-        if (removeFromRQ)
-            session.ReadyUnitIds.Remove(unitId);
-        lastDecisionResolved = true;
 
-        if (immediateEffectIds.Count == 0) yield break;
+        // if (immediateEffectIds.Count == 0) yield break;
 
         TransitionTo(ServerSessionState.Resolving);
 
@@ -356,22 +353,32 @@ public class ServerTimelineManager : MonoBehaviour
             if (effect is ServerActiveEffectBase serverEffect)
             {
                 var result = serverEffect.Apply(session, unitId, target);
+                if (result.EffectId == -1)
+                {
+                    TransitionTo(ServerSessionState.DecisionWaiting);
+                    yield break;
+                }
                 actionResults.Add(result);
                 totalDuration += effect.resolveDuration;
-                spawnManager.RecalculateSkillPatterns(session.GetUnit(unitId));
             }
         }
+        lastDecisionResolved = true;
+        // wait till resolved to mark, otherwise its not a valid request (doesnt count)
+        actionRecord.Add((unitId, skillDef, actionResults));
+        session.RecordSkillUsage(unitId, skillCardId);
+        //TODO: reduce skill points as cost
+        if (removeFromRQ)
+            session.ReadyUnitIds.Remove(unitId);
 
         // Atomic full pack write
         PackResolve(snapshotBefore, new ResolveData
         {
             HasResolve = true,
             SkillCardId = skillCardId,
-            decision = action,
+            decisionType = decisionType,
             ResolveResults = actionResults,
         });
         BroadcastSnapshot();
-        lastDecisionResolved = true;
 
         yield return new WaitForSeconds(totalDuration);
         TransitionTo(ServerSessionState.DecisionWaiting);
@@ -385,18 +392,27 @@ public class ServerTimelineManager : MonoBehaviour
     {
         if (effectRecord.Count == 0) yield break;
 
-        // Sort by unit speed descending
+        // Capture before state FIRST
+        var snapshotBefore = GetSnapshot();
+
         effectRecord.Sort((a, b) =>
         {
             var unitA = session.GetUnit(a.unitId);
             var unitB = session.GetUnit(b.unitId);
-            return (unitB?.Speed ?? 0).CompareTo(unitA?.Speed ?? 0);
+
+            int speedCompare = (unitB?.Speed ?? 0).CompareTo(unitA?.Speed ?? 0);
+            if (speedCompare != 0) return speedCompare;
+
+            int teamA = session.GetTeamIdByUnitId(a.unitId);
+            int teamB = session.GetTeamIdByUnitId(b.unitId);
+            if (teamA == teamB) return 0;
+
+            bool aGoesFirst = teamA == session.FlaggedTeamId;
+            session.FlaggedTeamId = session.GetOtherTeamId(session.FlaggedTeamId);
+            return aGoesFirst ? -1 : 1;
         });
 
         TransitionTo(ServerSessionState.Resolving);
-
-        // Capture before state locally
-        var snapshotBefore = GetSnapshot();
 
         var allResults = new List<ResolveResult>();
         float totalDuration = 0f;
@@ -407,16 +423,12 @@ public class ServerTimelineManager : MonoBehaviour
             if (effect is ServerActiveEffectBase serverEffect)
             {
                 var result = serverEffect.Apply(session, unitId, target);
+                if (result.EffectId == -1) continue;
                 allResults.Add(result);
                 totalDuration += effect.resolveDuration;
-                spawnManager.RecalculateSkillPatterns(session.GetUnit(unitId));
-
-                foreach (var record in actionRecord)
-                    if (record.unitId == unitId) { record.results.Add(result); break; }
             }
         }
 
-        // Atomic full pack write
         PackResolve(snapshotBefore, new ResolveData
         {
             HasResolve = true,
@@ -562,9 +574,6 @@ public class ServerTimelineManager : MonoBehaviour
             {
                 unit.ActiveEffectIds = activeEffects.Select(e => e.effectId).ToArray();
                 var def = session.unitLibrary.Get(unit.UId);
-                if (def != null)
-                    UnitRecalculator.Recalculate(unit, def, activeEffects);
-                spawnManager.RecalculateSkillPatterns(unit);
                 anyChanged = true;
             }
         }
@@ -619,8 +628,8 @@ public class ServerTimelineManager : MonoBehaviour
         return SessionSnapshotData.Full(
             session.MapId ?? string.Empty,
             session.CurrentTeamTurnId,
-            session.GetAllTeamData(),
-            session.GetAllUnits(),
+            session.GetAllCopyTeamData(),
+            session.GetAllCopyUnits(),
             new TimelineData
             {
                 currentInstant = session.CurrentInstant,
@@ -678,4 +687,5 @@ public class ServerTimelineManager : MonoBehaviour
         if (teamId < 0 || teamId >= session.GetAllTeamData().Count) return 0;
         return session.GetTeamDataByTeamId(teamId).clientId;
     }
+
 }

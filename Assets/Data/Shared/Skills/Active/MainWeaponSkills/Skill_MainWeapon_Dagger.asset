@@ -16,9 +16,10 @@ MonoBehaviour:
   skillName: DaggerBasicAttack
   targetPattern: {fileID: 11400000, guid: 30f51134ba6ca7942aa7e68c164d8e29, type: 2}
   isTargetPatternFixed: 0
-  targeting: 0
+  targeting: 2
   skillPointCost: 0
   stepCostMultiplier: 0.5
   useLimitPerInstant: 1
   useLimitTotal: -1
-  effectIds: 
+  effectIds: 12270000
+  icon: {fileID: 7941643797569593742, guid: 0036386d16770654bb5551214b3fa246, type: 3}

@@ -1,21 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Owns the client sync flow.
-/// States: Idle -> LoadingMap -> SpawningUnits -> Confirmed
-/// Each state defines its own validity conditions — checked every frame.
-/// Any violation transitions back to Idle immediately.
-/// Token is just one of many possible invalidation reasons.
-/// </summary>
 public class ClientSyncMachine : MonoBehaviour
 {
-    public enum SyncState
-    {
-        Idle,
-        LoadingMap,
-        SpawningUnits
-    }
+    public enum SyncState { Idle, LoadingMap, SpawningUnits }
 
     [Header("Refs")]
     [SerializeField] private ClientMatchSession session;
@@ -24,163 +12,68 @@ public class ClientSyncMachine : MonoBehaviour
     [SerializeField] private ClientSpawner spawner;
 
     public SyncState State { get; private set; } = SyncState.Idle;
+    public bool IsSyncing => State != SyncState.Idle;
 
-    private int syncingToken = -1;
-    private Coroutine activeWorker = null;
-    private bool workerDone = false;
-    private bool workerSuccess = false;
+    private bool syncRequested = false;
 
     public void Init()
     {
         StartCoroutine(SyncLoop());
     }
 
-    // -------------------------------------------------------
-    // State Validity — each state defines what must be true to remain valid
-    // -------------------------------------------------------
-
-    bool IdleIsValid()
+    public void RequestSync()
     {
-        // Idle exits when a new unconfirmed token arrives
-        return session.PendingToken == syncingToken;
+        syncRequested = true;
     }
-
-    bool LoadingMapIsValid()
-    {
-        // Must be syncing the right token
-        if (session.PendingToken != syncingToken) return false;
-        // Map asset must exist
-        if (session.MapAsset == null) return false;
-        return true;
-    }
-
-    bool SpawningUnitsIsValid()
-    {
-        // Must be syncing the right token
-        if (session.PendingToken != syncingToken) return false;
-        // Map must be loaded in scene before spawning
-        if (scene.movableTilemap == null) return false;
-        return true;
-    }
-
-    // -------------------------------------------------------
-    // Main Loop
-    // -------------------------------------------------------
 
     IEnumerator SyncLoop()
     {
         while (true)
         {
-            switch (State)
+            // Wait for sync request
+            while (!syncRequested)
+                yield return null;
+
+            syncRequested = false;
+
+            // Load map if needed
+            if (session.MapAsset != null && scene.movableTilemap == null)
             {
-                case SyncState.Idle:
-                    yield return RunIdle();
-                    break;
+                TransitionTo(SyncState.LoadingMap);
 
-                case SyncState.LoadingMap:
-                    yield return RunLoadingMap();
-                    break;
+                bool mapDone = false;
+                bool mapSuccess = false;
+                StartCoroutine(mapLoader.Load(result =>
+                {
+                    mapSuccess = result;
+                    mapDone = true;
+                }));
 
-                case SyncState.SpawningUnits:
-                    yield return RunSpawningUnits();
-                    break;
+                while (!mapDone) yield return null;
 
+                if (!mapSuccess)
+                {
+                    TransitionTo(SyncState.Idle);
+                    continue;
+                }
             }
-            yield return null;
-        }
-    }
 
-    // -------------------------------------------------------
-    // State Runners
-    // -------------------------------------------------------
+            // Sync units
+            TransitionTo(SyncState.SpawningUnits);
 
-    IEnumerator RunIdle()
-    {
-        // Wait here until a new token breaks idle validity
-        while (IdleIsValid())
-            yield return null;
-    
-        // New token arrived — begin sync
-        syncingToken = session.PendingToken;
-        Debug.Log($"[SyncMachine] New token {syncingToken}.");
-        TransitionTo(SyncState.LoadingMap);
-    }
-
-    IEnumerator RunLoadingMap()
-    {
-        workerDone    = false;
-        workerSuccess = false;
-        activeWorker  = StartCoroutine(mapLoader.Load(result =>
-        {
-            workerSuccess = result;
-            workerDone    = true;
-        }));
-
-        // Guard every frame — state validity is the authority
-        while (!workerDone)
-        {
-            if (!LoadingMapIsValid())
+            bool spawnDone = false;
+            bool spawnSuccess = false;
+            StartCoroutine(spawner.Sync(result =>
             {
-                StopWorker();
-                TransitionTo(SyncState.Idle);
-                yield break;
-            }
-            yield return null;
-        }
+                spawnSuccess = result;
+                spawnDone = true;
+            }));
 
-        if (!LoadingMapIsValid() || !workerSuccess)
-        {
+            while (!spawnDone) yield return null;
+
             TransitionTo(SyncState.Idle);
-            yield break;
+            Debug.Log($"[SyncMachine] Sync complete.");
         }
-
-        TransitionTo(SyncState.SpawningUnits);
-    }
-
-    IEnumerator RunSpawningUnits()
-    {
-        workerDone    = false;
-        workerSuccess = false;
-        activeWorker  = StartCoroutine(spawner.Sync(result =>
-        {
-            workerSuccess = result;
-            workerDone    = true;
-        }));
-
-        // Guard every frame — state validity is the authority
-        while (!workerDone)
-        {
-            if (!SpawningUnitsIsValid())
-            {
-                StopWorker();
-                TransitionTo(SyncState.Idle);
-                yield break;
-            }
-            yield return null;
-        }
-
-        if (!SpawningUnitsIsValid() || !workerSuccess)
-        {
-            TransitionTo(SyncState.Idle);
-            yield break;
-        }
-
-        TransitionTo(SyncState.Idle);
-        Debug.Log($"[SyncMachine] Token {syncingToken} confirmed.");
-    }
-
-    // -------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------
-
-    void StopWorker()
-    {
-        if (activeWorker != null)
-        {
-            StopCoroutine(activeWorker);
-            activeWorker = null;
-        }
-        Debug.Log($"[SyncMachine] State {State} invalidated — worker stopped.");
     }
 
     void TransitionTo(SyncState next)

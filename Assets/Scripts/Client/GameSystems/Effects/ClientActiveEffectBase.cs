@@ -7,7 +7,6 @@ public abstract class ClientActiveEffectBase : EffectBase
     // Called once per ResolveResult in order
     // If resolveDuration == 0f — skip animation, apply partial immediately
     public abstract IEnumerator Replay(
-        ClientUnit unit,
         ResolveResult result,
         ClientScene scene,
         ClientMatchSession session);

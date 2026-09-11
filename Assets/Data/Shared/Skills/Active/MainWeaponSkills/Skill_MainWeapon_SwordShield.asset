@@ -16,9 +16,10 @@ MonoBehaviour:
   skillName: SwordShieldBasicAttack
   targetPattern: {fileID: 11400000, guid: f0186860ad3c21d4e8a489e0f3830538, type: 2}
   isTargetPatternFixed: 0
-  targeting: 0
+  targeting: 2
   skillPointCost: 0
   stepCostMultiplier: 0.5
   useLimitPerInstant: 1
   useLimitTotal: -1
-  effectIds: 
+  effectIds: 12270000
+  icon: {fileID: 7206142068373055434, guid: cbedebeddc861da4cbf79c1db85ce968, type: 3}

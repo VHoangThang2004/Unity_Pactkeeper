@@ -22,4 +22,6 @@ public class SkillDefinition : ScriptableObject
 
     [Header("Effects — IDs only")]
     public int[] effectIds;
+    [Header("Visuals")]
+    public Sprite icon;
 }

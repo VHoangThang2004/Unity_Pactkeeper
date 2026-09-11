@@ -6,7 +6,7 @@ public struct ResolveData : INetworkSerializable
 {
     public bool HasResolve;
     public int SkillCardId;
-    public DecisionType decision;
+    public DecisionType decisionType;
     public List<ResolveResult> ResolveResults;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -14,9 +14,9 @@ public struct ResolveData : INetworkSerializable
         serializer.SerializeValue(ref HasResolve);
         serializer.SerializeValue(ref SkillCardId);
 
-        byte decisionByte = (byte)decision;
+        byte decisionByte = (byte)decisionType;
         serializer.SerializeValue(ref decisionByte);
-        decision = (DecisionType)decisionByte;
+        decisionType = (DecisionType)decisionByte;
 
         if (serializer.IsReader)
         {

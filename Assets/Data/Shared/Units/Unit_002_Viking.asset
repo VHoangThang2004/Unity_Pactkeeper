@@ -15,7 +15,6 @@ MonoBehaviour:
   uId: 2
   unitName: Viking
   speed: 120
-  maxHp: 100
-  maxSkillPoint: 5
-  movementSkill: {fileID: 11400000, guid: d43fce66ca65d044dacb060e52db3fb4, type: 2}
-  passiveSkills: []
+  maxHp: 40
+  maxSkillPoint: 4
+  passiveSkill: {fileID: 0}

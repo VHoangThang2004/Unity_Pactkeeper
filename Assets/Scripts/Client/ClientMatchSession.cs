@@ -8,22 +8,26 @@ public class ClientMatchSession : MonoBehaviour
     [Header("Data")]
     [SerializeField] public MapRegistry mapRegistry;
     [SerializeField] private ClientScene scene;
-    public int SyncState = -1;
+
+    // -------------------------------------------------------
+    // Sync State Machine
+    // -1 = Uninit, 0 = Idle, 2 = Syncing, 3 = Resolving
+    // -------------------------------------------------------
+    public int SyncState { get; private set; } = -1;
+    public bool IsSceneSyncing => scene.syncMachine.IsSyncing;
 
     // -------------------------------------------------------
     // Token System
     // -------------------------------------------------------
+    private int PendingToken = -1;
+    public int CurrentToken = -1;
 
-    public int PendingToken { get; private set; } = -1;
-    public int CurrentToken { get; private set; } = -1;
-
-    public bool ResistInteractionState() => PendingToken != CurrentToken;
-    public bool MaintainInteractionState() => PendingToken == CurrentToken;
+    public bool ResistInteractionState() => SyncState != 0;
+    public bool MaintainInteractionState() => SyncState == 0;
 
     // -------------------------------------------------------
     // Game Data
     // -------------------------------------------------------
-
     public int CurrentTeamTurn { get; private set; } = -1;
     public List<UnitData> units = new List<UnitData>();
     public List<TeamData> teams = new List<TeamData>();
@@ -31,7 +35,6 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
     // Map
     // -------------------------------------------------------
-
     public string MapId { get; private set; }
     public GridMapAsset MapAsset { get; private set; }
     public GridMap Map { get; private set; }
@@ -39,13 +42,11 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
     // Timeline
     // -------------------------------------------------------
-
     public TimelineData Timeline { get; private set; }
 
     // -------------------------------------------------------
     // Decision Data
     // -------------------------------------------------------
-
     public DecisionRequestData LastDecisionRequest { get; private set; }
     public int waitDur = 0;
     public int overtimeDur = 0;
@@ -53,20 +54,19 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
     // Resolve + Secret
     // -------------------------------------------------------
-
     public ResolveData LastResolve { get; private set; }
     public SecretData LastSecret { get; private set; }
 
     // -------------------------------------------------------
     // Interaction State
     // -------------------------------------------------------
-
     public int selectedUnitId { get; set; } = -1;
     public Vector3Int currentCellMouseOn { get; set; } = default;
     public Vector3Int currentPreviewCell { get; set; } = default;
     public bool isTargetLocked { get; set; } = false;
+
     // -------------------------------------------------------
-    // Pattern Preview Data — written by interaction states, read by visual controller
+    // Pattern Preview Data
     // -------------------------------------------------------
     public List<Vector3Int> CurrentTargetableCells { get; set; } = new List<Vector3Int>();
     public List<Vector3Int> CurrentAoECells { get; set; } = new List<Vector3Int>();
@@ -77,6 +77,7 @@ public class ClientMatchSession : MonoBehaviour
         CurrentAoECells.Clear();
         isTargetLocked = false;
     }
+
     public int currentSkillId = -1;
     public bool isOnCell { get; set; } = false;
 
@@ -91,13 +92,11 @@ public class ClientMatchSession : MonoBehaviour
         DecisionRequestData decision,
         int token)
     {
-        SyncState = 1;
-
-        // Step 1 — Load map first, everything else may depend on it
+        // Step 1 — Load map first
         if (before.HasMapId)
             LoadMapData(before.MapId);
 
-        // Step 2 — Apply Before snapshot
+        // Step 2 — Apply before snapshot + request scene sync
         ApplyFullSnapshot(before);
 
         // Step 3 — Store resolve + secret
@@ -110,18 +109,29 @@ public class ClientMatchSession : MonoBehaviour
         // Step 5 — Set pending token
         PendingToken = token;
 
+        // Step 6 — Transition state
+        SyncState = 2;
+        scene.syncMachine.RequestSync();
+
         if (resolve.HasResolve)
-        {
-            SyncState = 3;
-            StartCoroutine(ResolveReplay());
-        }
+            StartCoroutine(WaitThenResolve());
         else
-        {
-            SyncState = 0;
-            CurrentToken = PendingToken;
-        }
+            StartCoroutine(WaitThenIdle());
 
         Debug.Log($"[ClientMatchSession] Snapshot applied, PendingToken={PendingToken}");
+    }
+
+    IEnumerator WaitThenResolve()
+    {
+        while (IsSceneSyncing) yield return null;
+        StartCoroutine(ResolveReplay());
+    }
+
+    IEnumerator WaitThenIdle()
+    {
+        while (IsSceneSyncing) yield return null;
+        CurrentToken = PendingToken;
+        SyncState = 0;
     }
 
     void ApplyFullSnapshot(SessionSnapshotData snap)
@@ -129,12 +139,15 @@ public class ClientMatchSession : MonoBehaviour
         if (snap.HasCurrentTeamTurn) CurrentTeamTurn = snap.CurrentTeamTurn;
         if (snap.HasTeams) teams = snap.Teams ?? new List<TeamData>();
         if (snap.HasUnits && snap.Units != null)
+        {
+            units.RemoveAll(u => !snap.Units.Exists(s => s.Id == u.Id));
             foreach (var unit in snap.Units)
             {
                 int index = units.FindIndex(u => u.Id == unit.Id);
                 if (index == -1) units.Add(unit);
                 else units[index] = unit;
             }
+        }
         if (snap.HasTimeline) Timeline = snap.Timeline;
     }
 
@@ -147,29 +160,36 @@ public class ClientMatchSession : MonoBehaviour
         if (!LastResolve.HasResolve) yield break;
         if (LastResolve.ResolveResults == null) yield break;
 
+        SyncState = 3;
+
         foreach (var result in LastResolve.ResolveResults)
         {
-            // Look up visual effect
+            // Play visual
             var effectVisual = scene.effectRegistry.Get(result.EffectId);
-
             if (effectVisual != null && effectVisual.resolveDuration > 0f)
             {
-                // Find source unit in scene
-                var sceneUnit = scene.GetSceneUnitById(result.SourceUnitId);
-
-                if (sceneUnit != null)
-                    yield return StartCoroutine(effectVisual.Replay(sceneUnit, result, scene, this));
-                else
-                    yield return new WaitForSeconds(effectVisual.resolveDuration);
+                Debug.Log($"[Session] Started resolving effect {effectVisual.effectId}");
+                yield return StartCoroutine(effectVisual.Replay(result, scene, this));
+                Debug.Log($"[Session] Ended resolving effect {effectVisual.effectId}");
             }
 
-            // Apply partial snapshot after each result
-            ApplyPartialSnapshot(result.Partial);
+            // Apply data
+            if (result.Partial.HasMapId && result.Partial.HasTeams &&
+                result.Partial.HasUnits && result.Partial.HasTimeline)
+                ApplyFullSnapshot(result.Partial);
+            else
+                ApplyPartialSnapshot(result.Partial);
+
+            // Sync scene
+            SyncState = 2;
+            scene.syncMachine.RequestSync();
+            while (IsSceneSyncing) yield return null;
+            SyncState = 3;
         }
 
         LastResolve = default;
-        SyncState = 0;
         CurrentToken = PendingToken;
+        SyncState = 0;
     }
 
     void ApplyPartialSnapshot(SessionSnapshotData partial)
@@ -182,6 +202,7 @@ public class ClientMatchSession : MonoBehaviour
                 int index = units.FindIndex(u => u.Id == unit.Id);
                 if (index == -1) units.Add(unit);
                 else units[index] = unit;
+                Debug.Log($"[Session] ResolveData unit: ID{unit.Id}-UID{unit.UId}-HP{unit.CurrentHP}");
             }
         if (partial.HasTimeline) Timeline = partial.Timeline;
     }
@@ -217,11 +238,9 @@ public class ClientMatchSession : MonoBehaviour
     public void ApplyTimelineTick(TimelineData data)
     {
         int instantDelta = data.currentInstant - Timeline.currentInstant;
-
         if (instantDelta > 0)
             foreach (UnitData unit in units)
                 unit.CurrentStep = Mathf.Max(0, unit.CurrentStep - instantDelta);
-
         Timeline = data;
     }
 
@@ -234,19 +253,23 @@ public class ClientMatchSession : MonoBehaviour
     public bool isUnitReady(int unitId)
     {
         UnitData unit = GetUnitDataById(unitId);
-        return unit != null ? unit.CurrentStep == 0 : false;
+        return unit != null && unit.CurrentStep == 0;
     }
+
     public List<int> GetAllUnitIds()
     {
         var res = new List<int>();
         foreach (var u in units) res.Add(u.Id);
         return res;
     }
-    public UnitData GetUnitDataAt(Vector3Int cell) => units.Find(u => u.CurrentCell == cell);
+
+    public UnitData GetUnitDataAt(Vector3Int cell) =>
+        units.Find(u => u.CurrentCell.x == cell.x && u.CurrentCell.y == cell.y);
 
     // -------------------------------------------------------
     // Team Helpers
     // -------------------------------------------------------
+
     public int GetTeamIdByUnitId(int unitId)
     {
         foreach (var team in teams)
@@ -254,15 +277,26 @@ public class ClientMatchSession : MonoBehaviour
         return -1;
     }
 
-    public TeamData GetOwnedTeamData() => teams.Find(t => t.clientId == NetworkManager.Singleton.LocalClientId);
+    public TeamData GetOwnedTeamData() =>
+        teams.Find(t => t.clientId == NetworkManager.Singleton.LocalClientId);
+
     public int GetMyTeam()
     {
+        if (teams == null || teams.Count < 2) return -1;
         return teams[0].clientId == NetworkManager.Singleton.LocalClientId ? 0 :
                teams[1].clientId == NetworkManager.Singleton.LocalClientId ? 1 : -1;
     }
-    public bool IsMyTurn() => LastDecisionRequest.DecisionTeam == GetMyTeam();
+
+    public bool IsMyTurn()
+    {
+        int myTeam = GetMyTeam();
+        if (myTeam == -1) return false;
+        return LastDecisionRequest.DecisionTeam == myTeam;
+    }
+
     public bool IsMyUnit(int unitId) => GetOwnedTeamData()?.unitIds.Contains(unitId) ?? false;
     public bool IsUnitDataExisting(int unitId) => units.Exists(u => u.Id == unitId);
+
     public List<int> GetOwnedReadyUnitIds()
     {
         var owned = new List<int>();
@@ -282,6 +316,7 @@ public class ClientMatchSession : MonoBehaviour
 
     public void Init()
     {
+        SyncState = 0;
         StartCoroutine(DataLoop());
     }
 

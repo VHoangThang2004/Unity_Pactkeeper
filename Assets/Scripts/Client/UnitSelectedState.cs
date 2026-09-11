@@ -36,6 +36,7 @@ public class UnitSelectedState : IInteractionState
     public void OnTileClick(Vector3Int cell)
     {
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+        cell.z = 1; // z = 1 means selectable cell
         if (unit == null) { sm.GoToNone(); return; }
 
         // Click valid target cell first — takes priority over unit switching
@@ -62,19 +63,12 @@ public class UnitSelectedState : IInteractionState
 
     public void OnTileHover(Vector3Int cell)
     {
-        if (!session.IsMyUnit(session.selectedUnitId)) return;
-
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
         if (unit == null) return;
+        // Debug.Log($"On hovering {cell} on unit {session.selectedUnitId}");
 
-        // Only preview AoE if not locked
-        if (!session.isTargetLocked)
-        {
-            if (session.CurrentTargetableCells.Contains(cell))
-                CalculateAoECells(cell);
-            else
-                session.CurrentAoECells.Clear();
-        }
+        if (session.CurrentTargetableCells.Contains(cell))
+            CalculateAoECells(cell);
 
         scene.visualController.HoverShadow();
     }
@@ -92,6 +86,7 @@ public class UnitSelectedState : IInteractionState
             DecisionType.ActivateAction,
             skillId,
             session.CurrentToken);
+        sm.GoToNone();
     }
 
     public void OnDecision(int skillId)
@@ -132,8 +127,11 @@ public class UnitSelectedState : IInteractionState
             if (o.SkillId != session.currentSkillId) continue;
             if (o.TargetCells != null)
                 foreach (var cell in o.TargetCells)
+                {
                     session.CurrentTargetableCells.Add(cell);
-            Debug.Log($"[UnitSelected] Loaded {session.CurrentTargetableCells.Count} targetable cells");
+                    Debug.Log($"{cell}");
+                }
+            Debug.Log($"[UnitSelected] Loaded {session.CurrentTargetableCells.Count} targetable cells of skill [{session.currentSkillId}]");
             return;
         }
 

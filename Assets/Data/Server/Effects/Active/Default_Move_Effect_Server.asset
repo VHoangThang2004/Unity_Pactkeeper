@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveEffect
   effectId: 10001
   resolveDuration: 1
-  aoePattern: {fileID: 11400000, guid: 4f1ad2e1e208c3c43ba5c43c90282321, type: 2}
+  aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1

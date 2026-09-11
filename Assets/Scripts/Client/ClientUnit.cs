@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 /// <summary>
 /// Visual representation of a unit. Wired to ClientMatchSession via Init().
@@ -13,10 +14,14 @@ public class ClientUnit : MonoBehaviour
 {
     [Header("Visuals")]
     [SerializeField] public GameObject hoverUnit;
-    [SerializeField] private Animator UnitAnimator;
-    [SerializeField] private Animator VFXAnimator;
+    [SerializeField] public Animator UnitAnimator;
+    [SerializeField] public Animator VFXAnimator;
+    [SerializeField] public GameObject VFXSprite;
+
     [SerializeField] private TextMeshProUGUI stepText;
+    [SerializeField] private Image hpBar;
     [SerializeField] private GameObject actionMenuUI;
+    [SerializeField] private Image mainWeaponSkillIcon;
 
     [Header("InitRefs")] //put here so notice when something is not initiallized
     private ClientMatchSession session;
@@ -46,9 +51,23 @@ public class ClientUnit : MonoBehaviour
         }
         unitId = unitData.Id;
         //TODO in the future: data has list of active skillIds, link that onto buttons? Or let the visual controller link that on the main UI, for now using individual UIs
+        if (session.IsMyUnit(unitId))
+        {
+            hpBar.color = Color.green;
+        }
+        else
+        {
+            hpBar.color = Color.red;
+        }
+        SkillDefinition skill = scene.skillLibrary.Get(unitData.WeaponSkillId);
+        if (skill != null && mainWeaponSkillIcon != null)
+            mainWeaponSkillIcon.sprite = skill.icon;
+
         SyncPositionToCurrentSession();
 
         StartCoroutine(AutoUpdate());
+
+        Debug.Log($"Unit {unitData.UId} - ID{unitData.Id} initialized. HP:{unitData.CurrentHP}/Position {unitData.CurrentCell}/SP:{unitData.CurrentSkillPoint}");
     }
 
     IEnumerator AutoUpdate()
@@ -57,7 +76,8 @@ public class ClientUnit : MonoBehaviour
         {
             //an exception, does not affect the other processes
             UpdateStepUI();
-            if (session.selectedUnitId == unitId && actionMenuUI!=null)
+            UpdateHpBar();
+            if (session.selectedUnitId == unitId && actionMenuUI != null)
             {
                 //this unit is selected, shows action menu UI
                 actionMenuUI.SetActive(true);
@@ -70,7 +90,7 @@ public class ClientUnit : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             //emergency sync: stop all animations and starts brute sync
             //sync only once, so that the resolve from other place can take place smoothly and uninterrupted
-            if (session.PendingToken != session.CurrentToken)
+            if (session.SyncState != 0)
             {
                 if (!isAtBeforeSnapshot)
                 {
@@ -94,6 +114,13 @@ public class ClientUnit : MonoBehaviour
     // -------------------------------------------------------
     // UI
     // -------------------------------------------------------
+    void UpdateHpBar()
+    {
+        UnitData data = session.GetUnitDataById(unitId);
+        if (data == null || hpBar == null) return;
+        float fill = (float)data.CurrentHP / data.MaxHP;
+        hpBar.fillAmount = fill;
+    }
 
     public void UpdateStepUI()
     {
@@ -116,7 +143,7 @@ public class ClientUnit : MonoBehaviour
 
     public void SelectWeaponSkill()
     {
-        if(session.selectedUnitId!=unitId) return;
+        if (session.selectedUnitId != unitId) return;
         UnitData data = session.GetUnitDataById(unitId);
         int skillId = data.WeaponSkillId;
         scene.clientInteractionSystem.HandleDecisionSelectSkill(skillId);

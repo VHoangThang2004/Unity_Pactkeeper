@@ -84,16 +84,6 @@ public class ClientScene : MonoBehaviour
     // }
 
     public ClientUnit GetSceneUnitById(int unitId) => spawnedUnits.Find(u => u.unitId == unitId);
-    public ClientUnit GetSceneUnitAt(Vector3Int cell) => spawnedUnits.Find(u => session.GetUnitDataById(u.unitId).CurrentCell == cell);
     public List<ClientUnit> GetAllSceneUnits() => spawnedUnits;
 
-    // -------------------------------------------------------
-    // Range Data (computed, stored here for shared access)
-    // -------------------------------------------------------
-
-    public HashSet<Vector3Int> rangeTilesData { get; private set; } = new HashSet<Vector3Int>();
-
-    public void SetRangeData(HashSet<Vector3Int> data) => rangeTilesData = data;
-    public void ClearRangeData() => rangeTilesData = new HashSet<Vector3Int>();
-    public bool IsInRange(Vector3Int cell) => rangeTilesData.Contains(cell);
 }

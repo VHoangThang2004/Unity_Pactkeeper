@@ -43,7 +43,7 @@ public class ClientInteractionSystem : MonoBehaviour
     {
         while (true)
         {
-            if (session.PendingToken == session.CurrentToken && session.SyncState == 0)
+            if (session.SyncState == 0)
             {
                 stateMachine.GoToNone();
                 yield break;
@@ -56,7 +56,7 @@ public class ClientInteractionSystem : MonoBehaviour
         while (true)
         {
             HandleTileHover();
-            if (session.CurrentToken != session.PendingToken)
+            if (session.SyncState != 0)
                 ForceLockedInputState();
             yield return null;
         }

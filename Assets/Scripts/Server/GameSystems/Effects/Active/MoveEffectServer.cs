@@ -17,20 +17,20 @@ public class MoveEffectServer : ServerActiveEffectBase
         if (unit == null)
         {
             Debug.LogError($"[MoveEffect] Unit {sourceUnitId} not found!");
-            return default;
+            return new ResolveResult { EffectId = -1 };
         }
 
         // Validate target
         if (!session.Map.IsWalkable(target.x, target.y))
         {
             Debug.LogWarning($"[MoveEffect] Target {target} not walkable!");
-            return default;
+            return new ResolveResult { EffectId = -1 };
         }
 
         if (session.GetUnitAt(target) != null)
         {
             Debug.LogWarning($"[MoveEffect] Target {target} occupied!");
-            return default;
+            return new ResolveResult { EffectId = -1 };
         }
 
         Vector3Int fromCell = unit.CurrentCell;

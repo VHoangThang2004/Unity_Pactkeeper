@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class ClientVisualController : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class ClientVisualController : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI instantStatusText;
     [SerializeField] private TextMeshProUGUI instantCounterText;
-    [SerializeField] private TextMeshProUGUI waitCounterText;
+    [SerializeField] private TextMeshProUGUI timerBarText;
+    [SerializeField] private Image timerBar;
     [SerializeField] public GameObject waitButtonLayer;
     [SerializeField] public GameObject cancelButtonLayer;
     [SerializeField] public GameObject confirmButton;
@@ -33,26 +35,23 @@ public class ClientVisualController : MonoBehaviour
     public void UpdateVisualOnStateChange()
     {
         var state = scene?.clientInteractionSystem?.stateMachine?.currentState;
+        ClearRange();
+        ClearShadowBrute();
 
         if (state is UnitSelectedState)
         {
             ShowWaitButton(false);
             ShowCancelButton(true);
-            // confirm only if target locked
             ShowConfirmButton(session.isTargetLocked);
         }
         else if (state is NoneState)
         {
-            ClearRange();
-            ClearShadowBrute();
             ShowWaitButton(true);
             ShowCancelButton(false);
             ShowConfirmButton(false);
         }
         else if (state is LockedInputState)
         {
-            ClearRange();
-            ClearShadowBrute();
             ShowWaitButton(false);
             ShowCancelButton(false);
             ShowConfirmButton(false);
@@ -63,40 +62,27 @@ public class ClientVisualController : MonoBehaviour
     // Range Display — dumb redraw from session data
     // -------------------------------------------------------
 
-    private HashSet<Vector3Int> lastDrawnTarget = new HashSet<Vector3Int>();
-    private HashSet<Vector3Int> lastDrawnAoE = new HashSet<Vector3Int>();
-
-    private void RedrawRange(bool isOwned)
+    private void RedrawRange()
     {
+        bool isOwned = session.IsMyUnit(session.selectedUnitId);
+        ClearRange();
         if (scene.rangeTilemap == null) return;
 
         var newTarget = new HashSet<Vector3Int>(session.CurrentTargetableCells);
-        var newAoE = new HashSet<Vector3Int>(session.CurrentAoECells);
-
-        if (newTarget.SetEquals(lastDrawnTarget) && newAoE.SetEquals(lastDrawnAoE)) return;
-
-        lastDrawnTarget = newTarget;
-        lastDrawnAoE = newAoE;
 
         scene.rangeTilemap.ClearAllTiles();
 
-        TileBase tile = (isOwned && session.isUnitReady(session.selectedUnitId)) ? rangeTileBase : enemyRangeTileBase;
         foreach (var cell in newTarget)
+        {
+            TileBase tile = (isOwned && cell.z == 1) ? rangeTileBase : enemyRangeTileBase;
             scene.rangeTilemap.SetTile(cell, tile);
-
-        TileBase aoeTile = aoePreviewTileBase != null ? aoePreviewTileBase : enemyRangeTileBase;
-        foreach (var cell in newAoE)
-            scene.rangeTilemap.SetTile(cell, aoeTile);
-
-        scene.SetRangeData(newTarget);
+            Debug.Log($"cell[{cell}] is set {(isOwned && cell.z == 1)}");
+        }
     }
     public void ClearRange()
     {
         if (scene.rangeTilemap != null)
             scene.rangeTilemap.ClearAllTiles();
-        scene.ClearRangeData();
-        lastDrawnTarget.Clear();
-        lastDrawnAoE.Clear();
     }
 
     // -------------------------------------------------------
@@ -117,13 +103,16 @@ public class ClientVisualController : MonoBehaviour
             ? session.currentPreviewCell
             : session.currentCellMouseOn;
 
-        if (cell == unit.CurrentCell) { ClearShadowBrute(); return; }
+        cell.z = 1;
+
+        // Debug.Log($"Current previewing cell: {cell}");
 
         if (!session.CurrentTargetableCells.Contains(cell))
         {
             ClearShadowBrute();
             return;
         }
+        // Debug.Log($"Cell is in CurrentTagetable cells");
 
         GameObject shadow = sceneUnit.hoverUnit;
         shadow.SetActive(true);
@@ -170,8 +159,15 @@ public class ClientVisualController : MonoBehaviour
         while (true)
         {
             // Timeline counters
-            if (waitCounterText != null)
-                waitCounterText.text = $"Time: {session.waitDur} | OT: {session.overtimeDur}";
+            if (timerBarText != null)
+                timerBarText.text = session.waitDur > 0 ? "Waiting..." : "Overtime...";
+            if (timerBar != null)
+            {
+                float waitDur = session.waitDur > 0 ? session.waitDur : session.overtimeDur;
+                float maxDur = session.waitDur > 0 ? 60 : 200; //wait duration = 60 max, overtime duration = 200 max (hard coded)
+                float fill = waitDur / maxDur;
+                timerBar.fillAmount = fill;
+            }
 
             if (instantCounterText != null)
                 instantCounterText.text = $"{session.Timeline.currentInstant}/{session.Timeline.maxInstant}";
@@ -198,13 +194,9 @@ public class ClientVisualController : MonoBehaviour
             // Range + shadow — redraw every tick if unit selected
             if (scene?.clientInteractionSystem?.stateMachine?.currentState is UnitSelectedState)
             {
-                bool isOwned = session.IsMyUnit(session.selectedUnitId);
-                RedrawRange(isOwned);
-                HoverShadow();
-
                 // Update confirm button based on target lock
-                UnitData unit = session.GetUnitDataById(session.selectedUnitId);
                 bool targetLocked = session.isTargetLocked;
+                RedrawRange();
                 ShowConfirmButton(targetLocked);
             }
 

@@ -17,12 +17,18 @@ public struct SessionSnapshotData : INetworkSerializable
     public List<UnitData> Units;
     public TimelineData Timeline;
 
-    public static SessionSnapshotData Partial(List<UnitData> changedUnits)
+    public static SessionSnapshotData Partial(List<UnitData> changedUnits, List<TeamData> changedTeams = null)
     {
+        var cloned = new List<UnitData>();
+        foreach (var unit in changedUnits)
+            cloned.Add(unit.Clone());
+
         return new SessionSnapshotData
         {
             HasUnits = true,
-            Units = changedUnits
+            Units = cloned,
+            HasTeams = changedTeams != null,
+            Teams = changedTeams
         };
     }
 

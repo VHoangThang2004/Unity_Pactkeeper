@@ -78,7 +78,7 @@ public class ServerController : MonoBehaviour
         timeline.InitTimeline();
 
         // 4. Recalculate all units — applies passive buffs onto stats
-        spawnManager.RecalculateAll();
+        UnitRecalculator.RecalculateAll(session);
 
         // 5. Build full pack — snapshot captures fully buffed unit states
         timeline.PackFinal();

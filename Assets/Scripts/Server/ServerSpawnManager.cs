@@ -16,23 +16,11 @@ public class ServerSpawnManager : MonoBehaviour
     {
         if (!SpawnTeam(0)) return false;
         if (!SpawnTeam(1)) return false;
-        RecalculateAll();
+        // UnitRecalculator.RecalculateAll(session);
         suppressSpawnRpcs = false;
         return true;
     }
 
-    public void RecalculateAll()
-    {
-        foreach (var unit in session.units)
-        {
-            var def = session.unitLibrary.Get(unit.UId);
-            if (def == null) continue;
-            var activeEffects = session.GetUnitActiveEffects(unit.Id);
-            UnitRecalculator.Recalculate(unit, def, activeEffects);
-            RecalculateSkillPatterns(unit);
-        }
-        Debug.Log($"[SpawnManager] All units recalculated.");
-    }
 
     public bool SpawnTeam(int teamId)
     {
@@ -104,8 +92,6 @@ public class ServerSpawnManager : MonoBehaviour
             PassiveSkillId = def.passiveSkill != null ? def.passiveSkill.skillId : -1,
         };
 
-        InitSkillPatterns(unit, loadout);
-
         team.unitIds.Add(unit.Id);
         session.units.Add(unit);
 
@@ -120,69 +106,4 @@ public class ServerSpawnManager : MonoBehaviour
     // Skill Pattern Init + Recalculate
     // -------------------------------------------------------
 
-    void InitSkillPatterns(UnitData unit, PlayerUnitLoadout loadout)
-    {
-        var skillIds = new List<int>
-    {
-        loadout.movementSkillId,
-        loadout.weaponSkillId,
-        loadout.classSkillId,
-        loadout.equipmentSkillId
-    };
-
-        var patterns = new List<CurrentPatterns>();
-        foreach (var skillId in skillIds)
-        {
-            if (skillId == -1) continue;
-            var skill = session.skillLibrary.Get(skillId);
-            if (skill == null) continue;
-            patterns.Add(new CurrentPatterns { SkillId = skillId });
-        }
-
-        unit.SkillPatterns = patterns.ToArray();
-        RecalculateSkillPatterns(unit);
-
-        Debug.Log($"[SpawnManager] Unit {unit.Id} — {patterns.Count} skill patterns initialized.");
-    }
-
-    public void RecalculateSkillPatterns(UnitData unit)
-    {
-        if (unit.SkillPatterns == null) return;
-
-        for (int i = 0; i < unit.SkillPatterns.Length; i++)
-        {
-            var skill = session.skillLibrary.Get(unit.SkillPatterns[i].SkillId);
-            if (skill == null) continue;
-            unit.SkillPatterns[i] = BuildSkillPattern(unit, skill);
-        }
-    }
-    CurrentPatterns BuildSkillPattern(UnitData unit, SkillDefinition skill)
-    {
-        var targetCells = new List<Vector3Int>();
-
-        if (session.CanUseSkill(unit.Id, skill.skillId, skill) && skill.targetPattern != null)
-        {
-            var translated = PatternResolver.TranslateTargetPattern(skill, unit);
-            targetCells = ServerPatternResolver.FilterTargetPattern(translated, unit, skill, session);
-        }
-
-        Vector2Int[] aoePattern = null;
-        if (skill.effectIds != null)
-            foreach (var effectId in skill.effectIds)
-            {
-                var effect = session.effectRegistry.Get(effectId);
-                if (effect?.aoePattern?.cells != null)
-                {
-                    aoePattern = effect.aoePattern.cells;
-                    break;
-                }
-            }
-
-        return new CurrentPatterns
-        {
-            SkillId = skill.skillId,
-            TargetCells = targetCells.ToArray(),
-            AoePattern = aoePattern
-        };
-    }
 }

@@ -167,6 +167,21 @@ public class ServerMatchSession : MonoBehaviour
     {
         return teams;
     }
+    public List<TeamData> GetAllCopyTeamData()
+    {
+        var result = new List<TeamData>();
+        foreach (var team in teams)
+            result.Add(new TeamData
+            {
+                teamId = team.teamId,
+                clientId = team.clientId,
+                unitIds = new List<int>(team.unitIds),
+                WaitDuration = team.WaitDuration,
+                Overtime = team.Overtime,
+                isInstantEnded = team.isInstantEnded
+            });
+        return result;
+    }
     public int GetOtherTeamId(int currentTeamId)
     {
         return teams[0].teamId == currentTeamId ? teams[1].teamId : teams[0].teamId;
@@ -211,7 +226,7 @@ public class ServerMatchSession : MonoBehaviour
     }
     public UnitData GetUnitAt(Vector3Int cell)
     {
-        return units.Find(u => u.CurrentCell == cell);
+        return units.Find(u => u.CurrentCell.x == cell.x && u.CurrentCell.y == cell.y);
     }
     public List<UnitData> GetUnitsAt(List<Vector3Int> cells)
     {
@@ -228,6 +243,13 @@ public class ServerMatchSession : MonoBehaviour
     {
         return new List<UnitData>(units);
     }
+    public List<UnitData> GetAllCopyUnits()
+    {
+        var result = new List<UnitData>();
+        foreach (var unit in units)
+            result.Add(unit.Clone());
+        return result;
+    }
 
     // -------------------------------------------------------
     // Occupied Cells
@@ -243,14 +265,6 @@ public class ServerMatchSession : MonoBehaviour
         }
         return occupied;
     }
-
-    public void ApplyMove(int unitId, Vector3Int target)
-    {
-        var unit = GetUnit(unitId);
-        if (unit == null) return;
-        unit.CurrentCell = target;
-    }
-
 
     // -------------------------------------------------------
     // Skill usage
@@ -301,4 +315,21 @@ public class ServerMatchSession : MonoBehaviour
                 unit.SkillUsages[i].UsageThisInstant = 0;
     }
 
+    // 
+    public void RemoveUnit(int unitId)
+    {
+        units.RemoveAll(u => u.Id == unitId);
+        ReadyUnitIds.Remove(unitId);
+
+        foreach (var team in teams)
+            team.unitIds.Remove(unitId);
+
+        Debug.Log($"[Session] Unit {unitId} removed — dead.");
+    }
+
+    public void Kill(int unitId)
+    {
+        RemoveUnit(unitId);
+        Debug.Log($"[Timeline] Unit {unitId} killed.");
+    }
 }

@@ -15,7 +15,6 @@ MonoBehaviour:
   uId: 1
   unitName: DefaultRibbit
   speed: 100
-  maxHp: 122
-  maxSkillPoint: 3
-  movementSkill: {fileID: 11400000, guid: 84b83b2e355c4bb47a8222fed0b0c2e6, type: 2}
-  passiveSkills: []
+  maxHp: 30
+  maxSkillPoint: 4
+  passiveSkill: {fileID: 0}

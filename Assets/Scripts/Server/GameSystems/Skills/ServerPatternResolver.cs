@@ -3,6 +3,36 @@ using UnityEngine;
 
 public static class ServerPatternResolver
 {
+    public static CurrentPatterns BuildSkillPattern(UnitData unit, SkillDefinition skill, ServerMatchSession session)
+    {
+        var targetCells = new List<Vector3Int>();
+
+        if (skill.targetPattern != null)
+        {
+            var translated = PatternResolver.TranslateTargetPattern(skill, unit);
+            targetCells = FilterTargetPattern(translated, unit, skill, session);
+        }
+
+        Vector2Int[] aoePattern = null;
+        if (skill.effectIds != null)
+            foreach (var effectId in skill.effectIds)
+            {
+                var effect = session.effectRegistry.Get(effectId);
+                if (effect?.aoePattern?.cells != null)
+                {
+                    aoePattern = effect.aoePattern.cells;
+                    break;
+                }
+            }
+
+        return new CurrentPatterns
+        {
+            SkillId = skill.skillId,
+            TargetCells = targetCells.ToArray(),
+            AoePattern = aoePattern
+        };
+    }
+
     public static List<Vector3Int> FilterTargetPattern(
         List<Vector3Int> cells,
         UnitData caster,
@@ -10,35 +40,48 @@ public static class ServerPatternResolver
         ServerMatchSession session)
     {
         var result = new List<Vector3Int>();
+        bool skillUsable = session.CanUseSkill(caster.Id, skill.skillId, skill);
 
         foreach (var cell in cells)
         {
             if (!session.Map.IsWalkable(cell.x, cell.y)) continue;
             var unitAtCell = session.GetUnitAt(cell);
 
-            switch (skill.targeting)
+            bool selectable;
+            if (!skillUsable)
             {
-                case TargetFilter.EmptyCell:
-                    if (unitAtCell == null) result.Add(cell);
-                    break;
-                case TargetFilter.UnitCell:
-                    if (unitAtCell != null) result.Add(cell);
-                    break;
-                case TargetFilter.EnemyUnit:
-                    if (unitAtCell != null &&
-                        session.GetTeamIdByUnitId(unitAtCell.Id) != session.GetTeamIdByUnitId(caster.Id))
-                        result.Add(cell);
-                    break;
-                case TargetFilter.AllyUnit:
-                    if (unitAtCell != null &&
-                        session.GetTeamIdByUnitId(unitAtCell.Id) == session.GetTeamIdByUnitId(caster.Id))
-                        result.Add(cell);
-                    break;
-                case TargetFilter.AnyCell:
-                    result.Add(cell);
-                    break;
+                selectable = false;
             }
+            else
+            {
+                switch (skill.targeting)
+                {
+                    case TargetFilter.EmptyCell:
+                        selectable = unitAtCell == null;
+                        break;
+                    case TargetFilter.UnitCell:
+                        selectable = unitAtCell != null;
+                        break;
+                    case TargetFilter.EnemyUnit:
+                        selectable = unitAtCell != null &&
+                            session.GetTeamIdByUnitId(unitAtCell.Id) != session.GetTeamIdByUnitId(caster.Id);
+                        break;
+                    case TargetFilter.AllyUnit:
+                        selectable = unitAtCell != null &&
+                            session.GetTeamIdByUnitId(unitAtCell.Id) == session.GetTeamIdByUnitId(caster.Id);
+                        break;
+                    case TargetFilter.AnyCell:
+                        selectable = true;
+                        break;
+                    default:
+                        selectable = false;
+                        break;
+                }
+            }
+
+            result.Add(new Vector3Int(cell.x, cell.y, selectable ? 1 : 0));
         }
+
         return result;
     }
 
