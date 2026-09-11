@@ -42,7 +42,11 @@ public class ClientVisualController : MonoBehaviour
         {
             ShowWaitButton(false);
             ShowCancelButton(true);
-            ShowConfirmButton(session.isTargetLocked);
+            if (session.isTargetLocked)
+            {
+                Vector3Int x = session.CurrentTargetableCells.Find(cell => cell.x == session.currentPreviewCell.x && cell.y == session.currentPreviewCell.y);
+                ShowConfirmButton(x.z == 1 && session.isUnitReady(session.selectedUnitId));
+            }
         }
         else if (state is NoneState)
         {
@@ -164,9 +168,9 @@ public class ClientVisualController : MonoBehaviour
             if (timerBar != null)
             {
                 float waitDur = session.waitDur > 0 ? session.waitDur : session.overtimeDur;
-                float maxDur = session.waitDur > 0 ? 60 : 200; //wait duration = 60 max, overtime duration = 200 max (hard coded)
-                float fill = waitDur / maxDur;
-                timerBar.fillAmount = fill;
+                float maxDur = session.waitDur > 0 ? session.maxWaitDur : session.maxOvertimeDur;
+                timerBar.color = session.waitDur > 0 ? Color.green : Color.red;
+                timerBar.fillAmount = maxDur > 0 ? waitDur / maxDur : 0f;
             }
 
             if (instantCounterText != null)
@@ -195,9 +199,12 @@ public class ClientVisualController : MonoBehaviour
             if (scene?.clientInteractionSystem?.stateMachine?.currentState is UnitSelectedState)
             {
                 // Update confirm button based on target lock
-                bool targetLocked = session.isTargetLocked;
                 RedrawRange();
-                ShowConfirmButton(targetLocked);
+                if (session.isTargetLocked)
+                {
+                    Vector3Int x = session.CurrentTargetableCells.Find(cell => cell.x == session.currentPreviewCell.x && cell.y == session.currentPreviewCell.y);
+                    ShowConfirmButton(x.z == 1 && session.isUnitReady(session.selectedUnitId));
+                }
             }
 
             yield return new WaitForSeconds(0.1f);

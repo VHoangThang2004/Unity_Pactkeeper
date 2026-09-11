@@ -24,6 +24,8 @@ public class ClientController : MonoBehaviour
 
     private int trialErrorCount = 0;
     private int totalErrorCount = 0;
+    private bool initPackageReceived = false;
+
 
     IEnumerator ClientGuard()
     {
@@ -80,13 +82,22 @@ public class ClientController : MonoBehaviour
         //Init complete, ready to receive first snapshot of the match session
         scene.syncMachine.Init();
         session.Init();
-        bridge.RequestInitialStateServerRpc();
+        yield return TryRequestInitialStateServer();
 
         // Wait until first sync confirmed
         yield return new WaitUntil(() => session.CurrentToken != -1);
         Debug.Log("[ClientController] Client initialized successfully.");
         //Start the statemachines that requires data from now on
         scene.visualController.StartUILoop();
+    }
+
+    IEnumerator TryRequestInitialStateServer()
+    {
+        while (!initPackageReceived)
+        {
+            bridge.RequestInitialStateServerRpc();
+            yield return new WaitForSeconds(1f);
+        }
     }
 
     bool TryInitRegistries()
@@ -139,6 +150,7 @@ public class ClientController : MonoBehaviour
             decision = decision,
             token = token
         };
+        initPackageReceived = true;
     }
 
     IEnumerator SyncReceiverLoop()

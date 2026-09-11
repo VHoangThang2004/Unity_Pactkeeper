@@ -32,7 +32,7 @@ public class ServerTimelineManager : MonoBehaviour
     [SerializeField] private float instantDuration = 2f;
 
     [Header("Decision Timeouts")]
-    [SerializeField] private float actWaitWindowPerInstant = 60f;
+    [SerializeField] private float actWaitWindowPerInstantPerReadyUnit = 15f;
     [SerializeField] private float overtimePerTeam = 200f;
 
     // Internal coroutine control — not observable, not session data
@@ -138,9 +138,6 @@ public class ServerTimelineManager : MonoBehaviour
             TransitionTo(ServerSessionState.Flowing);
             session.CurrentTeamTurnId = -1;
 
-            // Reset per-instant tracking
-            foreach (var team in teams)
-                team.WaitDuration = (int)actWaitWindowPerInstant;
             actionRecord.Clear();
             effectRecord.Clear();
             session.ResetInstantSkillUsage();
@@ -149,6 +146,9 @@ public class ServerTimelineManager : MonoBehaviour
             TickAllUnits();
             bool effectsChanged = TickAllEffects();
             bool newUnitsReady = UpdateReadyQueue();
+            // Reset per-instant tracking
+            foreach (var team in teams)
+                team.WaitDuration = (int)actWaitWindowPerInstantPerReadyUnit * session.OwnedReadyUnitCount(team.teamId);
 
             // Broadcast — full pack if something changed, cheap tick otherwise
             if (effectsChanged)
@@ -670,13 +670,18 @@ public class ServerTimelineManager : MonoBehaviour
 
     DecisionRequestData BuildDecision()
     {
+        if (session.CurrentTeamTurnId == -1) return default;
+
         List<TeamData> teams = session.GetAllTeamData();
+        Debug.Log($"Wait dur{teams[session.CurrentTeamTurnId].WaitDuration} - max wd {actWaitWindowPerInstantPerReadyUnit * 5}");
         return session.CurrentTeamTurnId == -1 ? default : new DecisionRequestData
         {
             Instant = session.CurrentInstant,
             DecisionTeam = session.CurrentTeamTurnId,
-            WaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
-            Overtime = teams[session.CurrentTeamTurnId].Overtime
+            RemainingWaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
+            MaxWaitDuration = (int)actWaitWindowPerInstantPerReadyUnit * 5,
+            RemainingOvertime = teams[session.CurrentTeamTurnId].Overtime,
+            MaxOvertime = (int)overtimePerTeam
         };
     }
 

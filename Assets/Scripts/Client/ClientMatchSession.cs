@@ -49,7 +49,9 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
     public DecisionRequestData LastDecisionRequest { get; private set; }
     public int waitDur = 0;
+    public int maxWaitDur = 0;
     public int overtimeDur = 0;
+    public int maxOvertimeDur = 0;
 
     // -------------------------------------------------------
     // Resolve + Secret
@@ -210,8 +212,10 @@ public class ClientMatchSession : MonoBehaviour
     void ApplyDecisionRequest(DecisionRequestData data)
     {
         LastDecisionRequest = data;
-        waitDur = data.WaitDuration;
-        overtimeDur = data.Overtime;
+        waitDur = data.RemainingWaitDuration;
+        maxWaitDur = data.MaxWaitDuration;
+        overtimeDur = data.RemainingOvertime;
+        maxOvertimeDur = data.MaxOvertime;
     }
 
     void LoadMapData(string mapId)

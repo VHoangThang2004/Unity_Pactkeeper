@@ -85,6 +85,15 @@ public class ServerMatchSession : MonoBehaviour
     public int FlaggedTeamId { get; set; } = 0;
     public List<int> ReadyUnitIds { get; set; } = new List<int>();
 
+    public int OwnedReadyUnitCount(int teamId)
+    {
+        int count = 0;
+        foreach (var unitId in ReadyUnitIds)
+            if (GetTeamIdByUnitId(unitId) == teamId)
+                count++;
+        return count;
+    }
+
 
     // -------------------------------------------------------
     // Init

@@ -56,6 +56,8 @@ public class ServerController : MonoBehaviour
     [SerializeField] private float postInitGracePeriod = 3f;
     [SerializeField] private float clientInitTimeout = 30f;
 
+    private bool serverReady = false;
+
     IEnumerator InitSequence()
     {
         // 1. Init session
@@ -86,6 +88,7 @@ public class ServerController : MonoBehaviour
         Debug.Log("[ServerController] Ready — waiting for clients to request init.");
 
         // 6. Wait for all clients to request init
+        serverReady = true;
         float elapsed = 0f;
         while (clientsReceivedInit < requiredClients)
         {
@@ -112,6 +115,7 @@ public class ServerController : MonoBehaviour
 
     public void HandleAllInitialStateRequest(ulong clientId)
     {
+        if(!serverReady) return; // ignore request if not ready
         if (clientId == NetworkManager.Singleton.LocalClientId) return;
 
         timeline.SendSnapshotToClient(clientId);
