@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f19b60db6676e74a874b359a07942a0, type: 3}
-  m_Name: TargetPattern_Move_Tank_Class
+  m_Name: TargetPattern_Move_Physician_Class
   m_EditorClassIdentifier: Assembly-CSharp::SkillPattern
   cells:
   - {x: -1, y: 0}
-  - {x: -2, y: 0}
   - {x: 1, y: 0}
-  - {x: 2, y: 0}
+  - {x: 0, y: -2}
   - {x: 0, y: -1}
   - {x: 0, y: 1}
+  - {x: 0, y: 2}

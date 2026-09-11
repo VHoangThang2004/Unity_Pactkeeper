@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Unit_001_Default
   m_EditorClassIdentifier: Assembly-CSharp::UnitDefinition
   uId: 1
-  unitName: DefaultRibbit
-  speed: 100
+  unitName: AssasinRibbit
+  speed: 150
   maxHp: 30
   maxSkillPoint: 4
   passiveSkill: {fileID: 0}

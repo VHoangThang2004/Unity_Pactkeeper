@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2c5a9af477d8bd4c9c9fedbfe6a9aa8, type: 3}
+  m_Name: A2004_Skill_MainWeapon_Bow
+  m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
+  skillId: 2004
+  skillName: BowBasicAttack
+  targetPattern: {fileID: 11400000, guid: 0defede55d1cd0b4996a4955faed2b85, type: 2}
+  isTargetPatternFixed: 0
+  targeting: 2
+  skillPointCost: 0
+  stepCostMultiplier: 0.5
+  useLimitPerInstant: 1
+  useLimitTotal: -1
+  effectIds: 12270000
+  icon: {fileID: 1295046780112546796, guid: 09e61dcd944d9e64a804e022ca564d0c, type: 3}

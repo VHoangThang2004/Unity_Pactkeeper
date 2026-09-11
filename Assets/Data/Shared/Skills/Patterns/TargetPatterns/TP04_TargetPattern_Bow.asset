@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5e962323c5677c4bbd16669fe018bb7, type: 3}
-  m_Name: Unit_002_Viking
-  m_EditorClassIdentifier: Assembly-CSharp::UnitDefinition
-  uId: 2
-  unitName: Viking
-  speed: 100
-  maxHp: 50
-  maxSkillPoint: 4
-  passiveSkill: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 5f19b60db6676e74a874b359a07942a0, type: 3}
+  m_Name: TP04_TargetPattern_Bow
+  m_EditorClassIdentifier: Assembly-CSharp::SkillPattern
+  cells:
+  - {x: -2, y: 0}
+  - {x: 2, y: 0}
+  - {x: 0, y: 2}
+  - {x: 0, y: -2}

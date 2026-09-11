@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: SkillLibrary
   m_EditorClassIdentifier: Assembly-CSharp::ActionLibrary
   definitions:
-  - {fileID: 11400000, guid: 84b83b2e355c4bb47a8222fed0b0c2e6, type: 2}
   - {fileID: 11400000, guid: d43fce66ca65d044dacb060e52db3fb4, type: 2}
+  - {fileID: 11400000, guid: 84b83b2e355c4bb47a8222fed0b0c2e6, type: 2}
+  - {fileID: 11400000, guid: 9352b435c575e80428326975ed5cb487, type: 2}
+  - {fileID: 11400000, guid: 3e70871318dfd354cae72b6e9ba63cde, type: 2}
+  - {fileID: 11400000, guid: 9a7f9ecdfc0700549ac631c663415df7, type: 2}
   - {fileID: 11400000, guid: cbd1c73f2044db64382a67febc639b55, type: 2}
   - {fileID: 11400000, guid: 459a5071398d0e94bad24cbc1d780fba, type: 2}
+  - {fileID: 11400000, guid: 7f68afa0ebd233146b97182467afa69c, type: 2}
+  - {fileID: 11400000, guid: 07e4c4064ade4904da8f3793ad84906f, type: 2}
+  - {fileID: 11400000, guid: 368c9f6c7f0cbc94ea4c867612d4475f, type: 2}
