@@ -17,8 +17,12 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
         if (result.TargetCells == null || result.TargetCells.Count == 0)
             yield break;
 
-        // UnitData targetData = session.GetUnitDataAt(result.TargetCells[0]);
-        // if (targetData == null) yield break;
+        UnitData targetData = session.GetUnitDataAt(result.TargetCells[0]);
+        if (targetData != null)
+        {
+            ClientUnit targetUnit = scene.GetSceneUnitById(targetData.Id);
+            targetUnit.VFXAnimator.Play("BeingHealedVFX", 0, 0f);
+        }
 
         // ClientUnit targetUnit = scene.GetSceneUnitById(targetData.Id);
         // if (targetUnit == null) yield break;
@@ -28,7 +32,7 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
 
         Vector3 startPos = sceneUnit.transform.position;
         Vector3 targetPos = scene.movableTilemap.GetCellCenterWorld(result.TargetCells[0]);
-        float stopDistance = 0.6f; // world units before target
+        float stopDistance = 0.8f; // world units before target
         Vector3 dir = (targetPos - startPos).normalized;
         Vector3 midPos = targetPos - dir * stopDistance;
 
@@ -65,6 +69,12 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
             sceneUnit.transform.position = Vector3.Lerp(midPos, startPos, t);
             yield return null;
         }
+        if (targetData != null)
+        {
+            ClientUnit targetUnit = scene.GetSceneUnitById(targetData.Id);
+            targetUnit.VFXAnimator.Play("NoEffect", 0, 0f);
+        }
+
 
         sceneUnit.transform.position = startPos;
 
@@ -75,6 +85,6 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
         }
 
         sceneUnit.isResolvingAnimation = false;
-        // targetUnit.isResolvingAnimation = false;
+        // yield return new WaitForSeconds(2f);
     }
 }

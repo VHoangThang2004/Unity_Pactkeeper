@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5e962323c5677c4bbd16669fe018bb7, type: 3}
-  m_Name: Unit_003_Archer
+  m_Name: Unit_002_Paladin
   m_EditorClassIdentifier: Assembly-CSharp::UnitDefinition
-  uId: 3
-  unitName: Archer
-  speed: 130
-  maxHp: 30
+  uId: 2
+  unitName: Paladin
+  speed: 100
+  maxHp: 50
   maxSkillPoint: 4
   passiveSkill: {fileID: 0}

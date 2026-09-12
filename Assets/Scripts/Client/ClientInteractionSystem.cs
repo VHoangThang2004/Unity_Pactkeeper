@@ -100,6 +100,14 @@ public class ClientInteractionSystem : MonoBehaviour
         stateMachine.GoToLocked();
     }
 
+    public void SelectWeaponSkill()
+    {
+        if (session.selectedUnitId == -1) return;
+        UnitData data = session.GetUnitDataById(session.selectedUnitId);
+        int skillId = data.WeaponSkillId;
+        scene.clientInteractionSystem.HandleDecisionSelectSkill(skillId);
+    }
+
     public void ForceNoneState()
     {
         stateMachine?.GoToNone();

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 /// <summary>
 /// Scene object registry. Single source of truth for all runtime scene references.
@@ -27,6 +28,9 @@ public class ClientScene : MonoBehaviour
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
     [SerializeField] public UnitLibrary unitLibrary;
     [SerializeField] public ClientEffectRegistry effectRegistry;
+
+    //UI
+    [SerializeField] public Image mainWeaponSkillIcon;
 
     // -------------------------------------------------------
     // Map Refs (wired by ClientMapLoader at runtime)

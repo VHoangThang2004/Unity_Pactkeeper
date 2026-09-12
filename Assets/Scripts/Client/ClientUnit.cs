@@ -20,8 +20,6 @@ public class ClientUnit : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI stepText;
     [SerializeField] private Image hpBar;
-    [SerializeField] private GameObject actionMenuUI;
-    [SerializeField] private Image mainWeaponSkillIcon;
 
     [Header("InitRefs")] //put here so notice when something is not initiallized
     private ClientMatchSession session;
@@ -59,9 +57,6 @@ public class ClientUnit : MonoBehaviour
         {
             hpBar.color = Color.red;
         }
-        SkillDefinition skill = scene.skillLibrary.Get(unitData.WeaponSkillId);
-        if (skill != null && mainWeaponSkillIcon != null)
-            mainWeaponSkillIcon.sprite = skill.icon;
 
         SyncPositionToCurrentSession();
 
@@ -77,15 +72,6 @@ public class ClientUnit : MonoBehaviour
             //an exception, does not affect the other processes
             UpdateStepUI();
             UpdateHpBar();
-            if (session.selectedUnitId == unitId && actionMenuUI != null)
-            {
-                //this unit is selected, shows action menu UI
-                actionMenuUI.SetActive(true);
-            }
-            else
-            {
-                actionMenuUI.SetActive(false);
-            }
 
             yield return new WaitForSeconds(0.1f);
             //emergency sync: stop all animations and starts brute sync
@@ -141,11 +127,4 @@ public class ClientUnit : MonoBehaviour
         transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
     }
 
-    public void SelectWeaponSkill()
-    {
-        if (session.selectedUnitId != unitId) return;
-        UnitData data = session.GetUnitDataById(unitId);
-        int skillId = data.WeaponSkillId;
-        scene.clientInteractionSystem.HandleDecisionSelectSkill(skillId);
-    }
 }

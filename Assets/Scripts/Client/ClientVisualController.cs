@@ -26,7 +26,13 @@ public class ClientVisualController : MonoBehaviour
     [SerializeField] private Image timerBar;
     [SerializeField] public GameObject waitButtonLayer;
     [SerializeField] public GameObject cancelButtonLayer;
-    [SerializeField] public GameObject confirmButton;
+    // [SerializeField] public GameObject confirmButton;
+    [SerializeField] private CanvasGroup confirmButtonCanvasGroup;
+
+    [SerializeField] public GameObject ActionMenuUI;
+    [SerializeField] public TextMeshProUGUI CurrentUnitInfo;
+
+
 
     // -------------------------------------------------------
     // State Change — controls visibility of UI elements
@@ -42,6 +48,8 @@ public class ClientVisualController : MonoBehaviour
         {
             ShowWaitButton(false);
             ShowCancelButton(true);
+            ShowActionMenu(true);
+
             if (session.isTargetLocked)
             {
                 Vector3Int x = session.CurrentTargetableCells.Find(cell => cell.x == session.currentPreviewCell.x && cell.y == session.currentPreviewCell.y);
@@ -53,12 +61,16 @@ public class ClientVisualController : MonoBehaviour
             ShowWaitButton(true);
             ShowCancelButton(false);
             ShowConfirmButton(false);
+            ShowActionMenu(false);
+            ActionMenuUI.SetActive(false);
         }
         else if (state is LockedInputState)
         {
             ShowWaitButton(false);
             ShowCancelButton(false);
             ShowConfirmButton(false);
+            ShowActionMenu(false);
+            ActionMenuUI.SetActive(false);
         }
     }
 
@@ -144,12 +156,34 @@ public class ClientVisualController : MonoBehaviour
     {
         cancelButtonLayer.SetActive(session.IsMyTurn() && isShown);
     }
+    public void ShowActionMenu(bool isShown)
+    {
+        if (isShown)
+        {
+            ActionMenuUI.SetActive(true);
+            UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+            SkillDefinition skill = scene.skillLibrary.Get(unit.WeaponSkillId);
+            if (skill != null && scene.mainWeaponSkillIcon != null)
+                scene.mainWeaponSkillIcon.sprite = skill.icon;
+            UnitDefinition unitDefinition = scene.unitLibrary.Get(unit.UId);
+            CurrentUnitInfo.text = "Name: "+unitDefinition.name.ToString()
+            + "\n HP: " + unit.CurrentHP.ToString()
+            + "\n SP: " + unit.CurrentSkillPoint.ToString()
+            + "\n Speed: " + unit.Speed.ToString();
+        }
+        else
+        {
+            ActionMenuUI.SetActive(false);
+        }
+    }
 
     public void ShowConfirmButton(bool isShown)
     {
-        confirmButton.SetActive(session.IsMyTurn() && isShown);
+        bool show = session.IsMyTurn() && isShown;
+        confirmButtonCanvasGroup.alpha = show ? 1f : 0f;
+        confirmButtonCanvasGroup.interactable = show;
+        confirmButtonCanvasGroup.blocksRaycasts = show;
     }
-
     // -------------------------------------------------------
     // UI Loop — data only, dumb updates every tick
     // -------------------------------------------------------
@@ -180,11 +214,11 @@ public class ClientVisualController : MonoBehaviour
             if (instantStatusText != null)
             {
                 if (!session.Timeline.isPaused)
-                    instantStatusText.text = "Time is flowing...";
+                    instantStatusText.text = "Time is flowing";
                 else if (session.LastResolve.HasResolve && session.SyncState != 0)
-                    instantStatusText.text = "Resolving....";
+                    instantStatusText.text = "Resolving";
                 else
-                    instantStatusText.text = session.IsMyTurn() ? "Your turn to decide..." : "Enemy deciding...";
+                    instantStatusText.text = session.IsMyTurn() ? "Your turn" : "Enemy turn";
             }
 
             // Turn flip — update button visibility on turn change
@@ -205,6 +239,11 @@ public class ClientVisualController : MonoBehaviour
                     Vector3Int x = session.CurrentTargetableCells.Find(cell => cell.x == session.currentPreviewCell.x && cell.y == session.currentPreviewCell.y);
                     ShowConfirmButton(x.z == 1 && session.isUnitReady(session.selectedUnitId));
                 }
+                else
+                {
+                    ShowConfirmButton(false);
+                }
+
             }
 
             yield return new WaitForSeconds(0.1f);

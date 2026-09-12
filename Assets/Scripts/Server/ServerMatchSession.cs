@@ -130,41 +130,16 @@ public class ServerMatchSession : MonoBehaviour
         var connectedIds = new List<ulong>(NetworkManager.Singleton.ConnectedClientsIds);
         connectedIds.Remove(NetworkManager.Singleton.LocalClientId); // exclude server
 
-        loadouts = new List<TeamLoadout>();
-
-        //for (int i = 0; i < loadouts.Count && i < connectedIds.Count; i++)
-        //{
-        //    loadouts[i].clientId = connectedIds[i]; // testing: assign real clientId here
-        //    teams.Add(new TeamData
-        //    {
-        //        teamId = loadouts[i].teamId,
-        //        clientId = loadouts[i].clientId,
-        //        unitIds = new List<int>()
-        //    });
-        //}
-
-        for (int i = 0; i < connectedIds.Count; i++)
+        for (int i = 0; i < loadouts.Count && i < connectedIds.Count; i++)
         {
-            ulong clientId = connectedIds[i];
-
-            // Get the list of selected champions from the Lobby
-            List<PlayerUnitLoadout> myUnits = LobbyManager.MatchLoadoutData.ContainsKey(clientId)
-                                              ? LobbyManager.MatchLoadoutData[clientId]
-                                              : new List<PlayerUnitLoadout>(); // Error prevention
-            loadouts.Add(new TeamLoadout
-            {
-                teamId = i,
-                clientId = clientId,
-                units = myUnits
-            });
+            loadouts[i].clientId = connectedIds[i]; // testing: assign real clientId here
             teams.Add(new TeamData
             {
-                teamId = i,
-                clientId = clientId,
+                teamId = loadouts[i].teamId,
+                clientId = loadouts[i].clientId,
                 unitIds = new List<int>()
             });
         }
-
     }
 
     // -------------------------------------------------------
@@ -306,7 +281,6 @@ public class ServerMatchSession : MonoBehaviour
         return occupied;
     }
 
-
     // -------------------------------------------------------
     // Skill usage
     // -------------------------------------------------------
@@ -373,5 +347,4 @@ public class ServerMatchSession : MonoBehaviour
         RemoveUnit(unitId);
         Debug.Log($"[Timeline] Unit {unitId} killed.");
     }
-
 }
