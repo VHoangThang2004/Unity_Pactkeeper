@@ -46,10 +46,9 @@ public class NormalHealEffectVisual : ClientActiveEffectBase
 
         if (sceneUnit.VFXAnimator != null)
         {
-            sceneUnit.VFXAnimator.SetFloat("ValX", valX);
-            sceneUnit.VFXAnimator.SetFloat("ValY", valY);
-            sceneUnit.VFXAnimator.SetBool("IsAttacking", true);
             sceneUnit.VFXAnimator.SetBool("IsIdling", false);
+            sceneUnit.VFXAnimator.Play("SpellSourceVFX", 0, 0f);
+
         }
 
         float half = resolveDuration * 0.5f;
@@ -83,8 +82,8 @@ public class NormalHealEffectVisual : ClientActiveEffectBase
 
         if (sceneUnit.VFXAnimator != null)
         {
-            sceneUnit.VFXAnimator.SetBool("IsAttacking", false);
             sceneUnit.VFXAnimator.SetBool("IsIdling", true);
+            sceneUnit.VFXAnimator.Play("NoEffect", 0, 0f);
         }
 
         sceneUnit.isResolvingAnimation = false;
