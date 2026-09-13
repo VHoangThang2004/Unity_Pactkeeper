@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -30,6 +31,9 @@ public class ClientVisualController : MonoBehaviour
 
     [SerializeField] public GameObject ActionMenuUI;
     [SerializeField] public TextMeshProUGUI CurrentUnitInfo;
+    
+    [SerializeField] public InstantStatus myInstantStatus;
+    [SerializeField] public InstantStatus enemyInstantStatus;
 
 
     [SerializeField] private CanvasGroup[] OwnedReadyUnitCanvasGroup;
@@ -76,6 +80,18 @@ public class ClientVisualController : MonoBehaviour
                 EnemyReadyUnitCanvasGroup[i].alpha = 0;
                 EnemyReadyUnitCanvasGroup[i].interactable = false;
                 EnemyReadyUnitCanvasGroup[i].blocksRaycasts = false;
+            }
+        }
+
+        foreach(TeamData team in session.teams)
+        {
+            if (team.clientId == NetworkManager.Singleton.LocalClientId)
+            {
+                myInstantStatus.UpdateInstantStatus(team.isInstantEnded);
+            }
+            else
+            {
+                enemyInstantStatus.UpdateInstantStatus(team.isInstantEnded);
             }
         }
 

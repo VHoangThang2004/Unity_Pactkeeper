@@ -73,6 +73,12 @@ public class ClientCameraController : MonoBehaviour
             Gizmos.DrawWireCube(cam.transform.position, camSize);
         }
     }
+    public void CenterOn(Vector3 worldPos)
+    {
+        Vector3 target = new Vector3(worldPos.x, worldPos.y, transform.position.z);
+        transform.position = target;
+        ClampPosition();
+    }
     void ClampPosition()
     {
         if (boundsCollider == null || cam == null) return;

@@ -21,7 +21,11 @@ public class UnitSelectedState : IInteractionState
         UnitData unit = session.GetUnitDataById(session.selectedUnitId);
         session.currentSkillId = unit?.MovementSkillId ?? -1;
         session.isTargetLocked = false;
-
+        if (unit != null)
+        {
+            Vector3 worldPos = scene.movableTilemap.GetCellCenterWorld(unit.CurrentCell);
+            scene.cameraController.CenterOn(worldPos);
+        }
         ReloadTargetPattern();
 
         Debug.Log($"[State] → UnitSelected (unit {unitId} owned={session.IsMyUnit(session.selectedUnitId)})");

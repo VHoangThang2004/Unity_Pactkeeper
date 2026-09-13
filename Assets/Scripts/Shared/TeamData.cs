@@ -18,6 +18,7 @@ public class TeamData : INetworkSerializable
         serializer.SerializeValue(ref clientId);
         serializer.SerializeValue(ref WaitDuration);
         serializer.SerializeValue(ref Overtime);
+        serializer.SerializeValue(ref isInstantEnded);
 
         if (serializer.IsReader)
         {
