@@ -1,19 +1,20 @@
 // Server/GameSystems/Effects/Concrete/NormalAttackEffectServer.cs
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NormalAttackEffectServer", menuName = "SRPG/Effects/Server/NormalAttack")]
-public class NormalAttackEffectServer : ServerActiveEffectBase
+[CreateAssetMenu(fileName = "NormalHealEffectServer", menuName = "SRPG/Effects/Server/NormalHeal")]
+public class NormalHealEffectServer : ServerActiveEffectBase
 {
     public float baseValue = 10;
-    public override InstantType InstantType => InstantType.NonInstant;
-    public override EffectType EffectType => EffectType.Damage;
+    public override InstantType InstantType => InstantType.HalfInstant;
+    public override EffectType EffectType => EffectType.Heal;
 
     public override ResolveResult Apply(
         ServerMatchSession session,
         int sourceUnitId,
-        Vector3Int target) //1 target only for this effect (dont need to check aoe pattern)
+        Vector3Int target) //1 target only for this effect (dont need to check aoe pattern). If an effect with complicated aoe pattern then must check affected cells from this target
     {
         UnitData unit = session.GetUnit(sourceUnitId);
         if (unit == null)
@@ -38,36 +39,21 @@ public class NormalAttackEffectServer : ServerActiveEffectBase
             };
         }
 
-        if (session.GetTeamIdByUnitId(sourceUnitId) == session.GetTeamIdByUnitId(targetUnit.Id))
+        if (session.GetTeamIdByUnitId(sourceUnitId) != session.GetTeamIdByUnitId(targetUnit.Id))
         {
-            Debug.LogWarning("Cannot damage ally !");
-            return new ResolveResult { EffectId = -1 };
-        }
-
-        targetUnit.CurrentHP = targetUnit.CurrentHP - Mathf.RoundToInt(unit.DamageMultiplier * baseValue);
-
-        if (targetUnit.CurrentHP <= 0)
-        {
-            session.Kill(targetUnit.Id);
+            Debug.LogWarning("Cannot heal enemy !");
             return new ResolveResult
             {
                 EffectId = effectId,
                 SourceUnitId = sourceUnitId,
                 SourceCell = fromCell,
                 TargetCells = new List<Vector3Int> { target },
-                Partial = SessionSnapshotData.Full(
-                    session.MapId,
-                    session.CurrentTeamTurnId,
-                    session.GetAllCopyTeamData(),
-                    session.GetAllCopyUnits(),
-                    new TimelineData
-                    {
-                        currentInstant = session.CurrentInstant,
-                        isPaused = session.TimelineState != ServerSessionState.Flowing,
-                        flag = session.FlaggedTeamId
-                    })
+                Partial = SessionSnapshotData.Partial(new List<UnitData> { unit })
             };
         }
+
+        targetUnit.CurrentHP = Mathf.Min(targetUnit.CurrentHP + Mathf.RoundToInt(unit.DamageMultiplier * baseValue), targetUnit.MaxHP);
+
         return new ResolveResult
         {
             EffectId = effectId,

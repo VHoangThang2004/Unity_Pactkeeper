@@ -48,7 +48,7 @@ public static class ServerPatternResolver
             var unitAtCell = session.GetUnitAt(cell);
 
             bool selectable;
-            if (!skillUsable)
+            if (!skillUsable || !session.ReadyUnitIds.Contains(caster.Id))
             {
                 selectable = false;
             }

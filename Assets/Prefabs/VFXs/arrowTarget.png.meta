@@ -1,19 +1,22 @@
 fileFormatVersion: 2
-guid: 502bb9561f2de1d4daf66ea3fbc40875
+guid: 0cc5e2a834a76744fa8ee6a367e101db
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8034311358478198214
-    second: physician_0
+      213: 7236187972134006337
+    second: arrowTarget_0
   - first:
-      213: -5961000152254313914
-    second: physician_1
+      213: -7491179881448925902
+    second: arrowTarget_1
   - first:
-      213: 8642574999449343706
-    second: physician_2
+      213: -4057793388238970969
+    second: arrowTarget_2
   - first:
-      213: 2769497270478327017
-    second: physician_3
+      213: 4149543978814484181
+    second: arrowTarget_3
+  - first:
+      213: -2499110063297553886
+    second: arrowTarget_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -60,7 +63,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 20
+  spritePixelsToUnits: 40
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -109,7 +112,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: physician_0
+      name: arrowTarget_0
       rect:
         serializedVersion: 2
         x: 0
@@ -124,14 +127,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a3a55071364608090800000000000000
-      internalID: -8034311358478198214
+      spriteID: 14e60072f9a1c6460800000000000000
+      internalID: 7236187972134006337
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: physician_1
+      name: arrowTarget_1
       rect:
         serializedVersion: 2
         x: 32
@@ -146,14 +149,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 64a05dab1f5464da0800000000000000
-      internalID: -5961000152254313914
+      spriteID: 2351fa9769bf90890800000000000000
+      internalID: -7491179881448925902
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: physician_2
+      name: arrowTarget_2
       rect:
         serializedVersion: 2
         x: 64
@@ -168,14 +171,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ad699d2fb2890f770800000000000000
-      internalID: 8642574999449343706
+      spriteID: 7af561a9962dfa7c0800000000000000
+      internalID: -4057793388238970969
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: physician_3
+      name: arrowTarget_3
       rect:
         serializedVersion: 2
         x: 96
@@ -190,8 +193,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9ec4645181b3f6620800000000000000
-      internalID: 2769497270478327017
+      spriteID: 5de29157344269930800000000000000
+      internalID: 4149543978814484181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arrowTarget_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22a9b8663a0615dd0800000000000000
+      internalID: -2499110063297553886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arrowTarget_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50463d8b0dfc74a4fb7b92cd56a495c7
+      internalID: -1290962657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arrowTarget_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f8c05504d552de43a97a095d7356229
+      internalID: -1345246774
       vertices: []
       indices: 
       edges: []
@@ -200,7 +269,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 9ab51b41fbdca534892a5d71446a13d6
+    spriteID: 4a597993b51b0c9429350a0fd221b239
     internalID: 0
     vertices: []
     indices: 
@@ -210,12 +279,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":true,"isAlternate":false}'
     nameFileIdTable:
-      physician_0: -8034311358478198214
-      physician_1: -5961000152254313914
-      physician_2: 8642574999449343706
-      physician_3: 2769497270478327017
+      arrowTarget_0: 7236187972134006337
+      arrowTarget_1: -7491179881448925902
+      arrowTarget_2: -4057793388238970969
+      arrowTarget_3: 4149543978814484181
+      arrowTarget_4: -2499110063297553886
+      arrowTarget_5: -1290962657
+      arrowTarget_6: -1345246774
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NormalAttackEffectVisual", menuName = "SRPG/Effects/Client/NormalAttack")]
-public class NormalAttackEffectVisual : ClientActiveEffectBase
+[CreateAssetMenu(fileName = "NormalHealEffectVisual", menuName = "SRPG/Effects/Client/NormalHeal")]
+public class NormalHealEffectVisual : ClientActiveEffectBase
 {
-    public override InstantType InstantType => InstantType.NonInstant;
+    public override InstantType InstantType => InstantType.HalfInstant;
 
     public override IEnumerator Replay(
         ResolveResult result,
@@ -25,7 +25,6 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
             targetUnit.VFXAnimator.Play("BeingHealedVFX", 0, 0f);
         }
 
-
         // ClientUnit targetUnit = scene.GetSceneUnitById(targetData.Id);
         // if (targetUnit == null) yield break;
 
@@ -34,15 +33,16 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
 
         Vector3 startPos = sceneUnit.transform.position;
         Vector3 targetPos = scene.movableTilemap.GetCellCenterWorld(result.TargetCells[0]);
-        float stopDistance = 0.8f; // world units before target
         Vector3 dir = (targetPos - startPos).normalized;
-        Vector3 midPos = targetPos - dir * stopDistance;
 
         float valX = 0f, valY = 0f;
         if (Mathf.Abs(dir.x) >= Mathf.Abs(dir.y))
             valX = dir.x > 0 ? 1f : -1f;
         else
             valY = dir.y > 0 ? 1f : -1f;
+
+        Vector3 bobPos = startPos + new Vector3(valX, valY, 0f) * 0.2f; // small bob in attack direction
+
 
         if (sceneUnit.VFXAnimator != null)
         {
@@ -59,7 +59,7 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
         while (t < 1f)
         {
             t += Time.deltaTime / half;
-            sceneUnit.transform.position = Vector3.Lerp(startPos, midPos, t);
+            sceneUnit.transform.position = Vector3.Lerp(startPos, bobPos, t);
             yield return null;
         }
 
@@ -68,7 +68,7 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
         while (t < 1f)
         {
             t += Time.deltaTime / half;
-            sceneUnit.transform.position = Vector3.Lerp(midPos, startPos, t);
+            sceneUnit.transform.position = Vector3.Lerp(bobPos, startPos, t);
             yield return null;
         }
         if (targetData != null)

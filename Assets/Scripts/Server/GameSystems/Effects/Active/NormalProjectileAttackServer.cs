@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NormalAttackEffectServer", menuName = "SRPG/Effects/Server/NormalAttack")]
-public class NormalAttackEffectServer : ServerActiveEffectBase
+[CreateAssetMenu(fileName = "NormalProjectileAttackEffectServer", menuName = "SRPG/Effects/Server/NormalProjectileAttack")]
+public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
 {
     public float baseValue = 10;
     public override InstantType InstantType => InstantType.NonInstant;

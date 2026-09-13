@@ -16,10 +16,10 @@ MonoBehaviour:
   skillName: BookBasicHeal
   targetPattern: {fileID: 11400000, guid: 8ef7254b0ead2594dad89a09337c3588, type: 2}
   isTargetPatternFixed: 0
-  targeting: 2
+  targeting: 3
   skillPointCost: 0
   stepCostMultiplier: 0.5
   useLimitPerInstant: 1
   useLimitTotal: -1
-  effectIds: 12270000
+  effectIds: 13270000
   icon: {fileID: 1096970115234337456, guid: 5df9ac80a3018454e9de2586fbcf879b, type: 3}

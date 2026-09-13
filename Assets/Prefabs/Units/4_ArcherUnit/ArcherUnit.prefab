@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 11
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2334120886005512897, guid: 4d6a73dd4a0d4cc4eba3c2ffec8547cd, type: 3}
+  m_Sprite: {fileID: 7575372356821053225, guid: 356038fcb311d5d45949a29fe3202c95, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.3882353}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 7866631296865910294}
   - component: {fileID: 5043389349189340914}
   m_Layer: 0
-  m_Name: PhysicianUnit
+  m_Name: ArcherUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -145,8 +145,6 @@ MonoBehaviour:
   VFXSprite: {fileID: 6896991829087152469}
   stepText: {fileID: 6891451387335898828}
   hpBar: {fileID: 6719508733747538518}
-  actionMenuUI: {fileID: 0}
-  mainWeaponSkillIcon: {fileID: 0}
   unitId: 0
   isResolvingAnimation: 0
   isAtBeforeSnapshot: 0
@@ -232,7 +230,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8034311358478198214, guid: 502bb9561f2de1d4daf66ea3fbc40875, type: 3}
+  m_Sprite: {fileID: 7575372356821053225, guid: 356038fcb311d5d45949a29fe3202c95, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -252,7 +250,7 @@ Animator:
   m_GameObject: {fileID: 7847933845566471365}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b4fc2928420f3a14aa0f4849ca56ff4d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9bfec55daa1f810489e4a50e65f14ac3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
