@@ -107,6 +107,19 @@ public class ClientInteractionSystem : MonoBehaviour
         int skillId = data.WeaponSkillId;
         scene.clientInteractionSystem.HandleDecisionSelectSkill(skillId);
     }
+    public void SelectOwnedReadyUnit(int index)
+    {
+        if (session.ownedReadyUnitIds == null) return;
+        if (session.ownedReadyUnitIds.Count <= index) return;
+        HandleDecisionSelectUnit(session.ownedReadyUnitIds[index]);
+    }
+    public void SelectEnemyReadyUnit(int index)
+    {
+        if (session.enemyReadyUnitIds == null) return;
+        if (session.enemyReadyUnitIds.Count <= index) return;
+        HandleDecisionSelectUnit(session.enemyReadyUnitIds[index]);
+    }
+
 
     public void ForceNoneState()
     {
@@ -115,6 +128,11 @@ public class ClientInteractionSystem : MonoBehaviour
     public void HandleTileClick(Vector3Int cell)
     {
         stateMachine?.OnTileClick(cell);
+    }
+
+    public void HandleDecisionSelectUnit(int unitId)
+    {
+        stateMachine?.GoToUnitSelected(unitId);
     }
     public void HandleDecisionSelectSkill(int skillId)
     {

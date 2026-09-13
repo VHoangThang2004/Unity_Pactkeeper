@@ -13,6 +13,7 @@ public struct DecisionRequestData : INetworkSerializable
     public int MaxWaitDuration;  // max wait duration given per instant
     public int RemainingOvertime;    // remaining overtime seconds for current team
     public int MaxOvertime;  // max overtime given for whole match session
+    public int[] ReadyUnitIds; // ready units
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -22,5 +23,21 @@ public struct DecisionRequestData : INetworkSerializable
         serializer.SerializeValue(ref RemainingOvertime);
         serializer.SerializeValue(ref MaxWaitDuration);
         serializer.SerializeValue(ref MaxOvertime);
+        if (serializer.IsReader)
+        {
+            int count = 0;
+            serializer.SerializeValue(ref count);
+            ReadyUnitIds = new int[count];
+            for (int i = 0; i < count; i++)
+                serializer.SerializeValue(ref ReadyUnitIds[i]);
+        }
+        else
+        {
+            int count = ReadyUnitIds?.Length ?? 0;
+            serializer.SerializeValue(ref count);
+            if (ReadyUnitIds != null)
+                for (int i = 0; i < count; i++)
+                    serializer.SerializeValue(ref ReadyUnitIds[i]);
+        }
     }
 }
