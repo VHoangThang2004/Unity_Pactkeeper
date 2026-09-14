@@ -31,6 +31,8 @@ public class ClientMatchSession : MonoBehaviour
     public int CurrentTeamTurn { get; private set; } = -1;
     public List<UnitData> units = new List<UnitData>();
     public List<TeamData> teams = new List<TeamData>();
+    public List<int> ownedReadyUnitIds = new List<int>();
+    public List<int> enemyReadyUnitIds = new List<int>();
 
     // -------------------------------------------------------
     // Map
@@ -107,6 +109,7 @@ public class ClientMatchSession : MonoBehaviour
 
         // Step 4 — Store decision always
         ApplyDecisionRequest(decision);
+        scene.visualController.UpdateReadyUnitBar(); // update after decision request + team data applied
 
         // Step 5 — Set pending token
         PendingToken = token;
@@ -216,6 +219,24 @@ public class ClientMatchSession : MonoBehaviour
         maxWaitDur = data.MaxWaitDuration;
         overtimeDur = data.RemainingOvertime;
         maxOvertimeDur = data.MaxOvertime;
+        // update ready units
+
+        ownedReadyUnitIds.Clear();
+        enemyReadyUnitIds.Clear();
+        if (data.ReadyUnitIds == null) {return;}
+        var team = GetOwnedTeamData();
+        if (team == null) return;
+        foreach (int unitId in data.ReadyUnitIds)
+        {
+            if (team.unitIds.Contains(unitId))
+            {
+                ownedReadyUnitIds.Add(unitId);
+            }
+            else
+            {
+                enemyReadyUnitIds.Add(unitId);
+            }
+        }
     }
 
     void LoadMapData(string mapId)
@@ -256,8 +277,10 @@ public class ClientMatchSession : MonoBehaviour
 
     public bool isUnitReady(int unitId)
     {
-        UnitData unit = GetUnitDataById(unitId);
-        return unit != null && unit.CurrentStep == 0;
+        if (LastDecisionRequest.ReadyUnitIds == null) return false;
+        foreach (var id in LastDecisionRequest.ReadyUnitIds)
+            if (id == unitId) return true;
+        return false;
     }
 
     public List<int> GetAllUnitIds()
@@ -284,6 +307,10 @@ public class ClientMatchSession : MonoBehaviour
     public TeamData GetOwnedTeamData() =>
         teams.Find(t => t.clientId == NetworkManager.Singleton.LocalClientId);
 
+
+    public TeamData GetEnemyTeamData() =>
+        teams.Find(t => t.clientId != NetworkManager.Singleton.LocalClientId);
+
     public int GetMyTeam()
     {
         if (teams == null || teams.Count < 2) return -1;
@@ -301,16 +328,16 @@ public class ClientMatchSession : MonoBehaviour
     public bool IsMyUnit(int unitId) => GetOwnedTeamData()?.unitIds.Contains(unitId) ?? false;
     public bool IsUnitDataExisting(int unitId) => units.Exists(u => u.Id == unitId);
 
-    public List<int> GetOwnedReadyUnitIds()
-    {
-        var owned = new List<int>();
-        var team = GetOwnedTeamData();
-        if (team == null) return owned;
-        foreach (var unit in units)
-            if (unit.CurrentStep == 0 && team.unitIds.Contains(unit.Id))
-                owned.Add(unit.Id);
-        return owned;
-    }
+    // public List<int> GetOwnedReadyUnitIds()
+    // {
+    //     var owned = new List<int>();
+    //     var team = GetOwnedTeamData();
+    //     if (team == null) return owned;
+    //     foreach (var unit in units)
+    //         if (isUnitReady(unit.Id) && team.unitIds.Contains(unit.Id))
+    //             owned.Add(unit.Id);
+    //     return owned;
+    // }
 
     // -------------------------------------------------------
     // Data Loop

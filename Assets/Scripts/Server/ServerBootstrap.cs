@@ -7,20 +7,19 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-
-
 public class ServerBootstrap : MonoBehaviour
 {
     [Header("Server Config")]
     [SerializeField] private ushort port = 7777;
-    [SerializeField] private string lobbyScene = "2_Lobby";
+    [SerializeField] private string lobbyScene = "4_Lobby";
 
     [Header("Client Config")]
-    [SerializeField] private string clientStartScene = "1_Menu";
+    [SerializeField] private string loginScene = "1_Login";
+    [SerializeField] private string devConnectScene = "2_DevConnect";
+    [SerializeField] private bool devMode = true;
 
     IEnumerator Start()
     {
-        // Decide mode based on command line
         if (!IsServerMode())
         {
             StartClientFlow();
@@ -29,7 +28,6 @@ public class ServerBootstrap : MonoBehaviour
 
         Debug.Log("[Bootstrap] SERVER MODE");
 
-        // 🔥 Critical: wait until NetworkManager is fully initialized
         yield return new WaitUntil(() => NetworkManager.Singleton != null);
         yield return null;
 
@@ -51,7 +49,6 @@ public class ServerBootstrap : MonoBehaviour
             return;
         }
 
-        // Listen on all interfaces
         transport.SetConnectionData("0.0.0.0", port);
 
         bool success = NetworkManager.Singleton.StartServer();
@@ -64,7 +61,6 @@ public class ServerBootstrap : MonoBehaviour
 
         Debug.Log($"[Bootstrap] Server started on port {port}");
 
-        // Load lobby for all clients
         NetworkManager.Singleton.SceneManager.LoadScene(
             lobbyScene,
             LoadSceneMode.Single
@@ -73,10 +69,8 @@ public class ServerBootstrap : MonoBehaviour
 
     void StartClientFlow()
     {
-        Debug.Log("[Bootstrap] CLIENT MODE");
-
-        // Just go to menu, no networking yet
-        SceneManager.LoadScene(clientStartScene);
+        Debug.Log($"[Bootstrap] CLIENT MODE (devMode={devMode})");
+        SceneManager.LoadScene(devMode ? devConnectScene : loginScene);
     }
 
     bool IsServerMode()
@@ -84,15 +78,18 @@ public class ServerBootstrap : MonoBehaviour
 #if UNITY_EDITOR
         return IsEditorServerInstance();
 #else
-    return System.Environment.CommandLine.Contains("-server");
+        return System.Environment.CommandLine.Contains("-server");
 #endif
     }
 
+    [Header("Editor Config")]
+    [SerializeField] private bool editorIsServer = false;
 
     bool IsEditorServerInstance()
     {
 #if UNITY_EDITOR
-        return CurrentPlayer.IsMainEditor; // Main editor instance is server, others are clients
+        if (!editorIsServer) return false;
+        return CurrentPlayer.IsMainEditor;
 #else
     return false;
 #endif

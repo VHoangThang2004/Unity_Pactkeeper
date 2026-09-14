@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 public class LobbyManager : MonoBehaviour
 {
     [SerializeField] int requiredPlayers = 2;
-    [SerializeField] string gameScene = "3_Game";
-    [SerializeField] float checkInterval = 1f;
+    [SerializeField] string gameScene = "4_Match";
+     [SerializeField] float checkInterval = 1f;
 
     bool matchStarted = false;
 

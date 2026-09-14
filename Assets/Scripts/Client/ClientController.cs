@@ -138,11 +138,11 @@ public class ClientController : MonoBehaviour
         public DecisionRequestData decision;
         public int token;
     }
-    private SnapshotPackage? latestQueuedPackage = null;
-
+    private Queue<SnapshotPackage> snapshotQueue = new Queue<SnapshotPackage>();
+    private SnapshotPackage? latestNonResolvePacakge = null;
     public void OnSnapshotReceived(SessionSnapshotData snapshot, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token)
     {
-        latestQueuedPackage = new SnapshotPackage
+        var pkg = new SnapshotPackage
         {
             snapshot = snapshot,
             resolve = resolve,
@@ -150,6 +150,12 @@ public class ClientController : MonoBehaviour
             decision = decision,
             token = token
         };
+
+        if (resolve.HasResolve)
+            snapshotQueue.Enqueue(pkg);
+        else
+            latestNonResolvePacakge = pkg;
+
         initPackageReceived = true;
     }
 
@@ -157,14 +163,23 @@ public class ClientController : MonoBehaviour
     {
         while (true)
         {
-            if ((session.SyncState == 0 || session.SyncState == -1) && latestQueuedPackage.HasValue)
+            if (session.SyncState == 0 || session.SyncState == -1)
             {
-                var pkg = latestQueuedPackage.Value;
-                latestQueuedPackage = null;
-                session.ApplySnapshot(pkg.snapshot, pkg.resolve, pkg.secret, pkg.decision, pkg.token);
+                if (snapshotQueue.Count > 0)
+                {
+                    var pkg = snapshotQueue.Dequeue();
+                    session.ApplySnapshot(pkg.snapshot, pkg.resolve, pkg.secret, pkg.decision, pkg.token);
+                }
+                else if (latestNonResolvePacakge.HasValue)
+                {
+                    var pkg = latestNonResolvePacakge.Value;
+                    latestNonResolvePacakge = null;
+                    session.ApplySnapshot(pkg.snapshot, pkg.resolve, pkg.secret, pkg.decision, pkg.token);
+                }
             }
-            yield return null;
+            yield return null;  
         }
+
     }
     public void OnTimelineTick(TimelineData data)
     {

@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a3d9be217cfec418cfb2501309979d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  unitImg: {fileID: 7575372356821053225, guid: 356038fcb311d5d45949a29fe3202c95, type: 3}
   hoverUnit: {fileID: 1270681972976368635}
   UnitAnimator: {fileID: 251468126276781539}
   VFXAnimator: {fileID: 4871680169206284533}

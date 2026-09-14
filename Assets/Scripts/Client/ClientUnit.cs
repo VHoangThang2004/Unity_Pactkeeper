@@ -13,6 +13,7 @@ using UnityEngine.UI;
 public class ClientUnit : MonoBehaviour
 {
     [Header("Visuals")]
+    [SerializeField] public Sprite unitImg;
     [SerializeField] public GameObject hoverUnit;
     [SerializeField] public Animator UnitAnimator;
     [SerializeField] public Animator VFXAnimator;

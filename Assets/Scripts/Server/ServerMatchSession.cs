@@ -54,6 +54,43 @@ public class ServerMatchSession : MonoBehaviour
         new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
     }},
 };
+
+public void SetMatchData(string matchId, MatchLoadoutsResponse data)
+{
+    Debug.Log($"[MatchSession] Real match — matchId={matchId}");
+
+    loadouts.Clear();
+
+    if (data.player1Loadout != null)
+        loadouts.Add(ConvertToTeamLoadout(0, data.player1Loadout));
+
+    if (data.player2Loadout != null)
+        loadouts.Add(ConvertToTeamLoadout(1, data.player2Loadout));
+
+    Debug.Log($"[MatchSession] Loaded {loadouts.Count} team loadouts from backend.");
+}
+
+private TeamLoadout ConvertToTeamLoadout(int teamId, TeamLoadoutData data)
+{
+    var units = new List<PlayerUnitLoadout>();
+    foreach (var u in data.units)
+        units.Add(new PlayerUnitLoadout
+        {
+            uId = u.uId,
+            movementSkillId = u.movementSkillId,
+            weaponSkillId = u.weaponSkillId,
+            classSkillId = u.classSkillId,
+            equipmentSkillId = u.equipmentSkillId
+        });
+
+    return new TeamLoadout
+    {
+        teamId = teamId,
+        clientId = 0,
+        units = units
+    };
+}
+
     // Last sent state — always up to date, used for targeted sends and resync
     public SessionSnapshotData LastSnapshot;
     public ResolveData LastResolve;

@@ -139,14 +139,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a3d9be217cfec418cfb2501309979d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  unitImg: {fileID: 21300012, guid: d79edf18a76e2654a9ac99f15de8b2b3, type: 3}
   hoverUnit: {fileID: 1270681972976368635}
   UnitAnimator: {fileID: 251468126276781539}
   VFXAnimator: {fileID: 6949687461605030576}
   VFXSprite: {fileID: 8961768702633431824}
   stepText: {fileID: 2305214916769464637}
   hpBar: {fileID: 2098364964964572583}
-  actionMenuUI: {fileID: 0}
-  mainWeaponSkillIcon: {fileID: 0}
   unitId: 0
   isResolvingAnimation: 0
   isAtBeforeSnapshot: 0

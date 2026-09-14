@@ -22,7 +22,7 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
         {
             ClientUnit targetUnit = scene.GetSceneUnitById(targetData.Id);
             targetUnit.VFXAnimator.SetBool("IsIdling", false);
-            targetUnit.VFXAnimator.Play("BeingHealedVFX", 0, 0f);
+            targetUnit.VFXAnimator.Play("HitVFX", 0, 0f);
         }
 
 

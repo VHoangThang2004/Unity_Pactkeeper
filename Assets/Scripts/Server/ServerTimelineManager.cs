@@ -681,7 +681,8 @@ public class ServerTimelineManager : MonoBehaviour
             RemainingWaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
             MaxWaitDuration = (int)actWaitWindowPerInstantPerReadyUnit * 5,
             RemainingOvertime = teams[session.CurrentTeamTurnId].Overtime,
-            MaxOvertime = (int)overtimePerTeam
+            MaxOvertime = (int)overtimePerTeam,
+            ReadyUnitIds = session.ReadyUnitIds.ToArray()
         };
     }
 

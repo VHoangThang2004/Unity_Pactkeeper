@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5511957905222817402
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 15022, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Multiplayer Role Data
+  m_EditorClassIdentifier: UnityEditor.MultiplayerModule.dll::UnityEditor.Multiplayer.Internal.MultiplayerRoleData
+  multiplayerRole: 2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18,8 +31,26 @@ MonoBehaviour:
   m_PlatformId: 4e3c793746204150860bf175a9a41a05
   m_PlatformBuildProfile:
     rid: 75881803333501204
-  m_OverrideGlobalSceneList: 0
-  m_Scenes: []
+  m_OverrideGlobalSceneList: 1
+  m_Scenes:
+  - m_enabled: 1
+    m_path: Assets/Scenes/0_Bootstrap.unity
+    m_guid: 8aacf32c69e5d3349a9445c5f6da64b3
+  - m_enabled: 1
+    m_path: Assets/Scenes/1_Login.unity
+    m_guid: 910e70a3c7d2c20469422781a7632fdc
+  - m_enabled: 1
+    m_path: Assets/Scenes/2_DevConnect.unity
+    m_guid: 0e25c752cbca37d438b28e74b69790e1
+  - m_enabled: 1
+    m_path: Assets/Scenes/3_MainMenu.unity
+    m_guid: 014ec378ba428fe4aa45ad1ca7fdee48
+  - m_enabled: 1
+    m_path: Assets/Scenes/4_Lobby.unity
+    m_guid: 0bcbaf24d348640438c787e6be462c95
+  - m_enabled: 1
+    m_path: Assets/Scenes/5_Match.unity
+    m_guid: 09d259b7cf3b8ca4e89b35242e669969
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

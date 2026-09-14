@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -26,17 +27,75 @@ public class ClientVisualController : MonoBehaviour
     [SerializeField] private Image timerBar;
     [SerializeField] public GameObject waitButtonLayer;
     [SerializeField] public GameObject cancelButtonLayer;
-    // [SerializeField] public GameObject confirmButton;
     [SerializeField] private CanvasGroup confirmButtonCanvasGroup;
 
     [SerializeField] public GameObject ActionMenuUI;
     [SerializeField] public TextMeshProUGUI CurrentUnitInfo;
+    
+    [SerializeField] public InstantStatus myInstantStatus;
+    [SerializeField] public InstantStatus enemyInstantStatus;
+
+
+    [SerializeField] private CanvasGroup[] OwnedReadyUnitCanvasGroup;
+    [SerializeField] private Image[] OwnedReadyUnitIcon;
+    [SerializeField] private CanvasGroup[] EnemyReadyUnitCanvasGroup;
+    [SerializeField] private Image[] EnemyReadyUnitIcon;
+
 
 
 
     // -------------------------------------------------------
     // State Change — controls visibility of UI elements
     // -------------------------------------------------------
+
+    public void UpdateReadyUnitBar()
+    {
+        for (int i = 0; i < OwnedReadyUnitCanvasGroup.Length; i++)
+        {
+            if (i < session.ownedReadyUnitIds.Count)
+            {
+                OwnedReadyUnitCanvasGroup[i].alpha = 1;
+                OwnedReadyUnitCanvasGroup[i].interactable = true;
+                OwnedReadyUnitCanvasGroup[i].blocksRaycasts = true;
+                OwnedReadyUnitIcon[i].sprite = scene.GetSceneUnitById(session.ownedReadyUnitIds[i]).unitImg;
+            }
+            else
+            {
+                OwnedReadyUnitCanvasGroup[i].alpha = 0;
+                OwnedReadyUnitCanvasGroup[i].interactable = false;
+                OwnedReadyUnitCanvasGroup[i].blocksRaycasts = false;
+            }
+        }
+        for (int i = 0; i < EnemyReadyUnitCanvasGroup.Length; i++)
+        {
+            if (i < session.enemyReadyUnitIds.Count)
+            {
+                EnemyReadyUnitCanvasGroup[i].alpha = 1;
+                EnemyReadyUnitCanvasGroup[i].interactable = true;
+                EnemyReadyUnitCanvasGroup[i].blocksRaycasts = true;
+                EnemyReadyUnitIcon[i].sprite = scene.GetSceneUnitById(session.enemyReadyUnitIds[i]).unitImg;
+            }
+            else
+            {
+                EnemyReadyUnitCanvasGroup[i].alpha = 0;
+                EnemyReadyUnitCanvasGroup[i].interactable = false;
+                EnemyReadyUnitCanvasGroup[i].blocksRaycasts = false;
+            }
+        }
+
+        foreach(TeamData team in session.teams)
+        {
+            if (team.clientId == NetworkManager.Singleton.LocalClientId)
+            {
+                myInstantStatus.UpdateInstantStatus(team.isInstantEnded);
+            }
+            else
+            {
+                enemyInstantStatus.UpdateInstantStatus(team.isInstantEnded);
+            }
+        }
+
+    }
 
     public void UpdateVisualOnStateChange()
     {
@@ -166,7 +225,7 @@ public class ClientVisualController : MonoBehaviour
             if (skill != null && scene.mainWeaponSkillIcon != null)
                 scene.mainWeaponSkillIcon.sprite = skill.icon;
             UnitDefinition unitDefinition = scene.unitLibrary.Get(unit.UId);
-            CurrentUnitInfo.text = "Name: "+unitDefinition.name.ToString()
+            CurrentUnitInfo.text = "Name: " + unitDefinition.name.ToString()
             + "\n HP: " + unit.CurrentHP.ToString()
             + "\n SP: " + unit.CurrentSkillPoint.ToString()
             + "\n Speed: " + unit.Speed.ToString();

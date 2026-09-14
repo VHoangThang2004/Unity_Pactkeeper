@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ServerController : MonoBehaviour
 {
+    [Header("Backend")]
+    [SerializeField] ServerBackendClient backendClient;
     [Header("Bridge")]
     [SerializeField] private SyncedBridge bridge;
 
@@ -60,6 +62,9 @@ public class ServerController : MonoBehaviour
 
     IEnumerator InitSequence()
     {
+        // 0. Fetch match data from backend (real flow) or skip (dev mode)
+        yield return StartCoroutine(backendClient.FetchMatchData());
+
         // 1. Init session
         while (!session.Init())
         {
@@ -67,6 +72,9 @@ public class ServerController : MonoBehaviour
             IncrementErrors();
             yield return new WaitForSeconds(1f);
         }
+        // 1b. Override loadouts if real match flow
+        if (!backendClient.IsDevMode)
+            session.SetMatchData(backendClient.MatchId, backendClient.LoadoutResponse);
 
         // 2. Spawn all units
         while (!spawnManager.spawnAll())
@@ -115,7 +123,7 @@ public class ServerController : MonoBehaviour
 
     public void HandleAllInitialStateRequest(ulong clientId)
     {
-        if(!serverReady) return; // ignore request if not ready
+        if (!serverReady) return; // ignore request if not ready
         if (clientId == NetworkManager.Singleton.LocalClientId) return;
 
         timeline.SendSnapshotToClient(clientId);
