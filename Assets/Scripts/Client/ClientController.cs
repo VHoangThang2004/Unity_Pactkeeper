@@ -179,7 +179,7 @@ public class ClientController : MonoBehaviour
             }
             yield return null;  
         }
-
+        
     }
     public void OnTimelineTick(TimelineData data)
     {

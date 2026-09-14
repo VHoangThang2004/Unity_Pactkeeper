@@ -40,18 +40,18 @@ public class ServerMatchSession : MonoBehaviour
     new TeamLoadout { teamId = 0, clientId = 0, units = new List<PlayerUnitLoadout>
     {
         new PlayerUnitLoadout { uId = 1, movementSkillId = 1001, weaponSkillId = 2001, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 2, movementSkillId = 1002, weaponSkillId = 2002, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 3, movementSkillId = 1003, weaponSkillId = 2003, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 4, movementSkillId = 1004, weaponSkillId = 2004, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 2, movementSkillId = 1002, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 3, movementSkillId = 1003, weaponSkillId = 2002, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 4, movementSkillId = 1004, weaponSkillId = 2003, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2004, classSkillId = -1, equipmentSkillId = -1 },
     }},
     new TeamLoadout { teamId = 1, clientId = 0, units = new List<PlayerUnitLoadout>
     {
-        new PlayerUnitLoadout { uId = 1, movementSkillId = 1001, weaponSkillId = 2001, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 2, movementSkillId = 1002, weaponSkillId = 2002, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 3, movementSkillId = 1003, weaponSkillId = 2003, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 4, movementSkillId = 1004, weaponSkillId = 2004, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 1, movementSkillId = 1001, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 2, movementSkillId = 1002, weaponSkillId = 2004, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 3, movementSkillId = 1003, weaponSkillId = 2002, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 4, movementSkillId = 1004, weaponSkillId = 2003, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2001, classSkillId = -1, equipmentSkillId = -1 },
     }},
 };
 
