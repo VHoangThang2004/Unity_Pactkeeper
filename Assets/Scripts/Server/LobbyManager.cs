@@ -81,8 +81,6 @@ public class LobbyManager : MonoBehaviour
         {
             matchStarted = true;
             Debug.Log("[Lobby] Starting game");
-            // Store map in a persistent place for ServerMatchSession to read
-            MatchIdentityRegistry.clientPlayerMap = clientPlayerMap;
             string targetScene = backendClient.Mode == "story" ? sceneConfig.storyScene : sceneConfig.pvpScene;
             NetworkManager.Singleton.SceneManager.LoadScene(targetScene, LoadSceneMode.Single);
             return;
@@ -135,7 +133,7 @@ public class LobbyManager : MonoBehaviour
         }
 
         // Store mapping
-        clientPlayerMap[request.ClientNetworkId] = playerId;
+        MatchIdentityRegistry.clientPlayerMap[request.ClientNetworkId] = playerId;
         Debug.Log($"[Lobby] Approved — clientId={request.ClientNetworkId} → playerId={playerId}");
 
         response.Approved = true;

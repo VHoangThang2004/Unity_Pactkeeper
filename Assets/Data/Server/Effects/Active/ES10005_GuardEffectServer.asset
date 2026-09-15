@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fe63a94bdeab9d4e91e60a83ab8811c, type: 3}
-  m_Name: ES10004_NormalProjectileAttackEffectServer
-  m_EditorClassIdentifier: Assembly-CSharp::NormalProjectileAttackEffectServer
-  effectId: 10004
-  resolveDuration: 2
+  m_Script: {fileID: 11500000, guid: 03b063302cdbf93409b43351140efcd4, type: 3}
+  m_Name: ES10005_GuardEffectServer
+  m_EditorClassIdentifier: Assembly-CSharp::GuardEffectServer
+  effectId: 10005
+  resolveDuration: 0.5
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
-  baseValue: 1

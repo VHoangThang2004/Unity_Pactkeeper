@@ -15,6 +15,6 @@ MonoBehaviour:
   uId: 2
   unitName: Paladin
   speed: 100
-  maxHp: 50
+  maxHp: 5
   maxSkillPoint: 4
   passiveSkill: {fileID: 0}

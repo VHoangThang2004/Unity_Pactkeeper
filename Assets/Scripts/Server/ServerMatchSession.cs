@@ -364,6 +364,8 @@ public class ServerMatchSession : MonoBehaviour
     {
         var unit = GetUnit(unitId);
         if (unit == null) return false;
+        // Check skill point cost
+        if (unit.CurrentSkillPoint < skill.skillPointCost) return false;
 
         foreach (var usage in unit.SkillUsages)
         {
@@ -420,6 +422,8 @@ public class ServerMatchSession : MonoBehaviour
     public void Kill(int unitId)
     {
         RemoveUnit(unitId);
+        UnitRecalculator.RecalculateAll(this);
         Debug.Log($"[Timeline] Unit {unitId} killed.");
+
     }
 }

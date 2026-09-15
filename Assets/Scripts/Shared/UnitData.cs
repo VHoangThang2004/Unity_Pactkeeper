@@ -19,6 +19,7 @@ public class UnitData : INetworkSerializable
     public int Speed;
     public int MaxHP;
     public int MaxSkillPoint;
+    public int ConsecutiveRegenInstants = 0; // SERVER ONLY, never serialized
     public float DamageMultiplier = 1f;
     public float DamageReduction = 1f;
 
@@ -81,6 +82,7 @@ public class UnitData : INetworkSerializable
         serializer.SerializeValue(ref ClassSkillId);
         serializer.SerializeValue(ref EquipmentSkillId);
         serializer.SerializeValue(ref PassiveSkillId);
+        serializer.SerializeValue(ref ConsecutiveRegenInstants);
 
         // SkillPatterns
         if (serializer.IsReader)

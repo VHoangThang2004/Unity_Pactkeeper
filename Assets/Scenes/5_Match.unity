@@ -609,10 +609,7 @@ MonoBehaviour:
   speedConfig: {fileID: 11400000, guid: a536431617c5bcd428e100c3d53af3d8, type: 2}
   skillLibrary: {fileID: 11400000, guid: 80af1d814cd15c34e8ce7e04aec1fdc5, type: 2}
   spawnManager: {fileID: 157600750}
-  maxInstant: 150
-  instantDuration: 0.3
-  actWaitWindowPerInstantPerReadyUnit: 15
-  overtimePerTeam: 200
+  matchConfig: {fileID: 11400000, guid: 0886618e1bbaa9a49ae3641785625f3d, type: 2}
 --- !u!1 &163181511
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,7 +1237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &353959685
 RectTransform:
   m_ObjectHideFlags: 0

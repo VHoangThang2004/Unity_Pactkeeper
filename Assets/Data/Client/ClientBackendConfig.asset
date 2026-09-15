@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c5c48932deba8041b2fa3d9365208b2, type: 3}
   m_Name: ClientBackendConfig
   m_EditorClassIdentifier: Assembly-CSharp::BackendConfig
-  backendUrl: http://localhost:5276
+  backendUrl: https://unnamed-srpg-backend.onrender.com
   gameServerIp: 127.0.0.1
   gameServerPort: 7777

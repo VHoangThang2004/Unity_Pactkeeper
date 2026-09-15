@@ -28,12 +28,8 @@ public class ServerTimelineManager : MonoBehaviour
     [SerializeField] private ServerSpawnManager spawnManager;
 
     [Header("Timeline Config")]
-    [SerializeField] private int maxInstant = 100;
-    [SerializeField] private float instantDuration = 2f;
+    [SerializeField] private MatchConfig matchConfig;
 
-    [Header("Decision Timeouts")]
-    [SerializeField] private float actWaitWindowPerInstantPerReadyUnit = 15f;
-    [SerializeField] private float overtimePerTeam = 200f;
 
     // Internal coroutine control — not observable, not session data
     private bool waitingForDecision = false;
@@ -94,7 +90,7 @@ public class ServerTimelineManager : MonoBehaviour
         effectRecord = new List<(int, Vector3Int, int, int)>();
         List<TeamData> teams = session.GetAllTeamData();
         foreach (var team in teams)
-            team.Overtime = (int)overtimePerTeam;
+            team.Overtime = (int)matchConfig.overtimePerTeam;
 
         session.FlaggedTeamId = session.GetOtherTeamId(0);
 
@@ -133,11 +129,12 @@ public class ServerTimelineManager : MonoBehaviour
     {
         List<TeamData> teams = session.GetAllTeamData();
 
-        while (session.CurrentInstant <= maxInstant)
+        while (session.CurrentInstant <= matchConfig.maxInstant)
         {
             TransitionTo(ServerSessionState.Flowing);
             session.CurrentTeamTurnId = -1;
 
+            AllRegenSP();
             actionRecord.Clear();
             effectRecord.Clear();
             session.ResetInstantSkillUsage();
@@ -148,7 +145,7 @@ public class ServerTimelineManager : MonoBehaviour
             bool newUnitsReady = UpdateReadyQueue();
             // Reset per-instant tracking
             foreach (var team in teams)
-                team.WaitDuration = (int)actWaitWindowPerInstantPerReadyUnit * session.OwnedReadyUnitCount(team.teamId);
+                team.WaitDuration = (int)matchConfig.actWaitWindowPerInstantPerReadyUnit * session.OwnedReadyUnitCount(team.teamId);
 
             // Broadcast — full pack if something changed, cheap tick otherwise
             if (effectsChanged)
@@ -166,7 +163,7 @@ public class ServerTimelineManager : MonoBehaviour
             if (!newUnitsReady && !allReady)
             {
                 session.CurrentInstant++;
-                yield return new WaitForSeconds(instantDuration);
+                yield return new WaitForSeconds(matchConfig.instantDuration);
                 continue;
             }
 
@@ -179,8 +176,8 @@ public class ServerTimelineManager : MonoBehaviour
             BroadcastSnapshot();
 
 
-            foreach (var unit in session.units)
-                Debug.Log($"[PreResolve] Unit {unit.Id} HP={unit.CurrentHP}");
+            // foreach (var unit in session.units)
+            //     Debug.Log($"[PreResolve] Unit {unit.Id} HP={unit.CurrentHP}");
 
             // End of instant — resolve non-instant effects
             yield return ResolveEffectRecord();
@@ -191,7 +188,7 @@ public class ServerTimelineManager : MonoBehaviour
             BroadcastSnapshot();
 
             session.CurrentInstant++;
-            yield return new WaitForSeconds(instantDuration);
+            yield return new WaitForSeconds(matchConfig.instantDuration);
         }
 
         // Match end
@@ -366,7 +363,9 @@ public class ServerTimelineManager : MonoBehaviour
         // wait till resolved to mark, otherwise its not a valid request (doesnt count)
         actionRecord.Add((unitId, skillDef, actionResults));
         session.RecordSkillUsage(unitId, skillCardId);
-        //TODO: reduce skill points as cost
+        var actingUnit = session.GetUnit(unitId);
+        if (actingUnit != null)
+            actingUnit.CurrentSkillPoint = Mathf.Max(0, actingUnit.CurrentSkillPoint - skillDef.skillPointCost);
         if (removeFromRQ)
             session.ReadyUnitIds.Remove(unitId);
 
@@ -547,6 +546,27 @@ public class ServerTimelineManager : MonoBehaviour
             if (unit.CurrentStep > 0)
                 unit.CurrentStep--;
     }
+    void AllRegenSP()
+    {
+        // SP regen
+        foreach (var unit in session.units)
+        {
+            bool wasCommanded = actionRecord.Exists(a => a.unitId == unit.Id);
+            if (wasCommanded)
+            {
+                unit.ConsecutiveRegenInstants = 0;
+            }
+            else
+            {
+                unit.ConsecutiveRegenInstants++;
+                if (unit.ConsecutiveRegenInstants >= matchConfig.conseRegenCap)
+                {
+                    unit.ConsecutiveRegenInstants = 0;
+                    unit.CurrentSkillPoint = Mathf.Min(unit.CurrentSkillPoint + 1, unit.MaxSkillPoint);
+                }
+            }
+        }
+    }
 
     bool TickAllEffects()
     {
@@ -617,7 +637,7 @@ public class ServerTimelineManager : MonoBehaviour
         bridge.BroadcastTimelineTickClientRpc(new TimelineData
         {
             currentInstant = session.CurrentInstant,
-            maxInstant = maxInstant,
+            maxInstant = matchConfig.maxInstant,
             flag = session.FlaggedTeamId,
             isPaused = session.TimelineState != ServerSessionState.Flowing,
         });
@@ -633,7 +653,7 @@ public class ServerTimelineManager : MonoBehaviour
             new TimelineData
             {
                 currentInstant = session.CurrentInstant,
-                maxInstant = maxInstant,
+                maxInstant = matchConfig.maxInstant,
                 flag = session.FlaggedTeamId,
                 isPaused = session.TimelineState != ServerSessionState.Flowing,
             }
@@ -673,15 +693,15 @@ public class ServerTimelineManager : MonoBehaviour
         if (session.CurrentTeamTurnId == -1) return default;
 
         List<TeamData> teams = session.GetAllTeamData();
-        Debug.Log($"Wait dur{teams[session.CurrentTeamTurnId].WaitDuration} - max wd {actWaitWindowPerInstantPerReadyUnit * 5}");
+        Debug.Log($"Wait dur{teams[session.CurrentTeamTurnId].WaitDuration} - max wd {matchConfig.actWaitWindowPerInstantPerReadyUnit * 5}");
         return session.CurrentTeamTurnId == -1 ? default : new DecisionRequestData
         {
             Instant = session.CurrentInstant,
             DecisionTeam = session.CurrentTeamTurnId,
             RemainingWaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
-            MaxWaitDuration = (int)actWaitWindowPerInstantPerReadyUnit * 5,
+            MaxWaitDuration = (int)matchConfig.actWaitWindowPerInstantPerReadyUnit * 5,
             RemainingOvertime = teams[session.CurrentTeamTurnId].Overtime,
-            MaxOvertime = (int)overtimePerTeam,
+            MaxOvertime = (int)matchConfig.overtimePerTeam,
             ReadyUnitIds = session.ReadyUnitIds.ToArray()
         };
     }

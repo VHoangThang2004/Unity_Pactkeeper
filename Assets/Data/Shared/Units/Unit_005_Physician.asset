@@ -15,6 +15,6 @@ MonoBehaviour:
   uId: 5
   unitName: Physician
   speed: 120
-  maxHp: 30
+  maxHp: 3
   maxSkillPoint: 4
   passiveSkill: {fileID: 0}
