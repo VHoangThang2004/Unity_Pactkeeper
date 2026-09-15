@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f5e5d27476dbfc48859fa5dc347ee82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteamLoginManager
-  backendUrl: http://localhost:5276
+  config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
   mainMenuScene: 3_MainMenu
 --- !u!4 &781341144
 Transform:

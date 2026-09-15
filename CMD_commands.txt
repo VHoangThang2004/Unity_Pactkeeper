@@ -1,0 +1,16 @@
+Backend server commands:
+
+C:\Users\Admin>cd C:\Users\Admin\GameInventoryApi
+
+C:\Users\Admin\GameInventoryApi>code .
+
+C:\Users\Admin\GameInventoryApi>dotnet run
+
+UnityServer commands:
+
+PS C:\Users\Admin> $server = Start-Process -FilePath "E:\Unity Projects\Demos\Demo 001_Server\SRPG_SERVER.exe" -ArgumentList "-server -matchId 3c5a479c-850a-482f-b371-e09dc019f493 -batchmode -nographics -logFile C:\Users\Admin\server.log" -PassThru
+
+PS C:\Users\Admin> Stop-Process -Id $server.Id -Force
+
+(logs)
+PS C:\Users\Admin> Get-Content "C:\Users\Admin\server.log" -Wait

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ServerController : MonoBehaviour
 {
-    [Header("Backend")]
-    [SerializeField] ServerBackendClient backendClient;
     [Header("Bridge")]
     [SerializeField] private SyncedBridge bridge;
 
@@ -13,6 +11,7 @@ public class ServerController : MonoBehaviour
     [SerializeField] ServerSpawnManager spawnManager;
     [SerializeField] ServerTimelineManager timeline;
 
+    private ServerBackendClient backendClient;
     private int trialErrorCount = 0;
     private int totalErrorCount = 0;
 
@@ -48,6 +47,10 @@ public class ServerController : MonoBehaviour
 
     private void Start()
     {
+        backendClient = FindAnyObjectByType<ServerBackendClient>();
+        if (backendClient == null)
+            Debug.LogError("[ServerController] ServerBackendClient not found!");
+
         StartCoroutine(SessionGuard());
         StartCoroutine(InitSequence());
     }
@@ -62,8 +65,6 @@ public class ServerController : MonoBehaviour
 
     IEnumerator InitSequence()
     {
-        // 0. Fetch match data from backend (real flow) or skip (dev mode)
-        yield return StartCoroutine(backendClient.FetchMatchData());
 
         // 1. Init session
         while (!session.Init())
@@ -72,8 +73,8 @@ public class ServerController : MonoBehaviour
             IncrementErrors();
             yield return new WaitForSeconds(1f);
         }
-        // 1b. Override loadouts if real match flow
-        if (!backendClient.IsDevMode)
+        // 1b. Set data
+        if (!string.IsNullOrEmpty(backendClient.MatchId) && backendClient.LoadoutResponse != null)
             session.SetMatchData(backendClient.MatchId, backendClient.LoadoutResponse);
 
         // 2. Spawn all units
@@ -103,10 +104,9 @@ public class ServerController : MonoBehaviour
             elapsed += Time.deltaTime;
             if (elapsed >= clientInitTimeout)
             {
-                Debug.LogError($"[ServerController] Timeout — only {clientsReceivedInit}/{requiredClients} clients. Shutting down.");
-                // TODO: signal backend
+                Debug.LogError($"[ServerController] Timeout — only {clientsReceivedInit}/{requiredClients} clients.");
+                yield return StartCoroutine(backendClient.ReportCancelled());
                 NetworkManager.Singleton.Shutdown();
-                Application.Quit();
                 yield break;
             }
             yield return null;

@@ -7,7 +7,7 @@ using System.Text;
 public class SteamLoginManager : MonoBehaviour
 {
     [Header("Config")]
-    [SerializeField] private string backendUrl = "http://localhost:5276";
+    [SerializeField] private BackendConfig config;
     [SerializeField] private string mainMenuScene = "2_MainMenu";
 
     private bool steamInitialized = false;
@@ -89,11 +89,12 @@ public class SteamLoginManager : MonoBehaviour
         byte[] body = Encoding.UTF8.GetBytes(json);
 
         using var request = new UnityEngine.Networking.UnityWebRequest(
-            $"{backendUrl}/api/Auth/steam", "POST");
+            $"{config.backendUrl}/api/Auth/steam", "POST");
         request.uploadHandler = new UnityEngine.Networking.UploadHandlerRaw(body);
         request.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-
+        config.SetHeaders(request);
+        
         yield return request.SendWebRequest();
 
         if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
