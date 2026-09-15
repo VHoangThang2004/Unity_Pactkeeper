@@ -1626,6 +1626,7 @@ MonoBehaviour:
   loadoutText: {fileID: 1835153944}
   matchHistoryText: {fileID: 1215789921}
   config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
+  matchmakingManager: {fileID: 1683680690}
 --- !u!4 &1683680689
 Transform:
   m_ObjectHideFlags: 0

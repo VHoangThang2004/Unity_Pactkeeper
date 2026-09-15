@@ -8,7 +8,7 @@ public class SteamLoginManager : MonoBehaviour
 {
     [Header("Config")]
     [SerializeField] private BackendConfig config;
-    [SerializeField] private string mainMenuScene = "2_MainMenu";
+    [SerializeField] private SceneConfig sceneConfig;
 
     private bool steamInitialized = false;
 
@@ -94,7 +94,7 @@ public class SteamLoginManager : MonoBehaviour
         request.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(request);
-        
+
         yield return request.SendWebRequest();
 
         if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
@@ -121,7 +121,7 @@ public class SteamLoginManager : MonoBehaviour
         Debug.Log($"[SteamLogin] Logged in as {authResponse.username}");
 
         // Load main menu
-        SceneManager.LoadScene(mainMenuScene);
+        SceneManager.LoadScene(sceneConfig.mainMenuScene);
     }
 
     [System.Serializable]

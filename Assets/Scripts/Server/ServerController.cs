@@ -1,12 +1,13 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ServerController : MonoBehaviour
 {
     [Header("Bridge")]
     [SerializeField] private SyncedBridge bridge;
-
+    [SerializeField] private SceneConfig sceneConfig;
     [SerializeField] ServerMatchSession session;
     [SerializeField] ServerSpawnManager spawnManager;
     [SerializeField] ServerTimelineManager timeline;
@@ -26,14 +27,21 @@ public class ServerController : MonoBehaviour
             if (trialErrorCount > 10 || totalErrorCount > 50)
             {
                 Debug.LogError("[ServerController] Too many errors — shutting down!");
-                // TODO: send clients to main menu
-                NetworkManager.Singleton.Shutdown();
-                Application.Quit();
+                yield return StartCoroutine(Shutdown());
+                yield break;
             }
             yield return new WaitForSeconds(60f);
             trialErrorCount = 0;
         }
     }
+    IEnumerator Shutdown()
+    {
+        NetworkManager.Singleton.Shutdown();
+        yield return StartCoroutine(backendClient.ReportCancelled());
+    }
+
+
+
 
     void IncrementErrors()
     {
@@ -59,13 +67,16 @@ public class ServerController : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private float postInitGracePeriod = 3f;
-    [SerializeField] private float clientInitTimeout = 30f;
 
     private bool serverReady = false;
 
     IEnumerator InitSequence()
     {
 
+        // 0. Wait for backend client to finish fetching
+        var bc = FindAnyObjectByType<ServerBackendClient>();
+        if (bc != null)
+            yield return new WaitUntil(() => bc.IsReady);
         // 1. Init session
         while (!session.Init())
         {
@@ -73,9 +84,6 @@ public class ServerController : MonoBehaviour
             IncrementErrors();
             yield return new WaitForSeconds(1f);
         }
-        // 1b. Set data
-        if (!string.IsNullOrEmpty(backendClient.MatchId) && backendClient.LoadoutResponse != null)
-            session.SetMatchData(backendClient.MatchId, backendClient.LoadoutResponse);
 
         // 2. Spawn all units
         while (!spawnManager.spawnAll())
@@ -98,18 +106,10 @@ public class ServerController : MonoBehaviour
 
         // 6. Wait for all clients to request init
         serverReady = true;
-        float elapsed = 0f;
         while (clientsReceivedInit < requiredClients)
         {
-            elapsed += Time.deltaTime;
-            if (elapsed >= clientInitTimeout)
-            {
-                Debug.LogError($"[ServerController] Timeout — only {clientsReceivedInit}/{requiredClients} clients.");
-                yield return StartCoroutine(backendClient.ReportCancelled());
-                NetworkManager.Singleton.Shutdown();
-                yield break;
-            }
-            yield return null;
+            yield return new WaitForSeconds(1f);
+            IncrementErrors();
         }
 
         // 7. Grace period — let clients finish their own init

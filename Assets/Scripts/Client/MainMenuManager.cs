@@ -16,6 +16,9 @@ public class MainMenuManager : MonoBehaviour
     [Header("Config")]
     [SerializeField] private BackendConfig config;
 
+    [Header("Ref")]
+    [SerializeField] private MatchmakingManager matchmakingManager;
+
     void Start()
     {
         if (!PlayerSession.IsLoggedIn)
@@ -33,6 +36,8 @@ public class MainMenuManager : MonoBehaviour
         yield return StartCoroutine(FetchProfile());
         yield return StartCoroutine(FetchLoadout());
         yield return StartCoroutine(FetchMatchHistory());
+        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(matchmakingManager.CheckQueueStatus());
     }
 
     // -------------------------------------------------------

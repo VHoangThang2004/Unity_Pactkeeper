@@ -83,7 +83,7 @@ public class MatchmakingManager : MonoBehaviour
         }
     }
 
-    IEnumerator CheckQueueStatus()
+    public IEnumerator CheckQueueStatus()
     {
         using var request = UnityWebRequest.Get($"{config.backendUrl}/api/match/queue/status");
         config.SetHeaders(request, PlayerSession.Token);
@@ -112,6 +112,11 @@ public class MatchmakingManager : MonoBehaviour
         Debug.Log($"[Matchmaking] Connecting to {ip}:{port}");
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetConnectionData(ip, port);
+
+        // Send JWT as connection payload
+        byte[] payload = System.Text.Encoding.UTF8.GetBytes(PlayerSession.Token);
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = payload;
+
         NetworkManager.Singleton.StartClient();
     }
 

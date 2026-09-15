@@ -163,10 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5f4f0103a94ebe4195f69fff77ac460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
   port: 7777
-  lobbyScene: 4_Lobby
-  loginScene: 1_Login
-  devConnectScene: 2_DevConnect
   devMode: 1
   editorIsServer: 0
 --- !u!1 &1648753814
@@ -209,7 +207,7 @@ MonoBehaviour:
       NetworkPrefabsLists: []
     TickRate: 30
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30

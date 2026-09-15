@@ -50,4 +50,5 @@ public class SyncedBridge : NetworkBehaviour
         if (client == null) return;
         client.OnSnapshotReceived(before, resolve, secret, decision, token);
     }
+
 }

@@ -12,6 +12,7 @@ public class ServerMatchSession : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private string mapId = "defaultPvpMap";
+    private ServerBackendClient backendClient;
 
     [Header("Data")]
     [SerializeField] private MapRegistry mapRegistry;
@@ -55,41 +56,6 @@ public class ServerMatchSession : MonoBehaviour
     }},
 };
 
-public void SetMatchData(string matchId, MatchLoadoutsResponse data)
-{
-    Debug.Log($"[MatchSession] Real match — matchId={matchId}");
-
-    loadouts.Clear();
-
-    if (data.player1Loadout != null)
-        loadouts.Add(ConvertToTeamLoadout(0, data.player1Loadout));
-
-    if (data.player2Loadout != null)
-        loadouts.Add(ConvertToTeamLoadout(1, data.player2Loadout));
-
-    Debug.Log($"[MatchSession] Loaded {loadouts.Count} team loadouts from backend.");
-}
-
-private TeamLoadout ConvertToTeamLoadout(int teamId, TeamLoadoutData data)
-{
-    var units = new List<PlayerUnitLoadout>();
-    foreach (var u in data.units)
-        units.Add(new PlayerUnitLoadout
-        {
-            uId = u.uId,
-            movementSkillId = u.movementSkillId,
-            weaponSkillId = u.weaponSkillId,
-            classSkillId = u.classSkillId,
-            equipmentSkillId = u.equipmentSkillId
-        });
-
-    return new TeamLoadout
-    {
-        teamId = teamId,
-        clientId = 0,
-        units = units
-    };
-}
 
     // Last sent state — always up to date, used for targeted sends and resync
     public SessionSnapshotData LastSnapshot;
@@ -138,12 +104,21 @@ private TeamLoadout ConvertToTeamLoadout(int teamId, TeamLoadoutData data)
 
     public bool Init()
     {
-        mapRegistry.Init();
+        backendClient = FindAnyObjectByType<ServerBackendClient>();
 
-        MapAsset = mapRegistry.Get(mapId);
+        // Set data
+        if (!string.IsNullOrEmpty(backendClient.MatchId) && backendClient.LoadoutResponse != null)
+            SetMatchData(backendClient.MatchId, backendClient.LoadoutResponse);
+
+        mapRegistry.Init();
+        string resolvedMapId = (backendClient != null && !string.IsNullOrEmpty(backendClient.MapId))
+              ? backendClient.MapId
+              : mapId; // fallback to inspector value for devmode
+
+        MapAsset = mapRegistry.Get(resolvedMapId);
         if (MapAsset == null)
         {
-            Debug.LogError($"[MatchSession] MapRegistry has no entry for mapId '{mapId}'!");
+            Debug.LogError($"[MatchSession] MapRegistry has no entry for mapId '{resolvedMapId}'!");
             return false;
         }
 
@@ -154,29 +129,92 @@ private TeamLoadout ConvertToTeamLoadout(int teamId, TeamLoadoutData data)
         unitLibrary.Init();
         skillLibrary.Init();
         effectRegistry.Init();
-        SetTeamExcludeServer();
+        SetTeamFromLoadout();
         return true;
     }
+    public void SetMatchData(string matchId, MatchLoadoutsResponse data)
+    {
+        Debug.Log($"[MatchSession] Real match — matchId={matchId}");
 
-    private void SetTeamExcludeServer()
+        loadouts.Clear();
+
+        if (data.player1Loadout != null)
+            loadouts.Add(ConvertToTeamLoadout(0, data.player1Loadout));
+
+        if (data.player2Loadout != null)
+            loadouts.Add(ConvertToTeamLoadout(1, data.player2Loadout));
+
+        Debug.Log($"[MatchSession] Loaded {loadouts.Count} team loadouts from backend.");
+    }
+
+    private TeamLoadout ConvertToTeamLoadout(int teamId, TeamLoadoutData data)
+    {
+        var units = new List<PlayerUnitLoadout>();
+        foreach (var u in data.units)
+            units.Add(new PlayerUnitLoadout
+            {
+                uId = u.uId,
+                movementSkillId = u.movementSkillId,
+                weaponSkillId = u.weaponSkillId,
+                classSkillId = u.classSkillId,
+                equipmentSkillId = u.equipmentSkillId
+            });
+
+        return new TeamLoadout
+        {
+            teamId = teamId,
+            clientId = 0,
+            units = units
+        };
+    }
+
+    private void SetTeamFromLoadout()
     {
         teams = new List<TeamData>();
         units = new List<UnitData>();
 
-        // Build TeamData from loadouts — clientId assigned from connected clients for now
         var connectedIds = new List<ulong>(NetworkManager.Singleton.ConnectedClientsIds);
-        connectedIds.Remove(NetworkManager.Singleton.LocalClientId); // exclude server
+        connectedIds.Remove(NetworkManager.Singleton.LocalClientId);
 
-        for (int i = 0; i < loadouts.Count && i < connectedIds.Count; i++)
+        foreach (var loadout in loadouts)
         {
-            loadouts[i].clientId = connectedIds[i]; // testing: assign real clientId here
+            // Find the clientId that maps to this loadout's expected playerId
+            ulong assignedClientId = FindClientIdForTeam(loadout.teamId, connectedIds);
+
+            loadout.clientId = assignedClientId;
             teams.Add(new TeamData
             {
-                teamId = loadouts[i].teamId,
-                clientId = loadouts[i].clientId,
+                teamId = loadout.teamId,
+                clientId = assignedClientId,
                 unitIds = new List<int>()
             });
+
+            Debug.Log($"[MatchSession] Team {loadout.teamId} → clientId={assignedClientId}");
         }
+    }
+
+    private ulong FindClientIdForTeam(int teamId, List<ulong> connectedIds)
+    {
+        if (backendClient?.LoadoutResponse == null)
+        {
+            // No identity info — fall back to connection order
+            int index = teamId < connectedIds.Count ? teamId : 0;
+            return connectedIds[index];
+        }
+
+        string expectedPlayerId = teamId == 0
+            ? backendClient.LoadoutResponse.player1Id
+            : backendClient.LoadoutResponse.player2Id;
+
+        foreach (var clientId in connectedIds)
+        {
+            string playerId = MatchIdentityRegistry.GetPlayerId(clientId);
+            if (playerId == expectedPlayerId)
+                return clientId;
+        }
+
+        Debug.LogWarning($"[MatchSession] No client found for team {teamId} — falling back to connection order.");
+        return connectedIds.Count > teamId ? connectedIds[teamId] : 0;
     }
 
     // -------------------------------------------------------

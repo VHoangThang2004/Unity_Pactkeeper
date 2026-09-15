@@ -571,13 +571,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d635d9a84120ffe47b84ee8e10773e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServerController
-  backendClient: {fileID: 0}
   bridge: {fileID: 209351857}
+  sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
   session: {fileID: 157600748}
   spawnManager: {fileID: 157600750}
   timeline: {fileID: 157600751}
   postInitGracePeriod: 3
-  clientInitTimeout: 30
 --- !u!114 &157600750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4381,6 +4380,7 @@ GameObject:
   - component: {fileID: 2127351874}
   - component: {fileID: 2127351875}
   - component: {fileID: 2127351876}
+  - component: {fileID: 2127351877}
   m_Layer: 0
   m_Name: ClientController
   m_TagString: Untagged
@@ -4430,6 +4430,7 @@ MonoBehaviour:
   bridge: {fileID: 209351857}
   session: {fileID: 2127351871}
   scene: {fileID: 2127351875}
+  sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
 --- !u!114 &2127351869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4592,6 +4593,19 @@ MonoBehaviour:
   scene: {fileID: 2127351875}
   mapLoader: {fileID: 2127351874}
   spawner: {fileID: 2127351870}
+--- !u!114 &2127351877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127351865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5fdfdbc9921f5a4085d6d92975a0fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClientMenuReturner
+  sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
 --- !u!1 &2134915390
 GameObject:
   m_ObjectHideFlags: 0

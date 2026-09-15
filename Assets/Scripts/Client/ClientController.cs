@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Thin intersection layer. Starts client init, routes bridge RPCs to session,
@@ -17,7 +19,7 @@ public class ClientController : MonoBehaviour
 
     [Header("Ref")]
     [SerializeField] private ClientScene scene;
-
+    [SerializeField] private SceneConfig sceneConfig;
     // -------------------------------------------------------
     // Error Guard
     // -------------------------------------------------------
@@ -177,7 +179,7 @@ public class ClientController : MonoBehaviour
                     session.ApplySnapshot(pkg.snapshot, pkg.resolve, pkg.secret, pkg.decision, pkg.token);
                 }
             }
-            yield return null;  
+            yield return null;
         }
 
     }
@@ -191,4 +193,5 @@ public class ClientController : MonoBehaviour
     {
         // Ignored — ClientSpawner handles unit sync via token system
     }
+
 }

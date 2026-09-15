@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteamLoginManager
   config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
-  mainMenuScene: 3_MainMenu
+  sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
 --- !u!4 &781341144
 Transform:
   m_ObjectHideFlags: 0

@@ -14,14 +14,15 @@ public class DevLoginManager : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private BackendConfig config;
-    [SerializeField] private string mainMenuScene = "3_MainMenu";
+
+    [SerializeField] private SceneConfig sceneConfig;
 
     void Start()
     {
         if (PlayerSession.IsLoggedIn)
         {
             Debug.Log("[DevLogin] Already logged in, skipping to main menu.");
-            SceneManager.LoadScene(mainMenuScene);
+            SceneManager.LoadScene(sceneConfig.mainMenuScene);
         }
     }
 
@@ -48,7 +49,7 @@ public class DevLoginManager : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(request);
-        
+
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -69,7 +70,7 @@ public class DevLoginManager : MonoBehaviour
         PlayerSession.Username = response.username;
 
         Debug.Log($"[DevLogin] Logged in as {response.username}");
-        SceneManager.LoadScene(mainMenuScene);
+        SceneManager.LoadScene(sceneConfig.mainMenuScene);
     }
 
     [System.Serializable]

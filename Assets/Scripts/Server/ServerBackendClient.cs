@@ -16,7 +16,7 @@ public class MatchInfoResponse
 {
     public string matchId;
     public string mode;
-    public string storyChapterId;
+    public string mapId;
 }
 
 [System.Serializable]
@@ -43,7 +43,7 @@ public class ServerBackendClient : MonoBehaviour
 
     public string MatchId { get; private set; } = string.Empty;
     public string Mode { get; private set; } = "pvp";
-    public string StoryChapterId { get; private set; } = string.Empty;
+    public string MapId { get; private set; } = "defaultPvpMap";
     public bool IsReady { get; private set; } = false;
     public MatchLoadoutsResponse LoadoutResponse { get; private set; }
 
@@ -83,7 +83,7 @@ public class ServerBackendClient : MonoBehaviour
             yield return StartCoroutine(FetchLoadouts());
         else if (Mode == "story")
         {
-            Debug.Log($"[ServerBackendClient] Story mode — chapterId={StoryChapterId} (placeholder).");
+            Debug.Log($"[ServerBackendClient] Story mode — MapId={MapId} (placeholder).");
             // TODO: fetch story data
         }
 
@@ -108,7 +108,7 @@ public class ServerBackendClient : MonoBehaviour
 
         var info = JsonUtility.FromJson<MatchInfoResponse>(request.downloadHandler.text);
         Mode = info.mode;
-        StoryChapterId = info.storyChapterId;
+        MapId = info.mapId;
         Debug.Log($"[ServerBackendClient] Mode={Mode}");
     }
 

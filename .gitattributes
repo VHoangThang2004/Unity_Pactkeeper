@@ -1,0 +1,58 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Unity YAML text files (enforce LF in repository)
+*.unity text merge=unityyamlmerge eol=lf
+*.prefab text merge=unityyamlmerge eol=lf
+*.asset text merge=unityyamlmerge eol=lf
+*.meta text merge=unityyamlmerge eol=lf
+*.mat text merge=unityyamlmerge eol=lf
+*.anim text merge=unityyamlmerge eol=lf
+*.controller text merge=unityyamlmerge eol=lf
+*.overrideController text merge=unityyamlmerge eol=lf
+*.physicMaterial text merge=unityyamlmerge eol=lf
+*.physicsMaterial2D text merge=unityyamlmerge eol=lf
+*.guiskin text merge=unityyamlmerge eol=lf
+*.fontsettings text merge=unityyamlmerge eol=lf
+*.brush text merge=unityyamlmerge eol=lf
+*.terrainlayer text merge=unityyamlmerge eol=lf
+
+# Code & config files
+*.cs text diff=csharp eol=lf
+*.cginc text eol=lf
+*.shader text eol=lf
+*.hlsl text eol=lf
+*.glsl text eol=lf
+*.compute text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.asmdef text eol=lf
+*.asmref text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tga binary
+*.psd binary
+*.bmp binary
+*.tif binary
+*.tiff binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.fbx binary
+*.obj binary
+*.blend binary
+*.ttf binary
+*.otf binary
+*.dll binary
+*.pdb binary
+*.so binary
+*.dylib binary
+*.aar binary
+*.jar binary

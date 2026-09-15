@@ -9,13 +9,11 @@ using System.Collections;
 
 public class ServerBootstrap : MonoBehaviour
 {
+    [SerializeField] private SceneConfig sceneConfig;
     [Header("Server Config")]
     [SerializeField] private ushort port = 7777;
-    [SerializeField] private string lobbyScene = "4_Lobby";
 
     [Header("Client Config")]
-    [SerializeField] private string loginScene = "1_Login";
-    [SerializeField] private string devConnectScene = "2_DevConnect";
     [SerializeField] private bool devMode = true;
 
     IEnumerator Start()
@@ -62,7 +60,7 @@ public class ServerBootstrap : MonoBehaviour
         Debug.Log($"[Bootstrap] Server started on port {port}");
 
         NetworkManager.Singleton.SceneManager.LoadScene(
-            lobbyScene,
+            sceneConfig.lobbyScene,
             LoadSceneMode.Single
         );
     }
@@ -70,7 +68,7 @@ public class ServerBootstrap : MonoBehaviour
     void StartClientFlow()
     {
         Debug.Log($"[Bootstrap] CLIENT MODE (devMode={devMode})");
-        SceneManager.LoadScene(devMode ? devConnectScene : loginScene);
+        SceneManager.LoadScene(devMode ? sceneConfig.devConnectScene : sceneConfig.loginScene);
     }
 
     bool IsServerMode()

@@ -24,7 +24,9 @@
 
 # Visual Studio
 *.csproj
+*.csproj.lscache
 *.sln
+*.slnx
 *.suo
 *.user
 *.userprefs
@@ -73,11 +75,16 @@ sysinfo.txt
 *.log
 
 # =========================
-# Temporary files
+# Temporary & recovery files
 # =========================
 *.tmp
 *.temp
 *.bak
+[Aa]ssets/_Recovery/
+*.choices
+*.choices.meta
+*.private.*
+*.meta.private.*
 
 
 # =========================
