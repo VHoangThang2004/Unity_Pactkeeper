@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
   port: 7777
-  devMode: 0
+  devMode: 1
   editorIsServer: 0
 --- !u!1 &1648753814
 GameObject:

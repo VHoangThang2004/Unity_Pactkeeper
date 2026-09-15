@@ -233,6 +233,7 @@ GameObject:
   m_Component:
   - component: {fileID: 100957207}
   - component: {fileID: 100957208}
+  - component: {fileID: 100957209}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -271,6 +272,18 @@ MonoBehaviour:
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
   checkInterval: 1
   lobbyTimeout: 60
+--- !u!114 &100957209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100957206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf5876becf05e5042a3d51dcc1e2092b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ServerConnectionManager
 --- !u!1 &119103053
 GameObject:
   m_ObjectHideFlags: 0

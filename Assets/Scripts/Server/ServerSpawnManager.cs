@@ -32,7 +32,7 @@ public class ServerSpawnManager : MonoBehaviour
         }
 
         int spawnPointer = 0;
-        foreach (var unitLoadout in loadout.units)
+        foreach (var unitLoadout in loadout.Units)
         {
             Vector2Int spawnPoint = session.MapAsset.GetSpawn(teamId, spawnPointer);
             UnitData unit = SpawnUnit(teamId, unitLoadout, spawnPoint.x, spawnPoint.y);
@@ -56,10 +56,10 @@ public class ServerSpawnManager : MonoBehaviour
             return null;
         }
 
-        var def = session.unitLibrary.Get(loadout.uId);
+        var def = session.unitLibrary.Get(loadout.UId);
         if (def == null)
         {
-            Debug.LogError($"[SpawnManager] SpawnUnit: No definition for uId {loadout.uId}!");
+            Debug.LogError($"[SpawnManager] SpawnUnit: No definition for uId {loadout.UId}!");
             return null;
         }
 
@@ -74,7 +74,7 @@ public class ServerSpawnManager : MonoBehaviour
         var unit = new UnitData
         {
             Id = nextUnitId++,
-            UId = loadout.uId,
+            UId = loadout.UId,
             CurrentCell = new Vector3Int(worldX, worldY, 0),
             CurrentHP = def.maxHp,
             CurrentSkillPoint = def.maxSkillPoint,
@@ -85,10 +85,10 @@ public class ServerSpawnManager : MonoBehaviour
             MaxSkillPoint = def.maxSkillPoint,
             DamageMultiplier = 1f,
             DamageReduction = 1f,
-            MovementSkillId = loadout.movementSkillId,
-            WeaponSkillId = loadout.weaponSkillId,
-            ClassSkillId = loadout.classSkillId,
-            EquipmentSkillId = loadout.equipmentSkillId,
+            MovementSkillId = loadout.MovementSkillId,
+            WeaponSkillId = loadout.WeaponSkillId,
+            ClassSkillId = loadout.ClassSkillId,
+            EquipmentSkillId = loadout.EquipmentSkillId,
             PassiveSkillId = def.passiveSkill != null ? def.passiveSkill.skillId : -1,
         };
 
@@ -98,7 +98,7 @@ public class ServerSpawnManager : MonoBehaviour
         if (!suppressSpawnRpcs)
             bridge.SpawnUnitClientRpc(unit);
 
-        Debug.Log($"[SpawnManager] Spawned unit Id={unit.Id} uId={loadout.uId} team={teamNumber} speed={def.speed} step={unit.CurrentStep} at ({worldX},{worldY})");
+        Debug.Log($"[SpawnManager] Spawned unit Id={unit.Id} uId={loadout.UId} team={teamNumber} speed={def.speed} step={unit.CurrentStep} at ({worldX},{worldY})");
         return unit;
     }
 

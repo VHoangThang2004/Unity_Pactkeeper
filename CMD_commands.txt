@@ -14,3 +14,31 @@ PS C:\Users\Admin> Stop-Process -Id $server.Id -Force
 
 (logs)
 PS C:\Users\Admin> Get-Content "C:\Users\Admin\server.log" -Wait
+
+Update headless server (Linux dedicated server build) to VPS:
+scp -r "E:\Unity Projects\Demos\Demo 006_Server_Linux\*" root@103.110.87.249:/root/srpg-server/
+
+Connect to VPS:
+ssh root@103.110.87.249
+
+VPS commands:
+cd ~/unnamed-srpg-backend
+
+Enters tmux to run backend (remains running even after leaving)
+
+tmux attach -t backend
+
+(ctrl B ,then D to leave TMUX screen)
+
+ASPNETCORE_ENVIRONMENT=Production dotnet run --no-launch-profile > /root/backend.log 2>&1
+
+To read backend logs:
+ tail -f /root/backend.log
+
+To read headless server logs:
+ tail -f /root/srpg-server/logs/07fee967-9d6d-45a8-abd0-fd6e347e3f75.log
+
+Check VPS RAM usage:
+free -h
+ps aux --sort=-%mem | head
+

@@ -102,6 +102,7 @@ public class MatchmakingManager : MonoBehaviour
         if (response.status == "matched")
         {
             isInQueue = false;
+            PlayerSession.MatchId = response.matchId;
             statusText.text = "Match found! Connecting...";
             ConnectToServer(response.serverIp, (ushort)response.serverPort);
         }

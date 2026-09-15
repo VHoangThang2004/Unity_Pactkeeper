@@ -68,6 +68,7 @@ public class DevLoginManager : MonoBehaviour
 
         PlayerSession.Token = response.token;
         PlayerSession.Username = response.username;
+        PlayerSession.PlayerId = response.playerId;
 
         Debug.Log($"[DevLogin] Logged in as {response.username}");
         SceneManager.LoadScene(sceneConfig.mainMenuScene);
@@ -79,5 +80,6 @@ public class DevLoginManager : MonoBehaviour
         public string token;
         public string role;
         public string username;
+        public string playerId;
     }
 }

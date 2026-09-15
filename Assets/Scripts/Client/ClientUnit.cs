@@ -113,6 +113,10 @@ public class ClientUnit : MonoBehaviour
     {
         if (stepText == null) return;
         stepText.text = session.GetUnitDataById(unitId).CurrentStep.ToString();
+        if (stepText.text == "0")
+        {
+            stepText.text = "";
+        }
     }
 
     // -------------------------------------------------------

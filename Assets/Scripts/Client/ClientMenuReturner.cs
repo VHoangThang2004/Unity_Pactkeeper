@@ -20,6 +20,6 @@ public class ClientMenuReturner : MonoBehaviour
     {
         if (clientId != NetworkManager.Singleton.LocalClientId) return;
         Debug.Log("[Client] Disconnected — returning to main menu.");
-        SceneManager.LoadScene(sceneConfig.mainMenuScene);
+        SceneManager.LoadScene(sceneConfig.matchResultScene);
     }
 }

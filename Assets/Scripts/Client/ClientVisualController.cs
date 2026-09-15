@@ -57,7 +57,7 @@ public class ClientVisualController : MonoBehaviour
                 OwnedReadyUnitCanvasGroup[i].alpha = 1;
                 OwnedReadyUnitCanvasGroup[i].interactable = true;
                 OwnedReadyUnitCanvasGroup[i].blocksRaycasts = true;
-                OwnedReadyUnitIcon[i].sprite = scene.GetSceneUnitById(session.ownedReadyUnitIds[i]).unitImg;
+                OwnedReadyUnitIcon[i].sprite = scene.GetSceneUnitById(session.ownedReadyUnitIds[i])?.unitImg;
             }
             else
             {
@@ -73,7 +73,7 @@ public class ClientVisualController : MonoBehaviour
                 EnemyReadyUnitCanvasGroup[i].alpha = 1;
                 EnemyReadyUnitCanvasGroup[i].interactable = true;
                 EnemyReadyUnitCanvasGroup[i].blocksRaycasts = true;
-                EnemyReadyUnitIcon[i].sprite = scene.GetSceneUnitById(session.enemyReadyUnitIds[i]).unitImg;
+                EnemyReadyUnitIcon[i].sprite = scene.GetSceneUnitById(session.enemyReadyUnitIds[i])?.unitImg;
             }
             else
             {

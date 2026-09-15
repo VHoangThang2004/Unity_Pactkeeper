@@ -10,9 +10,6 @@ using System.Collections;
 public class ServerBootstrap : MonoBehaviour
 {
     [SerializeField] private SceneConfig sceneConfig;
-    [Header("Server Config")]
-    [SerializeField] private ushort port = 7777;
-
     [Header("Client Config")]
     [SerializeField] private bool devMode = true;
 
@@ -47,6 +44,7 @@ public class ServerBootstrap : MonoBehaviour
             return;
         }
 
+        ushort port = GetPortFromArgs();
         transport.SetConnectionData("0.0.0.0", port);
 
         bool success = NetworkManager.Singleton.StartServer();
@@ -69,6 +67,16 @@ public class ServerBootstrap : MonoBehaviour
     {
         Debug.Log($"[Bootstrap] CLIENT MODE (devMode={devMode})");
         SceneManager.LoadScene(devMode ? sceneConfig.devConnectScene : sceneConfig.loginScene);
+    }
+
+    ushort GetPortFromArgs()
+    {
+        string[] args = System.Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+            if (args[i] == "-port" && ushort.TryParse(args[i + 1], out ushort p))
+                return p;
+        Debug.LogWarning("[Bootstrap] No -port arg found — defaulting to 7777.");
+        return 7777;
     }
 
     bool IsServerMode()

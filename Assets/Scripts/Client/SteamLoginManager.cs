@@ -117,6 +117,7 @@ public class SteamLoginManager : MonoBehaviour
         // Store JWT
         PlayerSession.Token = authResponse.token;
         PlayerSession.Username = authResponse.username;
+        PlayerSession.PlayerId = authResponse.playerId;
 
         Debug.Log($"[SteamLogin] Logged in as {authResponse.username}");
 
@@ -130,5 +131,6 @@ public class SteamLoginManager : MonoBehaviour
         public string token;
         public string role;
         public string username;
+        public string playerId;
     }
 }

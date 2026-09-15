@@ -10,16 +10,17 @@ using UnityEngine;
 [System.Serializable]
 public class TeamLoadout
 {
-    public int teamId;
-    public ulong clientId;
-    public List<PlayerUnitLoadout> units;
+    public int TeamId;
+    public ulong ClientId;
+    public string PlayerId = string.Empty;
+    public List<PlayerUnitLoadout> Units;
 }
 
 public class PlayerUnitLoadout
 {
-    public int uId;
-    public int movementSkillId;
-    public int weaponSkillId;
-    public int classSkillId;
-    public int equipmentSkillId; // shoes etc.
+    public int UId;
+    public int MovementSkillId;
+    public int WeaponSkillId;
+    public int ClassSkillId;
+    public int EquipmentSkillId; // shoes etc.
 }   

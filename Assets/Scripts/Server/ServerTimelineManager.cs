@@ -168,6 +168,16 @@ public class ServerTimelineManager : MonoBehaviour
             }
 
             // Instant paused — run decision loop
+            if (!newUnitsReady)
+                session.ConsecutivePassInstants++;
+            else
+                session.ConsecutivePassInstants = 0;
+
+            if (session.ConsecutivePassInstants > 2)
+            {
+                yield return StartCoroutine(EndMatch());
+                yield break;
+            }
             TransitionTo(ServerSessionState.InstantPaused);
             yield return RunDecisionLoop();
 
@@ -640,6 +650,7 @@ public class ServerTimelineManager : MonoBehaviour
             maxInstant = matchConfig.maxInstant,
             flag = session.FlaggedTeamId,
             isPaused = session.TimelineState != ServerSessionState.Flowing,
+            consecutivePassInstants = session.ConsecutivePassInstants
         });
     }
 
@@ -656,6 +667,7 @@ public class ServerTimelineManager : MonoBehaviour
                 maxInstant = matchConfig.maxInstant,
                 flag = session.FlaggedTeamId,
                 isPaused = session.TimelineState != ServerSessionState.Flowing,
+                consecutivePassInstants = session.ConsecutivePassInstants
             }
         );
     }
@@ -670,13 +682,16 @@ public class ServerTimelineManager : MonoBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { clientId } }
         };
-        bridge.SendSnapshotToClientRpc(
-            session.LastSnapshot,
-            session.LastResolve,
-            secret,
-            session.LastDecision,
-            Token,
-            rpcParams);
+
+        var snapshot = session.LastSnapshot;
+        if (snapshot.Teams != null)
+            foreach (var snapTeam in snapshot.Teams)
+            {
+                var liveTeam = session.GetTeamDataByTeamId(snapTeam.teamId);
+                if (liveTeam != null) snapTeam.clientId = liveTeam.clientId;
+            }
+
+        bridge.SendSnapshotToClientRpc(snapshot, session.LastResolve, secret, session.LastDecision, Token, rpcParams);
     }
 
     public void BroadcastSnapshot()
@@ -712,6 +727,33 @@ public class ServerTimelineManager : MonoBehaviour
     {
         if (teamId < 0 || teamId >= session.GetAllTeamData().Count) return 0;
         return session.GetTeamDataByTeamId(teamId).clientId;
+    }
+
+    // -------------------------------------------------------
+    // Match End
+    // -------------------------------------------------------
+    IEnumerator EndMatch()
+    {
+        TransitionTo(ServerSessionState.Finished);
+
+        var teams = session.GetAllTeamData();
+        int team0Units = teams[0].unitIds.Count;
+        int team1Units = teams[1].unitIds.Count;
+
+        string winnerId = string.Empty;
+        if (team0Units > team1Units)
+            winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
+        else if (team1Units > team0Units)
+            winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+
+        Debug.Log($"[Timeline] Match ended — winner={winnerId}");
+
+        // Notify clients before shutting down
+
+        var backendClient = session.backendClient;
+        if (backendClient != null)
+            yield return StartCoroutine(backendClient.ReportResult(winnerId, session.CurrentInstant, session.CurrentInstant));
+        NetworkManager.Singleton.Shutdown();
     }
 
 }

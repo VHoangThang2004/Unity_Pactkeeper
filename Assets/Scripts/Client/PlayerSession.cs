@@ -6,6 +6,8 @@ public static class PlayerSession
 {
     public static string Token { get; set; } = string.Empty;
     public static string Username { get; set; } = string.Empty;
+    public static string PlayerId { get; set; } = string.Empty;
+    public static string MatchId { get; set; } = string.Empty;
 
     public static bool IsLoggedIn => !string.IsNullOrEmpty(Token);
 
@@ -13,5 +15,7 @@ public static class PlayerSession
     {
         Token = string.Empty;
         Username = string.Empty;
+        PlayerId = string.Empty;
+        MatchId = string.Empty;
     }
 }

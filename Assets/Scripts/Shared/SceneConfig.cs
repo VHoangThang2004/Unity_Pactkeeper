@@ -8,6 +8,7 @@ public class SceneConfig : ScriptableObject
     public string devConnectScene = "2_DevConnect";
     public string mainMenuScene = "3_MainMenu";
     public string lobbyScene = "4_Lobby";
+    public string matchResultScene = "6_MatchResult";
 
     [Header("Server Scenes")]
     public string pvpScene = "5_Match";

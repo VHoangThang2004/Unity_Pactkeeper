@@ -12,7 +12,7 @@ public class ServerMatchSession : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private string mapId = "defaultPvpMap";
-    private ServerBackendClient backendClient;
+    public ServerBackendClient backendClient;
 
     [Header("Data")]
     [SerializeField] private MapRegistry mapRegistry;
@@ -38,21 +38,21 @@ public class ServerMatchSession : MonoBehaviour
     // Backend phase: replace this with data received from backend
     private List<TeamLoadout> loadouts = new List<TeamLoadout>
 {
-    new TeamLoadout { teamId = 0, clientId = 0, units = new List<PlayerUnitLoadout>
+    new TeamLoadout { TeamId = 0, ClientId = 0, Units = new List<PlayerUnitLoadout>
     {
-        new PlayerUnitLoadout { uId = 1, movementSkillId = 1001, weaponSkillId = 2001, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 2, movementSkillId = 1002, weaponSkillId = 2002, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 3, movementSkillId = 1003, weaponSkillId = 2003, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 4, movementSkillId = 1004, weaponSkillId = 2004, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 1, MovementSkillId = 1001, WeaponSkillId = 2001, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 2, MovementSkillId = 1002, WeaponSkillId = 2002, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 3, MovementSkillId = 1003, WeaponSkillId = 2003, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 4, MovementSkillId = 1004, WeaponSkillId = 2004, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 5, MovementSkillId = 1005, WeaponSkillId = 2005, ClassSkillId = -1, EquipmentSkillId = -1 },
     }},
-    new TeamLoadout { teamId = 1, clientId = 0, units = new List<PlayerUnitLoadout>
+    new TeamLoadout { TeamId = 1, ClientId = 0, Units = new List<PlayerUnitLoadout>
     {
-        new PlayerUnitLoadout { uId = 1, movementSkillId = 1001, weaponSkillId = 2001, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 2, movementSkillId = 1002, weaponSkillId = 2002, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 3, movementSkillId = 1003, weaponSkillId = 2003, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 4, movementSkillId = 1004, weaponSkillId = 2004, classSkillId = -1, equipmentSkillId = -1 },
-        new PlayerUnitLoadout { uId = 5, movementSkillId = 1005, weaponSkillId = 2005, classSkillId = -1, equipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 1, MovementSkillId = 1001, WeaponSkillId = 2001, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 2, MovementSkillId = 1002, WeaponSkillId = 2002, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 3, MovementSkillId = 1003, WeaponSkillId = 2003, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 4, MovementSkillId = 1004, WeaponSkillId = 2004, ClassSkillId = -1, EquipmentSkillId = -1 },
+        new PlayerUnitLoadout { UId = 5, MovementSkillId = 1005, WeaponSkillId = 2005, ClassSkillId = -1, EquipmentSkillId = -1 },
     }},
 };
 
@@ -85,6 +85,7 @@ public class ServerMatchSession : MonoBehaviour
     // -------------------------------------------------------
     public ServerSessionState TimelineState { get; set; } = ServerSessionState.None;
     public int CurrentInstant { get; set; } = 0;
+    public int ConsecutivePassInstants { get; set; } = 0;
     public int FlaggedTeamId { get; set; } = 0;
     public List<int> ReadyUnitIds { get; set; } = new List<int>();
 
@@ -122,7 +123,7 @@ public class ServerMatchSession : MonoBehaviour
             return false;
         }
 
-        MapId = mapId;
+        MapId = resolvedMapId;
         Map = new GridMap();
         Map.Init(MapAsset);
 
@@ -153,18 +154,19 @@ public class ServerMatchSession : MonoBehaviour
         foreach (var u in data.units)
             units.Add(new PlayerUnitLoadout
             {
-                uId = u.uId,
-                movementSkillId = u.movementSkillId,
-                weaponSkillId = u.weaponSkillId,
-                classSkillId = u.classSkillId,
-                equipmentSkillId = u.equipmentSkillId
+                UId = u.uId,
+                MovementSkillId = u.movementSkillId,
+                WeaponSkillId = u.weaponSkillId,
+                ClassSkillId = u.classSkillId,
+                EquipmentSkillId = u.equipmentSkillId
             });
 
         return new TeamLoadout
         {
-            teamId = teamId,
-            clientId = 0,
-            units = units
+            TeamId = teamId,
+            ClientId = 0,
+            PlayerId = data.playerId,
+            Units = units
         };
     }
 
@@ -173,53 +175,48 @@ public class ServerMatchSession : MonoBehaviour
         teams = new List<TeamData>();
         units = new List<UnitData>();
 
-        var connectedIds = new List<ulong>(NetworkManager.Singleton.ConnectedClientsIds);
-        connectedIds.Remove(NetworkManager.Singleton.LocalClientId);
+        var unassigned = new List<ulong>(NetworkManager.Singleton.ConnectedClientsIds);
+        unassigned.Remove(NetworkManager.Singleton.LocalClientId);
 
         foreach (var loadout in loadouts)
         {
-            // Find the clientId that maps to this loadout's expected playerId
-            ulong assignedClientId = FindClientIdForTeam(loadout.teamId, connectedIds);
+            ulong assignedClientId = FindClientIdForPlayerId(loadout.PlayerId, unassigned);
+            unassigned.Remove(assignedClientId);
 
-            loadout.clientId = assignedClientId;
+            loadout.ClientId = assignedClientId;
             teams.Add(new TeamData
             {
-                teamId = loadout.teamId,
+                teamId = loadout.TeamId,
                 clientId = assignedClientId,
+                playerId = loadout.PlayerId,
                 unitIds = new List<int>()
             });
 
-            Debug.Log($"[MatchSession] Team {loadout.teamId} → clientId={assignedClientId}");
+            Debug.Log($"[MatchSession] Team {loadout.TeamId} → clientId={assignedClientId} playerId={loadout.PlayerId}");
         }
     }
 
-    private ulong FindClientIdForTeam(int teamId, List<ulong> connectedIds)
+    private ulong FindClientIdForPlayerId(string playerId, List<ulong> candidates)
     {
-        if (backendClient?.LoadoutResponse == null)
+        if (!string.IsNullOrEmpty(playerId))
         {
-            // No identity info — fall back to connection order
-            int index = teamId < connectedIds.Count ? teamId : 0;
-            return connectedIds[index];
+            foreach (var clientId in candidates)
+            {
+                if (MatchIdentityRegistry.GetPlayerId(clientId) == playerId)
+                    return clientId;
+            }
+            Debug.LogWarning($"[MatchSession] No client matched playerId={playerId} — using first available.");
         }
-
-        string expectedPlayerId = teamId == 0
-            ? backendClient.LoadoutResponse.player1Id
-            : backendClient.LoadoutResponse.player2Id;
-
-        foreach (var clientId in connectedIds)
-        {
-            string playerId = MatchIdentityRegistry.GetPlayerId(clientId);
-            if (playerId == expectedPlayerId)
-                return clientId;
-        }
-
-        Debug.LogWarning($"[MatchSession] No client found for team {teamId} — falling back to connection order.");
-        return connectedIds.Count > teamId ? connectedIds[teamId] : 0;
+        return candidates.Count > 0 ? candidates[0] : 0;
     }
 
     // -------------------------------------------------------
     // Team & Player Management
     // -------------------------------------------------------
+    public TeamData GetTeamByPlayerId(string playerId)
+    {
+        return teams.Find(t => t.playerId == playerId);
+    }
 
     public int GetTeamNumberByClientId(ulong clientId)
     {
@@ -240,8 +237,8 @@ public class ServerMatchSession : MonoBehaviour
     }
     public TeamLoadout GetTeamLoadoutDataByTeamId(int teamId)
     {
-        return loadouts[0].teamId == teamId ? loadouts[0] :
-               loadouts[1].teamId == teamId ? loadouts[1] : null;
+        return loadouts[0].TeamId == teamId ? loadouts[0] :
+               loadouts[1].TeamId == teamId ? loadouts[1] : null;
     }
     public TeamData GetTeamDataByClientId(ulong clientId)
     {
@@ -250,8 +247,8 @@ public class ServerMatchSession : MonoBehaviour
     }
     public TeamLoadout GetTeamLoadoutDataByClientId(ulong clientId)
     {
-        return loadouts[0].clientId == clientId ? loadouts[0] :
-               loadouts[1].clientId == clientId ? loadouts[1] : null;
+        return loadouts[0].ClientId == clientId ? loadouts[0] :
+               loadouts[1].ClientId == clientId ? loadouts[1] : null;
     }
     public List<TeamData> GetAllTeamData()
     {

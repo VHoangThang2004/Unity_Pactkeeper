@@ -5,6 +5,8 @@ public class TeamData : INetworkSerializable
 {
     public int teamId;
     public ulong clientId;
+    // Server only — not serialized, never sent to clients
+    [System.NonSerialized] public string playerId = string.Empty;
     public List<int> unitIds;
 
     // Instant decision data

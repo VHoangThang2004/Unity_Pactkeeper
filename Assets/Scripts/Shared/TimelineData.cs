@@ -6,7 +6,7 @@ public struct TimelineData : INetworkSerializable
     public int currentInstant;
     public int maxInstant;
     public int flag;
-    public int consecutiveWaits;
+    public int consecutivePassInstants;
     public bool isPaused;
     //removed ready units (client can process the data themselves, units data already included in session snapshot data)
 
@@ -15,7 +15,7 @@ public struct TimelineData : INetworkSerializable
         serializer.SerializeValue(ref currentInstant);
         serializer.SerializeValue(ref maxInstant);
         serializer.SerializeValue(ref flag);
-        serializer.SerializeValue(ref consecutiveWaits);
+        serializer.SerializeValue(ref consecutivePassInstants);
         serializer.SerializeValue(ref isPaused);
     }
 }
