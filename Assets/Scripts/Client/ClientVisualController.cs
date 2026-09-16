@@ -31,7 +31,9 @@ public class ClientVisualController : MonoBehaviour
 
     [SerializeField] public GameObject ActionMenuUI;
     [SerializeField] public TextMeshProUGUI CurrentUnitInfo;
-    
+    [SerializeField] public TextMeshProUGUI CurrentUnitSpInfo;
+    [SerializeField] public GameObject SpCooldown;
+
     [SerializeField] public InstantStatus myInstantStatus;
     [SerializeField] public InstantStatus enemyInstantStatus;
 
@@ -40,6 +42,8 @@ public class ClientVisualController : MonoBehaviour
     [SerializeField] private Image[] OwnedReadyUnitIcon;
     [SerializeField] private CanvasGroup[] EnemyReadyUnitCanvasGroup;
     [SerializeField] private Image[] EnemyReadyUnitIcon;
+
+
 
 
 
@@ -83,7 +87,7 @@ public class ClientVisualController : MonoBehaviour
             }
         }
 
-        foreach(TeamData team in session.teams)
+        foreach (TeamData team in session.teams)
         {
             if (team.clientId == NetworkManager.Singleton.LocalClientId)
             {
@@ -102,6 +106,10 @@ public class ClientVisualController : MonoBehaviour
         var state = scene?.clientInteractionSystem?.stateMachine?.currentState;
         ClearRange();
         ClearShadowBrute();
+        RedrawRange();
+        ShowInspectPanel(false);
+        // scene.IsCenteringCell = false;
+        scene.visualController.UpdateReadyUnitBar();
 
         if (state is UnitSelectedState)
         {
@@ -137,7 +145,7 @@ public class ClientVisualController : MonoBehaviour
     // Range Display — dumb redraw from session data
     // -------------------------------------------------------
 
-    private void RedrawRange()
+    public void RedrawRange()
     {
         bool isOwned = session.IsMyUnit(session.selectedUnitId);
         ClearRange();
@@ -203,6 +211,39 @@ public class ClientVisualController : MonoBehaviour
     }
 
     // -------------------------------------------------------
+    //Center cell highlight
+    // -------------------------------------------------------
+
+    public void HighlightCell(Vector3Int cell)
+    {
+        scene.IsCenteringCell = true;
+        scene.hoverHighlight.SetActive(true);
+        scene.hoverHighlight.transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
+    }
+
+    // Inspect panel
+    public void ShowInspectPanel(bool isShown, SkillDefinition skill = null)
+    {
+        if (isShown && skill != null)
+        {
+            scene.InspectPanel.SetActive(true);
+            scene.SkillName.text = skill.skillName;
+            scene.SkillDescription.text = skill.description + " => ";
+            foreach (var effectId in skill.effectIds)
+            {
+                ClientActiveEffectBase effect = scene.effectRegistry.Get(effectId);
+                scene.SkillDescription.text += " " + effect.GetDescription(session.selectedUnitId, session);
+            }
+            scene.SkillCost.text = $"SP Cost: {skill.skillPointCost}";
+            scene.StepMultiplier.text = $"Step Multi: x{skill.stepCostMultiplier}";
+        }
+        else
+        {
+            scene.InspectPanel.SetActive(false);
+        }
+    }
+
+    // -------------------------------------------------------
     // Button Visibility
     // -------------------------------------------------------
 
@@ -215,25 +256,56 @@ public class ClientVisualController : MonoBehaviour
     {
         cancelButtonLayer.SetActive(session.IsMyTurn() && isShown);
     }
+
+    public Sprite noSkillIcon;
     public void ShowActionMenu(bool isShown)
     {
         if (isShown)
         {
             ActionMenuUI.SetActive(true);
             UnitData unit = session.GetUnitDataById(session.selectedUnitId);
-            SkillDefinition skill = scene.skillLibrary.Get(unit.WeaponSkillId);
-            if (skill != null && scene.mainWeaponSkillIcon != null)
-                scene.mainWeaponSkillIcon.sprite = skill.icon;
+
+            if (scene.mainWeaponSkillSlot != null)
+                scene.mainWeaponSkillSlot.RefreshIcon();
+            if (scene.classSkillSlot != null)
+                scene.classSkillSlot.RefreshIcon();
+
             UnitDefinition unitDefinition = scene.unitLibrary.Get(unit.UId);
             CurrentUnitInfo.text = "Name: " + unitDefinition.name.ToString()
-            + "\n HP: " + unit.CurrentHP.ToString()
-            + "\n SP: " + unit.CurrentSkillPoint.ToString()
-            + "\n Speed: " + unit.Speed.ToString();
+            + "\n HP: " + unit.CurrentHP.ToString() + " / " + unit.MaxHP.ToString()
+            + "\n SP: " + SkillPointToPlus(unit.CurrentSkillPoint, unit.MaxSkillPoint)
+            + "\n BaseStep: " + unit.CurrentStepBase.ToString() + " => NextStep: " + unit.NextStep.ToString();
+
+            if (unit.CurrentSkillPoint == unit.MaxSkillPoint)
+            {
+                CurrentUnitSpInfo.text = "";
+                SpCooldown.SetActive(false);
+            }
+            else
+            {
+                int regen = session.matchConfig.conseRegenCap - unit.ConsecutiveRegenInstants;
+                Debug.Log($"regen: {regen} conseRegenCap: {session.matchConfig.conseRegenCap} ConsecutiveRegenInstants: {unit.ConsecutiveRegenInstants}");
+                CurrentUnitSpInfo.text = regen.ToString();
+                SpCooldown.SetActive(true);
+            }
         }
         else
         {
             ActionMenuUI.SetActive(false);
         }
+    }
+
+    public string SkillPointToPlus(int sp, int maxSp)
+    {
+        string result = "";
+        for (int i = 0; i < maxSp; i++)
+        {
+            if (i < sp)
+                result += "+";
+            else
+                result += "_";
+        }
+        return result;
     }
 
     public void ShowConfirmButton(bool isShown)
@@ -242,6 +314,25 @@ public class ClientVisualController : MonoBehaviour
         confirmButtonCanvasGroup.alpha = show ? 1f : 0f;
         confirmButtonCanvasGroup.interactable = show;
         confirmButtonCanvasGroup.blocksRaycasts = show;
+    }
+
+    //-------------------------------------------------------
+    //CommandLogs display
+    //_______________________________________________________
+
+    public void ApplyLogs(TimelineData timeline)
+    {
+        for (int i = 0; i < scene.CommandLogs.Length; i++)
+        {
+            if (i < timeline.timelinelog.Length)
+            {
+                scene.CommandLogs[i].text = timeline.timelinelog[i];
+            }
+            else
+            {
+                scene.CommandLogs[i].text = "";
+            }
+        }
     }
     // -------------------------------------------------------
     // UI Loop — data only, dumb updates every tick
@@ -292,7 +383,7 @@ public class ClientVisualController : MonoBehaviour
             if (scene?.clientInteractionSystem?.stateMachine?.currentState is UnitSelectedState)
             {
                 // Update confirm button based on target lock
-                RedrawRange();
+                // RedrawRange();
                 if (session.isTargetLocked)
                 {
                     Vector3Int x = session.CurrentTargetableCells.Find(cell => cell.x == session.currentPreviewCell.x && cell.y == session.currentPreviewCell.y);

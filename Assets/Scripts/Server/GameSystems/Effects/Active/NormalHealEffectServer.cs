@@ -7,7 +7,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NormalHealEffectServer", menuName = "SRPG/Effects/Server/NormalHeal")]
 public class NormalHealEffectServer : ServerActiveEffectBase
 {
-    public float baseValue = 10;
     public override InstantType InstantType => InstantType.HalfInstant;
     public override EffectType EffectType => EffectType.Heal;
 

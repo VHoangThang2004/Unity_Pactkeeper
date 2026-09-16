@@ -6,6 +6,11 @@ using UnityEngine;
 public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.NonInstant;
+    public override string GetDescription(int unitId, ClientMatchSession session)
+    {
+        UnitData unit = session.GetUnitDataById(unitId);
+        return " deals " + Mathf.RoundToInt(baseValue * unit.DamageMultiplier) + " damage to selected enemy target.";
+    }
 
     public override IEnumerator Replay(
         ResolveResult result,

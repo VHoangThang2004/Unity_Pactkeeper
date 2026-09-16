@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: A2005_Skill_MainWeapon_Book
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 2005
-  skillName: BookBasicHeal
+  skillName: Heal!
   targetPattern: {fileID: 11400000, guid: 8ef7254b0ead2594dad89a09337c3588, type: 2}
   isTargetPatternFixed: 0
   targeting: 3
@@ -23,3 +23,4 @@ MonoBehaviour:
   useLimitTotal: -1
   effectIds: 13270000
   icon: {fileID: 1096970115234337456, guid: 5df9ac80a3018454e9de2586fbcf879b, type: 3}
+  description: select an ally unit within range

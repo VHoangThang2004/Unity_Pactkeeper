@@ -34,7 +34,7 @@ public class SkillLibrary : ScriptableObject
         }
         if (!_lookup.TryGetValue(skillId, out var def))
         {
-            Debug.LogError($"[SkillLibrary] No definition found for skillId {skillId}");
+            Debug.LogWarning($"[SkillLibrary] No definition found for skillId {skillId}");
             return null;
         }
         return def;

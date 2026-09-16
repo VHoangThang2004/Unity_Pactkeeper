@@ -13,13 +13,16 @@ public class UnitData : INetworkSerializable
     public int CurrentHP;
     public int CurrentSkillPoint;
     public int CurrentStep;
-    public bool stepAlt; // SERVER ONLY, never serialized
+    public float NextStepMultiplier = 0f; // SERVER ONLY, never serialized
+    public int CurrentStepBase;
+    public int NextStep;
+    public bool StepAlt; // SERVER ONLY, never serialized
 
     // Recalculated stats
     public int Speed;
     public int MaxHP;
     public int MaxSkillPoint;
-    public int ConsecutiveRegenInstants = 0; // SERVER ONLY, never serialized
+    public int ConsecutiveRegenInstants = 0;
     public float DamageMultiplier = 1f;
     public float DamageReduction = 1f;
 
@@ -27,7 +30,7 @@ public class UnitData : INetworkSerializable
     public int MovementSkillId = -1;
     public int WeaponSkillId = -1;
     public int ClassSkillId = -1;
-    public int EquipmentSkillId = -1;
+    public int TrinketSkillId = -1;
     public int PassiveSkillId = -1;
     public SkillUsageData[] SkillUsages = new SkillUsageData[0];
 
@@ -47,7 +50,6 @@ public class UnitData : INetworkSerializable
             CurrentHP = CurrentHP,
             CurrentSkillPoint = CurrentSkillPoint,
             CurrentStep = CurrentStep,
-            stepAlt = stepAlt,
             Speed = Speed,
             MaxHP = MaxHP,
             MaxSkillPoint = MaxSkillPoint,
@@ -56,11 +58,14 @@ public class UnitData : INetworkSerializable
             MovementSkillId = MovementSkillId,
             WeaponSkillId = WeaponSkillId,
             ClassSkillId = ClassSkillId,
-            EquipmentSkillId = EquipmentSkillId,
+            TrinketSkillId = TrinketSkillId,
             PassiveSkillId = PassiveSkillId,
             SkillUsages = SkillUsages?.ToArray(),
             SkillPatterns = SkillPatterns?.ToArray(),
             ActiveEffectIds = ActiveEffectIds?.ToArray(),
+            ConsecutiveRegenInstants = ConsecutiveRegenInstants,
+            NextStep = NextStep,
+            CurrentStepBase = CurrentStepBase,
         };
     }
 
@@ -80,9 +85,13 @@ public class UnitData : INetworkSerializable
         serializer.SerializeValue(ref MovementSkillId);
         serializer.SerializeValue(ref WeaponSkillId);
         serializer.SerializeValue(ref ClassSkillId);
-        serializer.SerializeValue(ref EquipmentSkillId);
+        serializer.SerializeValue(ref TrinketSkillId);
         serializer.SerializeValue(ref PassiveSkillId);
         serializer.SerializeValue(ref ConsecutiveRegenInstants);
+        serializer.SerializeValue(ref NextStep);
+        serializer.SerializeValue(ref CurrentStepBase);
+        serializer.SerializeValue(ref StepAlt);
+
 
         // SkillPatterns
         if (serializer.IsReader)

@@ -37,6 +37,9 @@ public class ClientMatchSession : MonoBehaviour
     // -------------------------------------------------------
     // Map
     // -------------------------------------------------------
+
+    [Header("Config")]
+    public MatchConfig matchConfig;
     public string MapId { get; private set; }
     public GridMapAsset MapAsset { get; private set; }
     public GridMap Map { get; private set; }
@@ -153,8 +156,13 @@ public class ClientMatchSession : MonoBehaviour
                 else units[index] = unit;
             }
         }
-        if (snap.HasTimeline) Timeline = snap.Timeline;
+        if (snap.HasTimeline)
+        {
+            Timeline = snap.Timeline;
+            scene.visualController.ApplyLogs(snap.Timeline);
+        }
     }
+
 
     // -------------------------------------------------------
     // Resolve Replay
@@ -209,7 +217,11 @@ public class ClientMatchSession : MonoBehaviour
                 else units[index] = unit;
                 Debug.Log($"[Session] ResolveData unit: ID{unit.Id}-UID{unit.UId}-HP{unit.CurrentHP}");
             }
-        if (partial.HasTimeline) Timeline = partial.Timeline;
+        if (partial.HasTimeline)
+        {
+            Timeline = partial.Timeline;
+            scene.visualController.ApplyLogs(partial.Timeline);
+        }
     }
 
     void ApplyDecisionRequest(DecisionRequestData data)
@@ -223,7 +235,7 @@ public class ClientMatchSession : MonoBehaviour
 
         ownedReadyUnitIds.Clear();
         enemyReadyUnitIds.Clear();
-        if (data.ReadyUnitIds == null) {return;}
+        if (data.ReadyUnitIds == null) { return; }
         var team = GetOwnedTeamData();
         if (team == null) return;
         foreach (int unitId in data.ReadyUnitIds)

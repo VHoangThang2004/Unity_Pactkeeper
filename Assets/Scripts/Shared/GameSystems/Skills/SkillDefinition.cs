@@ -24,4 +24,5 @@ public class SkillDefinition : ScriptableObject
     public int[] effectIds; // to keep this system managable, all active skills only has 1 effect, the array type is for unique passives only (each passive can have more than 1 effect)
     [Header("Visuals")]
     public Sprite icon;
+    public string description;
 }

@@ -74,12 +74,20 @@ public class ClientInteractionSystem : MonoBehaviour
         worldPos.z = 0;
 
         session.currentCellMouseOn = scene.movableTilemap.WorldToCell(worldPos);
-
-        if (!scene.movableTilemap.HasTile(session.currentCellMouseOn))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            if (scene.hoverHighlight != null && scene.hoverHighlight.activeSelf)
-                scene.hoverHighlight.SetActive(false);
+            scene.IsCenteringCell=false;
+        }
+
+        if (scene.IsCenteringCell)
+        {
+            scene.hoverHighlight.SetActive(true);
+            return;
+        }
+        if (!scene.movableTilemap.HasTile(session.currentCellMouseOn) || EventSystem.current.IsPointerOverGameObject())
+        {
             session.isOnCell = false;
+            scene.hoverHighlight.SetActive(false);
             return;
         }
 
@@ -137,6 +145,10 @@ public class ClientInteractionSystem : MonoBehaviour
     public void HandleDecisionSelectSkill(int skillId)
     {
         stateMachine?.OnDecisionSelectSkill(skillId);
+    }
+    public void HandleDecisionInspectSkill(int skillId)
+    {
+        stateMachine?.OnDecisionInspectSkill(skillId);
     }
     public void HandleDecisionMoveOrSkill()
     {

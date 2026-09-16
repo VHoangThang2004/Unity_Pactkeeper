@@ -35,7 +35,7 @@ public static class UnitRecalculator
         unit.MovementSkillId,
         unit.WeaponSkillId,
         unit.ClassSkillId,
-        unit.EquipmentSkillId
+        unit.TrinketSkillId
     };
 
         var patterns = new List<CurrentPatterns>();

@@ -27,6 +27,7 @@ public class UnitSelectedState : IInteractionState
             scene.cameraController.CenterOn(worldPos);
         }
         ReloadTargetPattern();
+        scene.visualController.RedrawRange();
 
         Debug.Log($"[State] → UnitSelected (unit {unitId} owned={session.IsMyUnit(session.selectedUnitId)})");
     }
@@ -35,6 +36,7 @@ public class UnitSelectedState : IInteractionState
     {
         session.currentSkillId = -1;
         session.ClearPatternData();
+        scene.visualController.ClearRange();
     }
 
     public void OnTileClick(Vector3Int cell)
@@ -102,6 +104,13 @@ public class UnitSelectedState : IInteractionState
         Debug.Log($"[UnitSelected] OnDecision — switched to skillId={skillId}, targetable={session.CurrentTargetableCells.Count}");
         scene.visualController.UpdateVisualOnStateChange();
     }
+    
+    public void OnInspectSkill(int skillId)
+    {
+        OnDecision(skillId);
+        scene.visualController.ShowInspectPanel(true, scene.skillLibrary.Get(skillId));
+    }
+
 
     public void Cancel()
     {

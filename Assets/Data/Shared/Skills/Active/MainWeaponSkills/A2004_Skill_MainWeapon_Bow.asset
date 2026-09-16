@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: A2004_Skill_MainWeapon_Bow
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 2004
-  skillName: BowBasicAttack
+  skillName: Accurate shot
   targetPattern: {fileID: 11400000, guid: 0defede55d1cd0b4996a4955faed2b85, type: 2}
   isTargetPatternFixed: 0
   targeting: 2
@@ -23,3 +23,4 @@ MonoBehaviour:
   useLimitTotal: -1
   effectIds: 14270000
   icon: {fileID: 1295046780112546796, guid: 09e61dcd944d9e64a804e022ca564d0c, type: 3}
+  description: select an enemy unit within range

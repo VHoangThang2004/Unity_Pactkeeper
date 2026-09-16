@@ -63,10 +63,7 @@ public class ServerController : MonoBehaviour
         StartCoroutine(InitSequence());
     }
     private int clientsReceivedInit = 0;
-    private int requiredClients = 2;
 
-    [Header("Config")]
-    [SerializeField] private float postInitGracePeriod = 3f;
 
     private bool serverReady = false;
 
@@ -106,15 +103,15 @@ public class ServerController : MonoBehaviour
 
         // 6. Wait for all clients to request init
         serverReady = true;
-        while (clientsReceivedInit < requiredClients)
+        while (clientsReceivedInit < session.matchConfig.requiredClients)
         {
             yield return new WaitForSeconds(1f);
             IncrementErrors();
         }
 
         // 7. Grace period — let clients finish their own init
-        Debug.Log($"[ServerController] All clients initialized — grace period {postInitGracePeriod}s.");
-        yield return new WaitForSeconds(postInitGracePeriod);
+        Debug.Log($"[ServerController] All clients initialized — grace period {session.matchConfig.postInitGracePeriod}s.");
+        yield return new WaitForSeconds(session.matchConfig.postInitGracePeriod);
 
         // 8. Start timeline loop
         Debug.Log("[ServerController] Starting timeline.");
@@ -129,7 +126,7 @@ public class ServerController : MonoBehaviour
         timeline.SendSnapshotToClient(clientId);
         clientsReceivedInit++;
 
-        Debug.Log($"[ServerController] Client {clientId} received init ({clientsReceivedInit}/{requiredClients})");
+        Debug.Log($"[ServerController] Client {clientId} received init ({clientsReceivedInit}/{session.matchConfig.requiredClients})");
     }
     public void HandleDecision(ulong clientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken)
     {

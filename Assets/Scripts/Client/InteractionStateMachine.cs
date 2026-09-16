@@ -59,6 +59,7 @@ public class InteractionStateMachine
     // -------------------------------------------------------
 
     public void OnDecisionSelectSkill(int skillId) => (currentState as UnitSelectedState)?.OnDecision(skillId);
+    public void OnDecisionInspectSkill(int skillId) => (currentState as UnitSelectedState)?.OnInspectSkill(skillId);
     public void OnDecision() => currentState?.OnDecision();
     public void OnWait() => (currentState as NoneState)?.ApplyWait();
     public void OnCancel() => currentState?.Cancel();

@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class MatchResultManager : MonoBehaviour
@@ -14,6 +15,9 @@ public class MatchResultManager : MonoBehaviour
 
     [Header("UI")]
     public TMP_Text resultText;
+    [SerializeField] private Image backgroundImage;
+    [SerializeField] private Sprite victoryBackground;
+    [SerializeField] private Sprite defeatBackground;
 
     // Readable by UI scripts after OnResultLoaded fires
     public bool ResultLoaded { get; private set; }
@@ -75,13 +79,30 @@ public class MatchResultManager : MonoBehaviour
 
         Debug.Log($"[MatchResult] Loaded — winner={WinnerId} isWinner={IsWinner} duration={DurationSeconds}s instants={TotalInstants}");
 
+        ApplyResultBackground(IsWinner);
+
         if (resultText != null)
-            resultText.text = IsWinner
-                ? $"Victory!\nDuration: {DurationSeconds}s  Instants: {TotalInstants}"
-                : (data.result.winnerId == "" ? "Draw.\nDuration: {DurationSeconds}s  Instants: {TotalInstants}"
-                : $"Defeat.\nDuration: {DurationSeconds}s  Instants: {TotalInstants}");
+        {
+            bool isDraw = string.IsNullOrEmpty(data.result.winnerId);
+            resultText.text = isDraw
+                ? $"Draw.\nDuration: {DurationSeconds}s  Instants: {TotalInstants}"
+                : $"Duration: {DurationSeconds}s  Instants: {TotalInstants}";
+        }
 
         OnResultLoaded();
+    }
+
+    void ApplyResultBackground(bool isWinner)
+    {
+        if (backgroundImage == null) return;
+
+        Sprite sprite = isWinner ? victoryBackground : defeatBackground;
+        if (sprite == null) return;
+
+        backgroundImage.sprite = sprite;
+        backgroundImage.color = Color.white;
+        backgroundImage.preserveAspect = false;
+        backgroundImage.type = Image.Type.Simple;
     }
 
     protected virtual void OnResultLoaded() { }

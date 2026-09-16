@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: M1004_Move_Archer_Class_Shared
   m_EditorClassIdentifier: Assembly-CSharp::ActionDefinition
   skillId: 1004
-  skillName: MoveArcherClass
+  skillName: Archer's Movement
   targetPattern: {fileID: 11400000, guid: 42ffdffd5b2708d4599548eeb2f5b0b0, type: 2}
   isTargetPatternFixed: 0
   targeting: 1
@@ -23,3 +23,4 @@ MonoBehaviour:
   useLimitTotal: -1
   effectIds: 11270000
   icon: {fileID: 0}
+  description: 

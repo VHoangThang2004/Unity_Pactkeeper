@@ -5,7 +5,10 @@ using UnityEngine;
 public class MoveEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.Instant;
-
+    public override string GetDescription(int unitId, ClientMatchSession session)
+    {
+        return " moves to the selected empty cell.";
+    }
     public override IEnumerator Replay(
         ResolveResult result,
         ClientScene scene,

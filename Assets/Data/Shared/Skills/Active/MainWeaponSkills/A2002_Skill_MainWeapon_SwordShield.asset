@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: A2002_Skill_MainWeapon_SwordShield
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 2002
-  skillName: SwordShieldBasicAttack
+  skillName: Defensive Slash
   targetPattern: {fileID: 11400000, guid: 5d93d2c094486d148bb0bc7d6ac3cb5c, type: 2}
   isTargetPatternFixed: 0
   targeting: 2
@@ -23,3 +23,4 @@ MonoBehaviour:
   useLimitTotal: -1
   effectIds: 12270000
   icon: {fileID: 7206142068373055434, guid: cbedebeddc861da4cbf79c1db85ce968, type: 3}
+  description: select an enemy unit within range

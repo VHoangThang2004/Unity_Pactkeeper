@@ -15,4 +15,11 @@ public class MatchConfig : ScriptableObject
 
     [Header("SP Regen")]
     public int conseRegenCap = 3;
+
+    [Header("Command Log")]
+    public int maxLogCount = 10;
+
+    [Header("Session")]
+    public int requiredClients = 2;
+    public float postInitGracePeriod = 3f;
 }

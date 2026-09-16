@@ -13,6 +13,7 @@ public class ServerMatchSession : MonoBehaviour
     [Header("Config")]
     [SerializeField] private string mapId = "defaultPvpMap";
     public ServerBackendClient backendClient;
+    [SerializeField] public MatchConfig matchConfig;
 
     [Header("Data")]
     [SerializeField] private MapRegistry mapRegistry;
@@ -273,6 +274,19 @@ public class ServerMatchSession : MonoBehaviour
     {
         return teams[0].teamId == currentTeamId ? teams[1].teamId : teams[0].teamId;
     }
+    // -------------------------------------------------------
+    // Server logs
+    // -------------------------------------------------------
+    private List<string> timelineLog = new List<string>();
+
+    public void AddLog(string entry)
+    {
+        timelineLog.Add(entry);
+        if (timelineLog.Count > matchConfig.maxLogCount)
+            timelineLog.RemoveAt(0);
+    }
+
+    public string[] GetTimelineLog() => timelineLog.ToArray();
     // -------------------------------------------------------
     // Lookup
     // -------------------------------------------------------

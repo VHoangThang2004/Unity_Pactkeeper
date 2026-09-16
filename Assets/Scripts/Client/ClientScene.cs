@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -30,12 +31,23 @@ public class ClientScene : MonoBehaviour
     [SerializeField] public ClientEffectRegistry effectRegistry;
 
     //UI
-    [SerializeField] public Image mainWeaponSkillIcon;
+    [SerializeField] public SkillSlotUI mainWeaponSkillSlot;
+    [SerializeField] public SkillSlotUI classSkillSlot;
+    [SerializeField] public SkillSlotUI trinketSkillSlot;
+    [SerializeField] public SkillSlotUI uniquePassiveSlot;
+    [SerializeField] public TextMeshProUGUI[] CommandLogs;
+
+    //Inspect panel
+    [SerializeField] public GameObject InspectPanel;
+    [SerializeField] public TextMeshProUGUI SkillName;
+    [SerializeField] public TextMeshProUGUI SkillDescription;
+    [SerializeField] public TextMeshProUGUI SkillCost;
+    [SerializeField] public TextMeshProUGUI StepMultiplier;
 
     // -------------------------------------------------------
     // Map Refs (wired by ClientMapLoader at runtime)
     // -------------------------------------------------------
-
+    public bool IsCenteringCell = false;
     public Tilemap movableTilemap { get; private set; }
     public Tilemap rangeTilemap { get; private set; }
     public GameObject hoverHighlight { get; private set; }

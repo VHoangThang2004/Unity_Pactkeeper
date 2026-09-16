@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: M1001_Move_Assasin_Class_Shared
   m_EditorClassIdentifier: Assembly-CSharp::ActionDefinition
   skillId: 1001
-  skillName: MoveAssasinClass
+  skillName: Sneaky Steps
   targetPattern: {fileID: 11400000, guid: 79ad5a7e3962b1c45ac1f70b5b048b45, type: 2}
   isTargetPatternFixed: 0
   targeting: 1
@@ -23,3 +23,4 @@ MonoBehaviour:
   useLimitTotal: -1
   effectIds: 11270000
   icon: {fileID: 0}
+  description: 

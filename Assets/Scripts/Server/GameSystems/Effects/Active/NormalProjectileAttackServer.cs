@@ -6,7 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NormalProjectileAttackEffectServer", menuName = "SRPG/Effects/Server/NormalProjectileAttack")]
 public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
 {
-    public float baseValue = 10;
     public override InstantType InstantType => InstantType.NonInstant;
     public override EffectType EffectType => EffectType.Damage;
 

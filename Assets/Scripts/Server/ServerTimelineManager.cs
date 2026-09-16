@@ -27,8 +27,6 @@ public class ServerTimelineManager : MonoBehaviour
     [SerializeField] private SkillLibrary skillLibrary;
     [SerializeField] private ServerSpawnManager spawnManager;
 
-    [Header("Timeline Config")]
-    [SerializeField] private MatchConfig matchConfig;
 
 
     // Internal coroutine control — not observable, not session data
@@ -90,11 +88,12 @@ public class ServerTimelineManager : MonoBehaviour
         effectRecord = new List<(int, Vector3Int, int, int)>();
         List<TeamData> teams = session.GetAllTeamData();
         foreach (var team in teams)
-            team.Overtime = (int)matchConfig.overtimePerTeam;
+            team.Overtime = (int)session.matchConfig.overtimePerTeam;
 
         session.FlaggedTeamId = session.GetOtherTeamId(0);
 
         TransitionTo(ServerSessionState.Flowing);
+        LogInstantFlowing(session.CurrentInstant);
 
         Debug.Log("[Timeline] Initialized and pack ready.");
     }
@@ -129,7 +128,7 @@ public class ServerTimelineManager : MonoBehaviour
     {
         List<TeamData> teams = session.GetAllTeamData();
 
-        while (session.CurrentInstant <= matchConfig.maxInstant)
+        while (session.CurrentInstant <= session.matchConfig.maxInstant)
         {
             TransitionTo(ServerSessionState.Flowing);
             session.CurrentTeamTurnId = -1;
@@ -145,7 +144,7 @@ public class ServerTimelineManager : MonoBehaviour
             bool newUnitsReady = UpdateReadyQueue();
             // Reset per-instant tracking
             foreach (var team in teams)
-                team.WaitDuration = (int)matchConfig.actWaitWindowPerInstantPerReadyUnit * session.OwnedReadyUnitCount(team.teamId);
+                team.WaitDuration = (int)session.matchConfig.actWaitWindowPerInstantPerReadyUnit * session.OwnedReadyUnitCount(team.teamId);
 
             // Broadcast — full pack if something changed, cheap tick otherwise
             if (effectsChanged)
@@ -163,7 +162,7 @@ public class ServerTimelineManager : MonoBehaviour
             if (!newUnitsReady && !allReady)
             {
                 session.CurrentInstant++;
-                yield return new WaitForSeconds(matchConfig.instantDuration);
+                yield return new WaitForSeconds(session.matchConfig.instantDuration);
                 continue;
             }
 
@@ -179,6 +178,7 @@ public class ServerTimelineManager : MonoBehaviour
                 yield break;
             }
             TransitionTo(ServerSessionState.InstantPaused);
+            LogInstantPaused(session.CurrentInstant);
             yield return RunDecisionLoop();
 
             // Always broadcast after decision loop — even if no decisions made
@@ -198,7 +198,7 @@ public class ServerTimelineManager : MonoBehaviour
             BroadcastSnapshot();
 
             session.CurrentInstant++;
-            yield return new WaitForSeconds(matchConfig.instantDuration);
+            yield return new WaitForSeconds(session.matchConfig.instantDuration);
         }
 
         // Match end
@@ -314,7 +314,7 @@ public class ServerTimelineManager : MonoBehaviour
         // Check skill usage limit
         if (!session.CanUseSkill(unitId, skillCardId, skillDef))
         {
-            Debug.LogWarning($"[Timeline] Skill {skillCardId} usage limit reached for unit {unitId}");
+            Debug.LogWarning($"[Timeline] Unit {unitId} cannot use skill {skillCardId}");
             yield break;
         }
 
@@ -375,7 +375,12 @@ public class ServerTimelineManager : MonoBehaviour
         session.RecordSkillUsage(unitId, skillCardId);
         var actingUnit = session.GetUnit(unitId);
         if (actingUnit != null)
+        {
             actingUnit.CurrentSkillPoint = Mathf.Max(0, actingUnit.CurrentSkillPoint - skillDef.skillPointCost);
+            actingUnit.NextStepMultiplier += skillDef.stepCostMultiplier;
+
+            actingUnit.NextStep = Mathf.Max(0, Mathf.RoundToInt(actingUnit.CurrentStepBase * actingUnit.NextStepMultiplier));
+        }
         if (removeFromRQ)
             session.ReadyUnitIds.Remove(unitId);
 
@@ -467,17 +472,20 @@ public class ServerTimelineManager : MonoBehaviour
             var unit = session.GetUnit(kvp.Key);
             if (unit == null) continue;
 
-            Vector2Int stepRange = speedConfig.GetStepRange(unit.Speed);
-            float baseStep = unit.stepAlt ? stepRange.y : stepRange.x;
-            unit.stepAlt = !unit.stepAlt;
 
-            int newStep = Mathf.Max(0, Mathf.RoundToInt(baseStep * kvp.Value));
+            int newStep = Mathf.Max(0, Mathf.RoundToInt(unit.CurrentStepBase * kvp.Value));
             unit.CurrentStep = newStep;
+            unit.NextStep = 0;
+            unit.NextStepMultiplier = 0f;
+            unit.StepAlt = !unit.StepAlt;
+            Vector2Int stepRange = speedConfig.GetStepRange(unit.Speed);
+            unit.CurrentStepBase = unit.StepAlt ? stepRange.y : stepRange.x;
 
             if (newStep == 0)
                 session.ReadyUnitIds.Add(unit.Id);
 
-            Debug.Log($"[Timeline] Unit {unit.Id} step: base={baseStep} x mult={kvp.Value} = {newStep}");
+
+            Debug.Log($"[Timeline] Unit {unit.Id} step: base={unit.CurrentStepBase} x mult={kvp.Value} = {newStep}");
         }
     }
 
@@ -516,6 +524,7 @@ public class ServerTimelineManager : MonoBehaviour
             pendingDecision = null;
             waitingForDecision = false;
             Debug.Log($"[Timeline] Team {senderTeam} chose wait.");
+            session.AddLog($"Team {senderTeam} — wait.");
             return;
         }
 
@@ -540,6 +549,28 @@ public class ServerTimelineManager : MonoBehaviour
             SendSnapshotToClient(senderClientId);
             return;
         }
+        SkillDefinition skillDef = session.skillLibrary.Get(skillcardId);
+        if (skillDef == null && decisionType != DecisionType.Wait)
+        {
+            Debug.LogWarning($"[Server] SkillDefinition {skillcardId} not found");
+            SendSnapshotToClient(senderClientId);
+            return;
+        }
+        if (skillDef != null)
+        {
+            //decides to use a skill, need to validate 
+            if (!session.CanUseSkill(unitId, skillcardId, skillDef))
+            {
+                Debug.LogWarning($"[Server] Invalid skill usage: unit={unitId} skill={skillcardId}");
+                SendSnapshotToClient(senderClientId);
+                return;
+            }
+        }
+
+        //Logs the decision
+        LogTeamCommand(senderTeam, unit, skillDef, target);
+
+
 
         pendingDecision = (unitId, target, decisionType, skillcardId);
         waitingForDecision = false;
@@ -562,17 +593,17 @@ public class ServerTimelineManager : MonoBehaviour
         foreach (var unit in session.units)
         {
             bool wasCommanded = actionRecord.Exists(a => a.unitId == unit.Id);
-            if (wasCommanded)
+            if (wasCommanded || unit.CurrentSkillPoint >= unit.MaxSkillPoint)
             {
                 unit.ConsecutiveRegenInstants = 0;
             }
             else
             {
                 unit.ConsecutiveRegenInstants++;
-                if (unit.ConsecutiveRegenInstants >= matchConfig.conseRegenCap)
+                if (unit.ConsecutiveRegenInstants >= session.matchConfig.conseRegenCap)
                 {
                     unit.ConsecutiveRegenInstants = 0;
-                    unit.CurrentSkillPoint = Mathf.Min(unit.CurrentSkillPoint + 1, unit.MaxSkillPoint);
+                    unit.CurrentSkillPoint += 1;
                 }
             }
         }
@@ -647,10 +678,11 @@ public class ServerTimelineManager : MonoBehaviour
         bridge.BroadcastTimelineTickClientRpc(new TimelineData
         {
             currentInstant = session.CurrentInstant,
-            maxInstant = matchConfig.maxInstant,
+            maxInstant = session.matchConfig.maxInstant,
             flag = session.FlaggedTeamId,
             isPaused = session.TimelineState != ServerSessionState.Flowing,
-            consecutivePassInstants = session.ConsecutivePassInstants
+            consecutivePassInstants = session.ConsecutivePassInstants,
+            timelinelog = session.GetTimelineLog()
         });
     }
 
@@ -664,10 +696,11 @@ public class ServerTimelineManager : MonoBehaviour
             new TimelineData
             {
                 currentInstant = session.CurrentInstant,
-                maxInstant = matchConfig.maxInstant,
+                maxInstant = session.matchConfig.maxInstant,
                 flag = session.FlaggedTeamId,
                 isPaused = session.TimelineState != ServerSessionState.Flowing,
-                consecutivePassInstants = session.ConsecutivePassInstants
+                consecutivePassInstants = session.ConsecutivePassInstants,
+                timelinelog = session.GetTimelineLog()
             }
         );
     }
@@ -708,15 +741,15 @@ public class ServerTimelineManager : MonoBehaviour
         if (session.CurrentTeamTurnId == -1) return default;
 
         List<TeamData> teams = session.GetAllTeamData();
-        Debug.Log($"Wait dur{teams[session.CurrentTeamTurnId].WaitDuration} - max wd {matchConfig.actWaitWindowPerInstantPerReadyUnit * 5}");
+        Debug.Log($"Wait dur{teams[session.CurrentTeamTurnId].WaitDuration} - max wd {session.matchConfig.actWaitWindowPerInstantPerReadyUnit * 5}");
         return session.CurrentTeamTurnId == -1 ? default : new DecisionRequestData
         {
             Instant = session.CurrentInstant,
             DecisionTeam = session.CurrentTeamTurnId,
             RemainingWaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
-            MaxWaitDuration = (int)matchConfig.actWaitWindowPerInstantPerReadyUnit * 5,
+            MaxWaitDuration = (int)session.matchConfig.actWaitWindowPerInstantPerReadyUnit * 5,
             RemainingOvertime = teams[session.CurrentTeamTurnId].Overtime,
-            MaxOvertime = (int)matchConfig.overtimePerTeam,
+            MaxOvertime = (int)session.matchConfig.overtimePerTeam,
             ReadyUnitIds = session.ReadyUnitIds.ToArray()
         };
     }
@@ -728,7 +761,29 @@ public class ServerTimelineManager : MonoBehaviour
         if (teamId < 0 || teamId >= session.GetAllTeamData().Count) return 0;
         return session.GetTeamDataByTeamId(teamId).clientId;
     }
+    void LogInstantFlowing(int instant)
+    {
+        session.AddLog($"~ Instant {instant} flows by ~");
+    }
 
+    void LogInstantPaused(int instant)
+    {
+        session.AddLog($"Instant {instant} paused.");
+    }
+
+    void LogTeamWait(int teamId)
+    {
+        session.AddLog($"Team {teamId} — wait.");
+    }
+
+    void LogTeamCommand(int teamId, UnitData unit, SkillDefinition skill, Vector3Int target)
+    {
+        UnitDefinition unitDefinition = session.unitLibrary.Get(unit.UId);
+        string unitLink = $"<link=\"ID {unit.Id}\"><u>{unitDefinition.unitName}</u></link>";
+        string skillLink = $"<link=\"ID {unit.Id} SID {skill.skillId}\"><u>{skill.skillName}</u></link>";
+        string cellLink = $"<link=\"Cell {target.x} {target.y}\"><u>({target.x},{target.y})</u></link>";
+        session.AddLog($"Team {teamId} — {unitLink} used {skillLink} on {cellLink}.");
+    }
     // -------------------------------------------------------
     // Match End
     // -------------------------------------------------------
