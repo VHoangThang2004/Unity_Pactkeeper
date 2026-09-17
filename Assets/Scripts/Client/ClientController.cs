@@ -106,8 +106,7 @@ public class ClientController : MonoBehaviour
     {
         try
         {
-            scene.unitLibrary.Init();
-            scene.unitPrefabRegistry.Init(scene.unitLibrary);
+            scene.unitPrefabRegistry.Init();
             scene.skillLibrary.Init();
             session.mapRegistry.Init();
             scene.effectRegistry.Init();

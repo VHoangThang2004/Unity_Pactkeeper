@@ -27,7 +27,6 @@ public class ClientScene : MonoBehaviour
 
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
-    [SerializeField] public UnitLibrary unitLibrary;
     [SerializeField] public ClientEffectRegistry effectRegistry;
 
     //UI
@@ -40,6 +39,7 @@ public class ClientScene : MonoBehaviour
     //Inspect panel
     [SerializeField] public GameObject InspectPanel;
     [SerializeField] public TextMeshProUGUI SkillName;
+    [SerializeField] public TextMeshProUGUI EffectType;
     [SerializeField] public TextMeshProUGUI SkillDescription;
     [SerializeField] public TextMeshProUGUI SkillCost;
     [SerializeField] public TextMeshProUGUI StepMultiplier;

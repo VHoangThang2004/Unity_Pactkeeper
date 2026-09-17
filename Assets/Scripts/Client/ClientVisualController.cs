@@ -228,6 +228,7 @@ public class ClientVisualController : MonoBehaviour
         {
             scene.InspectPanel.SetActive(true);
             scene.SkillName.text = skill.skillName;
+            scene.EffectType.text = skill.effectIds.Length > 0 ? scene.effectRegistry.Get(skill.effectIds[0]).InstantType.ToString() : "";
             scene.SkillDescription.text = skill.description + " => ";
             foreach (var effectId in skill.effectIds)
             {
@@ -265,13 +266,12 @@ public class ClientVisualController : MonoBehaviour
             ActionMenuUI.SetActive(true);
             UnitData unit = session.GetUnitDataById(session.selectedUnitId);
 
-            if (scene.mainWeaponSkillSlot != null)
-                scene.mainWeaponSkillSlot.RefreshIcon();
-            if (scene.classSkillSlot != null)
-                scene.classSkillSlot.RefreshIcon();
+            scene.mainWeaponSkillSlot?.RefreshIcon();
+            scene.classSkillSlot?.RefreshIcon();
+            scene.trinketSkillSlot?.RefreshIcon();
+            scene.uniquePassiveSlot?.RefreshIcon();
 
-            UnitDefinition unitDefinition = scene.unitLibrary.Get(unit.UId);
-            CurrentUnitInfo.text = "Name: " + unitDefinition.name.ToString()
+            CurrentUnitInfo.text = "Name: " + scene.unitPrefabRegistry.GetName(unit.UId)
             + "\n HP: " + unit.CurrentHP.ToString() + " / " + unit.MaxHP.ToString()
             + "\n SP: " + SkillPointToPlus(unit.CurrentSkillPoint, unit.MaxSkillPoint)
             + "\n BaseStep: " + unit.CurrentStepBase.ToString() + " => NextStep: " + unit.NextStep.ToString();

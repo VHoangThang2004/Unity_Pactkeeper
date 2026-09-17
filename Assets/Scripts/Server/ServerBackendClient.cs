@@ -5,10 +5,8 @@ using UnityEngine.Networking;
 [System.Serializable]
 public class MatchLoadoutsResponse
 {
-    public string player1Id;
-    public string player2Id;
-    public TeamLoadoutData player1Loadout;
-    public TeamLoadoutData player2Loadout;
+    public PlayerLoadoutData player1;
+    public PlayerLoadoutData player2;
 }
 
 [System.Serializable]
@@ -20,31 +18,68 @@ public class MatchInfoResponse
 }
 
 [System.Serializable]
-public class TeamLoadoutData
+public class LoginResponse
 {
+    public string token;
+    public string role;
+    public string username;
     public string playerId;
-    public UnitLoadoutData[] units;
 }
 
 [System.Serializable]
-public class UnitLoadoutData
+public class PlayerLoadoutData
 {
+    public string playerId;
+    public UnitConfigData[] units;
+}
+
+[System.Serializable]
+public class UnitConfigData
+{
+    public string ownedUnitId;
     public int uId;
-    public int movementSkillId;
-    public int weaponSkillId;
-    public int classSkillId;
-    public int equipmentSkillId;
+    public int grade;
+    public int passiveSkillId;
+    public int equippedMovementSkillId;
+    public int equippedClassSkillId;
+    public UnitGradeStatsData gradeStats;
+    public EquippedEquipmentData equippedWeapon;
+    public EquippedEquipmentData equippedTrinket;
+}
+
+[System.Serializable]
+public class UnitGradeStatsData
+{
+    public int maxHP;
+    public int maxSkillPoint;
+    public int speed;
+    public float damageMultiplier;
+    public float damageReduction;
+}
+
+[System.Serializable]
+public class EquippedEquipmentData
+{
+    public int definitionId;
+    public int skillId;
+    public int maxHP;
+    public int maxSkillPoint;
+    public int speed;
+    public float damageMultiplier;
+    public float damageReduction;
 }
 
 public class ServerBackendClient : MonoBehaviour
 {
     [Header("Config")]
     [SerializeField] private BackendConfig config;
+    [SerializeField] private ServerCredentialsConfig serverCredentials;
 
     public string MatchId { get; private set; } = string.Empty;
     public string Mode { get; private set; } = "pvp";
     public string MapId { get; private set; } = "defaultPvpMap";
     public bool IsReady { get; private set; } = false;
+    public string ServerToken { get; private set; } = string.Empty;
     public MatchLoadoutsResponse LoadoutResponse { get; private set; }
 
     // -------------------------------------------------------
@@ -71,10 +106,12 @@ public class ServerBackendClient : MonoBehaviour
 
         if (string.IsNullOrEmpty(MatchId))
         {
-            Debug.Log("[ServerBackendClient] No matchId arg — using hardcoded loadouts.");
+            Debug.LogError("[ServerBackendClient] No -matchId arg provided — server cannot operate without a match.");
             IsReady = true;
             yield break;
         }
+
+        yield return StartCoroutine(Login());
 
         Debug.Log($"[ServerBackendClient] MatchId={MatchId} — fetching match info.");
         yield return StartCoroutine(FetchMatchInfo());
@@ -89,6 +126,36 @@ public class ServerBackendClient : MonoBehaviour
 
         IsReady = true;
         Debug.Log($"[ServerBackendClient] Ready. Mode={Mode}");
+    }
+
+    IEnumerator Login()
+    {
+        if (serverCredentials == null)
+        {
+            Debug.LogWarning("[ServerBackendClient] No server credentials asset assigned — requests will be unauthenticated.");
+            yield break;
+        }
+
+        string json = $"{{\"username\":\"{serverCredentials.username}\",\"password\":\"{serverCredentials.password}\"}}";
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+
+        using var request = new UnityWebRequest($"{config.backendUrl}/api/auth/login", "POST");
+        request.uploadHandler = new UploadHandlerRaw(body);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("ngrok-skip-browser-warning", "true");
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"[ServerBackendClient] Login failed: {request.error}");
+            yield break;
+        }
+
+        var response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
+        ServerToken = response.token;
+        Debug.Log($"[ServerBackendClient] Logged in as {response.username} (role={response.role})");
     }
 
     IEnumerator FetchMatchInfo()
@@ -117,7 +184,7 @@ public class ServerBackendClient : MonoBehaviour
         string url = $"{config.backendUrl}/api/match/{MatchId}/loadouts";
 
         using var request = UnityWebRequest.Get(url);
-        request.SetRequestHeader("ngrok-skip-browser-warning", "true");
+        config.SetHeaders(request, ServerToken);
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -130,7 +197,7 @@ public class ServerBackendClient : MonoBehaviour
         Debug.Log($"[ServerBackendClient] Loadouts received: {json}");
 
         LoadoutResponse = JsonUtility.FromJson<MatchLoadoutsResponse>(json);
-        Debug.Log($"[ServerBackendClient] Player1={LoadoutResponse.player1Id} Player2={LoadoutResponse.player2Id}");
+        Debug.Log($"[ServerBackendClient] Player1={LoadoutResponse.player1?.playerId} Player2={LoadoutResponse.player2?.playerId}");
     }
 
     // -------------------------------------------------------
@@ -167,7 +234,7 @@ public class ServerBackendClient : MonoBehaviour
         request.uploadHandler = new UploadHandlerRaw(body);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
-        request.SetRequestHeader("ngrok-skip-browser-warning", "true");
+        config.SetHeaders(request, ServerToken);
 
         yield return request.SendWebRequest();
 

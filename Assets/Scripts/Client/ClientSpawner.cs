@@ -13,7 +13,6 @@ public class ClientSpawner : MonoBehaviour
     [Header("Refs")]
     [SerializeField] private ClientMatchSession session;
     [SerializeField] private ClientScene scene;
-    [SerializeField] private UnitLibrary unitLibrary;
     [SerializeField] private UnitPrefabRegistry unitPrefabRegistry;
 
     /// <summary>
@@ -72,16 +71,10 @@ public class ClientSpawner : MonoBehaviour
             return;
         }
 
-        var def = unitLibrary.Get(unitData.UId);
-        if (def == null)
-        {
-            Debug.LogError($"[ClientSpawner] No definition for uId {unitData.UId}!");
-            return;
-        }
-
+        string unitName = unitPrefabRegistry.GetName(unitData.UId);
         var worldPos = scene.movableTilemap.GetCellCenterWorld(unitData.CurrentCell);
         var go = Instantiate(prefab, worldPos, Quaternion.identity);
-        go.name = $"Unit_{unitData.Id}_{def.unitName}";
+        go.name = $"Unit_{unitData.Id}_{unitName}";
 
         var clientUnit = go.GetComponent<ClientUnit>();
         if (clientUnit == null)
@@ -94,6 +87,6 @@ public class ClientSpawner : MonoBehaviour
         clientUnit.Init(unitData, session, scene);
         scene.RegisterUnit(clientUnit);
 
-        Debug.Log($"[ClientSpawner] Spawned unit {unitData.Id} ({def.unitName}) at {unitData.CurrentCell}");
+        Debug.Log($"[ClientSpawner] Spawned unit {unitData.Id} ({unitName}) at {unitData.CurrentCell}");
     }
 }

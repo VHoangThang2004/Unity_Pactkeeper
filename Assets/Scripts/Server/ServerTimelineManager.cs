@@ -634,7 +634,6 @@ public class ServerTimelineManager : MonoBehaviour
             if (anyRemoved)
             {
                 unit.ActiveEffectIds = activeEffects.Select(e => e.effectId).ToArray();
-                var def = session.unitLibrary.Get(unit.UId);
                 anyChanged = true;
             }
         }
@@ -778,8 +777,7 @@ public class ServerTimelineManager : MonoBehaviour
 
     void LogTeamCommand(int teamId, UnitData unit, SkillDefinition skill, Vector3Int target)
     {
-        UnitDefinition unitDefinition = session.unitLibrary.Get(unit.UId);
-        string unitLink = $"<link=\"ID {unit.Id}\"><u>{unitDefinition.unitName}</u></link>";
+        string unitLink = $"<link=\"ID {unit.Id}\"><u>Unit {unit.UId}</u></link>";
         string skillLink = $"<link=\"ID {unit.Id} SID {skill.skillId}\"><u>{skill.skillName}</u></link>";
         string cellLink = $"<link=\"Cell {target.x} {target.y}\"><u>({target.x},{target.y})</u></link>";
         session.AddLog($"Team {teamId} — {unitLink} used {skillLink} on {cellLink}.");

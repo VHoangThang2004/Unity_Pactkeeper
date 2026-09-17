@@ -8,16 +8,17 @@ public class UnitPrefabRegistry : ScriptableObject
     public struct Entry
     {
         public int uId;
+        public string unitName;
         public GameObject prefab;
     }
 
     [SerializeField] private Entry[] entries;
 
-    private Dictionary<int, GameObject> _lookup;
+    private Dictionary<int, Entry> _lookup;
 
-    public void Init(UnitLibrary library)
+    public void Init()
     {
-        _lookup = new Dictionary<int, GameObject>();
+        _lookup = new Dictionary<int, Entry>();
 
         foreach (var e in entries)
         {
@@ -33,11 +34,7 @@ public class UnitPrefabRegistry : ScriptableObject
                 continue;
             }
 
-            // Warn if uId has no matching definition in library
-            if (!library.Exists(e.uId))
-                Debug.LogWarning($"[UnitPrefabRegistry] uId {e.uId} has no matching UnitDefinition in library!");
-
-            _lookup[e.uId] = e.prefab;
+            _lookup[e.uId] = e;
         }
 
         Debug.Log($"[UnitPrefabRegistry] Loaded {_lookup.Count} prefab entries.");
@@ -51,12 +48,19 @@ public class UnitPrefabRegistry : ScriptableObject
             return null;
         }
 
-        if (!_lookup.TryGetValue(uId, out var prefab))
+        if (!_lookup.TryGetValue(uId, out var entry))
         {
             Debug.LogError($"[UnitPrefabRegistry] No prefab found for uId {uId}");
             return null;
         }
 
-        return prefab;
+        return entry.prefab;
+    }
+
+    public string GetName(int uId)
+    {
+        if (_lookup != null && _lookup.TryGetValue(uId, out var entry))
+            return string.IsNullOrEmpty(entry.unitName) ? $"Unit {uId}" : entry.unitName;
+        return $"Unit {uId}";
     }
 }

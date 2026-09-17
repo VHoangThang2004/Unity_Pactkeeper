@@ -56,41 +56,39 @@ public class ServerSpawnManager : MonoBehaviour
             return null;
         }
 
-        var def = session.unitLibrary.Get(loadout.UId);
-        if (def == null)
-        {
-            Debug.LogError($"[SpawnManager] SpawnUnit: No definition for uId {loadout.UId}!");
-            return null;
-        }
-
         if (!session.Map.IsWalkable(worldX, worldY))
         {
             Debug.LogError($"[SpawnManager] SpawnUnit: Cell ({worldX},{worldY}) is not walkable!");
             return null;
         }
 
-        Vector2Int stepRange = speedConfig.GetStepRange(def.speed);
+        Vector2Int stepRange = speedConfig.GetStepRange(loadout.Speed);
 
         var unit = new UnitData
         {
             Id = nextUnitId++,
             UId = loadout.UId,
             CurrentCell = new Vector3Int(worldX, worldY, 0),
-            CurrentHP = def.maxHp,
+            CurrentHP = loadout.MaxHP,
             CurrentStep = stepRange.x,
             StepAlt = true,
             CurrentStepBase = stepRange.y,
-            Speed = def.speed,
-            MaxHP = def.maxHp,
-            MaxSkillPoint = def.maxSkillPoint,
+            Speed = loadout.Speed,
+            MaxHP = loadout.MaxHP,
+            MaxSkillPoint = loadout.MaxSkillPoint,
             CurrentSkillPoint = 0,
-            DamageMultiplier = 1f,
-            DamageReduction = 1f,
+            DamageMultiplier = loadout.DamageMultiplier,
+            DamageReduction = loadout.DamageReduction,
+            BaseSpeed = loadout.Speed,
+            BaseMaxHP = loadout.MaxHP,
+            BaseMaxSkillPoint = loadout.MaxSkillPoint,
+            BaseDamageMultiplier = loadout.DamageMultiplier,
+            BaseDamageReduction = loadout.DamageReduction,
             MovementSkillId = loadout.MovementSkillId,
             WeaponSkillId = loadout.WeaponSkillId,
             ClassSkillId = loadout.ClassSkillId,
-            TrinketSkillId = loadout.EquipmentSkillId,
-            PassiveSkillId = def.passiveSkill != null ? def.passiveSkill.skillId : -1,
+            TrinketSkillId = loadout.TrinketSkillId,
+            PassiveSkillId = loadout.PassiveSkillId,
         };
 
         team.unitIds.Add(unit.Id);
@@ -99,7 +97,7 @@ public class ServerSpawnManager : MonoBehaviour
         if (!suppressSpawnRpcs)
             bridge.SpawnUnitClientRpc(unit);
 
-        Debug.Log($"[SpawnManager] Spawned unit Id={unit.Id} uId={loadout.UId} team={teamNumber} speed={def.speed} step={unit.CurrentStep} at ({worldX},{worldY})");
+        Debug.Log($"[SpawnManager] Spawned unit Id={unit.Id} uId={loadout.UId} team={teamNumber} speed={loadout.Speed} step={unit.CurrentStep} at ({worldX},{worldY})");
         return unit;
     }
 

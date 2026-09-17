@@ -17,7 +17,6 @@ public class ServerMatchSession : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] private MapRegistry mapRegistry;
-    [SerializeField] public UnitLibrary unitLibrary;
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public ServerEffectRegistry effectRegistry;
     public List<EffectBase> GlobalActiveEffects { get; set; } = new List<EffectBase>(); public int[] GlobalActiveEffectIds = new int[0];
@@ -37,25 +36,7 @@ public class ServerMatchSession : MonoBehaviour
     public List<UnitData> units;
     // Testing phase — hardcoded loadouts
     // Backend phase: replace this with data received from backend
-    private List<TeamLoadout> loadouts = new List<TeamLoadout>
-{
-    new TeamLoadout { TeamId = 0, ClientId = 0, Units = new List<PlayerUnitLoadout>
-    {
-        new PlayerUnitLoadout { UId = 1, MovementSkillId = 1001, WeaponSkillId = 2001, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 2, MovementSkillId = 1002, WeaponSkillId = 2002, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 3, MovementSkillId = 1003, WeaponSkillId = 2003, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 4, MovementSkillId = 1004, WeaponSkillId = 2004, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 5, MovementSkillId = 1005, WeaponSkillId = 2005, ClassSkillId = -1, EquipmentSkillId = -1 },
-    }},
-    new TeamLoadout { TeamId = 1, ClientId = 0, Units = new List<PlayerUnitLoadout>
-    {
-        new PlayerUnitLoadout { UId = 1, MovementSkillId = 1001, WeaponSkillId = 2001, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 2, MovementSkillId = 1002, WeaponSkillId = 2002, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 3, MovementSkillId = 1003, WeaponSkillId = 2003, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 4, MovementSkillId = 1004, WeaponSkillId = 2004, ClassSkillId = -1, EquipmentSkillId = -1 },
-        new PlayerUnitLoadout { UId = 5, MovementSkillId = 1005, WeaponSkillId = 2005, ClassSkillId = -1, EquipmentSkillId = -1 },
-    }},
-};
+    private List<TeamLoadout> loadouts = new();
 
 
     // Last sent state — always up to date, used for targeted sends and resync
@@ -108,9 +89,10 @@ public class ServerMatchSession : MonoBehaviour
     {
         backendClient = FindAnyObjectByType<ServerBackendClient>();
 
-        // Set data
-        if (!string.IsNullOrEmpty(backendClient.MatchId) && backendClient.LoadoutResponse != null)
+        if (backendClient.LoadoutResponse != null)
             SetMatchData(backendClient.MatchId, backendClient.LoadoutResponse);
+        else
+            Debug.LogError("[MatchSession] No loadout data from backend — match cannot start correctly!");
 
         mapRegistry.Init();
         string resolvedMapId = (backendClient != null && !string.IsNullOrEmpty(backendClient.MapId))
@@ -128,7 +110,6 @@ public class ServerMatchSession : MonoBehaviour
         Map = new GridMap();
         Map.Init(MapAsset);
 
-        unitLibrary.Init();
         skillLibrary.Init();
         effectRegistry.Init();
         SetTeamFromLoadout();
@@ -140,27 +121,47 @@ public class ServerMatchSession : MonoBehaviour
 
         loadouts.Clear();
 
-        if (data.player1Loadout != null)
-            loadouts.Add(ConvertToTeamLoadout(0, data.player1Loadout));
+        if (data.player1 != null)
+            loadouts.Add(ConvertToTeamLoadout(0, data.player1));
 
-        if (data.player2Loadout != null)
-            loadouts.Add(ConvertToTeamLoadout(1, data.player2Loadout));
+        if (data.player2 != null)
+            loadouts.Add(ConvertToTeamLoadout(1, data.player2));
 
         Debug.Log($"[MatchSession] Loaded {loadouts.Count} team loadouts from backend.");
     }
 
-    private TeamLoadout ConvertToTeamLoadout(int teamId, TeamLoadoutData data)
+    private TeamLoadout ConvertToTeamLoadout(int teamId, PlayerLoadoutData data)
     {
         var units = new List<PlayerUnitLoadout>();
         foreach (var u in data.units)
+        {
+            bool hasWeapon = u.equippedWeapon != null && u.equippedWeapon.definitionId > 0;
+            bool hasTrinket = u.equippedTrinket != null && u.equippedTrinket.definitionId > 0;
             units.Add(new PlayerUnitLoadout
             {
                 UId = u.uId,
-                MovementSkillId = u.movementSkillId,
-                WeaponSkillId = u.weaponSkillId,
-                ClassSkillId = u.classSkillId,
-                EquipmentSkillId = u.equipmentSkillId
+                PassiveSkillId = u.passiveSkillId,
+                MovementSkillId = u.equippedMovementSkillId,
+                WeaponSkillId = hasWeapon ? u.equippedWeapon.skillId : -1,
+                ClassSkillId = u.equippedClassSkillId,
+                TrinketSkillId = hasTrinket ? u.equippedTrinket.skillId : -1,
+                MaxHP = u.gradeStats.maxHP
+                    + (hasWeapon ? u.equippedWeapon.maxHP : 0)
+                    + (hasTrinket ? u.equippedTrinket.maxHP : 0),
+                MaxSkillPoint = u.gradeStats.maxSkillPoint
+                    + (hasWeapon ? u.equippedWeapon.maxSkillPoint : 0)
+                    + (hasTrinket ? u.equippedTrinket.maxSkillPoint : 0),
+                Speed = u.gradeStats.speed
+                    + (hasWeapon ? u.equippedWeapon.speed : 0)
+                    + (hasTrinket ? u.equippedTrinket.speed : 0),
+                DamageMultiplier = u.gradeStats.damageMultiplier
+                    + (hasWeapon ? u.equippedWeapon.damageMultiplier : 0)
+                    + (hasTrinket ? u.equippedTrinket.damageMultiplier : 0),
+                DamageReduction = u.gradeStats.damageReduction
+                    + (hasWeapon ? u.equippedWeapon.damageReduction : 0)
+                    + (hasTrinket ? u.equippedTrinket.damageReduction : 0),
             });
+        }
 
         return new TeamLoadout
         {

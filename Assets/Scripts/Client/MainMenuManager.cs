@@ -76,14 +76,15 @@ public class MainMenuManager : MonoBehaviour
             yield break;
         }
 
-        var loadout = JsonUtility.FromJson<TeamLoadoutResponse>(request.downloadHandler.text);
-        if (loadout.units == null || loadout.units.Length == 0)
+        // Backend returns a JSON array: [1, 2, 3, 4, 5]
+        var wrapper = JsonUtility.FromJson<IntArrayWrapper>("{\"items\":" + request.downloadHandler.text + "}");
+        if (wrapper.items == null || wrapper.items.Length == 0)
         {
             loadoutText.text = "Team: empty";
             yield break;
         }
 
-        string units = string.Join(", ", System.Array.ConvertAll(loadout.units, u => $"uId:{u.uId}"));
+        string units = string.Join(", ", System.Array.ConvertAll(wrapper.items, u => $"uId:{u}"));
         loadoutText.text = $"Team: {units}";
     }
 
@@ -131,20 +132,9 @@ public class MainMenuManager : MonoBehaviour
     }
 
     [System.Serializable]
-    private class TeamLoadoutResponse
+    private class IntArrayWrapper
     {
-        public string playerId;
-        public UnitEntry[] units;
-    }
-
-    [System.Serializable]
-    private class UnitEntry
-    {
-        public int uId;
-        public int movementSkillId;
-        public int weaponSkillId;
-        public int classSkillId;
-        public int equipmentSkillId;
+        public int[] items;
     }
 
     [System.Serializable]

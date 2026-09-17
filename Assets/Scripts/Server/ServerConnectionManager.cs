@@ -41,9 +41,9 @@ public class ServerConnectionManager : MonoBehaviour
 
         if (backendClient?.LoadoutResponse != null)
         {
-            Debug.Log($"[ConnectionManager] LoadoutResponse — p1={backendClient.LoadoutResponse.player1Id} p2={backendClient.LoadoutResponse.player2Id} checking for playerId={playerId}");
-            string p1 = backendClient.LoadoutResponse.player1Id;
-            string p2 = backendClient.LoadoutResponse.player2Id;
+            Debug.Log($"[ConnectionManager] LoadoutResponse — p1={backendClient.LoadoutResponse.player1.playerId} p2={backendClient.LoadoutResponse.player2.playerId} checking for playerId={playerId}");
+            string p1 = backendClient.LoadoutResponse.player1.playerId;
+            string p2 = backendClient.LoadoutResponse.player2.playerId;
 
             if (playerId != p1 && playerId != p2)
             {
@@ -53,11 +53,11 @@ public class ServerConnectionManager : MonoBehaviour
             }
             if (playerId == p1)
             {
-                Debug.Log($"[ConnectionManager] Player 1 connected — playerId={playerId} with loadout {backendClient.LoadoutResponse.player1Loadout}");
+                Debug.Log($"[ConnectionManager] Player 1 connected — playerId={playerId} with loadout {backendClient.LoadoutResponse.player1.units}");
             }
             if (playerId == p2)
             {
-                Debug.Log($"[ConnectionManager] Player 2 connected — playerId={playerId} with loadout {backendClient.LoadoutResponse.player2Loadout}");
+                Debug.Log($"[ConnectionManager] Player 2 connected — playerId={playerId} with loadout {backendClient.LoadoutResponse.player2.units}");
             }
         }
 

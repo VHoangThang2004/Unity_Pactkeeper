@@ -497,6 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServerBackendClient
   config: {fileID: 11400000, guid: 876112f67e3b749499d7f6524326f5f5, type: 2}
+  serverCredentials: {fileID: 11400000, guid: 2130ca8d4908b9d4d9d5cbde3cde276b, type: 2}
 --- !u!1 &1148757545
 GameObject:
   m_ObjectHideFlags: 0

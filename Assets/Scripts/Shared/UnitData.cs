@@ -26,6 +26,13 @@ public class UnitData : INetworkSerializable
     public float DamageMultiplier = 1f;
     public float DamageReduction = 1f;
 
+    // Base stats from loadout (pre-effect) — SERVER ONLY, never serialized
+    public int BaseMaxHP;
+    public int BaseMaxSkillPoint;
+    public int BaseSpeed;
+    public float BaseDamageMultiplier = 1f;
+    public float BaseDamageReduction = 1f;
+
     // Skill slots
     public int MovementSkillId = -1;
     public int WeaponSkillId = -1;

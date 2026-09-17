@@ -5,16 +5,15 @@ public static class UnitRecalculator
 {
     private static void Recalculate(
         UnitData unit,
-        UnitDefinition def,
         List<EffectBase> activeEffects,
         ServerMatchSession session)
     {
-        // Reset to base stats
-        unit.Speed = def.speed;
-        unit.MaxHP = def.maxHp;
-        unit.MaxSkillPoint = def.maxSkillPoint;
-        unit.DamageMultiplier = 1f;
-        unit.DamageReduction = 1f;
+        // Reset to base stats from loadout
+        unit.Speed = unit.BaseSpeed;
+        unit.MaxHP = unit.BaseMaxHP;
+        unit.MaxSkillPoint = unit.BaseMaxSkillPoint;
+        unit.DamageMultiplier = unit.BaseDamageMultiplier;
+        unit.DamageReduction = unit.BaseDamageReduction;
         InitSkillPatterns(unit, session);
 
         // Apply passive stat modifiers
@@ -55,10 +54,8 @@ public static class UnitRecalculator
     {
         foreach (var unit in session.units)
         {
-            var def = session.unitLibrary.Get(unit.UId);
-            if (def == null) continue;
             var activeEffects = session.GetUnitActiveEffects(unit.Id);
-            Recalculate(unit, def, activeEffects, session);
+            Recalculate(unit, activeEffects, session);
         }
         // Debug.Log($"[UnitRecalculator] All {session.units.Count} units recalculated.");
     }
