@@ -14,7 +14,7 @@ public class NormalAttackEffectServer : ServerActiveEffectBase
         int sourceUnitId,
         Vector3Int target) //1 target only for this effect (dont need to check aoe pattern)
     {
-        UnitData unit = session.GetUnit(sourceUnitId);
+        UnitData unit = session.GetUnitByUnitId(sourceUnitId);
         if (unit == null)
         {
             Debug.LogError($"[MoveEffect] Unit {sourceUnitId} not found!");
@@ -43,7 +43,7 @@ public class NormalAttackEffectServer : ServerActiveEffectBase
             return new ResolveResult { EffectId = -1 };
         }
 
-        targetUnit.CurrentHP = targetUnit.CurrentHP - Mathf.RoundToInt(unit.DamageMultiplier * baseValue);
+        targetUnit.CurrentHP = targetUnit.CurrentHP - Mathf.RoundToInt(unit.DamageMultiplier * baseValue/100);
 
         if (targetUnit.CurrentHP <= 0)
         {

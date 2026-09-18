@@ -15,7 +15,7 @@ public class NormalHealEffectServer : ServerActiveEffectBase
         int sourceUnitId,
         Vector3Int target) //1 target only for this effect (dont need to check aoe pattern). If an effect with complicated aoe pattern then must check affected cells from this target
     {
-        UnitData unit = session.GetUnit(sourceUnitId);
+        UnitData unit = session.GetUnitByUnitId(sourceUnitId);
         if (unit == null)
         {
             Debug.LogError($"[MoveEffect] Unit {sourceUnitId} not found!");
@@ -51,7 +51,7 @@ public class NormalHealEffectServer : ServerActiveEffectBase
             };
         }
 
-        targetUnit.CurrentHP = Mathf.Min(targetUnit.CurrentHP + Mathf.RoundToInt(unit.DamageMultiplier * baseValue), targetUnit.MaxHP);
+        targetUnit.CurrentHP = Mathf.Min(targetUnit.CurrentHP + Mathf.RoundToInt(unit.DamageMultiplier * baseValue/100), targetUnit.MaxHP);
 
         return new ResolveResult
         {

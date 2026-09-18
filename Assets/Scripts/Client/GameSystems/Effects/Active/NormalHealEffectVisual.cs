@@ -5,10 +5,10 @@ using UnityEngine;
 public class NormalHealEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.HalfInstant;
-    public override string GetDescription(int unitId, ClientMatchSession session)
+    public override string GetDescription(UnitData unit)
     {
         // UnitData unit = session.GetUnitDataById(unitId);
-        return " heals " + baseValue + " HP to selected ally target.";
+        return " Recover " + baseValue + " HP to selected ally target.";
     }
 
     public override IEnumerator Replay(

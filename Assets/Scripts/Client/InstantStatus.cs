@@ -7,9 +7,9 @@ public class InstantStatus : MonoBehaviour
     [SerializeField] private Sprite CloseSprite;
     [SerializeField] private Image StatusImg;
 
-    public void UpdateInstantStatus(bool isInstantEnded)
+    public void UpdateInstantStatus(bool openEye)
     {
-        if (isInstantEnded)
+        if (!openEye)
         {
             StatusImg.sprite = CloseSprite;
         }

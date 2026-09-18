@@ -18,9 +18,9 @@ MonoBehaviour:
   isTargetPatternFixed: 0
   targeting: 2
   skillPointCost: 0
-  stepCostMultiplier: 0.5
+  stepCostMultiplier: 0.6
   useLimitPerInstant: 1
   useLimitTotal: -1
   effectIds: 12270000
   icon: {fileID: 7206142068373055434, guid: cbedebeddc861da4cbf79c1db85ce968, type: 3}
-  description: select an enemy unit within range
+  description: Select an enemy unit within range

@@ -18,67 +18,92 @@ public class ClientSyncMachine : MonoBehaviour
 
     public void Init()
     {
-        StartCoroutine(SyncLoop());
+        // syncLoopCoroutine = StartCoroutine(SyncProcess());
     }
 
-    public void RequestSync()
+    public IEnumerator RequestSync()
     {
-        syncRequested = true;
-    }
-
-    IEnumerator SyncLoop()
-    {
-        while (true)
+        if (syncRequested)
         {
-            // Wait for sync request
-            while (!syncRequested)
-                yield return null;
+            Debug.LogWarning($"[SyncMachine] Sync in progress");
+            yield break;
+        }
+        syncRequested = true;
+        yield return SyncProcess();
+    }
 
-            syncRequested = false;
+    public void ForceReset()
+    {
+        Debug.LogWarning("[SyncMachine] Force reset triggered");
+        syncRequested = false;
+        State = SyncState.Idle;
+    }
 
-            // Load map if needed
-            if (session.MapAsset != null && scene.movableTilemap == null)
+    private IEnumerator SyncProcess()
+    {
+
+        // Load map if needed
+        if (session.MapAsset != null && scene.movableTilemap == null)
+        {
+            TransitionTo(SyncState.LoadingMap);
+
+            bool mapDone = false;
+            bool mapSuccess = false;
+            yield return mapLoader.Load(result =>
             {
-                TransitionTo(SyncState.LoadingMap);
-
-                bool mapDone = false;
-                bool mapSuccess = false;
-                StartCoroutine(mapLoader.Load(result =>
+                try
                 {
                     mapSuccess = result;
                     mapDone = true;
-                }));
-
-                while (!mapDone) yield return null;
-
-                if (!mapSuccess)
-                {
-                    TransitionTo(SyncState.Idle);
-                    continue;
                 }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[SyncMachine] Map callback error: {e}");
+                    mapSuccess = false;
+                    mapDone = true;
+                }
+            });
+
+
+            if (!mapSuccess || !mapDone)
+            {
+                ForceReset();
+                yield break;
             }
+        }
 
-            // Sync units
-            TransitionTo(SyncState.SpawningUnits);
+        // Sync units
+        TransitionTo(SyncState.SpawningUnits);
 
-            bool spawnDone = false;
-            bool spawnSuccess = false;
-            StartCoroutine(spawner.Sync(result =>
+        bool spawnDone = false;
+        bool spawnSuccess = false;
+        yield return spawner.Sync(result =>
+        {
+            try
             {
                 spawnSuccess = result;
                 spawnDone = true;
-            }));
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[SyncMachine] Spawn callback error: {e}");
+                spawnSuccess = false;
+                spawnDone = true;
+            }
+        });
 
-            while (!spawnDone) yield return null;
+        TransitionTo(SyncState.Idle);
+        Debug.Log($"[SyncMachine] Sync complete.{spawnDone} - {spawnSuccess}");
 
-            TransitionTo(SyncState.Idle);
-            Debug.Log($"[SyncMachine] Sync complete.");
-        }
     }
 
     void TransitionTo(SyncState next)
     {
         Debug.Log($"[SyncMachine] {State} -> {next}");
         State = next;
+        if(next == SyncState.Idle)
+        {
+            syncRequested = false;
+        }
     }
 }

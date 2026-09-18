@@ -18,6 +18,11 @@ public class MatchmakingManager : MonoBehaviour
     private bool isInQueue = false;
     private Coroutine pollingCoroutine;
 
+    private void OnDestroy()
+    {
+        // OnClickCancel();
+    }
+
     public void OnClickFindMatch()
     {
         if (!PlayerSession.IsLoggedIn)

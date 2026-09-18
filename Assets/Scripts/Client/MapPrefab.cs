@@ -13,6 +13,11 @@ public class MapPrefab : MonoBehaviour
     public Tilemap movableTilemap;   // walkable tiles — used by interaction, pathfinding, spawning
     public Tilemap rangeTilemap;     // runtime range highlight overlay (empty at start)
 
+    [Header("Tile Assets")]
+    [SerializeField] public TileBase rangeTileBase;
+    [SerializeField] public TileBase enemyRangeTileBase;
+    [SerializeField] public TileBase aoePreviewTileBase;
+
     [Header("Runtime Objects")]
     public GameObject highlighter;   // hover highlight sprite
 }

@@ -46,7 +46,7 @@ public class ClientMapLoader : MonoBehaviour
         }
 
         // Instantiate
-        spawnedMap      = Instantiate(session.MapAsset.tilemapPrefab, Vector3.zero, Quaternion.identity);
+        spawnedMap = Instantiate(session.MapAsset.tilemapPrefab, Vector3.zero, Quaternion.identity);
         spawnedMap.name = $"Map_{session.MapAsset.name}";
 
         var mapPrefab = spawnedMap.GetComponent<MapPrefab>();
@@ -59,7 +59,7 @@ public class ClientMapLoader : MonoBehaviour
         }
 
         // Wire scene refs
-        scene.SetMapRefs(mapPrefab.movableTilemap, mapPrefab.rangeTilemap, mapPrefab.highlighter);
+        scene.SetMapRefs(mapPrefab.movableTilemap, mapPrefab.rangeTilemap, mapPrefab.highlighter, mapPrefab);
         scene.clientInteractionSystem.Init();
 
         loadedMapId = targetMapId;

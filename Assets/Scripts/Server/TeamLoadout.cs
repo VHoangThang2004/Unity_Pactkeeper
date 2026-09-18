@@ -21,6 +21,6 @@ public class PlayerUnitLoadout
     public int MaxHP;
     public int MaxSkillPoint;
     public int Speed;
-    public float DamageMultiplier;
-    public float DamageReduction;
+    public int DamageMultiplier;
+    public int DamageReduction;
 }   

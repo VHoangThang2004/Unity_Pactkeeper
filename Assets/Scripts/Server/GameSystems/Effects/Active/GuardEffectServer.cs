@@ -14,7 +14,7 @@ public class GuardEffectServer : ServerActiveEffectBase
         int sourceUnitId,
         Vector3Int target) //1 target only for this effect (dont need to check aoe pattern)
     {
-        UnitData sourceUnit = session.GetUnit(sourceUnitId);
+        UnitData sourceUnit = session.GetUnitByUnitId(sourceUnitId);
         if (sourceUnit == null)
         {
             Debug.LogError($"[MoveEffect] Unit {sourceUnitId} not found!");

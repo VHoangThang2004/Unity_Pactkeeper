@@ -5,9 +5,9 @@ using UnityEngine;
 public class GuardEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.Instant;
-    public override string GetDescription(int unitId, ClientMatchSession session)
+    public override string GetDescription(UnitData unit)
     {
-        return " swaps position with the selected ally target.";
+        return " Swap position with the selected ally target.";
     }
 
     public override IEnumerator Replay(

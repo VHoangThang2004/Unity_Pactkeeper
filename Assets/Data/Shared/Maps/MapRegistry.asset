@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapRegistry
   entries:
   - mapId: MD_PVP_001
-    asset: {fileID: 11400000, guid: e121107d22eedc249bf9ffb33758e159, type: 2}
+    asset: {fileID: 11400000, guid: 93ecc710580357043ab166c4c7c8f346, type: 2}

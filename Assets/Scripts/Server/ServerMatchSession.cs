@@ -79,6 +79,19 @@ public class ServerMatchSession : MonoBehaviour
                 count++;
         return count;
     }
+    public void ReloadInstant()
+    {
+        foreach (var team in teams)
+        {
+            bool hasUnitReady = false;
+            foreach (int unitId in team.unitIds)
+            {
+                hasUnitReady = ReadyUnitIds.Contains(unitId) || hasUnitReady;
+            }
+            // team.isInstantEnded = false;
+            team.isInstantEnded = !hasUnitReady;
+        }
+    }
 
 
     // -------------------------------------------------------
@@ -322,9 +335,9 @@ public class ServerMatchSession : MonoBehaviour
         return teams.Find(t => t.unitIds.Contains(unitId));
     }
 
-    public UnitData GetUnit(int instanceId)
+    public UnitData GetUnitByUnitId(int unitId)
     {
-        return units.Find(u => u.Id == instanceId);
+        return units.Find(u => u.Id == unitId);
     }
     public UnitData GetUnitAt(Vector3Int cell)
     {
@@ -374,7 +387,7 @@ public class ServerMatchSession : MonoBehaviour
 
     public bool CanUseSkill(int unitId, int skillId, SkillDefinition skill)
     {
-        var unit = GetUnit(unitId);
+        var unit = GetUnitByUnitId(unitId);
         if (unit == null) return false;
         // Check skill point cost
         if (unit.CurrentSkillPoint < skill.skillPointCost) return false;
@@ -391,7 +404,7 @@ public class ServerMatchSession : MonoBehaviour
 
     public void RecordSkillUsage(int unitId, int skillId)
     {
-        var unit = GetUnit(unitId);
+        var unit = GetUnitByUnitId(unitId);
         if (unit == null) return;
 
         for (int i = 0; i < unit.SkillUsages.Length; i++)

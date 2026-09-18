@@ -118,30 +118,15 @@ public class MainMenuManager : MonoBehaviour
         matchHistoryText.text = history.TrimEnd();
     }
 
-    // -------------------------------------------------------
-    // Response Models
-    // -------------------------------------------------------
+    //-------------------
+    //Wrapper classes for JSON arrays
+    //-------------------
 
     [System.Serializable]
-    private class PlayerProfileResponse
-    {
-        public string playerId;
-        public string username;
-        public int level;
-        public int experience;
-    }
+    private class IntArrayWrapper { public int[] items; }
 
     [System.Serializable]
-    private class IntArrayWrapper
-    {
-        public int[] items;
-    }
-
-    [System.Serializable]
-    private class MatchHistoryWrapper
-    {
-        public MatchEntry[] matches;
-    }
+    private class MatchHistoryWrapper { public MatchEntry[] matches; }
 
     [System.Serializable]
     private class MatchEntry
@@ -152,5 +137,19 @@ public class MainMenuManager : MonoBehaviour
         public string serverIp;
         public int serverPort;
         public string status;
+    }
+    
+    // -------------------------------------------------------
+    // Scene Navigation
+    // -------------------------------------------------------
+
+
+    [Header("Forwarding scene")]
+    [SerializeField] public SceneConfig sceneConfig;
+    public void GoToUnitList()
+    {
+        Debug.Log("Navigating to Unit List scene...");
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.unitListScene);
     }
 }

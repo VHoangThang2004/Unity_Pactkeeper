@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a2b99947d25d694385f36779e8179af, type: 3}
+  m_Name: WeaponDefinitionRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponDefinitionRegistry
+  entries:
+  - weaponId: 1
+    icon: {fileID: 7941643797569593742, guid: 0036386d16770654bb5551214b3fa246, type: 3}
+  - weaponId: 2
+    icon: {fileID: 7206142068373055434, guid: cbedebeddc861da4cbf79c1db85ce968, type: 3}
+  - weaponId: 3
+    icon: {fileID: 3778983062851526320, guid: 960f0eab1e1a56e47b2d54128f2664f1, type: 3}
+  - weaponId: 4
+    icon: {fileID: 1295046780112546796, guid: 09e61dcd944d9e64a804e022ca564d0c, type: 3}
+  - weaponId: 5
+    icon: {fileID: 1096970115234337456, guid: 5df9ac80a3018454e9de2586fbcf879b, type: 3}

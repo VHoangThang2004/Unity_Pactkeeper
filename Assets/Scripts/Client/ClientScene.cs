@@ -24,12 +24,14 @@ public class ClientScene : MonoBehaviour
     public InputReader input;
     public ClientCameraController cameraController;
     public ClientSyncMachine syncMachine;
+    public MapPrefab mapPrefab; // for easy access to tile assets, highlighter, etc. Wired by ClientMapLoader at runtime.
 
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
     [SerializeField] public ClientEffectRegistry effectRegistry;
 
     //UI
+    [SerializeField] public LoadingScreen loadingScreen;
     [SerializeField] public SkillSlotUI mainWeaponSkillSlot;
     [SerializeField] public SkillSlotUI classSkillSlot;
     [SerializeField] public SkillSlotUI trinketSkillSlot;
@@ -43,20 +45,24 @@ public class ClientScene : MonoBehaviour
     [SerializeField] public TextMeshProUGUI SkillDescription;
     [SerializeField] public TextMeshProUGUI SkillCost;
     [SerializeField] public TextMeshProUGUI StepMultiplier;
+    [SerializeField] public TextMeshProUGUI SkillUsageText;
+    [SerializeField] public EyesCanvasUI eyesCanvasUI;
 
     // -------------------------------------------------------
     // Map Refs (wired by ClientMapLoader at runtime)
     // -------------------------------------------------------
+    [Header("Map Refs (wired at runtime)")]
     public bool IsCenteringCell = false;
     public Tilemap movableTilemap { get; private set; }
     public Tilemap rangeTilemap { get; private set; }
     public GameObject hoverHighlight { get; private set; }
 
-    public void SetMapRefs(Tilemap movable, Tilemap range, GameObject highlight)
+    public void SetMapRefs(Tilemap movable, Tilemap range, GameObject highlight, MapPrefab prefab )
     {
         movableTilemap = movable;
         rangeTilemap = range;
         hoverHighlight = highlight;
+        mapPrefab = prefab;
     }
 
     public void ClearMapRefs()

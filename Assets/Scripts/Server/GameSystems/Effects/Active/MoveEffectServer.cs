@@ -13,7 +13,7 @@ public class MoveEffectServer : ServerActiveEffectBase
         int sourceUnitId,
         Vector3Int target)
     {
-        var unit = session.GetUnit(sourceUnitId);
+        var unit = session.GetUnitByUnitId(sourceUnitId);
         if (unit == null)
         {
             Debug.LogError($"[MoveEffect] Unit {sourceUnitId} not found!");

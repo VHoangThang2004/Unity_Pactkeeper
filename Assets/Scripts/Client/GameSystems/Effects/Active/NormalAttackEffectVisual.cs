@@ -5,10 +5,9 @@ using UnityEngine;
 public class NormalAttackEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.NonInstant;
-    public override string GetDescription(int unitId, ClientMatchSession session)
+    public override string GetDescription(UnitData unit)
     {
-        UnitData unit = session.GetUnitDataById(unitId);
-        return " deals " + Mathf.RoundToInt(baseValue * unit.DamageMultiplier) + " damage to selected target.";
+        return " Deal " + Mathf.RoundToInt(baseValue * unit.DamageMultiplier/100) + " damage to selected target.";
     }
 
     public override IEnumerator Replay(

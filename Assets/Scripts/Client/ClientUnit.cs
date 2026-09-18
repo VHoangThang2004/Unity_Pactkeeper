@@ -20,7 +20,8 @@ public class ClientUnit : MonoBehaviour
     [SerializeField] public GameObject VFXSprite;
 
     [SerializeField] private TextMeshProUGUI stepText;
-    [SerializeField] private Image hpBar;
+    [SerializeField] private UnitBar hpBar;
+    [SerializeField] private UnitBar spBar;
 
     [Header("InitRefs")] //put here so notice when something is not initiallized
     private ClientMatchSession session;
@@ -52,18 +53,17 @@ public class ClientUnit : MonoBehaviour
         //TODO in the future: data has list of active skillIds, link that onto buttons? Or let the visual controller link that on the main UI, for now using individual UIs
         if (session.IsMyUnit(unitId))
         {
-            hpBar.color = Color.green;
+            hpBar.Init(unitData.MaxHP, BarType.AllyHP);
         }
         else
         {
-            hpBar.color = Color.red;
+            hpBar.Init(unitData.MaxHP, BarType.EnemyHP);
         }
+        spBar.Init(unitData.MaxSkillPoint, BarType.SkillPoint);
 
         SyncPositionToCurrentSession();
 
         StartCoroutine(AutoUpdate());
-
-        Debug.Log($"Unit {unitData.UId} - ID{unitData.Id} initialized. HP:{unitData.CurrentHP}/Position {unitData.CurrentCell}/SP:{unitData.CurrentSkillPoint}");
     }
 
     IEnumerator AutoUpdate()
@@ -72,12 +72,12 @@ public class ClientUnit : MonoBehaviour
         {
             //an exception, does not affect the other processes
             UpdateStepUI();
-            UpdateHpBar();
+            UpdateBars();
 
             yield return new WaitForSeconds(0.1f);
             //emergency sync: stop all animations and starts brute sync
             //sync only once, so that the resolve from other place can take place smoothly and uninterrupted
-            if (session.SyncState != 0)
+            if (session.SyncState != SyncStateValue.Idle)
             {
                 if (!isAtBeforeSnapshot)
                 {
@@ -101,18 +101,18 @@ public class ClientUnit : MonoBehaviour
     // -------------------------------------------------------
     // UI
     // -------------------------------------------------------
-    void UpdateHpBar()
+    void UpdateBars()
     {
         UnitData data = session.GetUnitDataById(unitId);
         if (data == null || hpBar == null) return;
-        float fill = (float)data.CurrentHP / data.MaxHP;
-        hpBar.fillAmount = fill;
+        hpBar.UpdateValue(data.CurrentHP);
+        spBar.UpdateValue(data.CurrentSkillPoint);
     }
 
     public void UpdateStepUI()
     {
         if (stepText == null) return;
-        stepText.text = session.GetUnitDataById(unitId).CurrentStep.ToString();
+        stepText.text = session.GetUnitDataById(unitId)?.CurrentStep.ToString();
         if (stepText.text == "0")
         {
             stepText.text = "";

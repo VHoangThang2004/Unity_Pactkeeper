@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -56,6 +57,7 @@ public class ClientController : MonoBehaviour
 
     void Start()
     {
+        scene.loadingScreen.Show("Loading...");
         StartCoroutine(ClientGuard());
         StartCoroutine(InitSequence());
     }
@@ -86,8 +88,22 @@ public class ClientController : MonoBehaviour
         session.Init();
         yield return TryRequestInitialStateServer();
 
-        // Wait until first sync confirmed
-        yield return new WaitUntil(() => session.CurrentToken != -1);
+        // Wait until first sync confirmed (with timeout)
+        float initTimeout = 30f;
+        float elapsed = 0f;
+        while (session.CurrentToken == -1 && elapsed < initTimeout)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (session.CurrentToken == -1)
+        {
+            Debug.LogError("[ClientController] Init sequence timed out waiting for first snapshot");
+            IncrementErrors();
+            yield break;
+        }
+
         Debug.Log("[ClientController] Client initialized successfully.");
         //Start the statemachines that requires data from now on
         scene.visualController.StartUILoop();
@@ -140,7 +156,7 @@ public class ClientController : MonoBehaviour
         public int token;
     }
     private Queue<SnapshotPackage> snapshotQueue = new Queue<SnapshotPackage>();
-    private SnapshotPackage? latestNonResolvePacakge = null;
+    private SnapshotPackage? latestNonResolvePackage = null;
     public void OnSnapshotReceived(SessionSnapshotData snapshot, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token)
     {
         var pkg = new SnapshotPackage
@@ -153,9 +169,12 @@ public class ClientController : MonoBehaviour
         };
 
         if (resolve.HasResolve)
+        {
             snapshotQueue.Enqueue(pkg);
+            latestNonResolvePackage = null;
+        }
         else
-            latestNonResolvePacakge = pkg;
+            latestNonResolvePackage = pkg;
 
         initPackageReceived = true;
     }
@@ -164,23 +183,24 @@ public class ClientController : MonoBehaviour
     {
         while (true)
         {
-            if (session.SyncState == 0 || session.SyncState == -1)
+            if (session.SyncState == SyncStateValue.Idle || session.SyncState == SyncStateValue.Uninitialized)
             {
+                SnapshotPackage? pkg = null;
+
                 if (snapshotQueue.Count > 0)
+                    pkg = snapshotQueue.Dequeue();
+                else if (latestNonResolvePackage.HasValue)
                 {
-                    var pkg = snapshotQueue.Dequeue();
-                    session.ApplySnapshot(pkg.snapshot, pkg.resolve, pkg.secret, pkg.decision, pkg.token);
+                    pkg = latestNonResolvePackage.Value;
+                    latestNonResolvePackage = null;
                 }
-                else if (latestNonResolvePacakge.HasValue)
-                {
-                    var pkg = latestNonResolvePacakge.Value;
-                    latestNonResolvePacakge = null;
-                    session.ApplySnapshot(pkg.snapshot, pkg.resolve, pkg.secret, pkg.decision, pkg.token);
-                }
+
+                if (pkg.HasValue) // only process if token is newer than current session token
+                    yield return session.ApplySnapshot(pkg.Value.snapshot, pkg.Value.resolve, pkg.Value.secret, pkg.Value.decision, pkg.Value.token);
             }
+
             yield return null;
         }
-
     }
     public void OnTimelineTick(TimelineData data)
     {

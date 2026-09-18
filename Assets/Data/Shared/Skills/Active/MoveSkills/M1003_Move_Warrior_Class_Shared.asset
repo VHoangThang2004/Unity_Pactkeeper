@@ -18,9 +18,9 @@ MonoBehaviour:
   isTargetPatternFixed: 0
   targeting: 1
   skillPointCost: 0
-  stepCostMultiplier: 0.6
+  stepCostMultiplier: 0.3
   useLimitPerInstant: 1
   useLimitTotal: -1
   effectIds: 11270000
-  icon: {fileID: 0}
+  icon: {fileID: -5557895429145451543, guid: 82d5f242d6464af41a464813c67c1466, type: 3}
   description: 

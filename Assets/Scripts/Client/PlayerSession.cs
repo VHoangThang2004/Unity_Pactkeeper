@@ -10,6 +10,7 @@ public static class PlayerSession
     public static string MatchId { get; set; } = string.Empty;
 
     public static bool IsLoggedIn => !string.IsNullOrEmpty(Token);
+    public static string SelectedOwnedUnitId { get; set; } = string.Empty;
 
     public static void Clear()
     {
@@ -17,5 +18,6 @@ public static class PlayerSession
         Username = string.Empty;
         PlayerId = string.Empty;
         MatchId = string.Empty;
+        SelectedOwnedUnitId = string.Empty;
     }
 }

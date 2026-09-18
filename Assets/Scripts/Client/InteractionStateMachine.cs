@@ -37,7 +37,7 @@ public class InteractionStateMachine
 
     private void TransitionTo(IInteractionState next, int? unitId = null, int? skillId = null)
     {
-        if (session.SyncState != 0)
+        if (session.SyncState != SyncStateValue.Idle)
         {
             if (currentState is not LockedInputState)
             {

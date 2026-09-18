@@ -53,8 +53,8 @@ public class UnitGradeStatsData
     public int maxHP;
     public int maxSkillPoint;
     public int speed;
-    public float damageMultiplier;
-    public float damageReduction;
+    public int damageMultiplier;
+    public int damageReduction;
 }
 
 [System.Serializable]
@@ -65,8 +65,8 @@ public class EquippedEquipmentData
     public int maxHP;
     public int maxSkillPoint;
     public int speed;
-    public float damageMultiplier;
-    public float damageReduction;
+    public int damageMultiplier;
+    public int damageReduction;
 }
 
 public class ServerBackendClient : MonoBehaviour

@@ -77,7 +77,7 @@ public class MatchResultManager : MonoBehaviour
         TotalInstants = data.result.totalInstants;
         ResultLoaded = true;
 
-        Debug.Log($"[MatchResult] Loaded — winner={WinnerId} isWinner={IsWinner} duration={DurationSeconds}s instants={TotalInstants}");
+        Debug.Log($"[MatchResult] Loaded — winner={WinnerId} isWinner={IsWinner} instants={TotalInstants}");
 
         ApplyResultBackground(IsWinner);
 
@@ -85,8 +85,8 @@ public class MatchResultManager : MonoBehaviour
         {
             bool isDraw = string.IsNullOrEmpty(data.result.winnerId);
             resultText.text = isDraw
-                ? $"Draw.\nDuration: {DurationSeconds}s  Instants: {TotalInstants}"
-                : $"Duration: {DurationSeconds}s  Instants: {TotalInstants}";
+                ? $"Draw.\n Instants: {TotalInstants}"
+                : $" Instants: {TotalInstants}";
         }
 
         OnResultLoaded();

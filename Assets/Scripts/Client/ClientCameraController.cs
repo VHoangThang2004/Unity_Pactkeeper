@@ -24,6 +24,8 @@ public class ClientCameraController : MonoBehaviour
             cam = Camera.main;
 
         cam.orthographic = true;
+        CenterOn(new Vector3(0f, 0f, -10f));
+        Zoom(minZoom); 
         // cam.orthographicSize = 6f;
     }
     void Update()

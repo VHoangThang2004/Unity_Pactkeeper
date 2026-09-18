@@ -23,15 +23,15 @@ public class UnitData : INetworkSerializable
     public int MaxHP;
     public int MaxSkillPoint;
     public int ConsecutiveRegenInstants = 0;
-    public float DamageMultiplier = 1f;
-    public float DamageReduction = 1f;
+    public int DamageMultiplier = 100; // +%
+    public int DamageReduction = 0;    // -%
 
     // Base stats from loadout (pre-effect) — SERVER ONLY, never serialized
     public int BaseMaxHP;
     public int BaseMaxSkillPoint;
     public int BaseSpeed;
-    public float BaseDamageMultiplier = 1f;
-    public float BaseDamageReduction = 1f;
+    public int BaseDamageMultiplier = 100; // +%
+    public int BaseDamageReduction = 0;    // -%
 
     // Skill slots
     public int MovementSkillId = -1;

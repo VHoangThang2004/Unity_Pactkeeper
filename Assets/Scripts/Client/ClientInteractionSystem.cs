@@ -43,7 +43,7 @@ public class ClientInteractionSystem : MonoBehaviour
     {
         while (true)
         {
-            if (session.SyncState == 0)
+            if (session.SyncState == SyncStateValue.Idle)
             {
                 stateMachine.GoToNone();
                 yield break;
@@ -56,7 +56,7 @@ public class ClientInteractionSystem : MonoBehaviour
         while (true)
         {
             HandleTileHover();
-            if (session.SyncState != 0)
+            if (session.SyncState != SyncStateValue.Idle)
                 ForceLockedInputState();
             yield return null;
         }

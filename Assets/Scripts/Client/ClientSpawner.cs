@@ -30,6 +30,7 @@ public class ClientSpawner : MonoBehaviour
         List<UnitData> sessionUnits = session.units;
         List<ClientUnit> sceneUnits = scene.GetAllSceneUnits();
         List<int> sessionUnitIds = session.GetAllUnitIds();
+        Debug.Log($"[ClientSpawner] Syncing units. Session has {sessionUnits.Count} units, scene has {sceneUnits.Count} units.");
 
         //delete all clientUnit that is not supposed to be in scene
         foreach (ClientUnit cu in new List<ClientUnit>(sceneUnits))
@@ -38,6 +39,7 @@ public class ClientSpawner : MonoBehaviour
             {
                 scene.UnregisterUnit(cu);
                 Destroy(cu.gameObject);
+                Debug.Log($"[ClientSpawner] Removed unit {cu.unitId} from scene.");
             }
         }
 

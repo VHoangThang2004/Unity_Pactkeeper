@@ -15,10 +15,6 @@ public class ClientVisualController : MonoBehaviour
     [Header("Camera")]
     public ClientCameraController cameraController;
 
-    [Header("Tile Assets")]
-    [SerializeField] private TileBase rangeTileBase;
-    [SerializeField] private TileBase enemyRangeTileBase;
-    [SerializeField] private TileBase aoePreviewTileBase;
 
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI instantStatusText;
@@ -46,14 +42,27 @@ public class ClientVisualController : MonoBehaviour
 
 
 
-
-
     // -------------------------------------------------------
     // State Change — controls visibility of UI elements
     // -------------------------------------------------------
 
     public void UpdateReadyUnitBar()
     {
+        // foreach (TeamData team in session.teams)
+        // {
+        //     bool hasUnitReady = false;
+        //     foreach (int unitId in team.unitIds)
+        //     {
+        //         ClientUnit unit = scene.GetSceneUnitById(unitId);
+        //         if (unit != null)
+        //         {
+        //             hasUnitReady = session.isUnitReady(unitId) || hasUnitReady;
+        //         }
+        //     }
+        //     // team.isInstantEnded = false;
+        //     team.isInstantEnded = team.isInstantEnded || !hasUnitReady;
+        // }
+
         for (int i = 0; i < OwnedReadyUnitCanvasGroup.Length; i++)
         {
             if (i < session.ownedReadyUnitIds.Count)
@@ -87,17 +96,6 @@ public class ClientVisualController : MonoBehaviour
             }
         }
 
-        foreach (TeamData team in session.teams)
-        {
-            if (team.clientId == NetworkManager.Singleton.LocalClientId)
-            {
-                myInstantStatus.UpdateInstantStatus(team.isInstantEnded);
-            }
-            else
-            {
-                enemyInstantStatus.UpdateInstantStatus(team.isInstantEnded);
-            }
-        }
 
     }
 
@@ -157,7 +155,7 @@ public class ClientVisualController : MonoBehaviour
 
         foreach (var cell in newTarget)
         {
-            TileBase tile = (isOwned && cell.z == 1) ? rangeTileBase : enemyRangeTileBase;
+            TileBase tile = (isOwned && cell.z == 1) ? scene.mapPrefab.rangeTileBase : scene.mapPrefab.enemyRangeTileBase;
             scene.rangeTilemap.SetTile(cell, tile);
             Debug.Log($"cell[{cell}] is set {(isOwned && cell.z == 1)}");
         }
@@ -224,24 +222,41 @@ public class ClientVisualController : MonoBehaviour
     // Inspect panel
     public void ShowInspectPanel(bool isShown, SkillDefinition skill = null)
     {
-        if (isShown && skill != null)
-        {
-            scene.InspectPanel.SetActive(true);
-            scene.SkillName.text = skill.skillName;
-            scene.EffectType.text = skill.effectIds.Length > 0 ? scene.effectRegistry.Get(skill.effectIds[0]).InstantType.ToString() : "";
-            scene.SkillDescription.text = skill.description + " => ";
-            foreach (var effectId in skill.effectIds)
-            {
-                ClientActiveEffectBase effect = scene.effectRegistry.Get(effectId);
-                scene.SkillDescription.text += " " + effect.GetDescription(session.selectedUnitId, session);
-            }
-            scene.SkillCost.text = $"SP Cost: {skill.skillPointCost}";
-            scene.StepMultiplier.text = $"Step Multi: x{skill.stepCostMultiplier}";
-        }
-        else
+        if (!isShown || skill == null)
         {
             scene.InspectPanel.SetActive(false);
+            return;
         }
+
+        UnitData unit = session.GetUnitDataById(session.selectedUnitId);
+        if (unit == null) return;
+        SkillUsageData[] usageCopy = unit.SkillUsages.Clone() as SkillUsageData[];
+
+        int index = -1;
+        for (int i = 0; i < usageCopy.Length; i++)
+        {
+            if (usageCopy[i].SkillId == skill.skillId)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        scene.InspectPanel.SetActive(true);
+        scene.SkillName.text = skill.skillName;
+        scene.EffectType.text = skill.effectIds.Length > 0 ? scene.effectRegistry.Get(skill.effectIds[0]).InstantType.ToString() : "";
+        scene.SkillDescription.text = skill.description + " => ";
+        foreach (var effectId in skill.effectIds)
+        {
+            ClientActiveEffectBase effect = scene.effectRegistry.Get(effectId);
+            scene.SkillDescription.text += " " + effect.GetDescription(session.GetUnitDataById(session.selectedUnitId));
+        }
+        scene.SkillCost.text = $"SP Cost: {skill.skillPointCost}";
+        scene.StepMultiplier.text = $"Step Cost: {skill.stepCostMultiplier * unit.CurrentStepBase} (x{skill.stepCostMultiplier})";
+
+        string totalLimit = skill.useLimitTotal > 0 ? usageCopy[index].UsageTotal + "/" + skill.useLimitTotal.ToString() : "∞";
+        string instantLimit = skill.useLimitPerInstant < 0 ? "∞" : (index < 0 ? "0/" + skill.useLimitPerInstant : usageCopy[index].UsageThisInstant + "/" + skill.useLimitPerInstant);
+        scene.SkillUsageText.text = $"Limit per instant: {instantLimit} | Total Limit: {totalLimit}";
     }
 
     // -------------------------------------------------------
@@ -319,21 +334,86 @@ public class ClientVisualController : MonoBehaviour
     //-------------------------------------------------------
     //CommandLogs display
     //_______________________________________________________
+    private string[] prevLogs = new string[0];
 
-    public void ApplyLogs(TimelineData timeline)
+    public IEnumerator ApplyLogs(TimelineData timeline)
     {
+        int myTeam = session.GetMyTeam();
+
         for (int i = 0; i < scene.CommandLogs.Length; i++)
         {
             if (i < timeline.timelinelog.Length)
             {
-                scene.CommandLogs[i].text = timeline.timelinelog[i];
+                string log = timeline.timelinelog[i];
+                if (myTeam != -1)
+                {
+                    log = log.Replace($"Team {myTeam} —", "[Your team]");
+                    log = log.Replace($"Team {1 - myTeam} —", "[Enemy team]");
+                }
+                foreach (var unit in session.units)
+                {
+                    string name = scene.unitPrefabRegistry.GetName(unit.UId);
+                    log = log.Replace($"Unit {unit.UId}", name);
+                }
+                scene.CommandLogs[i].text = log;
             }
             else
             {
                 scene.CommandLogs[i].text = "";
             }
         }
+
+        bool logsChanged = prevLogs.Length != timeline.timelinelog.Length;
+        if (!logsChanged)
+        {
+            for (int i = 0; i < Mathf.Min(prevLogs.Length, timeline.timelinelog.Length); i++)
+            {
+                if (!prevLogs[i].Equals(timeline.timelinelog[i]))
+                {
+                    logsChanged = true;
+                }
+            }
+        }
+        string lastLog = timeline.timelinelog.Length > 0 ? timeline.timelinelog[timeline.timelinelog.Length - 1] : "";
+        Debug.Log($"[ClientVisualController] last log: {lastLog} Losgs changed: {logsChanged}");
+        if (!logsChanged)
+        {
+            yield break; // no change in logs, skip rest of the sequence
+        }
+
+        prevLogs = timeline.timelinelog.Clone() as string[];
+
+        Debug.Log($"Logs changed, checking for state changes...You ended? {session.GetOwnedTeamData().isInstantEnded} Enemy ended? {session.GetEnemyTeamData().isInstantEnded}");
+
+        if (lastLog.Contains("paused"))
+        {
+            Debug.Log("Timeline paused, playing eye sequence with animation");
+            yield return scene.eyesCanvasUI.PlayEyeSequence(!session.GetOwnedTeamData().isInstantEnded, !session.GetEnemyTeamData().isInstantEnded, !session.GetOwnedTeamData().isInstantEnded, !session.GetEnemyTeamData().isInstantEnded, myInstantStatus, enemyInstantStatus);
+        }
+        else
+        {
+            int commandedTeam = ExtractTeamFromLog(lastLog);
+            if (session.GetTeamDataById(commandedTeam)?.isInstantEnded == true)
+            {
+                Debug.Log($"Instant ended for team {commandedTeam}, playing eye sequence with animation. Commanded team: {commandedTeam}, My team: {session.GetMyTeam()}");
+                if (commandedTeam == session.GetMyTeam())
+                    yield return scene.eyesCanvasUI.PlayEyeSequence(!session.GetOwnedTeamData().isInstantEnded, !session.GetEnemyTeamData().isInstantEnded, true, false, myInstantStatus, enemyInstantStatus);
+                else
+                    yield return scene.eyesCanvasUI.PlayEyeSequence(!session.GetOwnedTeamData().isInstantEnded, !session.GetEnemyTeamData().isInstantEnded, false, true, myInstantStatus, enemyInstantStatus);
+            }
+
+        }
     }
+
+    private int ExtractTeamFromLog(string log)
+    {
+        if (log.StartsWith("Team 0"))
+            return 0;
+        if (log.StartsWith("Team 1"))
+            return 1;
+        return -1;
+    }
+
     // -------------------------------------------------------
     // UI Loop — data only, dumb updates every tick
     // -------------------------------------------------------
@@ -365,7 +445,7 @@ public class ClientVisualController : MonoBehaviour
             {
                 if (!session.Timeline.isPaused)
                     instantStatusText.text = "Time is flowing";
-                else if (session.LastResolve.HasResolve && session.SyncState != 0)
+                else if (session.LastResolve.HasResolve && session.SyncState != SyncStateValue.Idle)
                     instantStatusText.text = "Resolving";
                 else
                     instantStatusText.text = session.IsMyTurn() ? "Your turn" : "Enemy turn";

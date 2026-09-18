@@ -19,6 +19,9 @@ public class MatchConfig : ScriptableObject
     [Header("Command Log")]
     public int maxLogCount = 10;
 
+    [Header("Animation")]
+    public float eyeAnimDur = 2f;
+
     [Header("Session")]
     public int requiredClients = 2;
     public float postInitGracePeriod = 3f;
