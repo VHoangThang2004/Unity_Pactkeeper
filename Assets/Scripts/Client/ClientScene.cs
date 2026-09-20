@@ -29,7 +29,7 @@ public class ClientScene : MonoBehaviour
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
     [SerializeField] public ClientEffectRegistry effectRegistry;
-
+    [SerializeField] public RopeLine ropeLine;
     //UI
     [SerializeField] public LoadingScreen loadingScreen;
     [SerializeField] public SkillSlotUI mainWeaponSkillSlot;
@@ -57,7 +57,7 @@ public class ClientScene : MonoBehaviour
     public Tilemap rangeTilemap { get; private set; }
     public GameObject hoverHighlight { get; private set; }
 
-    public void SetMapRefs(Tilemap movable, Tilemap range, GameObject highlight, MapPrefab prefab )
+    public void SetMapRefs(Tilemap movable, Tilemap range, GameObject highlight, MapPrefab prefab)
     {
         movableTilemap = movable;
         rangeTilemap = range;

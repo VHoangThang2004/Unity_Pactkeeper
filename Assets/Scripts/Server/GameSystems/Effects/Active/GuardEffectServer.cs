@@ -12,7 +12,8 @@ public class GuardEffectServer : ServerActiveEffectBase
     public override ResolveResult Apply(
         ServerMatchSession session,
         int sourceUnitId,
-        Vector3Int target) //1 target only for this effect (dont need to check aoe pattern)
+        Vector3Int sourceCell,
+        Vector3Int targetCell) //1 target only for this effect (dont need to check aoe pattern)
     {
         UnitData sourceUnit = session.GetUnitByUnitId(sourceUnitId);
         if (sourceUnit == null)
@@ -22,7 +23,7 @@ public class GuardEffectServer : ServerActiveEffectBase
         }
 
         // Validate target
-        UnitData targetUnit = session.GetUnitAt(target);
+        UnitData targetUnit = session.GetUnitAt(targetCell);
         if (targetUnit == null)
         {
             Debug.LogWarning("Missing target!");
@@ -44,7 +45,7 @@ public class GuardEffectServer : ServerActiveEffectBase
             EffectId = effectId,
             SourceUnitId = sourceUnitId,
             SourceCell = fromCell,
-            TargetCells = new List<Vector3Int> { target },
+            TargetCells = new List<Vector3Int> { targetCell },
             Partial = SessionSnapshotData.Partial(new List<UnitData> { sourceUnit, targetUnit })
         };
     }

@@ -12,7 +12,8 @@ public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
     public override ResolveResult Apply(
         ServerMatchSession session,
         int sourceUnitId,
-        Vector3Int target) //1 target only for this effect (dont need to check aoe pattern)
+        Vector3Int sourceCell,
+        Vector3Int targetCell) //1 target only for this effect (dont need to check aoe pattern)
     {
         UnitData unit = session.GetUnitByUnitId(sourceUnitId);
         if (unit == null)
@@ -22,8 +23,9 @@ public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
         }
 
         Vector3Int fromCell = unit.CurrentCell;
+        Vector3Int newTargetCell = OffsetRecalculator.RecalculateNewTargetCell(sourceCell,targetCell,fromCell);
         // Validate target
-        UnitData targetUnit = session.GetUnitAt(target);
+        UnitData targetUnit = session.GetUnitAt(newTargetCell);
         if (targetUnit == null)
         {
             Debug.LogWarning("Missing target!");
@@ -32,7 +34,7 @@ public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
                 EffectId = effectId,
                 SourceUnitId = sourceUnitId,
                 SourceCell = fromCell,
-                TargetCells = new List<Vector3Int> { target },
+                TargetCells = new List<Vector3Int> { newTargetCell },
                 Partial = SessionSnapshotData.Partial(new List<UnitData> { unit })
             };
         }
@@ -53,7 +55,7 @@ public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
                 EffectId = effectId,
                 SourceUnitId = sourceUnitId,
                 SourceCell = fromCell,
-                TargetCells = new List<Vector3Int> { target },
+                TargetCells = new List<Vector3Int> { newTargetCell },
                 Partial = SessionSnapshotData.Full(
                     session.MapId,
                     session.CurrentTeamTurnId,
@@ -72,7 +74,7 @@ public class NormalProjectileAttackEffectServer : ServerActiveEffectBase
             EffectId = effectId,
             SourceUnitId = sourceUnitId,
             SourceCell = fromCell,
-            TargetCells = new List<Vector3Int> { target },
+            TargetCells = new List<Vector3Int> { newTargetCell },
             Partial = SessionSnapshotData.Partial(new List<UnitData> { unit, targetUnit })
         };
     }

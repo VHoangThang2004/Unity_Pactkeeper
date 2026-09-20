@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2c5a9af477d8bd4c9c9fedbfe6a9aa8, type: 3}
-  m_Name: CS3003_PlaceHolder
+  m_Name: CS3003_WarriorClassSkill
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 3003
-  skillName: Guard!
+  skillName: Push!
   targetPattern: {fileID: 11400000, guid: 8b3e3c94d087eef468fc2b126c9214e9, type: 2}
-  isTargetPatternFixed: 0
-  targeting: 3
+  isTargetPatternFixed: 1
+  targeting: 4
   skillPointCost: 1
-  stepCostMultiplier: 0.3
-  useLimitPerInstant: -1
+  stepCostMultiplier: 0.5
+  useLimitPerInstant: 1
   useLimitTotal: -1
-  effectIds: 15270000
-  icon: {fileID: 1237066433707095895, guid: 0f63a873f71be1e47a4e222f66dabf32, type: 3}
-  description: Select an ally unit within range
+  effectIds: 17270000
+  icon: {fileID: 133982719826790466, guid: 644d1e3cc140ed54f8a1c2ec5b8e4b12, type: 3}
+  description: Select an enemy unit within range

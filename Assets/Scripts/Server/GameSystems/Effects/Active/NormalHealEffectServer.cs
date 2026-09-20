@@ -13,7 +13,8 @@ public class NormalHealEffectServer : ServerActiveEffectBase
     public override ResolveResult Apply(
         ServerMatchSession session,
         int sourceUnitId,
-        Vector3Int target) //1 target only for this effect (dont need to check aoe pattern). If an effect with complicated aoe pattern then must check affected cells from this target
+        Vector3Int sourceCell,
+        Vector3Int targetCell) //1 target only for this effect (dont need to check aoe pattern). If an effect with complicated aoe pattern then must check affected cells from this target
     {
         UnitData unit = session.GetUnitByUnitId(sourceUnitId);
         if (unit == null)
@@ -23,8 +24,9 @@ public class NormalHealEffectServer : ServerActiveEffectBase
         }
 
         Vector3Int fromCell = unit.CurrentCell;
+        Vector3Int newTargetCell = OffsetRecalculator.RecalculateNewTargetCell(sourceCell,targetCell,fromCell);
         // Validate target
-        UnitData targetUnit = session.GetUnitAt(target);
+        UnitData targetUnit = session.GetUnitAt(newTargetCell);
         if (targetUnit == null)
         {
             Debug.LogWarning("Missing target!");
@@ -33,7 +35,7 @@ public class NormalHealEffectServer : ServerActiveEffectBase
                 EffectId = effectId,
                 SourceUnitId = sourceUnitId,
                 SourceCell = fromCell,
-                TargetCells = new List<Vector3Int> { target },
+                TargetCells = new List<Vector3Int> { newTargetCell },
                 Partial = SessionSnapshotData.Partial(new List<UnitData> { unit })
             };
         }
@@ -46,7 +48,7 @@ public class NormalHealEffectServer : ServerActiveEffectBase
                 EffectId = effectId,
                 SourceUnitId = sourceUnitId,
                 SourceCell = fromCell,
-                TargetCells = new List<Vector3Int> { target },
+                TargetCells = new List<Vector3Int> { newTargetCell },
                 Partial = SessionSnapshotData.Partial(new List<UnitData> { unit })
             };
         }
@@ -58,7 +60,7 @@ public class NormalHealEffectServer : ServerActiveEffectBase
             EffectId = effectId,
             SourceUnitId = sourceUnitId,
             SourceCell = fromCell,
-            TargetCells = new List<Vector3Int> { target },
+            TargetCells = new List<Vector3Int> { newTargetCell },
             Partial = SessionSnapshotData.Partial(new List<UnitData> { unit, targetUnit })
         };
     }

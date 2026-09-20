@@ -1,4 +1,3 @@
-// Server/GameSystems/Effects/Concrete/NormalAttackEffectServer.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,8 @@ public class ClassSkillAssasinEffectServer : ServerActiveEffectBase
     public override ResolveResult Apply(
         ServerMatchSession session,
         int sourceUnitId,
-        Vector3Int target) //1 target only for this effect (dont need to check aoe pattern)
+        Vector3Int sourceCell,
+        Vector3Int targetCell) //1 target only for this effect (dont need to check aoe pattern)
     {
         UnitData sourceUnit = session.GetUnitByUnitId(sourceUnitId);
         if (sourceUnit == null)
@@ -36,7 +36,7 @@ public class ClassSkillAssasinEffectServer : ServerActiveEffectBase
             EffectId = effectId,
             SourceUnitId = sourceUnitId,
             SourceCell = sourceUnit.CurrentCell,
-            TargetCells = new List<Vector3Int> { target },
+            TargetCells = new List<Vector3Int> { targetCell },
             Partial = SessionSnapshotData.Partial(new List<UnitData> { sourceUnit })
         };
     }

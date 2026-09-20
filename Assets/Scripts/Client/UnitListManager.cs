@@ -10,6 +10,7 @@ public class UnitListManager : MonoBehaviour
     [SerializeField] public SceneConfig sceneConfig;
     [SerializeField] public BackendConfig clientBackendConfig;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
+    [SerializeField] public ClassDefinitionRegistry classLibrary;
 
     [Header("Loading")]
     [SerializeField] public LoadingScreen loadingScreen;
@@ -24,13 +25,14 @@ public class UnitListManager : MonoBehaviour
     [Header("State Machine")]
     [SerializeField] public UnitListStateMachine stateMachine;
 
-    private List<OwnedUnitDto> ownedUnits = new();
-    private List<int> formationUIds = new();
+    public List<OwnedUnitDto> ownedUnits = new();
+    public List<int> formationUIds = new();
     public List<UnitContainer> unitListItems = new();
 
     void Start()
     {
         unitPrefabRegistry.Init();
+        classLibrary.Init();
         StartCoroutine(InitSequence());
     }
 
@@ -100,12 +102,19 @@ public class UnitListManager : MonoBehaviour
 
             if (i < formationUIds.Count)
             {
-                var unit = ownedUnits.Find(u => u.unitDefinitionUId == formationUIds[i]);
+                OwnedUnitDto unit = ownedUnits.Find(u => u.unitDefinitionUId == formationUIds[i]);
                 if (unit != null)
                 {
                     var prefab = unitPrefabRegistry.Get(unit.unitDefinitionUId);
                     Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-                    slot.Setup(unit.ownedUnitId, unit.unitDefinitionUId, portrait, unitPrefabRegistry.GetName(unit.unitDefinitionUId), true);
+                    slot.Setup(
+                        unit.ownedUnitId,
+                        unit.unitDefinitionUId,
+                        portrait,
+                        unitPrefabRegistry.GetName(unit.unitDefinitionUId),
+                        unit.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
+                        unit.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
+                        true);
                 }
                 else
                     slot.SetEmpty();
@@ -137,7 +146,14 @@ public class UnitListManager : MonoBehaviour
             container.Init(stateMachine);
             var prefab = unitPrefabRegistry.Get(unit.unitDefinitionUId);
             Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-            container.Setup(unit.ownedUnitId, unit.unitDefinitionUId, portrait, unitPrefabRegistry.GetName(unit.unitDefinitionUId),false);
+            container.Setup(
+                        unit.ownedUnitId,
+                        unit.unitDefinitionUId,
+                        portrait,
+                        unitPrefabRegistry.GetName(unit.unitDefinitionUId),
+                        unit.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
+                        unit.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
+                        false);
             unitListItems.Add(container);
         }
     }

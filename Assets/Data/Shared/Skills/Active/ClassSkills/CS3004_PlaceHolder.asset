@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: CS3004_PlaceHolder
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 3004
-  skillName: Guard!
+  skillName: woahhh a bear!
   targetPattern: {fileID: 11400000, guid: 8b3e3c94d087eef468fc2b126c9214e9, type: 2}
   isTargetPatternFixed: 0
   targeting: 3
   skillPointCost: 1
-  stepCostMultiplier: 0.3
+  stepCostMultiplier: 0.75
   useLimitPerInstant: -1
   useLimitTotal: -1
-  effectIds: 15270000
+  effectIds: 16270000
   icon: {fileID: 1237066433707095895, guid: 0f63a873f71be1e47a4e222f66dabf32, type: 3}
   description: Select an ally unit within range

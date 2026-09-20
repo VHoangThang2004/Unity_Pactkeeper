@@ -11,6 +11,8 @@ public class UnitConfigManager : MonoBehaviour
     [SerializeField] public SceneConfig sceneConfig;
     [SerializeField] public BackendConfig clientBackendConfig;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
+    [SerializeField] public ClassDefinitionRegistry classLibrary;
+
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public ClientEffectRegistry effectRegistry;
     [SerializeField] public WeaponDefinitionRegistry weaponRegistry;
@@ -64,6 +66,7 @@ public class UnitConfigManager : MonoBehaviour
         weaponRegistry.Init();
         trinketRegistry.Init();
         effectRegistry.Init();
+        classLibrary.Init();
         StartCoroutine(FullInitSequence(loadingScreen));
     }
 
@@ -118,7 +121,7 @@ public class UnitConfigManager : MonoBehaviour
         unitHp.text = $"HP: {CurrentStats.maxHP}";
         unitSP.text = $"SP: {CurrentStats.maxSkillPoint}";
         unitSpeed.text = $"Speed: {CurrentStats.speed}";
-        unitDamageMultiplier.text = $"DMG%: {CurrentStats.damageMultiplier*1}%";
+        unitDamageMultiplier.text = $"DMG%: {CurrentStats.damageMultiplier * 1}%";
         unitDamageReduction.text = $"DMG Reduction%: {CurrentStats.damageReduction}%";
 
     }
@@ -163,7 +166,14 @@ public class UnitConfigManager : MonoBehaviour
 
         var prefab = unitPrefabRegistry.Get(CurrentUnit.uId);
         Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-        currentUnitContainer.Setup(CurrentUnit.ownedUnitId, CurrentUnit.uId, portrait, unitPrefabRegistry.GetName(CurrentUnit.uId), false);
+        currentUnitContainer.Setup(
+                        CurrentUnit.ownedUnitId,
+                        CurrentUnit.uId,
+                        portrait,
+                        unitPrefabRegistry.GetName(CurrentUnit.uId),
+                        CurrentUnitDataWithUnlockedClass.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(CurrentUnitDataWithUnlockedClass.unlockedClassIds[0]) : null,
+                        CurrentUnitDataWithUnlockedClass.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(CurrentUnitDataWithUnlockedClass.unlockedClassIds[1]) : null,
+                        false);
 
 
         Debug.Log($"[UnitConfig] Loaded unit {CurrentUnit.ownedUnitId} uId={CurrentUnit.uId}");

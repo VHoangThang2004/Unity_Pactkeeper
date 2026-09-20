@@ -56,7 +56,7 @@ public class UnitListStateMachine : MonoBehaviour
                 break;
 
             case UnitListState.FormationConfig:
-                selectedSlot?.ShowFormationSlotState();
+                // selectedSlot?.ShowFormationSlotState();
                 foreach (UnitContainer item in manager.unitListItems)
                     item.ShowChangeUnitOption();
                 break;
@@ -129,7 +129,16 @@ public class UnitListStateMachine : MonoBehaviour
         // Move list item data into slot
         var prefab = manager.unitPrefabRegistry.Get(listItem.uId);
         Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-        selectedSlot.Setup(listItem.ownedUnitId, listItem.uId, portrait, manager.unitPrefabRegistry.GetName(listItem.uId), true);
+
+        OwnedUnitDto unit = manager.ownedUnits.Find(u => u.unitDefinitionUId == listItem.uId);
+        selectedSlot.Setup(
+                        unit.ownedUnitId,
+                        unit.unitDefinitionUId,
+                        portrait,
+                        manager.unitPrefabRegistry.GetName(unit.unitDefinitionUId),
+                        unit.unlockedClassIds.Length > 0 ? manager.classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
+                        unit.unlockedClassIds.Length > 1 ? manager.classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
+                        true);
         // Hide the list item that entered the team
         listItem.gameObject.SetActive(false);
 

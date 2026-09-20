@@ -103,8 +103,18 @@ public class UnitSelectedState : IInteractionState
         ReloadTargetPattern();
         Debug.Log($"[UnitSelected] OnDecision — switched to skillId={skillId}, targetable={session.CurrentTargetableCells.Count}");
         scene.visualController.UpdateVisualOnStateChange();
+
+        // int targetable = 0;
+        // foreach (Vector3Int cell in session.CurrentTargetableCells)
+        // {
+        //     targetable += cell.z;
+        // }
+        if (session.CurrentTargetableCells.Count == 1)
+        {
+            OnTileClick(session.CurrentTargetableCells[0]);
+        }
     }
-    
+
     public void OnInspectSkill(int skillId)
     {
         OnDecision(skillId);

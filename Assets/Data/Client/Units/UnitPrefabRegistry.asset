@@ -28,3 +28,6 @@ MonoBehaviour:
   - uId: 5
     unitName: Doc
     prefab: {fileID: 7328345900343870533, guid: 76178b183b5503748b07958a3928fe54, type: 3}
+  - uId: 6
+    unitName: Druid
+    prefab: {fileID: 7328345900343870533, guid: 2d0804a17ced1e04c9709d72d11345b5, type: 3}

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1769eb2b2b8ecb544b09ad9245325c1c, type: 3}
+  m_Name: ClassDefinitionRegistry
+  m_EditorClassIdentifier: Assembly-CSharp::ClassDefinitionRegistry
+  entries:
+  - classId: 1
+    fullFrameIcon: {fileID: 151487980284210862, guid: 7486c046ec3bcdb4693004bcc7b0395c, type: 3}
+    haflFrameIcon: {fileID: 0}
+  - classId: 2
+    fullFrameIcon: {fileID: 151487980284210862, guid: 7486c046ec3bcdb4693004bcc7b0395c, type: 3}
+    haflFrameIcon: {fileID: -4676735282052696360, guid: 7d8ab4a651e8a274a8dbcda66db8783e, type: 3}
+  - classId: 3
+    fullFrameIcon: {fileID: 151487980284210862, guid: 7486c046ec3bcdb4693004bcc7b0395c, type: 3}
+    haflFrameIcon: {fileID: 0}
+  - classId: 4
+    fullFrameIcon: {fileID: 151487980284210862, guid: 7486c046ec3bcdb4693004bcc7b0395c, type: 3}
+    haflFrameIcon: {fileID: 0}
+  - classId: 5
+    fullFrameIcon: {fileID: -5896473864645691197, guid: a2ecedac59c4aac499373123fac9ad9c, type: 3}
+    haflFrameIcon: {fileID: 6190076405306613398, guid: af1f316e9a8fb6c4a88d8fcb481b82e5, type: 3}
+  - classId: 6
+    fullFrameIcon: {fileID: -5896473864645691197, guid: a2ecedac59c4aac499373123fac9ad9c, type: 3}
+    haflFrameIcon: {fileID: 6190076405306613398, guid: af1f316e9a8fb6c4a88d8fcb481b82e5, type: 3}

@@ -9,6 +9,8 @@ public class UnitContainer : MonoBehaviour
     public int slotIndex = -1; // only for formation slots
 
     [Header("UI")]
+    [SerializeField] private Image fullFrameImg;
+    [SerializeField] private Image halfFrameImg;
     [SerializeField] private Image unitImage;
     [SerializeField] private TextMeshProUGUI unitNameText;
     [Header("State Panels")]
@@ -29,15 +31,29 @@ public class UnitContainer : MonoBehaviour
         Debug.Log($"[UnitContainer] Init with state machine reference: {sm}");
     }
 
-    public void Setup(string ownedUnitId, int uId, Sprite portrait, string unitName, bool isFormationSlot = true)
+    public void Setup(string ownedUnitId, int uId, Sprite portrait, string unitName, Sprite fullFrame = null, Sprite halfFrame = null, bool isFormationSlot = true)
     {
         this.ownedUnitId = ownedUnitId;
         this.uId = uId;
         this.isFormationSlot = isFormationSlot;
         if (unitImage != null) unitImage.sprite = portrait;
         if (unitNameText != null) unitNameText.text = unitName;
+        if (fullFrame != null)
+        {
+            fullFrameImg.sprite = fullFrame;
+        }
+        if (halfFrame != null)
+        {
+            halfFrameImg.gameObject.SetActive(true);
+            halfFrameImg.sprite = halfFrame;
+        }
+        else
+        {
+            halfFrameImg.gameObject.SetActive(false);
+        }
+
         ShowDefault();
-        Debug.Log($"[UnitContainer] Setup called with ownedUnitId: {ownedUnitId}, uId: {uId}, unitName: {unitName}, isFormationSlot: {isFormationSlot}");
+        Debug.Log($"[UnitContainer] Setup called with ownedUnitId: {ownedUnitId}, uId: {uId}, unitName: {unitName}, FullFrame: {fullFrame}, HalfFrame: {halfFrame}, isFormationSlot: {isFormationSlot}");
     }
 
     public void SetEmpty()

@@ -79,6 +79,14 @@ public static class ServerPatternResolver
                 }
             }
 
+            foreach(int eId in skill.effectIds)
+            {
+                if (session.effectRegistry.Get(eId).InstantType == InstantType.NonInstant)
+                {
+                    selectable = session.ReadyUnitIds.Contains(caster.Id);
+                }
+            }
+
             result.Add(new Vector3Int(cell.x, cell.y, selectable ? 1 : 0));
         }
 

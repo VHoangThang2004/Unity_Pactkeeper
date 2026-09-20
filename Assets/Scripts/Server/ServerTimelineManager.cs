@@ -32,11 +32,11 @@ public class ServerTimelineManager : MonoBehaviour
     // Internal coroutine control — not observable, not session data
     private bool waitingForDecision = false;
     private bool lastDecisionResolved = false;
-    private (int unitId, Vector3Int target, DecisionType decisionType, int skillCardId)? pendingDecision = null;
+    private (int unitId, Vector3Int sourceCell, Vector3Int targetCell, DecisionType decisionType, int skillCardId)? pendingDecision = null;
 
     // Transient per-instant records — live and die within one instant
     private List<(int unitId, SkillDefinition skilldef, List<ResolveResult> results)> actionRecord;
-    private List<(int unitId, Vector3Int target, int effectId, int skillCardId)> effectRecord;
+    private List<(int unitId, Vector3Int sourceCell, Vector3Int targetCell, int effectId, int skillCardId)> effectRecord;
     // Sync token — control concern, client/server handshake only
     private int Token = 0;
 
@@ -85,7 +85,7 @@ public class ServerTimelineManager : MonoBehaviour
     public void InitTimeline()
     {
         actionRecord = new List<(int, SkillDefinition, List<ResolveResult>)>();
-        effectRecord = new List<(int, Vector3Int, int, int)>();
+        effectRecord = new List<(int, Vector3Int, Vector3Int, int, int)>();
         List<TeamData> teams = session.GetAllTeamData();
         foreach (var team in teams)
             team.Overtime = (int)session.matchConfig.overtimePerTeam;
@@ -305,7 +305,7 @@ public class ServerTimelineManager : MonoBehaviour
         lastDecisionResolved = false;
         if (pendingDecision == null) yield break;
 
-        var (unitId, target, decisionType, skillCardId) = pendingDecision.Value;
+        var (unitId, sourceCell, targetCell, decisionType, skillCardId) = pendingDecision.Value;
         SkillDefinition skillDef = skillLibrary.Get(skillCardId);
 
         if (skillDef == null)
@@ -340,7 +340,7 @@ public class ServerTimelineManager : MonoBehaviour
                     removeFromRQ = true;
                     break;
                 case InstantType.NonInstant:
-                    effectRecord.Add((unitId, target, effectId, skillCardId));
+                    effectRecord.Add((unitId, sourceCell, targetCell, effectId, skillCardId));
                     removeFromRQ = true;
                     break;
                 case InstantType.PassiveBuff:
@@ -361,7 +361,7 @@ public class ServerTimelineManager : MonoBehaviour
             var effect = session.effectRegistry.Get(effectId);
             if (effect is ServerActiveEffectBase serverEffect)
             {
-                var result = serverEffect.Apply(session, unitId, target);
+                var result = serverEffect.Apply(session, unitId, sourceCell, targetCell);
                 if (result.EffectId == -1)
                 {
                     TransitionTo(ServerSessionState.DecisionWaiting);
@@ -435,12 +435,12 @@ public class ServerTimelineManager : MonoBehaviour
         var allResults = new List<ResolveResult>();
         float totalDuration = 0f;
 
-        foreach (var (unitId, target, effectId, skillCardId) in effectRecord)
+        foreach (var (unitId, sourceCell, targetCell, effectId, skillCardId) in effectRecord)
         {
             var effect = session.effectRegistry.Get(effectId);
             if (effect is ServerActiveEffectBase serverEffect)
             {
-                var result = serverEffect.Apply(session, unitId, target);
+                var result = serverEffect.Apply(session, unitId, sourceCell, targetCell);
                 if (result.EffectId == -1) continue;
                 allResults.Add(result);
                 totalDuration += effect.resolveDuration;
@@ -576,7 +576,7 @@ public class ServerTimelineManager : MonoBehaviour
 
 
 
-        pendingDecision = (unitId, target, decisionType, skillcardId);
+        pendingDecision = (unitId, unit.CurrentCell, target, decisionType, skillcardId);
         waitingForDecision = false;
         Debug.Log($"[Server] Decision accepted: unit={unitId} target={target}");
     }

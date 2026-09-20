@@ -11,7 +11,8 @@ public class MoveEffectServer : ServerActiveEffectBase
     public override ResolveResult Apply(
         ServerMatchSession session,
         int sourceUnitId,
-        Vector3Int target)
+        Vector3Int sourceCell,
+        Vector3Int targetCell)
     {
         var unit = session.GetUnitByUnitId(sourceUnitId);
         if (unit == null)
@@ -21,29 +22,29 @@ public class MoveEffectServer : ServerActiveEffectBase
         }
 
         // Validate target
-        if (!session.Map.IsWalkable(target.x, target.y))
+        if (!session.Map.IsWalkable(targetCell.x, targetCell.y))
         {
-            Debug.LogWarning($"[MoveEffect] Target {target} not walkable!");
+            Debug.LogWarning($"[MoveEffect] Target {targetCell} not walkable!");
             return new ResolveResult { EffectId = -1 };
         }
 
-        if (session.GetUnitAt(target) != null)
+        if (session.GetUnitAt(targetCell) != null)
         {
-            Debug.LogWarning($"[MoveEffect] Target {target} occupied!");
+            Debug.LogWarning($"[MoveEffect] Target {targetCell} occupied!");
             return new ResolveResult { EffectId = -1 };
         }
 
         Vector3Int fromCell = unit.CurrentCell;
 
         // Apply directly — no session helper
-        unit.CurrentCell = target;
+        unit.CurrentCell = targetCell;
 
         return new ResolveResult
         {
             EffectId = effectId,
             SourceUnitId = sourceUnitId,
             SourceCell = fromCell,
-            TargetCells = new List<Vector3Int> { target },
+            TargetCells = new List<Vector3Int> { targetCell },
             Partial = SessionSnapshotData.Partial(new List<UnitData> { unit })
         };
     }

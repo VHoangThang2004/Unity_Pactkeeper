@@ -167,6 +167,7 @@ MonoBehaviour:
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
   clientBackendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
   unitPrefabRegistry: {fileID: 11400000, guid: b6bb6ae67ad733f46a5602e8a1626e3f, type: 2}
+  classLibrary: {fileID: 11400000, guid: 29daae5b94dfd0b4aaa8e71e9429f62c, type: 2}
   loadingScreen: {fileID: 9069832694590096340}
   formationSlots:
   - {fileID: 2041762708}
@@ -177,6 +178,8 @@ MonoBehaviour:
   unitListContainer: {fileID: 7818621758928892869}
   unitContainerPrefab: {fileID: 7872400392276762358, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
   stateMachine: {fileID: 92357333}
+  ownedUnits: []
+  formationUIds: 
   unitListItems: []
 --- !u!114 &92357333
 MonoBehaviour:
@@ -208,6 +211,14 @@ PrefabInstance:
     - target: {fileID: -9104813328686764665, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: isFormationSlot
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2188727200626645188, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2475009166879977256, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4933166295143152122, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: m_Pivot.x
@@ -472,6 +483,14 @@ PrefabInstance:
       propertyPath: isFormationSlot
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2188727200626645188, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2475009166879977256, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4933166295143152122, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -682,6 +701,14 @@ PrefabInstance:
     - target: {fileID: -9104813328686764665, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: isFormationSlot
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2188727200626645188, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2475009166879977256, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4933166295143152122, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: m_Pivot.x
@@ -1259,8 +1286,8 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 200, y: 300}
-  m_Spacing: {x: 30, y: 20}
+  m_CellSize: {x: 300, y: 300}
+  m_Spacing: {x: 0, y: 20}
   m_Constraint: 0
   m_ConstraintCount: 1
 --- !u!1001 &1952978464
@@ -1278,6 +1305,14 @@ PrefabInstance:
     - target: {fileID: -9104813328686764665, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: isFormationSlot
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2188727200626645188, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2475009166879977256, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4933166295143152122, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: m_Pivot.x
@@ -1392,9 +1427,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1844218432}
     m_Modifications:
-    - target: {fileID: -9104813328686764665, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
-      propertyPath: slotIndex
-      value: 1
+    - target: {fileID: 2930406363651757701, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4933166295143152122, guid: 5f43762c0235cd747aaa41952f54b3de, type: 3}
       propertyPath: m_Pivot.x
@@ -2106,8 +2141,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 200, y: 300}
-  m_Spacing: {x: 30, y: 50}
+  m_CellSize: {x: 300, y: 300}
+  m_Spacing: {x: 0, y: 50}
   m_Constraint: 0
   m_ConstraintCount: 1
 --- !u!222 &6360828937427177535
