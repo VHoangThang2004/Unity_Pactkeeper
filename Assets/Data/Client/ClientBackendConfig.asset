@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c5c48932deba8041b2fa3d9365208b2, type: 3}
   m_Name: ClientBackendConfig
   m_EditorClassIdentifier: Assembly-CSharp::BackendConfig
-  backendUrl: http://103.110.87.249:5276
+  backendUrl: http://srpg-backend.duckdns.org:5276
   gameServerIp: 103.110.87.249
   gameServerPort: 7777

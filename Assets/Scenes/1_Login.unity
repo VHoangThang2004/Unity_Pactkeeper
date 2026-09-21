@@ -289,7 +289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &772165708
 RectTransform:
   m_ObjectHideFlags: 0
@@ -353,9 +353,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 781341143}
-        m_TargetAssemblyTypeName: SteamLoginManager, Assembly-CSharp
-        m_MethodName: OnClickSteamLogin
+      - m_Target: {fileID: 781341145}
+        m_TargetAssemblyTypeName: GoogleLoginManager, Client
+        m_MethodName: OnClickGoogleLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -413,6 +413,7 @@ GameObject:
   m_Component:
   - component: {fileID: 781341144}
   - component: {fileID: 781341143}
+  - component: {fileID: 781341145}
   m_Layer: 0
   m_Name: LoginManager
   m_TagString: Untagged
@@ -449,6 +450,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &781341145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781341142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 818e86359f7457c4ea941898db961090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::GoogleLoginManager
+  config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
+  sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
 --- !u!1 &820691295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,7 +1224,7 @@ GameObject:
   - component: {fileID: 1937961054}
   - component: {fileID: 1937961053}
   m_Layer: 5
-  m_Name: LoginButton
+  m_Name: LoginButton_Steam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
