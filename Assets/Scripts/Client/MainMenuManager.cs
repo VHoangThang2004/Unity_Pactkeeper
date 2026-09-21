@@ -152,4 +152,10 @@ public class MainMenuManager : MonoBehaviour
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.unitListScene);
     }
+    public void GoToGacha()
+    {
+        Debug.Log("Navigating to Gacha scene...");
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.gachaScene);
+    }
 }

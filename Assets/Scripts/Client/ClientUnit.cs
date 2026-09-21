@@ -18,6 +18,7 @@ public class ClientUnit : MonoBehaviour
     [SerializeField] public Animator UnitAnimator;
     [SerializeField] public Animator VFXAnimator;
     [SerializeField] public GameObject VFXSprite;
+    [SerializeField] public GameObject UnitAura;
 
     [SerializeField] private TextMeshProUGUI stepText;
     [SerializeField] private UnitBar hpBar;

@@ -286,6 +286,7 @@ public class ServerTimelineManager : MonoBehaviour
 
     IEnumerator WaitForDecision(int team)
     {
+        yield return new WaitForSeconds(2f);
         List<TeamData> teams = session.GetAllTeamData();
         pendingDecision = null;
         waitingForDecision = true;
@@ -413,7 +414,7 @@ public class ServerTimelineManager : MonoBehaviour
         });
         BroadcastSnapshot();
 
-        yield return new WaitForSeconds(totalDuration);
+        yield return new WaitForSeconds(totalDuration + 0.5f);
     }
 
     // -------------------------------------------------------
@@ -468,7 +469,7 @@ public class ServerTimelineManager : MonoBehaviour
         });
         BroadcastSnapshot();
 
-        yield return new WaitForSeconds(totalDuration);
+        yield return new WaitForSeconds(totalDuration + 0.5f);
     }
 
     // -------------------------------------------------------
@@ -820,11 +821,27 @@ public class ServerTimelineManager : MonoBehaviour
 
         Debug.Log($"[Timeline] Match ended — winner={winnerId}");
 
+        var afterMatchData = new AfterMatchPlayerReport[]
+        {
+            new AfterMatchPlayerReport
+            {
+                playerId = teams[0].playerId,
+                unitsAlive = team0Units,
+                totalUnits = session.GetTeamLoadoutDataByTeamId(teams[0].teamId)?.Units?.Count ?? 0
+            },
+            new AfterMatchPlayerReport
+            {
+                playerId = teams[1].playerId,
+                unitsAlive = team1Units,
+                totalUnits = session.GetTeamLoadoutDataByTeamId(teams[1].teamId)?.Units?.Count ?? 0
+            }
+        };
+
         // Notify clients before shutting down
 
         var backendClient = session.backendClient;
         if (backendClient != null)
-            yield return StartCoroutine(backendClient.ReportResult(winnerId, session.CurrentInstant, session.CurrentInstant));
+            yield return StartCoroutine(backendClient.ReportResult(winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
         NetworkManager.Singleton.Shutdown();
     }
 

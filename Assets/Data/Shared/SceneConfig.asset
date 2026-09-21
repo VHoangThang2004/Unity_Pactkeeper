@@ -18,3 +18,4 @@ MonoBehaviour:
   lobbyScene: 4_Lobby
   pvpScene: 5_Match
   storyScene: 5_Story
+  gachaScene: 9_Gacha

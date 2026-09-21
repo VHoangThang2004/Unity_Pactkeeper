@@ -13,6 +13,7 @@ public class PlayerProfileResponse
     public string username;
     public int level;
     public int experience;
+    public int gems;
     public OwnedUnitDto[] ownedUnits;
     public OwnedWeaponDto[] ownedWeapons;
     public OwnedTrinketDto[] ownedTrinkets;
@@ -148,4 +149,94 @@ public class OwnedTrinketResultDto
     public string ownedTrinketId;
     public int trinketDefinitionId;
     public bool isEquipped;
+}
+
+// -------------------------------------------------------
+// Gacha Summons
+// -------------------------------------------------------
+
+[System.Serializable]
+public class RewardDto
+{
+    public string type; // "Unit" | "Weapon" | "Trinket" | "Gems"
+    public int definitionId;
+    public int classId;
+    public int amount;
+}
+
+[System.Serializable]
+public class BannerItemDto
+{
+    public RewardDto reward;
+    public int weight;
+    public bool isFeatured;
+    public int rewardTier;
+}
+
+[System.Serializable]
+public class PullOptionDto
+{
+    public string pullType; // "Single" | "Five" | "Ten"
+    public int price;
+}
+
+[System.Serializable]
+public class GachaBannerDto
+{
+    public string id;
+    public string name;
+    public string description;
+    public BannerItemDto[] items;
+    public PullOptionDto[] pullOptions;
+    public bool isActive;
+    public string startDate;
+    public string expiryDate;
+    public int pityThreshold;
+    public string createdAt;
+}
+
+[System.Serializable]
+public class GachaBannersWrapper
+{
+    public GachaBannerDto[] items;
+}
+
+[System.Serializable]
+public class GachaPullRequestDto
+{
+    public string bannerId;
+    public string pullType;
+}
+
+[System.Serializable]
+public class GachaPullResultItemDto
+{
+    public RewardDto reward;
+    public bool isDuplicate;
+    public int compensationGems;
+}
+
+[System.Serializable]
+public class GachaPullResponseDto
+{
+    public GachaPullResultItemDto[] results;
+    public int gemsSpent;
+    public int gemsRemaining;
+}
+
+[System.Serializable]
+public class DropRateItemDto
+{
+    public RewardDto reward;
+    public bool isFeatured;
+    public int rewardTier;
+    public double dropRate;
+}
+
+[System.Serializable]
+public class BannerDropRatesDto
+{
+    public string bannerId;
+    public string bannerName;
+    public DropRateItemDto[] items;
 }

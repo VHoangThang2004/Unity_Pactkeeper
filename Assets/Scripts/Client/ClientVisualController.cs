@@ -338,6 +338,102 @@ public class ClientVisualController : MonoBehaviour
     //_______________________________________________________
     private string[] prevLogs = new string[0];
 
+    private void ProcessAura(TimelineData timeline)
+    {
+        if (timeline.timelinelog == null || timeline.timelinelog.Length == 0)
+        {
+            Debug.LogWarning("[ProcessAura] timelinelog is null or empty.");
+            return;
+        }
+
+        foreach (ClientUnit clientUnit in scene.spawnedUnits)
+            clientUnit.UnitAura.SetActive(false);
+
+        for (int i = timeline.timelinelog.Length - 1; i >= 0; i--)
+        {
+            string log = timeline.timelinelog[i];
+            Debug.Log($"[ProcessAura] log[{i}]: {log}");
+
+            if (log.Contains("paused"))
+            {
+                Debug.Log($"[ProcessAura] Hit paused at [{i}], stopping.");
+                return;
+            }
+
+            if (!log.Contains("SID")) continue;
+
+            int searchFrom = 0;
+            int unitId = -1;
+            int skillId = -1;
+
+            while (searchFrom < log.Length)
+            {
+                int linkStart = log.IndexOf("\"ID ", searchFrom);
+                if (linkStart < 0) break;
+
+                int linkEnd = log.IndexOf('"', linkStart + 1);
+                if (linkEnd < 0) break;
+
+                string linkContent = log.Substring(linkStart + 1, linkEnd - linkStart - 1);
+                Debug.Log($"[ProcessAura] linkContent: '{linkContent}'");
+
+                if (linkContent.Contains("SID"))
+                {
+                    string[] parts = linkContent.Split(' ');
+                    if (parts.Length >= 4 &&
+                        int.TryParse(parts[1], out unitId) &&
+                        int.TryParse(parts[3], out skillId))
+                    {
+                        Debug.Log($"[ProcessAura] Parsed unitId={unitId} skillId={skillId}");
+                        break;
+                    }
+                    else
+                        Debug.LogWarning($"[ProcessAura] Failed to parse from '{linkContent}' parts={parts.Length}");
+                }
+
+                searchFrom = linkEnd + 1;
+            }
+
+            if (unitId < 0 || skillId < 0)
+            {
+                Debug.LogWarning($"[ProcessAura] Could not parse unitId/skillId from log: {log}");
+                continue;
+            }
+
+            var skill = scene.skillLibrary.Get(skillId);
+            if (skill == null)
+            {
+                Debug.LogWarning($"[ProcessAura] Skill {skillId} not found.");
+                continue;
+            }
+
+            bool hasNonInstant = false;
+            foreach (var eId in skill.effectIds)
+            {
+                var effect = scene.effectRegistry.Get(eId);
+                if (effect != null && effect.InstantType == InstantType.NonInstant)
+                {
+                    hasNonInstant = true;
+                    break;
+                }
+            }
+
+            Debug.Log($"[ProcessAura] skillId={skillId} hasNonInstant={hasNonInstant}");
+
+            if (!hasNonInstant) continue;
+
+            var clientUnit = scene.GetSceneUnitById(unitId);
+            if (clientUnit == null)
+            {
+                Debug.LogWarning($"[ProcessAura] ClientUnit {unitId} not found in scene.");
+                continue;
+            }
+
+            Debug.Log($"[ProcessAura] Activating aura for unit {unitId}.");
+            clientUnit.UnitAura?.SetActive(true);
+        }
+    }
+
     public IEnumerator ApplyLogs(TimelineData timeline)
     {
         int myTeam = session.GetMyTeam();
@@ -365,6 +461,7 @@ public class ClientVisualController : MonoBehaviour
             }
         }
 
+        ProcessAura(timeline);
         bool logsChanged = prevLogs.Length != timeline.timelinelog.Length;
         if (!logsChanged)
         {

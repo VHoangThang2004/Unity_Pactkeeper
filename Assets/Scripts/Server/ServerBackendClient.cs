@@ -69,6 +69,14 @@ public class EquippedEquipmentData
     public int damageReduction;
 }
 
+[System.Serializable]
+public class AfterMatchPlayerReport
+{
+    public string playerId;
+    public int unitsAlive;
+    public int totalUnits;
+}
+
 public class ServerBackendClient : MonoBehaviour
 {
     [Header("Config")]
@@ -210,21 +218,22 @@ public class ServerBackendClient : MonoBehaviour
         yield return StartCoroutine(ReportStatus("cancelled", null));
     }
 
-    public IEnumerator ReportResult(string winnerId, int durationSeconds, int totalInstants)
+    public IEnumerator ReportResult(string winnerId, int durationSeconds, int totalInstants, AfterMatchPlayerReport[] afterMatchTeamData)
     {
         Debug.Log($"[ServerBackendClient] Reporting result for match {MatchId} — winner: {winnerId}");
         yield return StartCoroutine(ReportStatus("completed", new MatchReportResult
         {
             winnerId = winnerId,
             durationSeconds = durationSeconds,
-            totalInstants = totalInstants
+            totalInstants = totalInstants,
+            afterMatchTeamData = afterMatchTeamData
         }));
     }
 
     IEnumerator ReportStatus(string status, MatchReportResult result)
     {
         string json = result != null
-            ? $"{{\"status\":\"{status}\",\"result\":{{\"winnerId\":\"{result.winnerId}\",\"durationSeconds\":{result.durationSeconds},\"totalInstants\":{result.totalInstants}}}}}"
+            ? $"{{\"status\":\"{status}\",\"result\":{JsonUtility.ToJson(result)}}}"
             : $"{{\"status\":\"{status}\"}}";
 
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
@@ -250,6 +259,7 @@ public class ServerBackendClient : MonoBehaviour
         public string winnerId;
         public int durationSeconds;
         public int totalInstants;
+        public AfterMatchPlayerReport[] afterMatchTeamData;
     }
 
     // -------------------------------------------------------

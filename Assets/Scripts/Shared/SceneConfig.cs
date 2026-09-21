@@ -12,6 +12,7 @@ public class SceneConfig : ScriptableObject
     public string unitListScene = "7_UnitList";
     public string unitConfigScene = "8_UnitConfig";
     public string inventoryScene = "9_Inventory";
+    public string gachaScene = "9_Gacha";
 
     [Header("Server Scenes")]
     public string lobbyScene = "4_Lobby";
