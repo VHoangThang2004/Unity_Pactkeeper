@@ -88,7 +88,12 @@ sysinfo.txt
 
 
 # =========================
-# AI memory
+# AI memory & local scratch files
 # =========================
 *.claude
 *.plastic
+
+.vsconfig
+CMD_commands.txt
+steam_appid.txt
+UILayoutPlan.png
