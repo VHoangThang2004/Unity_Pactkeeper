@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5dd3b311681e6f4eb72672c027ecf3a, type: 3}
+  m_Name: GachaBannerRegistry
+  m_EditorClassIdentifier: Client::GachaBannerRegistry
+  entries:
+  - bannerId: 
+    bannerName: Standard Summon
+    listButtonArt: {fileID: 4182218561940668035, guid: bf0bb16cf341df243aedeb186fbc3b11, type: 3}
+    promoArt: {fileID: 4200407338226818293, guid: 541cb4dae6b5ae74288531eff38e9cb6, type: 3}

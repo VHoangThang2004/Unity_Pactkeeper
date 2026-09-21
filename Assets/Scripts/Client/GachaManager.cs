@@ -52,6 +52,10 @@ public class GachaManager : MonoBehaviour
     [SerializeField] public TMP_Text errorText;
     [SerializeField] public Button errorCloseButton;
 
+    [Header("Custom Banner Settings")]
+    [SerializeField] public GachaBannerRegistry bannerRegistry;
+    [SerializeField] public GameObject bannerButtonPrefab;
+
     private List<GachaBannerDto> activeBanners = new List<GachaBannerDto>();
     private GachaBannerDto selectedBanner;
     private TMP_FontAsset gameFont;
@@ -66,9 +70,10 @@ public class GachaManager : MonoBehaviour
         if (classLibrary != null) classLibrary.Init();
         if (weaponRegistry != null) weaponRegistry.Init();
         if (trinketRegistry != null) trinketRegistry.Init();
+        if (bannerRegistry != null) bannerRegistry.Init();
 
         // Try to capture font asset from the scene
-        var existingText = FindObjectOfType<TMP_Text>();
+        var existingText = FindAnyObjectByType<TMP_Text>();
         if (existingText != null) gameFont = existingText.font;
 
         // Setup UI panels dynamically as a fallback if not wired in Inspector
@@ -250,37 +255,57 @@ public class GachaManager : MonoBehaviour
         for (int i = 0; i < activeBanners.Count; i++)
         {
             var banner = activeBanners[i];
-            GameObject itemGo = Instantiate(unitContainerPrefab, unitListContainer);
+            
+            // Determine which prefab to use (custom banner button vs original unit card container)
+            GameObject usePrefab = (bannerButtonPrefab != null) ? bannerButtonPrefab : unitContainerPrefab;
+            GameObject itemGo = Instantiate(usePrefab, unitListContainer);
             itemGo.name = $"BannerItem_{i}";
 
-            UnitContainer container = itemGo.GetComponent<UnitContainer>();
-            if (container != null)
+            GachaBannerButton bannerBtn = itemGo.GetComponent<GachaBannerButton>();
+            if (bannerBtn != null && bannerRegistry != null)
             {
-                Sprite bannerIcon = null;
-                var featured = System.Array.Find(banner.items, x => x.isFeatured);
-                if (featured == null && banner.items.Length > 0) featured = banner.items[0];
-                if (featured != null)
+                var art = bannerRegistry.GetArt(banner.id, banner.name);
+                bannerBtn.Setup(art?.listButtonArt);
+                
+                Button btn = bannerBtn.button;
+                if (btn == null) btn = itemGo.GetComponent<Button>();
+                if (btn != null)
                 {
-                    bannerIcon = GetRewardIcon(featured.reward);
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() => SelectBanner(banner));
+                }
+            }
+            else
+            {
+                UnitContainer container = itemGo.GetComponent<UnitContainer>();
+                if (container != null)
+                {
+                    Sprite bannerIcon = null;
+                    var featured = System.Array.Find(banner.items, x => x.isFeatured);
+                    if (featured == null && banner.items.Length > 0) featured = banner.items[0];
+                    if (featured != null)
+                    {
+                        bannerIcon = GetRewardIcon(featured.reward);
+                    }
+
+                    container.Setup(
+                        banner.id,
+                        i,
+                        bannerIcon,
+                        banner.name,
+                        null,
+                        null,
+                        false
+                    );
                 }
 
-                container.Setup(
-                    banner.id,
-                    i,
-                    bannerIcon,
-                    banner.name,
-                    null,
-                    null,
-                    false
-                );
-            }
-
-            Button btn = itemGo.GetComponent<Button>();
-            if (btn == null) btn = itemGo.GetComponentInChildren<Button>();
-            if (btn != null)
-            {
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => SelectBanner(banner));
+                Button btn = itemGo.GetComponent<Button>();
+                if (btn == null) btn = itemGo.GetComponentInChildren<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveAllListeners();
+                    btn.onClick.AddListener(() => SelectBanner(banner));
+                }
             }
         }
     }
@@ -297,17 +322,32 @@ public class GachaManager : MonoBehaviour
 
         if (bannerPromotionalImage != null)
         {
-            var featured = System.Array.Find(banner.items, x => x.isFeatured);
-            if (featured == null && banner.items.Length > 0) featured = banner.items[0];
-            if (featured != null)
+            Sprite customPromoSprite = null;
+            if (bannerRegistry != null)
             {
-                bannerPromotionalImage.sprite = GetRewardIcon(featured.reward);
+                var art = bannerRegistry.GetArt(banner.id, banner.name);
+                if (art != null) customPromoSprite = art.Value.promoArt;
+            }
+
+            if (customPromoSprite != null)
+            {
+                bannerPromotionalImage.sprite = customPromoSprite;
                 bannerPromotionalImage.color = Color.white;
             }
             else
             {
-                bannerPromotionalImage.sprite = null;
-                bannerPromotionalImage.color = new Color(0.2f, 0.2f, 0.25f, 1f);
+                var featured = System.Array.Find(banner.items, x => x.isFeatured);
+                if (featured == null && banner.items.Length > 0) featured = banner.items[0];
+                if (featured != null)
+                {
+                    bannerPromotionalImage.sprite = GetRewardIcon(featured.reward);
+                    bannerPromotionalImage.color = Color.white;
+                }
+                else
+                {
+                    bannerPromotionalImage.sprite = null;
+                    bannerPromotionalImage.color = new Color(0.2f, 0.2f, 0.25f, 1f);
+                }
             }
         }
 
@@ -393,7 +433,7 @@ public class GachaManager : MonoBehaviour
                 }
                 break;
             case "Gems":
-                var existingBtn = FindObjectOfType<Button>();
+                var existingBtn = FindAnyObjectByType<Button>();
                 if (existingBtn != null)
                 {
                     var img = existingBtn.GetComponent<Image>();
@@ -598,7 +638,7 @@ public class GachaManager : MonoBehaviour
     void SetupDetailsPanel()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindObjectOfType<Canvas>();
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         GameObject detailPanelGo = new GameObject("GachaDetailsPanel", typeof(RectTransform));
@@ -649,7 +689,7 @@ public class GachaManager : MonoBehaviour
         bannerDescText.color = Color.white;
 
         Sprite buttonSprite = null;
-        var existingButton = FindObjectOfType<Button>();
+        var existingButton = FindAnyObjectByType<Button>();
         if (existingButton != null)
         {
             var img = existingButton.GetComponent<Image>();
@@ -710,7 +750,7 @@ public class GachaManager : MonoBehaviour
     void SetupRatesPopup()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindObjectOfType<Canvas>();
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         ratesPanel = new GameObject("GachaRatesPanel", typeof(RectTransform));
@@ -797,7 +837,7 @@ public class GachaManager : MonoBehaviour
         scrollRect.content = contentRt;
 
         Sprite buttonSprite = null;
-        var existingButton = FindObjectOfType<Button>();
+        var existingButton = FindAnyObjectByType<Button>();
         if (existingButton != null)
         {
             var img = existingButton.GetComponent<Image>();
@@ -818,7 +858,7 @@ public class GachaManager : MonoBehaviour
     void SetupResultsPopup()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindObjectOfType<Canvas>();
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         resultsPanel = new GameObject("GachaResultsPanel", typeof(RectTransform));
@@ -861,7 +901,7 @@ public class GachaManager : MonoBehaviour
         layout.childAlignment = TextAnchor.MiddleCenter;
 
         Sprite buttonSprite = null;
-        var existingButton = FindObjectOfType<Button>();
+        var existingButton = FindAnyObjectByType<Button>();
         if (existingButton != null)
         {
             var img = existingButton.GetComponent<Image>();
@@ -893,7 +933,7 @@ public class GachaManager : MonoBehaviour
     void SetupErrorPopup()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindObjectOfType<Canvas>();
+        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null) return;
 
         errorPanel = new GameObject("GachaErrorPanel", typeof(RectTransform));
@@ -944,7 +984,7 @@ public class GachaManager : MonoBehaviour
         errorText.alignment = TextAlignmentOptions.Center;
 
         Sprite buttonSprite = null;
-        var existingButton = FindObjectOfType<Button>();
+        var existingButton = FindAnyObjectByType<Button>();
         if (existingButton != null)
         {
             var img = existingButton.GetComponent<Image>();
