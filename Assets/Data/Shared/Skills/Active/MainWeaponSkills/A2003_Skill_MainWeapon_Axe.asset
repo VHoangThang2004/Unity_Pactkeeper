@@ -18,7 +18,7 @@ MonoBehaviour:
   isTargetPatternFixed: 0
   targeting: 2
   skillPointCost: 0
-  stepCostMultiplier: 0.75
+  stepCostMultiplier: 0.5
   useLimitPerInstant: 1
   useLimitTotal: -1
   effectIds: 12270000
