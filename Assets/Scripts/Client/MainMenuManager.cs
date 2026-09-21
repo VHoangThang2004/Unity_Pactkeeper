@@ -12,6 +12,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TMP_Text profileText;
     [SerializeField] private TMP_Text loadoutText;
     [SerializeField] private TMP_Text matchHistoryText;
+    [SerializeField] private TMP_Text gemsText;
+    [SerializeField] private TMP_Text usernameText;
 
     [Header("Config")]
     [SerializeField] private BackendConfig config;
@@ -27,7 +29,25 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
+        // Fallback dynamic lookup if references are not manually wired in Editor
+        if (gemsText == null)
+        {
+            var gemObj = GameObject.Find("Gem");
+            if (gemObj != null)
+                gemsText = gemObj.GetComponentInChildren<TMP_Text>();
+        }
+
+        if (usernameText == null)
+        {
+            var profileContainer = GameObject.Find("ProfileContainer");
+            if (profileContainer != null)
+                usernameText = profileContainer.GetComponentInChildren<TMP_Text>();
+        }
+
         welcomeText.text = $"Welcome, {PlayerSession.Username}!";
+        if (usernameText != null)
+            usernameText.text = PlayerSession.Username;
+
         StartCoroutine(FetchAllData());
     }
 
@@ -58,6 +78,12 @@ public class MainMenuManager : MonoBehaviour
 
         var profile = JsonUtility.FromJson<PlayerProfileResponse>(request.downloadHandler.text);
         profileText.text = $"Level {profile.level} | EXP {profile.experience}";
+
+        if (gemsText != null)
+            gemsText.text = profile.gems.ToString();
+
+        if (usernameText != null)
+            usernameText.text = profile.username;
     }
 
     // -------------------------------------------------------

@@ -20,16 +20,16 @@ public class GachaManager : MonoBehaviour
     [SerializeField] public LoadingScreen loadingScreen;
 
     [Header("UI Display")]
-    [SerializeField] private TextMeshProUGUI gemsText; // Wired in editor
+    [SerializeField] private TextMeshProUGUI gemsText;
 
-    [Header("Formation (repurposed for Featured Characters)")]
+    [Header("Formation")]
     [SerializeField] public List<UnitContainer> formationSlots;
 
-    [Header("Banners List (repurposed from Unit List)")]
-    [SerializeField] public Transform unitListContainer; // Banners will spawn here
-    [SerializeField] public GameObject unitContainerPrefab; // Reuse unit item prefab for banners and results
+    [Header("Banners List")]
+    [SerializeField] public Transform unitListContainer;
+    [SerializeField] public GameObject unitContainerPrefab;
 
-    [Header("Details Panel References (Wired in Editor)")]
+    [Header("Details Panel References")]
     [SerializeField] public Image bannerPromotionalImage;
     [SerializeField] public TMP_Text bannerTitleText;
     [SerializeField] public TMP_Text bannerDescText;
