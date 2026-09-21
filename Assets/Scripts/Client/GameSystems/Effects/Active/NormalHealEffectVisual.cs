@@ -5,7 +5,7 @@ using UnityEngine;
 public class NormalHealEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.HalfInstant;
-    public override string GetDescription(UnitData unit)
+    public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
         // UnitData unit = session.GetUnitDataById(unitId);
         return " Recover " + baseValue + " HP to selected ally target.";
@@ -19,6 +19,8 @@ public class NormalHealEffectVisual : ClientActiveEffectBase
 
         ClientUnit sceneUnit = scene.GetSceneUnitById(result.SourceUnitId);
         if (sceneUnit == null) yield break;
+        scene.cameraController.CenterOn(sceneUnit.transform.position);
+
         if (result.TargetCells == null || result.TargetCells.Count == 0)
             yield break;
 

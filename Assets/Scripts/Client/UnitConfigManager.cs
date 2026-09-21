@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -316,6 +317,8 @@ public class UnitConfigManager : MonoBehaviour
         classSkillSlot?.Init(this, SlotConfig.SlotType.ClassSkill);
         weaponSlot?.Init(this, SlotConfig.SlotType.Weapon);
         trinketSlot?.Init(this, SlotConfig.SlotType.Trinket);
+
+        OnClickCloseAll();
     }
 
     // -------------------------------------------------------
@@ -327,6 +330,7 @@ public class UnitConfigManager : MonoBehaviour
         yield return PatchRequest("movement-skill",
             JsonUtility.ToJson(new UpdateSkillDto { skillId = skillId }));
         CurrentUnit.equippedMovementSkillId = skillId;
+        CurrentUnitDataWithUnlockedClass.equippedMovementSkillId = skillId;
         movementSkillSlot?.Refresh();
     }
 
@@ -335,6 +339,7 @@ public class UnitConfigManager : MonoBehaviour
         yield return PatchRequest("class-skill",
             JsonUtility.ToJson(new UpdateSkillDto { skillId = skillId }));
         CurrentUnit.equippedClassSkillId = skillId;
+        CurrentUnitDataWithUnlockedClass.equippedClassSkillId = skillId;
         classSkillSlot?.Refresh();
     }
 

@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
+public class ActiveEffectInstance
+{
+    public ServerPassiveEffectBase effect;
+    public bool isPermanent;
+    public int remainingInstants;
+}
 public class ServerMatchSession : MonoBehaviour
 {
     public int CurrentTeamTurnId = -1; // -1 : not a turn, time flowing, if a team's turn, this value equals to TeamData.teamId
@@ -20,13 +25,15 @@ public class ServerMatchSession : MonoBehaviour
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public ServerEffectRegistry effectRegistry;
     public List<EffectBase> GlobalActiveEffects { get; set; } = new List<EffectBase>(); public int[] GlobalActiveEffectIds = new int[0];
-    private Dictionary<int, List<EffectBase>> unitActiveEffects = new Dictionary<int, List<EffectBase>>();
+    // private Dictionary<int, List<EffectBase>> unitActiveEffects = new Dictionary<int, List<EffectBase>>();
 
-    public List<EffectBase> GetUnitActiveEffects(int unitId)
+    private Dictionary<int, List<ActiveEffectInstance>> unitActiveEffects = new();
+
+    public List<ActiveEffectInstance> GetUnitActiveEffects(int unitId)
     {
         if (!unitActiveEffects.TryGetValue(unitId, out var list))
         {
-            list = new List<EffectBase>();
+            list = new List<ActiveEffectInstance>();
             unitActiveEffects[unitId] = list;
         }
         return list;
@@ -228,6 +235,18 @@ public class ServerMatchSession : MonoBehaviour
     // -------------------------------------------------------
     // Team & Player Management
     // -------------------------------------------------------
+
+    public int GetOppositeTeamId(int currentTeamId)
+    {
+        foreach (TeamData team in teams)
+        {
+            if (team.teamId != currentTeamId)
+            {
+                return team.teamId;
+            }
+        }
+        return -1;
+    }
     public TeamData GetTeamByPlayerId(string playerId)
     {
         return teams.Find(t => t.playerId == playerId);

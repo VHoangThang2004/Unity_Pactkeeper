@@ -22,5 +22,5 @@ MonoBehaviour:
   useLimitPerInstant: 1
   useLimitTotal: -1
   effectIds: 14270000
-  icon: {fileID: 1295046780112546796, guid: 09e61dcd944d9e64a804e022ca564d0c, type: 3}
-  description: Select an enemy unit within range
+  icon: {fileID: -5662285254915375189, guid: 83e14d66d5e118f44bd3413b4ec62a63, type: 3}
+  description: Select any cell

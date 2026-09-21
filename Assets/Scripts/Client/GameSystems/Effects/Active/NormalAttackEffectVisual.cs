@@ -5,9 +5,9 @@ using UnityEngine;
 public class NormalAttackEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.NonInstant;
-    public override string GetDescription(UnitData unit)
+    public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
-        return " Deal " + Mathf.RoundToInt(baseValue * unit.DamageMultiplier/100) + " damage to selected target.";
+        return " Deal " + Mathf.RoundToInt(baseValue * unit.DamageMultiplier / 100) + " damage to selected target.";
     }
 
     public override IEnumerator Replay(
@@ -18,6 +18,8 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
 
         ClientUnit sceneUnit = scene.GetSceneUnitById(result.SourceUnitId);
         if (sceneUnit == null) yield break;
+        scene.cameraController.CenterOn(sceneUnit.transform.position);
+
         if (result.TargetCells == null || result.TargetCells.Count == 0)
             yield break;
 

@@ -22,5 +22,5 @@ MonoBehaviour:
   useLimitPerInstant: -1
   useLimitTotal: -1
   effectIds: 15270000
-  icon: {fileID: 1237066433707095895, guid: 0f63a873f71be1e47a4e222f66dabf32, type: 3}
+  icon: {fileID: -487690659708163878, guid: 1d7bcdc0b539c4f40ad1be0627bb1da4, type: 3}
   description: Select an ally unit within range

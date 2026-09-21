@@ -81,18 +81,12 @@ public class PullEffectServer : ServerActiveEffectBase
 
     bool IsTowardSource(Vector3Int current, Vector3Int next, Vector3Int source)
     {
-        int dx = source.x - current.x;
-        int dy = source.y - current.y;
-        int nx = next.x - current.x;
-        int ny = next.y - current.y;
+        Vector2 toSource = new Vector2(source.x - current.x, source.y - current.y);
+        Vector2 toNext = new Vector2(next.x - current.x, next.y - current.y);
 
-        // Must not move away on any axis
-        if (dx != 0 && nx != 0 && Math.Sign(nx) != Math.Sign(dx)) return false;
-        if (dy != 0 && ny != 0 && Math.Sign(ny) != Math.Sign(dy)) return false;
+        if (toSource == Vector2.zero || toNext == Vector2.zero) return false;
 
-        // Must make progress on at least one axis
-        if (nx == 0 && ny == 0) return false;
-
-        return true;
+        float angle = Vector2.Angle(toSource, toNext);
+        return angle < 45f;
     }
 }

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrinketDefinitionRegistry
   entries:
   - trinketId: 1
-    icon: {fileID: -6939695964637348897, guid: 511f2f0f5a8936241a5b63c6b6745b49, type: 3}
+    icon: {fileID: 4748708304814070278, guid: d5959580b91dc724183e937b7e73a802, type: 3}
   - trinketId: 2
-    icon: {fileID: -6939695964637348897, guid: 511f2f0f5a8936241a5b63c6b6745b49, type: 3}
+    icon: {fileID: -7953070661147143301, guid: 5c88c908152a80642aa56da03b4c668c, type: 3}
   - trinketId: 3
-    icon: {fileID: -6939695964637348897, guid: 511f2f0f5a8936241a5b63c6b6745b49, type: 3}
+    icon: {fileID: -7703886266356680166, guid: decfb7359ca70ae4c98555e0049098fe, type: 3}
   - trinketId: 4
-    icon: {fileID: -6939695964637348897, guid: 511f2f0f5a8936241a5b63c6b6745b49, type: 3}
+    icon: {fileID: 727647038802650903, guid: 3bdab203eeea55d48a2a19a03621d111, type: 3}
   - trinketId: 5
-    icon: {fileID: 1096970115234337456, guid: 5df9ac80a3018454e9de2586fbcf879b, type: 3}
+    icon: {fileID: 21300000, guid: 752bab493dc0f1747968413870f7750f, type: 3}

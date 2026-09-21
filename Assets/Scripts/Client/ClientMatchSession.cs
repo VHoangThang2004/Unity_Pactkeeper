@@ -246,7 +246,8 @@ public class ClientMatchSession : MonoBehaviour
     {
         LastDecisionRequest = data;
         waitDur = data.RemainingWaitDuration;
-        maxWaitDur = data.MaxWaitDuration;
+        maxWaitDur = data.RemainingWaitDuration;
+        // maxWaitDur = data.MaxWaitDuration;
         overtimeDur = data.RemainingOvertime;
         maxOvertimeDur = data.MaxOvertime;
         // update ready units

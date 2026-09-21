@@ -57,10 +57,10 @@ public class ServerBootstrap : MonoBehaviour
 
         Debug.Log($"[Bootstrap] Server started on port {port}");
 
-        NetworkManager.Singleton.SceneManager.LoadScene(
+        SceneManager.LoadScene(
             sceneConfig.lobbyScene,
             LoadSceneMode.Single
-        );
+            );
     }
 
     void StartClientFlow()

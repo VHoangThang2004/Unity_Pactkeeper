@@ -21,7 +21,7 @@ public class ServerTimelineManager : MonoBehaviour
     // -------------------------------------------------------
 
     [Header("Refs")]
-    [SerializeField] private SyncedBridge bridge;
+    private SyncedBridge bridge;
     [SerializeField] private ServerMatchSession session;
     [SerializeField] private SpeedConfig speedConfig;
     [SerializeField] private SkillLibrary skillLibrary;
@@ -82,8 +82,9 @@ public class ServerTimelineManager : MonoBehaviour
     // -------------------------------------------------------
     // Init
     // -------------------------------------------------------
-    public void InitTimeline()
+    public void InitTimeline(SyncedBridge bridge)
     {
+        this.bridge = bridge;
         actionRecord = new List<(int, SkillDefinition, List<ResolveResult>)>();
         effectRecord = new List<(int, Vector3Int, Vector3Int, int, int)>();
         List<TeamData> teams = session.GetAllTeamData();
@@ -177,6 +178,19 @@ public class ServerTimelineManager : MonoBehaviour
                 yield return StartCoroutine(EndMatch());
                 yield break;
             }
+            bool gameEnded = true;
+            foreach (var unit in session.GetAllUnits())
+            {
+                if (session.GetTeamIdByUnitId(unit.Id) != session.GetTeamIdByUnitId(session.units.First().Id))
+                {
+                    gameEnded = false;
+                }
+            }
+            if (gameEnded)
+            {
+                yield return StartCoroutine(EndMatch());
+                yield break;
+            }
             TransitionTo(ServerSessionState.InstantPaused);
             LogInstantPaused(session.CurrentInstant);
             yield return RunDecisionLoop();
@@ -222,15 +236,15 @@ public class ServerTimelineManager : MonoBehaviour
         {
             if (!TeamHasReady(0) && !TeamHasReady(1)) yield break;
             if (teams[0].isInstantEnded && teams[1].isInstantEnded) yield break;
-            yield return HandleTeamTurn(session.CurrentTeamTurnId, teams);
+            yield return HandleTeamTurn(session.CurrentTeamTurnId);
         }
     }
-    IEnumerator HandleTeamTurn(int currentTeam, List<TeamData> teams)
+    IEnumerator HandleTeamTurn(int currentTeamId)
     {
-        if (teams[currentTeam].isInstantEnded || !TeamHasReady(currentTeam))
+        TeamData currentTeam = session.GetTeamDataByTeamId(currentTeamId);
+        if (currentTeam.isInstantEnded || !TeamHasReady(currentTeamId))
         {
-            teams[currentTeam].isInstantEnded = true;
-            session.CurrentTeamTurnId = 1 - currentTeam;
+            session.CurrentTeamTurnId = session.GetOppositeTeamId(currentTeamId);
             yield break;
         }
 
@@ -240,23 +254,24 @@ public class ServerTimelineManager : MonoBehaviour
 
         while (true)
         {
-            yield return WaitForDecision(currentTeam);
+            TransitionTo(ServerSessionState.DecisionWaiting);
+            yield return WaitForDecision(currentTeamId);
 
             if (pendingDecision == null)
             {
                 // waited or timed out
-                teams[currentTeam].isInstantEnded = true;
+                currentTeam.isInstantEnded = true;
                 PackFinal();
                 BroadcastSnapshot();
                 yield return new WaitForSeconds(session.matchConfig.eyeAnimDur);
                 yield break;
             }
 
-            yield return ResolveDecisionEffects(currentTeam);
+            yield return ResolveDecisionEffects(currentTeamId);
 
             if (lastDecisionResolved)
             {
-                session.CurrentTeamTurnId = 1 - currentTeam;
+                session.CurrentTeamTurnId = session.GetOppositeTeamId(currentTeamId);
                 session.FlaggedTeamId = session.CurrentTeamTurnId;
                 yield break;
             }
@@ -349,8 +364,6 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
 
-        // if (immediateEffectIds.Count == 0) yield break;
-
         TransitionTo(ServerSessionState.Resolving);
 
         var snapshotBefore = GetSnapshot();
@@ -364,7 +377,6 @@ public class ServerTimelineManager : MonoBehaviour
                 var result = serverEffect.Apply(session, unitId, sourceCell, targetCell);
                 if (result.EffectId == -1)
                 {
-                    TransitionTo(ServerSessionState.DecisionWaiting);
                     yield break;
                 }
                 actionResults.Add(result);
@@ -386,8 +398,11 @@ public class ServerTimelineManager : MonoBehaviour
         if (removeFromRQ)
         {
             session.ReadyUnitIds.Remove(unitId);
-            //todo: team end instant if no more ready units, fornow client checks it
+            TeamHasReady(session.GetTeamByUnitId(unitId).teamId);
         }
+
+        // Post command timing
+
         // Atomic full pack write
         PackResolve(snapshotBefore, new ResolveData
         {
@@ -399,7 +414,6 @@ public class ServerTimelineManager : MonoBehaviour
         BroadcastSnapshot();
 
         yield return new WaitForSeconds(totalDuration);
-        TransitionTo(ServerSessionState.DecisionWaiting);
     }
 
     // -------------------------------------------------------
@@ -478,7 +492,7 @@ public class ServerTimelineManager : MonoBehaviour
 
 
             int newStep = Mathf.Max(0, Mathf.RoundToInt(unit.CurrentStepBase * kvp.Value));
-            unit.CurrentStep = newStep;
+            unit.CurrentStep += newStep;
             unit.NextStep = 0;
             unit.NextStepMultiplier = 0f;
             unit.StepAlt = !unit.StepAlt;
@@ -499,8 +513,8 @@ public class ServerTimelineManager : MonoBehaviour
 
     public void HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillcardId, int clientToken)
     {
-        int senderTeam = session.GetTeamNumberByClientId(senderClientId);
-        Debug.Log($"[Server] Decision received: client={senderClientId} unit={unitId} target={target} type={decisionType} skill={skillcardId}");
+        int senderTeamId = session.GetTeamNumberByClientId(senderClientId);
+        Debug.Log($"[Server] Decision received: client={senderClientId} teamId = {senderTeamId} unit={unitId} target={target} type={decisionType} skill={skillcardId}");
 
         if (clientToken != Token)
         {
@@ -516,9 +530,9 @@ public class ServerTimelineManager : MonoBehaviour
             return;
         }
 
-        if (senderTeam != session.CurrentTeamTurnId)
+        if (senderTeamId != session.CurrentTeamTurnId)
         {
-            Debug.LogWarning($"[Timeline] Team {senderTeam} sent but team {session.CurrentTeamTurnId}'s turn — ignored.");
+            Debug.LogWarning($"[Timeline] Team {senderTeamId} sent but team {session.CurrentTeamTurnId}'s turn — ignored.");
             SendSnapshotToClient(senderClientId);
             return;
         }
@@ -527,7 +541,7 @@ public class ServerTimelineManager : MonoBehaviour
         {
             pendingDecision = null;
             waitingForDecision = false;
-            Debug.Log($"[Timeline] Team {senderTeam} chose wait.");
+            Debug.Log($"[Timeline] Team {senderTeamId} chose wait.");
             // session.AddLog($"Team {senderTeam} — wait."); // truncated (log later in decision loop)
             return;
         }
@@ -547,9 +561,9 @@ public class ServerTimelineManager : MonoBehaviour
             return;
         }
 
-        if (session.GetTeamIdByUnitId(unitId) != senderTeam)
+        if (session.GetTeamIdByUnitId(unitId) != senderTeamId)
         {
-            Debug.LogWarning($"[Server] Unit {unitId} not owned by team {senderTeam}");
+            Debug.LogWarning($"[Server] Unit {unitId} not owned by team {senderTeamId}");
             SendSnapshotToClient(senderClientId);
             return;
         }
@@ -572,7 +586,7 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
         //Logs the decision
-        LogTeamCommand(senderTeam, unit, skillDef, target);
+        LogTeamCommand(senderTeamId, unit, skillDef, target);
 
 
 
@@ -624,11 +638,10 @@ public class ServerTimelineManager : MonoBehaviour
 
             for (int i = activeEffects.Count - 1; i >= 0; i--)
             {
-                if (activeEffects[i] is not ServerPassiveEffectBase statusEffect) continue;
-                if (statusEffect.isPermanent) continue;
-
-                statusEffect.durationInstants--;
-                if (statusEffect.durationInstants <= 0)
+                if (activeEffects[i] is not ActiveEffectInstance instance) continue;
+                if (instance.isPermanent) continue;
+                instance.remainingInstants--;
+                if (instance.remainingInstants <= 0)
                 {
                     activeEffects.RemoveAt(i);
                     anyRemoved = true;
@@ -637,7 +650,7 @@ public class ServerTimelineManager : MonoBehaviour
 
             if (anyRemoved)
             {
-                unit.ActiveEffectIds = activeEffects.Select(e => e.effectId).ToArray();
+                unit.ActiveEffectIds = activeEffects.Select(e => e.effect.effectId).ToArray();
                 anyChanged = true;
             }
         }
@@ -665,10 +678,11 @@ public class ServerTimelineManager : MonoBehaviour
         return anyNew;
     }
 
-    bool TeamHasReady(int team)
+    bool TeamHasReady(int teamId)
     {
         foreach (int id in session.ReadyUnitIds)
-            if (session.GetTeamIdByUnitId(id) == team) return true;
+            if (session.GetTeamIdByUnitId(id) == teamId) return true;
+        session.GetTeamDataByTeamId(teamId).isInstantEnded = true;
         return false;
     }
 

@@ -18,9 +18,9 @@ MonoBehaviour:
   isTargetPatternFixed: 0
   targeting: 1
   skillPointCost: 0
-  stepCostMultiplier: 0.2
+  stepCostMultiplier: 0.25
   useLimitPerInstant: 1
   useLimitTotal: -1
   effectIds: 11270000
-  icon: {fileID: -5557895429145451543, guid: 82d5f242d6464af41a464813c67c1466, type: 3}
-  description: 
+  icon: {fileID: -3011494807137413604, guid: 8ae5f47e17ffb034fbd2a221bfebb933, type: 3}
+  description: 'Select an empty cell '

@@ -66,6 +66,14 @@ public class ClientInteractionSystem : MonoBehaviour
     // Interaction
     // -------------------------------------------------------
 
+    public bool isScrolling = false;
+    public void OnScrollButtonClicked()
+    {
+        if (isScrolling) return;
+        isScrolling = true;
+        StartCoroutine(scene.visualController.ShowCommandLog(!scene.CommandLogs[0].IsActive()));
+    }
+
     public void HandleTileHover()
     {
         if (scene.movableTilemap == null) return;
@@ -76,7 +84,7 @@ public class ClientInteractionSystem : MonoBehaviour
         session.currentCellMouseOn = scene.movableTilemap.WorldToCell(worldPos);
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            scene.IsCenteringCell=false;
+            scene.IsCenteringCell = false;
         }
 
         if (scene.IsCenteringCell)

@@ -1,0 +1,29 @@
+{
+    "name": "Client",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3fb40279fac2f4090af9b29c50d70798",
+        "GUID:6546d7765b4165b40850b3667f981c26",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:9f4f5bf029cebb64f983b7bdc29f62a1",
+        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f",
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:68bd7fdb68ef2684e982e8a9825b18a5",
+        "GUID:2dfb1770f1cda9a43b2d26aa0eff04da",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:d8b63aba1907145bea998dd612889d6b"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2c5a9af477d8bd4c9c9fedbfe6a9aa8, type: 3}
-  m_Name: CS3005_PLaceHolder
+  m_Name: A2006_Skill_MainWeapon_Staff
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
-  skillId: 3005
-  skillName: woahh a ninja!
-  targetPattern: {fileID: 11400000, guid: 8b3e3c94d087eef468fc2b126c9214e9, type: 2}
+  skillId: 2006
+  skillName: Thorns attack!
+  targetPattern: {fileID: 11400000, guid: ce7be449fb4e8944a91e842339549753, type: 2}
   isTargetPatternFixed: 0
-  targeting: 3
-  skillPointCost: 1
-  stepCostMultiplier: 0.75
-  useLimitPerInstant: -1
+  targeting: 2
+  skillPointCost: 0
+  stepCostMultiplier: 0.5
+  useLimitPerInstant: 1
   useLimitTotal: -1
-  effectIds: 16270000
-  icon: {fileID: 1237066433707095895, guid: 0f63a873f71be1e47a4e222f66dabf32, type: 3}
+  effectIds: 1d270000
+  icon: {fileID: -4421300922047078791, guid: 8ed9f126e3314204ca9f840407f303ef, type: 3}
   description: Select an ally unit within range

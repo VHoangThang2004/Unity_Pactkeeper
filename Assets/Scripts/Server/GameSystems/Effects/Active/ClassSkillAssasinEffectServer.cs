@@ -7,7 +7,7 @@ using UnityEngine;
 public class ClassSkillAssasinEffectServer : ServerActiveEffectBase
 {
     public override InstantType InstantType => InstantType.Instant;
-    public override EffectType EffectType => EffectType.StatBuff;
+    public override EffectType EffectType => EffectType.ApplyBuff;
 
     public override ResolveResult Apply(
         ServerMatchSession session,

@@ -1,11 +1,10 @@
 using UnityEngine;
 using Unity.VisualScripting;
 using System.Collections.Generic;
-
 public class ServerSpawnManager : MonoBehaviour
 {
     [Header("Refs")]
-    [SerializeField] private SyncedBridge bridge;
+    [SerializeField] private ServerController controller;
     [SerializeField] private ServerMatchSession session;
     [SerializeField] private SpeedConfig speedConfig;
 
@@ -36,11 +35,11 @@ public class ServerSpawnManager : MonoBehaviour
         {
             Vector2Int spawnPoint = session.MapAsset.GetSpawn(teamId, spawnPointer);
             UnitData unit = SpawnUnit(teamId, unitLoadout, spawnPoint.x, spawnPoint.y);
-            if (unit.IsUnityNull())
-            {
-                Debug.LogError($"[SpawnManager] Failed to spawn unit for team {teamId} at ({spawnPoint.x},{spawnPoint.y})!");
-                return false;
-            }
+            // if (unit.IsUnityNull())
+            // {
+            //     Debug.LogError($"[SpawnManager] Failed to spawn unit for team {teamId} at ({spawnPoint.x},{spawnPoint.y})!");
+            //     return false;
+            // }
             spawnPointer++;
         }
 
@@ -95,7 +94,7 @@ public class ServerSpawnManager : MonoBehaviour
         session.units.Add(unit);
 
         if (!suppressSpawnRpcs)
-            bridge.SpawnUnitClientRpc(unit);
+            controller.bridge.SpawnUnitClientRpc(unit);
 
         Debug.Log($"[SpawnManager] Spawned unit Id={unit.Id} uId={loadout.UId} team={teamNumber} speed={loadout.Speed} step={unit.CurrentStep} at ({worldX},{worldY})");
         return unit;

@@ -1,36 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class ServerPatternResolver
 {
-    public static CurrentPatterns BuildSkillPattern(UnitData unit, SkillDefinition skill, ServerMatchSession session)
+    public static void TranslateSkillPattern(UnitData unit, SkillDefinition skill, ServerMatchSession session, int index)
     {
-        var targetCells = new List<Vector3Int>();
+        var worldCells = new List<Vector3Int>();
+        foreach (var raw in unit.SkillPatterns[index].TargetCells ?? new Vector3Int[0])
+            worldCells.Add(new Vector3Int(
+                unit.CurrentCell.x + raw.x,
+                unit.CurrentCell.y + raw.y,
+                0));
 
-        if (skill.targetPattern != null)
-        {
-            var translated = PatternResolver.TranslateTargetPattern(skill, unit);
-            targetCells = FilterTargetPattern(translated, unit, skill, session);
-        }
-
-        Vector2Int[] aoePattern = null;
-        if (skill.effectIds != null)
-            foreach (var effectId in skill.effectIds)
-            {
-                var effect = session.effectRegistry.Get(effectId);
-                if (effect?.aoePattern?.cells != null)
-                {
-                    aoePattern = effect.aoePattern.cells;
-                    break;
-                }
-            }
-
-        return new CurrentPatterns
-        {
-            SkillId = skill.skillId,
-            TargetCells = targetCells.ToArray(),
-            AoePattern = aoePattern
-        };
+        unit.SkillPatterns[index].TargetCells = FilterTargetPattern(worldCells, unit, skill, session).ToArray();
     }
 
     public static List<Vector3Int> FilterTargetPattern(
@@ -40,12 +23,25 @@ public static class ServerPatternResolver
         ServerMatchSession session)
     {
         var result = new List<Vector3Int>();
+
+        // Debug.Log("F1");
+
         bool skillUsable = session.CanUseSkill(caster.Id, skill.skillId, skill);
+
+        // Debug.Log("F2");
 
         foreach (var cell in cells)
         {
-            if (!session.Map.IsWalkable(cell.x, cell.y)) continue;
+            // Debug.Log("F3");
+
+            if (!session.Map.IsWalkable(cell.x, cell.y))
+                continue;
+
+            // Debug.Log("F4");
+
             var unitAtCell = session.GetUnitAt(cell);
+
+            // Debug.Log("F5");
 
             bool selectable;
             if (!skillUsable || !session.ReadyUnitIds.Contains(caster.Id))
@@ -79,14 +75,24 @@ public static class ServerPatternResolver
                 }
             }
 
-            foreach(int eId in skill.effectIds)
+            // Debug.Log("F6");
+            foreach (int eId in skill.effectIds)
             {
-                if (session.effectRegistry.Get(eId).InstantType == InstantType.NonInstant)
+                var effect = session.effectRegistry.Get(eId);
+
+                if (effect == null)
+                {
+                    Debug.LogWarning(
+                        $"Skill {skill.skillId} contains missing effect {eId}"
+                    );
+                    continue;
+                }
+
+                if (effect.InstantType == InstantType.NonInstant)
                 {
                     selectable = session.ReadyUnitIds.Contains(caster.Id);
                 }
             }
-
             result.Add(new Vector3Int(cell.x, cell.y, selectable ? 1 : 0));
         }
 

@@ -1,16 +1,17 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class ServerController : MonoBehaviour
+public class ServerController : MonoBehaviour, ISyncedBridgeServer
 {
     [Header("Bridge")]
-    [SerializeField] private SyncedBridge bridge;
+    [SerializeField] private SyncedBridge bridgePrefab;
+    public SyncedBridge bridge;
     [SerializeField] private SceneConfig sceneConfig;
     [SerializeField] ServerMatchSession session;
     [SerializeField] ServerSpawnManager spawnManager;
     [SerializeField] ServerTimelineManager timeline;
+
 
     private ServerBackendClient backendClient;
     private int trialErrorCount = 0;
@@ -53,7 +54,24 @@ public class ServerController : MonoBehaviour
     // Init
     // -------------------------------------------------------
 
-    private void Start()
+    void Start()
+    {
+        if (!NetworkManager.Singleton.IsServer)
+            return;
+
+        var bridge = Instantiate(bridgePrefab);
+        bridge.NetworkObject.Spawn();
+
+        Debug.Log("[Server] SyncedBridge spawned");
+    }
+
+    public void OnBridgeReady(SyncedBridge bridge)
+    {
+        this.bridge = bridge;
+        Debug.Log("[ServerController] Bridge registered.");
+        StartSequence();
+    }
+    private void StartSequence()
     {
         backendClient = FindAnyObjectByType<ServerBackendClient>();
         if (backendClient == null)
@@ -91,7 +109,7 @@ public class ServerController : MonoBehaviour
         }
 
         // 3. Init timeline — sets up records, inits skill library, transitions to Flowing
-        timeline.InitTimeline();
+        timeline.InitTimeline(bridge);
 
         // 4. Recalculate all units — applies passive buffs onto stats
         UnitRecalculator.RecalculateAll(session);

@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 [CreateAssetMenu(fileName = "ServerEffectRegistry", menuName = "SRPG/Server Effect Registry")]
 public class ServerEffectRegistry : ScriptableObject
 {
-    [SerializeField] private ServerActiveEffectBase[] effects;
-    private Dictionary<int, ServerActiveEffectBase> _lookup;
+    [SerializeField] private EffectBase[] effects;
+    private Dictionary<int, EffectBase> _lookup;
 
     public void Init()
     {
-        _lookup = new Dictionary<int, ServerActiveEffectBase>();
+        _lookup = new Dictionary<int, EffectBase>();
         foreach (var effect in effects)
         {
             if (effect == null) continue;
@@ -23,7 +22,7 @@ public class ServerEffectRegistry : ScriptableObject
         Debug.Log($"[ServerEffectRegistry] Loaded {_lookup.Count} effects.");
     }
 
-    public ServerActiveEffectBase Get(int effectId)
+    public EffectBase Get(int effectId)
     {
         if (_lookup == null)
         {

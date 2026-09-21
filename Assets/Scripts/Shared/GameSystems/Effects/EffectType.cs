@@ -2,8 +2,18 @@
 public enum EffectType
 {
     Move,
+    OnEnterRQ,
+    PreMoveTiming,
+    PostMoveTiming,
     Damage,
+    PreDamageTiming,
+    PostDamageTiming,
     Heal,
+    PreHealTiming,
+    PostHealTiming,
+    PreCommandTiming,
+    PostCommandTiming,
     Status,
-    StatBuff,    // for PassiveBuff effects — client displays buff icon
+    Passive,    // for PassiveBuff effects — client displays buff icon
+    ApplyBuff
 }

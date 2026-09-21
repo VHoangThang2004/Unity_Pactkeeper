@@ -25,6 +25,8 @@ public class ClientVisualController : MonoBehaviour
     [SerializeField] public GameObject cancelButtonLayer;
     [SerializeField] private CanvasGroup confirmButtonCanvasGroup;
 
+    [SerializeField] private Animator leftCommandLogAnimator;
+
     [SerializeField] public GameObject ActionMenuUI;
     [SerializeField] public TextMeshProUGUI CurrentUnitInfo;
     [SerializeField] public TextMeshProUGUI CurrentUnitSpInfo;
@@ -249,7 +251,7 @@ public class ClientVisualController : MonoBehaviour
         foreach (var effectId in skill.effectIds)
         {
             ClientActiveEffectBase effect = scene.effectRegistry.Get(effectId);
-            scene.SkillDescription.text += " " + effect.GetDescription(session.GetUnitDataById(session.selectedUnitId));
+            scene.SkillDescription.text += " " + effect.GetDescription(session.GetUnitDataById(session.selectedUnitId), scene.effectRegistry);
         }
         scene.SkillCost.text = $"SP Cost: {skill.skillPointCost}";
         scene.StepMultiplier.text = $"Step Cost: {skill.stepCostMultiplier * unit.CurrentStepBase} (x{skill.stepCostMultiplier})";
@@ -403,6 +405,21 @@ public class ClientVisualController : MonoBehaviour
             }
 
         }
+    }
+
+    public IEnumerator ShowCommandLog(bool isShow)
+    {
+        if (isShow)
+            leftCommandLogAnimator.Play("ScrollDown", 0, 0f);
+        else
+            leftCommandLogAnimator.Play("ScrollUp", 0, 0f);
+        if (isShow)
+            yield return new WaitForSeconds(0.35f);
+        foreach (var log in scene.CommandLogs)
+        {
+            log.gameObject?.SetActive(isShow);
+        }
+        scene.clientInteractionSystem.isScrolling = false;
     }
 
     private int ExtractTeamFromLog(string log)

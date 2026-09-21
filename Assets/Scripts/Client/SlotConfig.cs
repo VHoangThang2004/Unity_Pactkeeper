@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class SlotConfig : MonoBehaviour
 {
@@ -15,10 +16,17 @@ public class SlotConfig : MonoBehaviour
 
     [Header("Description Panel")]
     [SerializeField] private GameObject descriptionPanel;
+    [SerializeField] private Transform ContentContainer;
+
     [SerializeField] private TextMeshProUGUI ItemNameText;
     [SerializeField] private TextMeshProUGUI ItemDesctext;
     [SerializeField] private TextMeshProUGUI SkillNameText;
     [SerializeField] private TextMeshProUGUI SkillDescText;
+
+    [SerializeField] private TextMeshProUGUI TargetPatternType;
+    [SerializeField] private PatternInfo TargetPatternInfo;
+    [SerializeField] private TextMeshProUGUI AoePatternType;
+    [SerializeField] private PatternInfo AoePatternInfo;
 
 
     [Header("Select Options Panel")]
@@ -245,6 +253,8 @@ public class SlotConfig : MonoBehaviour
     {
         if (manager?.CurrentUnit == null) return;
         manager.OnClickCloseAll();
+        if (ContentContainer != null)
+            ContentContainer.localPosition = new Vector3(ContentContainer.localPosition.x, 0f, ContentContainer.localPosition.z);
 
         bool hasItem = slotType switch
         {
@@ -291,14 +301,28 @@ public class SlotConfig : MonoBehaviour
 
                         SkillNameText.text = skill?.skillName ?? $"Skill {manager.CurrentUnit.equippedMovementSkillId}";
                         SkillDescText.text = skill.description + " => ";
+                        string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
+                        TargetPatternType.text = $"Target Pattern ({tptype})";
+                        TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
+                        if (skill.effectIds.Length > 0)
+                        {
+                            var effect0 = manager.effectRegistry.Get(skill.effectIds[0]);
+                            if (effect0 != null)
+                            {
+                                string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
+                                AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
+                            }
+                        }
                         foreach (var effectId in skill.effectIds)
                         {
                             ClientActiveEffectBase effect = manager.effectRegistry.Get(effectId);
-                            SkillDescText.text += " " + effect.GetDescription(unit);
+                            SkillDescText.text += " " + effect.GetDescription(unit, manager.effectRegistry);
                         }
                         SkillDescText.text += $"\nSP Cost: {skill.skillPointCost}";
                         SkillDescText.text += $"\nStep multiplier: x{skill.stepCostMultiplier}";
                         SkillDescText.text += $"\nLimit per instant: {instantLimit} | Total Limit: {totalLimit}";
+
                     }
                     break;
                 }
@@ -320,10 +344,23 @@ public class SlotConfig : MonoBehaviour
 
                         SkillNameText.text = skill.skillName;
                         SkillDescText.text = skill.description + " => ";
+                        string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
+                        TargetPatternType.text = $"Target Pattern ({tptype})";
+                        TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
+                        if (skill.effectIds.Length > 0)
+                        {
+                            var effect0 = manager.effectRegistry.Get(skill.effectIds[0]);
+                            if (effect0 != null)
+                            {
+                                string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
+                                AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
+                            }
+                        }
                         foreach (var effectId in skill.effectIds)
                         {
                             ClientActiveEffectBase effect = manager.effectRegistry.Get(effectId);
-                            SkillDescText.text += " " + effect.GetDescription(unit);
+                            SkillDescText.text += " " + effect.GetDescription(unit, manager.effectRegistry);
                         }
                         SkillDescText.text += $"\nSP Cost: {skill.skillPointCost}";
                         SkillDescText.text += $"\nStep multiplier: x{skill.stepCostMultiplier}";
@@ -360,10 +397,23 @@ public class SlotConfig : MonoBehaviour
 
                             SkillNameText.text = skill.skillName;
                             SkillDescText.text = skill.description + " => ";
+                            string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
+                            TargetPatternType.text = $"Target Pattern ({tptype})";
+                            TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
+                            if (skill.effectIds.Length > 0)
+                            {
+                                var effect0 = manager.effectRegistry.Get(skill.effectIds[0]);
+                                if (effect0 != null)
+                                {
+                                    string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
+                                    AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                    AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
+                                }
+                            }
                             foreach (var effectId in skill.effectIds)
                             {
                                 ClientActiveEffectBase effect = manager.effectRegistry.Get(effectId);
-                                SkillDescText.text += " " + effect.GetDescription(unit);
+                                SkillDescText.text += " " + effect.GetDescription(unit, manager.effectRegistry);
                             }
                             SkillDescText.text += $"\nSP Cost: {skill.skillPointCost}";
                             SkillDescText.text += $"\nStep multiplier: x{skill.stepCostMultiplier}";
@@ -402,10 +452,23 @@ public class SlotConfig : MonoBehaviour
 
                             SkillNameText.text = skill.skillName;
                             SkillDescText.text = skill.description + " => ";
+                            string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
+                            TargetPatternType.text = $"Target Pattern ({tptype})";
+                            TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
+                            if (skill.effectIds.Length > 0)
+                            {
+                                var effect0 = manager.effectRegistry.Get(skill.effectIds[0]);
+                                if (effect0 != null)
+                                {
+                                    string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
+                                    AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                    AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
+                                }
+                            }
                             foreach (var effectId in skill.effectIds)
                             {
                                 ClientActiveEffectBase effect = manager.effectRegistry.Get(effectId);
-                                SkillDescText.text += " " + effect.GetDescription(unit);
+                                SkillDescText.text += " " + effect.GetDescription(unit, manager.effectRegistry);
                             }
                             SkillDescText.text += $"\nSP Cost: {skill.skillPointCost}";
                             SkillDescText.text += $"\nStep multiplier: x{skill.stepCostMultiplier}";

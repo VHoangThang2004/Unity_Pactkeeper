@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using Unity.Netcode;
-using Unity.Netcode.Transports.UTP;
 using TMPro;
 
 public class MatchmakingManager : MonoBehaviour
 {
     [Header("Config")]
     [SerializeField] private BackendConfig config;
+    [SerializeField] private SceneConfig sceneConfig;
+
 
     [Header("UI")]
     [SerializeField] private TMP_Text statusText;
@@ -106,24 +106,12 @@ public class MatchmakingManager : MonoBehaviour
 
         if (response.status == "matched")
         {
-            isInQueue = false;
             PlayerSession.MatchId = response.matchId;
-            statusText.text = "Match found! Connecting...";
-            ConnectToServer(response.serverIp, (ushort)response.serverPort);
+            PlayerSession.ServerIp = response.serverIp;
+            PlayerSession.ServerPort = response.serverPort;
+
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.clientMatch);
         }
-    }
-
-    void ConnectToServer(string ip, ushort port)
-    {
-        Debug.Log($"[Matchmaking] Connecting to {ip}:{port}");
-        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetConnectionData(ip, port);
-
-        // Send JWT as connection payload
-        byte[] payload = System.Text.Encoding.UTF8.GetBytes(PlayerSession.Token);
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = payload;
-
-        NetworkManager.Singleton.StartClient();
     }
 
     [System.Serializable]

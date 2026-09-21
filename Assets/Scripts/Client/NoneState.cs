@@ -48,6 +48,6 @@ public class NoneState : IInteractionState
 
     public void ApplyWait()
     {
-        scene.bridge.SendDecisionServerRpc(-1, default, DecisionType.Wait, -1, session.CurrentToken);
+        scene.controller.bridge.SendDecisionServerRpc(-1, default, DecisionType.Wait, -1, session.CurrentToken);
     }
 }

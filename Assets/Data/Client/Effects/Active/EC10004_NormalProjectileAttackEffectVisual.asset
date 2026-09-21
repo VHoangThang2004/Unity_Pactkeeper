@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NormalProjectileAttackEffectVisual
   effectId: 10004
   resolveDuration: 2
+  baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
-  description: damage the target
+  sourceVFXname: ArrowSourceVFX
+  targetVFXname: ArrowTargetVFX

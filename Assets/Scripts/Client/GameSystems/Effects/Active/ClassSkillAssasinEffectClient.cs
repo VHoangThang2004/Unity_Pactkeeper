@@ -5,7 +5,7 @@ using UnityEngine;
 public class ClassSkillAssasinEffectClient : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.Instant;
-    public override string GetDescription(UnitData unit)
+    public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
         return " reactive the movement skill.";
     }
@@ -18,6 +18,8 @@ public class ClassSkillAssasinEffectClient : ClientActiveEffectBase
         if (result.TargetCells == null || result.TargetCells.Count == 0) yield break;
 
         ClientUnit sceneUnit = scene.GetSceneUnitById(result.SourceUnitId);
+        scene.cameraController.CenterOn(sceneUnit.transform.position);
+
         if (sceneUnit == null) yield break;
 
         if (sceneUnit.VFXAnimator != null)

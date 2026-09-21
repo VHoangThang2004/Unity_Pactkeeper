@@ -3,8 +3,39 @@ using Unity.Netcode;
 
 public class SyncedBridge : NetworkBehaviour
 {
-    [SerializeField] private ClientController client;
-    [SerializeField] private ServerController server;
+    private ISyncedBridgeServer server;
+    private ISyncedBridgeClient client;
+
+    public void RegisterServer(ISyncedBridgeServer serverInstance) => server = serverInstance;
+    public void RegisterClient(ISyncedBridgeClient clientInstance) => client = clientInstance;
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            foreach (var mb in FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Exclude))
+            {
+                if (mb is ISyncedBridgeServer s)
+                {
+                    RegisterServer(s);
+                    s.OnBridgeReady(this);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            foreach (var mb in FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Exclude))
+            {
+                if (mb is ISyncedBridgeClient c)
+                {
+                    RegisterClient(c);
+                    c.OnBridgeReady(this);
+                    break;
+                }
+            }
+        }
+    }
 
     // -------------------------------------------------------
     // CLIENT -> SERVER
@@ -13,17 +44,13 @@ public class SyncedBridge : NetworkBehaviour
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void RequestInitialStateServerRpc(RpcParams rpcParams = default)
     {
-        server.HandleAllInitialStateRequest(rpcParams.Receive.SenderClientId);
+        server?.HandleAllInitialStateRequest(rpcParams.Receive.SenderClientId);
     }
 
-    /// <summary>
-    /// Client sends decision. unitId = -1 means wait. Valid unitId means act with that unit moving to target.
-    /// Invalid decisions (wrong unit, out of range, etc.) are silently ignored — timeout counts as wait.
-    /// </summary>
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     public void SendDecisionServerRpc(int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken, RpcParams rpcParams = default)
     {
-        server.HandleDecision(rpcParams.Receive.SenderClientId, unitId, target, decisionType, skillCardId, clientToken);
+        server?.HandleDecision(rpcParams.Receive.SenderClientId, unitId, target, decisionType, skillCardId, clientToken);
     }
 
     // -------------------------------------------------------
@@ -33,22 +60,18 @@ public class SyncedBridge : NetworkBehaviour
     [ClientRpc]
     public void SpawnUnitClientRpc(UnitData unitData, ClientRpcParams clientRpcParams = default)
     {
-        if (client == null) return;
-        client.OnUnitSpawned(unitData);
+        client?.OnUnitSpawned(unitData);
     }
 
     [ClientRpc]
     public void BroadcastTimelineTickClientRpc(TimelineData timelineData)
     {
-        if (client == null) return;
-        client.OnTimelineTick(timelineData);
+        client?.OnTimelineTick(timelineData);
     }
 
     [ClientRpc]
     public void SendSnapshotToClientRpc(SessionSnapshotData before, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token, ClientRpcParams clientRpcParams = default)
     {
-        if (client == null) return;
-        client.OnSnapshotReceived(before, resolve, secret, decision, token);
+        client?.OnSnapshotReceived(before, resolve, secret, decision, token);
     }
-
 }

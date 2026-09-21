@@ -86,7 +86,7 @@ public class UnitSelectedState : IInteractionState
         if (unitId == -1 || skillId == -1) return;
         if (!session.isTargetLocked) return;
 
-        scene.bridge.SendDecisionServerRpc(
+        scene.controller.bridge.SendDecisionServerRpc(
             unitId,
             session.currentPreviewCell,
             DecisionType.ActivateAction,
@@ -109,7 +109,7 @@ public class UnitSelectedState : IInteractionState
         // {
         //     targetable += cell.z;
         // }
-        if (session.CurrentTargetableCells.Count == 1)
+        if (session.CurrentTargetableCells.Count == 1 && session.IsMyUnit(session.selectedUnitId))
         {
             OnTileClick(session.CurrentTargetableCells[0]);
         }

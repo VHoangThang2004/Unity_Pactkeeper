@@ -19,7 +19,7 @@ public class ClientScene : MonoBehaviour
     public ClientVisualController visualController;
     public ClientMatchSession session;
     public ClientInteractionSystem clientInteractionSystem;
-    public SyncedBridge bridge;
+    public ClientController controller;
     public Vector3 offset;
     public InputReader input;
     public ClientCameraController cameraController;

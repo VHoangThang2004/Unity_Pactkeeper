@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 /// <summary>
@@ -9,10 +11,9 @@ using UnityEngine;
 /// routes input to interaction system, routes decisions to bridge.
 /// Does not own any data or scene objects — those live in ClientMatchSession and ClientScene.
 /// </summary>
-public class ClientController : MonoBehaviour
+public class ClientController : MonoBehaviour, ISyncedBridgeClient
 {
-    [Header("Bridge")]
-    [SerializeField] private SyncedBridge bridge;
+    public SyncedBridge bridge;
 
     [Header("Data")]
     [SerializeField] public ClientMatchSession session;
@@ -53,9 +54,29 @@ public class ClientController : MonoBehaviour
     // -------------------------------------------------------
     // Unity
     // -------------------------------------------------------
-
-    void Start()
+    private void Start()
     {
+        ConnectToServer();
+    }
+
+    void ConnectToServer()
+    {
+        var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+
+        transport.SetConnectionData(
+            PlayerSession.ServerIp,
+            (ushort)PlayerSession.ServerPort);
+
+        NetworkManager.Singleton.NetworkConfig.ConnectionData =
+            Encoding.UTF8.GetBytes(PlayerSession.Token);
+
+        NetworkManager.Singleton.StartClient();
+    }
+
+    
+    public void OnBridgeReady(SyncedBridge bridge)
+    {
+        this.bridge = bridge;
         scene.loadingScreen.Show("Loading...");
         StartCoroutine(ClientGuard());
         StartCoroutine(InitSequence());

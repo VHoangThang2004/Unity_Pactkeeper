@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class ServerPassiveEffectBase : EffectBase
@@ -12,6 +13,8 @@ public abstract class ServerPassiveEffectBase : EffectBase
     // Modifies unit derived stats — called by UnitRecalculator
     public virtual void ApplyStatModifier(UnitData unit) { }
 
+    // Modifies patterns
+    public virtual void ApplyPatternModifier(UnitData unit, ServerMatchSession session) { }
     // Returns 1 ResolveResult so client can sync unit data
     public abstract ResolveResult Apply(
         ServerMatchSession session,

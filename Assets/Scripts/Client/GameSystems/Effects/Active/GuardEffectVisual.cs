@@ -5,7 +5,7 @@ using UnityEngine;
 public class GuardEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.Instant;
-    public override string GetDescription(UnitData unit)
+    public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
     {
         return " Swap position with the selected ally target.";
     }
@@ -24,6 +24,9 @@ public class GuardEffectVisual : ClientActiveEffectBase
         ClientUnit sourceSceneUnit = scene.GetSceneUnitById(result.SourceUnitId);
         ClientUnit targetSceneUnit = scene.GetSceneUnitById(targetUnitData.Id);
         if (sourceSceneUnit == null || targetSceneUnit == null) yield break;
+        
+        Vector3 midPoint = (sourceSceneUnit.transform.position + targetSceneUnit.transform.position) / 2f;
+        scene.cameraController.CenterOn(midPoint);
 
         sourceSceneUnit.isResolvingAnimation = true;
         targetSceneUnit.isResolvingAnimation = true;

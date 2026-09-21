@@ -7,13 +7,14 @@ public class SceneConfig : ScriptableObject
     public string loginScene = "1_Login";
     public string devConnectScene = "2_DevConnect";
     public string mainMenuScene = "3_MainMenu";
-    public string lobbyScene = "4_Lobby";
+    public string clientMatch = "5_ClientMatch";
     public string matchResultScene = "6_MatchResult";
     public string unitListScene = "7_UnitList";
     public string unitConfigScene = "8_UnitConfig";
     public string inventoryScene = "9_Inventory";
 
     [Header("Server Scenes")]
-    public string pvpScene = "5_Match";
+    public string lobbyScene = "4_Lobby";
+    public string serverMatch = "5_ServerMatch";
     public string storyScene = "5_Story";
 }

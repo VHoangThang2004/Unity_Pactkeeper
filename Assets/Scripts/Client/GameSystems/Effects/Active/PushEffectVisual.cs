@@ -5,7 +5,7 @@ using UnityEngine;
 public class PushEffectVisual : ClientActiveEffectBase
 {
     public override InstantType InstantType => InstantType.Instant;
-    public override string GetDescription(UnitData unit)
+    public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
         return " Push the selected enemy target.";
     }
@@ -26,6 +26,8 @@ public class PushEffectVisual : ClientActiveEffectBase
         ClientUnit sourceSceneUnit = scene.GetSceneUnitById(result.SourceUnitId);
         ClientUnit targetSceneUnit = scene.GetSceneUnitById(targetUnit.Id);
         if (sourceSceneUnit == null || targetSceneUnit == null) yield break;
+        scene.cameraController.CenterOn(sourceSceneUnit.transform.position);
+
 
         sourceSceneUnit.isResolvingAnimation = true;
         targetSceneUnit.isResolvingAnimation = true;

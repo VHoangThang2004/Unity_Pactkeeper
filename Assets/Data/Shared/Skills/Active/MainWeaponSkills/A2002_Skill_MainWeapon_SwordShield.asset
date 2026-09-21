@@ -18,9 +18,9 @@ MonoBehaviour:
   isTargetPatternFixed: 0
   targeting: 2
   skillPointCost: 0
-  stepCostMultiplier: 0.6
+  stepCostMultiplier: 0.5
   useLimitPerInstant: 1
   useLimitTotal: -1
   effectIds: 12270000
-  icon: {fileID: 7206142068373055434, guid: cbedebeddc861da4cbf79c1db85ce968, type: 3}
-  description: Select an enemy unit within range
+  icon: {fileID: -6717884257390833292, guid: c9196d4d46da80048a14213cf18af5a9, type: 3}
+  description: Select any cell

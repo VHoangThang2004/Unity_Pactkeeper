@@ -46,10 +46,7 @@ MonoBehaviour:
     m_path: Assets/Scenes/3_MainMenu.unity
     m_guid: 014ec378ba428fe4aa45ad1ca7fdee48
   - m_enabled: 1
-    m_path: Assets/Scenes/4_Lobby.unity
-    m_guid: 0bcbaf24d348640438c787e6be462c95
-  - m_enabled: 1
-    m_path: Assets/Scenes/5_Match.unity
+    m_path: Assets/Scenes/5_ClientMatch.unity
     m_guid: 09d259b7cf3b8ca4e89b35242e669969
   - m_enabled: 1
     m_path: Assets/Scenes/6_MatchResult.unity
@@ -146,7 +143,7 @@ MonoBehaviour:
     - line: '|   androidApplicationEntry: 2'
     - line: '|   defaultIsNativeResolution: 1'
     - line: '|   macRetinaSupport: 1'
-    - line: '|   runInBackground: 0'
+    - line: '|   runInBackground: 1'
     - line: '|   muteOtherAudioSources: 0'
     - line: '|   Prepare IOS For Recording: 0'
     - line: '|   Force IOS Speakers When Recording: 0'

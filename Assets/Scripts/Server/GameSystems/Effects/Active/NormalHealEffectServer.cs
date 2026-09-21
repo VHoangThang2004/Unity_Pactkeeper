@@ -1,8 +1,8 @@
 // Server/GameSystems/Effects/Concrete/NormalAttackEffectServer.cs
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
+
 
 [CreateAssetMenu(fileName = "NormalHealEffectServer", menuName = "SRPG/Effects/Server/NormalHeal")]
 public class NormalHealEffectServer : ServerActiveEffectBase

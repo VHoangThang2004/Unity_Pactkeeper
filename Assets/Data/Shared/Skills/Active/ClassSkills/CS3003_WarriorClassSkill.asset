@@ -23,4 +23,4 @@ MonoBehaviour:
   useLimitTotal: -1
   effectIds: 17270000
   icon: {fileID: 133982719826790466, guid: 644d1e3cc140ed54f8a1c2ec5b8e4b12, type: 3}
-  description: Select an enemy unit within range
+  description: Select any unit

@@ -1,7 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -47,8 +46,8 @@ public class LobbyManager : MonoBehaviour
         {
             matchStarted = true;
             Debug.Log("[Lobby] Starting game");
-            string targetScene = backendClient.Mode == "story" ? sceneConfig.storyScene : sceneConfig.pvpScene;
-            NetworkManager.Singleton.SceneManager.LoadScene(targetScene, LoadSceneMode.Single);
+            string targetScene = backendClient.Mode == "story" ? sceneConfig.storyScene : sceneConfig.serverMatch;
+            UnityEngine.SceneManagement.SceneManager.LoadScene(targetScene);
             return;
         }
 
