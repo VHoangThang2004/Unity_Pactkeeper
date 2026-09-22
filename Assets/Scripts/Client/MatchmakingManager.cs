@@ -14,6 +14,10 @@ public class MatchmakingManager : MonoBehaviour
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private GameObject findMatchButton;
     [SerializeField] private GameObject cancelButton;
+    [SerializeField] private GameObject matchFoundPanel;
+    [SerializeField] private TMP_Text player1Text;
+    [SerializeField] private TMP_Text player2Text;
+    [SerializeField] private TMP_Text vsText;
 
     private bool isInQueue = false;
     private Coroutine pollingCoroutine;
@@ -101,8 +105,9 @@ public class MatchmakingManager : MonoBehaviour
             yield break;
         }
 
-        var response = JsonUtility.FromJson<QueueStatusResponse>(request.downloadHandler.text);
-        Debug.Log($"[Matchmaking] Queue status: {response.status}");
+        string rawResponseText = request.downloadHandler.text;
+        var response = JsonUtility.FromJson<QueueStatusResponse>(rawResponseText);
+        Debug.Log($"[Matchmaking] Queue status: {response.status}, player1Name='{response.player1Name}', player2Name='{response.player2Name}', raw: {rawResponseText}");
 
         if (response.status == "matched")
         {
@@ -110,8 +115,44 @@ public class MatchmakingManager : MonoBehaviour
             PlayerSession.ServerIp = response.serverIp;
             PlayerSession.ServerPort = response.serverPort;
 
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.clientMatch);
+            StartCoroutine(ShowMatchLoadingScreenAndLoad(response.player1Name, response.player2Name));
         }
+    }
+
+    IEnumerator ShowMatchLoadingScreenAndLoad(string p1Name, string p2Name)
+    {
+        Debug.Log($"[Matchmaking] ShowMatchLoadingScreenAndLoad: p1Name='{p1Name}', p2Name='{p2Name}'");
+        isInQueue = false;
+        if (pollingCoroutine != null) StopCoroutine(pollingCoroutine);
+
+        findMatchButton.SetActive(false);
+        cancelButton.SetActive(false);
+
+        if (matchFoundPanel != null)
+        {
+            matchFoundPanel.SetActive(true);
+            Debug.Log($"[Matchmaking] matchFoundPanel active. player1Text={player1Text != null}, player2Text={player2Text != null}");
+            if (player1Text != null) 
+            {
+                player1Text.text = p1Name;
+                Debug.Log($"[Matchmaking] Set player1Text.text = '{p1Name}'");
+            }
+            if (player2Text != null) 
+            {
+                player2Text.text = p2Name;
+                Debug.Log($"[Matchmaking] Set player2Text.text = '{p2Name}'");
+            }
+            if (vsText != null) vsText.text = "VS";
+        }
+        else
+        {
+            // Fallback UI using statusText
+            statusText.text = $"Match Found!\n\n{p1Name}\n  VS  \n{p2Name}\n\nLoading game...";
+        }
+
+        yield return new WaitForSeconds(4f);
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.clientMatch);
     }
 
     [System.Serializable]
@@ -121,5 +162,7 @@ public class MatchmakingManager : MonoBehaviour
         public string matchId;
         public string serverIp;
         public int serverPort;
+        public string player1Name;
+        public string player2Name;
     }
 }

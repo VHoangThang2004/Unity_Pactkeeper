@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/5_ClientMatch.unity
     guid: 09d259b7cf3b8ca4e89b35242e669969
   - enabled: 1
+    path: Assets/Scenes/6_MatchResult.unity
+    guid: 7f939e44cb9e81a4eb14d3adc7589739
+  - enabled: 1
     path: Assets/Scenes/7_UnitList.unity
     guid: 20ed26eeab327254ca006c9f88eeaea1
   - enabled: 1
