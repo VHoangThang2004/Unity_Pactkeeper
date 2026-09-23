@@ -19,8 +19,9 @@ public class ClientVisualController : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI instantStatusText;
     [SerializeField] private TextMeshProUGUI instantCounterText;
-    [SerializeField] private TextMeshProUGUI timerBarText;
-    [SerializeField] private Image timerBar;
+    [SerializeField] private Image myTimerBar;
+    [SerializeField] private Image enemyTimerBar;
+
     [SerializeField] public GameObject waitButtonLayer;
     [SerializeField] public GameObject cancelButtonLayer;
     [SerializeField] private CanvasGroup confirmButtonCanvasGroup;
@@ -540,17 +541,6 @@ public class ClientVisualController : MonoBehaviour
     {
         while (true)
         {
-            // Timeline counters
-            if (timerBarText != null)
-                timerBarText.text = session.waitDur > 0 ? "Waiting..." : "Overtime...";
-            if (timerBar != null)
-            {
-                float waitDur = session.waitDur > 0 ? session.waitDur : session.overtimeDur;
-                float maxDur = session.waitDur > 0 ? session.maxWaitDur : session.maxOvertimeDur;
-                timerBar.color = session.waitDur > 0 ? Color.green : Color.red;
-                timerBar.fillAmount = maxDur > 0 ? waitDur / maxDur : 0f;
-            }
-
             if (instantCounterText != null)
                 instantCounterText.text = $"{session.Timeline.currentInstant}/{session.Timeline.maxInstant}";
 
@@ -567,6 +557,22 @@ public class ClientVisualController : MonoBehaviour
 
             // Turn flip — update button visibility on turn change
             bool isMyTurn = session.IsMyTurn();
+
+            var timerBar = isMyTurn ? myTimerBar : enemyTimerBar;
+            var otherBar = isMyTurn ? enemyTimerBar : myTimerBar;
+
+            if (timerBar != null)
+            {
+                float waitDur = session.waitDur > 0 ? session.waitDur : session.overtimeDur;
+                float maxDur = session.waitDur > 0 ? session.maxWaitDur : session.maxOvertimeDur;
+                timerBar.color = session.waitDur > 0 ? Color.green : Color.red;
+                timerBar.fillAmount = maxDur > 0 ? waitDur / maxDur : 0f;
+            }
+            if (otherBar != null)
+            {
+                otherBar.fillAmount = 0;
+            }
+
             if (turnFlip != isMyTurn)
             {
                 UpdateVisualOnStateChange();

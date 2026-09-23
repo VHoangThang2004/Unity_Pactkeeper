@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -10,26 +9,27 @@ public class MainMenuManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text welcomeText;
     [SerializeField] private TMP_Text profileText;
-    [SerializeField] private TMP_Text loadoutText;
-    [SerializeField] private TMP_Text matchHistoryText;
     [SerializeField] private TMP_Text gemsText;
     [SerializeField] private TMP_Text usernameText;
+    [SerializeField] private GameObject loadingScreen;
 
     [Header("Config")]
     [SerializeField] private BackendConfig config;
+    [SerializeField] private SceneConfig sceneConfig;
 
     [Header("Ref")]
     [SerializeField] private MatchmakingManager matchmakingManager;
 
     void Start()
     {
+        loadingScreen?.SetActive(true);
+
         if (!PlayerSession.IsLoggedIn)
         {
             SceneManager.LoadScene("1_Login");
             return;
         }
 
-        // Fallback dynamic lookup if references are not manually wired in Editor
         if (gemsText == null)
         {
             var gemObj = GameObject.Find("Gem");
@@ -54,10 +54,120 @@ public class MainMenuManager : MonoBehaviour
     IEnumerator FetchAllData()
     {
         yield return StartCoroutine(FetchProfile());
-        yield return StartCoroutine(FetchLoadout());
-        yield return StartCoroutine(FetchMatchHistory());
-        yield return new WaitForSeconds(1f);
-        yield return StartCoroutine(matchmakingManager.CheckQueueStatus());
+
+        // ── 1. Ongoing match check ─────────────────────────────────────────
+        bool reconnectedToPvP = false;
+        yield return StartCoroutine(matchmakingManager.FetchCurrentMatch(
+            match =>
+            {
+                if (match.mode == "pvp")
+                {
+                    reconnectedToPvP = true;
+                    StartCoroutine(matchmakingManager.ShowMatchLoadingScreenAndLoad(
+                        match.player1Name, match.player2Name));
+                }
+                // story: PlayerSession already populated by FetchCurrentMatch, flow continues
+            },
+            () => { } // no ongoing match
+        ));
+
+        if (reconnectedToPvP) yield break;
+
+        // ── 2. Story progress ──────────────────────────────────────────────
+        bool stayOnMenu = true;
+        yield return StartCoroutine(StoryClient.GetCurrent(config,
+            progress =>
+            {
+                if (!progress.isChapterCompleted)
+                    stayOnMenu = ResumeStory(progress);
+            }));
+
+        // ── 3. Normal main menu ────────────────────────────────────────────
+        if (stayOnMenu) loadingScreen?.SetActive(false);
+    }
+
+    // -------------------------------------------------------
+    // Story resume
+    // -------------------------------------------------------
+
+    // Returns true if the main menu should stay visible, false if transitioning away.
+    bool ResumeStory(StoryProgressData progress)
+    {
+        Debug.Log($"[MainMenu] Resuming story: " +
+                  $"ch={progress.chapterId} sc={progress.sceneId} " +
+                  $"type={progress.sceneType} completed={progress.isCompleted}");
+
+        if (progress.isCompleted)
+        {
+            if (progress.autoNext)
+            {
+                StartCoroutine(AdvanceStory());
+                return false;
+            }
+            return true; // show main menu, wait for player input
+        }
+
+        var targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
+
+        if (targetScene == SceneManager.GetActiveScene().name)
+        {
+            HandleInlineStory(progress);
+            return true;
+        }
+
+        if (progress.sceneType == "Battle")
+        {
+            if (!string.IsNullOrEmpty(PlayerSession.MatchId))
+                SceneManager.LoadScene(targetScene);
+            else
+                StartCoroutine(RequestAndStartStoryBattle(targetScene));
+            return false;
+        }
+
+        SceneManager.LoadScene(targetScene);
+        return false;
+    }
+
+    IEnumerator RequestAndStartStoryBattle(string targetScene)
+    {
+        yield return StartCoroutine(StoryClient.StartStoryMatch(config,
+            match =>
+            {
+                PlayerSession.MatchId = match.matchId;
+                PlayerSession.ServerIp = match.serverIp;
+                PlayerSession.ServerPort = match.serverPort;
+            },
+            () => Debug.LogError("[MainMenu] Failed to start story battle match.")));
+
+        if (!string.IsNullOrEmpty(PlayerSession.MatchId))
+            SceneManager.LoadScene(targetScene);
+    }
+
+    void HandleInlineStory(StoryProgressData progress)
+    {
+        Debug.Log($"[MainMenu] Inline story ch={progress.chapterId} sc={progress.sceneId}");
+        // TODO: activate tooltip overlay / tutorial panel
+    }
+
+    // -------------------------------------------------------
+    // Story advancement
+    // -------------------------------------------------------
+
+    public IEnumerator CompleteAndContinue()
+    {
+        yield return StartCoroutine(StoryClient.CompleteAndAdvance(
+            config, this,
+            next => ResumeStory(next),
+            () => Debug.LogWarning("[MainMenu] Story advance failed.")
+        ));
+    }
+
+    public IEnumerator AdvanceStory()
+    {
+        yield return StartCoroutine(StoryClient.StartNextScene(config,
+            next => ResumeStory(next),
+            () => Debug.LogWarning("[MainMenu] AdvanceStory failed.")
+        ));
     }
 
     // -------------------------------------------------------
@@ -87,100 +197,17 @@ public class MainMenuManager : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // Loadout
-    // -------------------------------------------------------
-
-    IEnumerator FetchLoadout()
-    {
-        using var request = UnityWebRequest.Get($"{config.backendUrl}/api/TeamLoadout");
-        config.SetHeaders(request, PlayerSession.Token);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            loadoutText.text = "Team: failed to load.";
-            yield break;
-        }
-
-        // Backend returns a JSON array: [1, 2, 3, 4, 5]
-        var wrapper = JsonUtility.FromJson<IntArrayWrapper>("{\"items\":" + request.downloadHandler.text + "}");
-        if (wrapper.items == null || wrapper.items.Length == 0)
-        {
-            loadoutText.text = "Team: empty";
-            yield break;
-        }
-
-        string units = string.Join(", ", System.Array.ConvertAll(wrapper.items, u => $"uId:{u}"));
-        loadoutText.text = $"Team: {units}";
-    }
-
-    // -------------------------------------------------------
-    // Match History
-    // -------------------------------------------------------
-
-    IEnumerator FetchMatchHistory()
-    {
-        using var request = UnityWebRequest.Get($"{config.backendUrl}/api/Match/history");
-        config.SetHeaders(request, PlayerSession.Token);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            matchHistoryText.text = "Matches: failed to load.";
-            yield break;
-        }
-
-        var wrapper = JsonUtility.FromJson<MatchHistoryWrapper>("{\"matches\":" + request.downloadHandler.text + "}");
-        if (wrapper.matches == null || wrapper.matches.Length == 0)
-        {
-            matchHistoryText.text = "Matches: none";
-            yield break;
-        }
-
-        string history = "";
-        foreach (var m in wrapper.matches)
-            history += $"[{m.status.ToUpper()}] {m.matchId.Substring(0, 8)}... {m.serverIp}:{m.serverPort}\n";
-
-        matchHistoryText.text = history.TrimEnd();
-    }
-
-    //-------------------
-    //Wrapper classes for JSON arrays
-    //-------------------
-
-    [System.Serializable]
-    private class IntArrayWrapper { public int[] items; }
-
-    [System.Serializable]
-    private class MatchHistoryWrapper { public MatchEntry[] matches; }
-
-    [System.Serializable]
-    private class MatchEntry
-    {
-        public string matchId;
-        public string player1Id;
-        public string player2Id;
-        public string serverIp;
-        public int serverPort;
-        public string status;
-    }
-    
-    // -------------------------------------------------------
     // Scene Navigation
     // -------------------------------------------------------
 
-
-    [Header("Forwarding scene")]
-    [SerializeField] public SceneConfig sceneConfig;
     public void GoToUnitList()
     {
-        Debug.Log("Navigating to Unit List scene...");
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.unitListScene);
     }
+
     public void GoToGacha()
     {
-        Debug.Log("Navigating to Gacha scene...");
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.gachaScene);
     }

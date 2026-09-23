@@ -11,11 +11,14 @@ public class SceneConfig : ScriptableObject
     public string matchResultScene = "6_MatchResult";
     public string unitListScene = "7_UnitList";
     public string unitConfigScene = "8_UnitConfig";
-    public string inventoryScene = "9_Inventory";
+    public string inventoryScene = "10_Inventory";
     public string gachaScene = "9_Gacha";
+    public string storyScene = "5_ClientStory";
+
 
     [Header("Server Scenes")]
-    public string lobbyScene = "4_Lobby";
+    public string lobbyScene = "4_Lobby"; //pvp, 2 player lobby (waits for 2 players)
+    public string singleLobbyScene = "4_SingleStoryLobby"; //pve-story, 1 player only
     public string serverMatch = "5_ServerMatch";
-    public string storyScene = "5_Story";
+    public string serverStoryScene = "5_ServerStory";
 }

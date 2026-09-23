@@ -57,10 +57,16 @@ public class ServerBootstrap : MonoBehaviour
 
         Debug.Log($"[Bootstrap] Server started on port {port}");
 
-        SceneManager.LoadScene(
-            sceneConfig.lobbyScene,
-            LoadSceneMode.Single
-            );
+        // Route to the correct lobby based on -mode CLI arg.
+        // Mode is known immediately (CLI arg) — no need to wait for backend fetch.
+        string mode = GetModeFromArgs();
+        string targetLobby = mode == "story"
+            ? sceneConfig.singleLobbyScene
+            : sceneConfig.lobbyScene;
+
+        Debug.Log($"[Bootstrap] Mode={mode} — loading lobby '{targetLobby}'");
+
+        SceneManager.LoadScene(targetLobby, LoadSceneMode.Single);
     }
 
     void StartClientFlow()
@@ -77,6 +83,16 @@ public class ServerBootstrap : MonoBehaviour
                 return p;
         Debug.LogWarning("[Bootstrap] No -port arg found — defaulting to 7777.");
         return 7777;
+    }
+
+    string GetModeFromArgs()
+    {
+        string[] args = System.Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+            if (args[i] == "-mode")
+                return args[i + 1];
+        Debug.LogWarning("[Bootstrap] No -mode arg found — defaulting to 'pvp'.");
+        return "pvp";
     }
 
     bool IsServerMode()

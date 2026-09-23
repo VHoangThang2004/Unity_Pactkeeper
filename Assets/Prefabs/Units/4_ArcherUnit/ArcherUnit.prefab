@@ -330,6 +330,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7282712516317533878, guid: 34681d6dae668214ba5e433b1697ed30, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8078598664654727500, guid: 34681d6dae668214ba5e433b1697ed30, type: 3}
       propertyPath: m_Name
       value: UnitAura

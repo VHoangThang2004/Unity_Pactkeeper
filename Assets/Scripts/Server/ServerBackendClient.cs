@@ -86,6 +86,12 @@ public class ServerBackendClient : MonoBehaviour
     public string MatchId { get; private set; } = string.Empty;
     public string Mode { get; private set; } = "pvp";
     public string MapId { get; private set; } = "defaultPvpMap";
+
+    // Story mode only — read from CLI args, set by MatchmakingService.SpawnServer.
+    // Always 0 for PvP matches (never set, never used by PvP code paths).
+    public int ChapterId { get; private set; } = 0;
+    public int SceneId { get; private set; } = 0;
+
     public bool IsReady { get; private set; } = false;
     public string ServerToken { get; private set; } = string.Empty;
     public MatchLoadoutsResponse LoadoutResponse { get; private set; }
@@ -111,6 +117,8 @@ public class ServerBackendClient : MonoBehaviour
     IEnumerator FetchMatchData()
     {
         MatchId = GetMatchIdFromArgs();
+        ChapterId = GetIntArg("-chapterId", 0);
+        SceneId = GetIntArg("-sceneId", 0);
 
         if (string.IsNullOrEmpty(MatchId))
         {
@@ -128,8 +136,9 @@ public class ServerBackendClient : MonoBehaviour
             yield return StartCoroutine(FetchLoadouts());
         else if (Mode == "story")
         {
-            Debug.Log($"[ServerBackendClient] Story mode — MapId={MapId} (placeholder).");
-            // TODO: fetch story data
+            Debug.Log($"[ServerBackendClient] Story mode — chapter={ChapterId} scene={SceneId} " +
+                      $"MapId={MapId}. Fetching player1 loadout (may be unused if scene has local preset).");
+            yield return StartCoroutine(FetchLoadouts());
         }
 
         IsReady = true;
@@ -230,6 +239,31 @@ public class ServerBackendClient : MonoBehaviour
         }));
     }
 
+    // Story mode only — notifies backend the player won a story battle scene.
+    // Called by StoryTimelineManager.EndMatch(), never by PvP code.
+    public IEnumerator ReportBattleComplete(string playerId)
+    {
+        Debug.Log($"[ServerBackendClient] Reporting battle complete for player {playerId} " +
+                  $"chapter={ChapterId} scene={SceneId}");
+
+        string json = $"{{\"playerId\":\"{playerId}\"}}";
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+
+        using var request = new UnityWebRequest(
+            $"{config.backendUrl}/api/story/progress/battle-complete", "POST");
+        request.uploadHandler = new UploadHandlerRaw(body);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        config.SetHeaders(request, ServerToken);
+
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+            Debug.LogError($"[ServerBackendClient] Failed to report battle complete: {request.error}");
+        else
+            Debug.Log("[ServerBackendClient] Battle complete reported successfully.");
+    }
+
     IEnumerator ReportStatus(string status, MatchReportResult result)
     {
         string json = result != null
@@ -273,5 +307,14 @@ public class ServerBackendClient : MonoBehaviour
             if (args[i] == "-matchId")
                 return args[i + 1];
         return string.Empty;
+    }
+
+    private int GetIntArg(string flag, int defaultValue)
+    {
+        string[] args = System.Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+            if (args[i] == flag && int.TryParse(args[i + 1], out int value))
+                return value;
+        return defaultValue;
     }
 }

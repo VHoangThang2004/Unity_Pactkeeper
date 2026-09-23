@@ -404,7 +404,7 @@ public class ClientMatchSession : MonoBehaviour
 
     private void Maintaining()
     {
-        if (Timeline.isPaused)
+        if (Timeline.isPaused && SyncState == SyncStateValue.Idle)
             CountDownDurations();
     }
 

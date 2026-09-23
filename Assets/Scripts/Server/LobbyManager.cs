@@ -2,6 +2,10 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Collections;
 
+/// <summary>
+/// PvP-only lobby. Waits for 2 real players, then loads the standard PvP match scene.
+/// Story matches never reach this script — ServerBootstrap routes them to StoryLobbyManager instead.
+/// </summary>
 public class LobbyManager : MonoBehaviour
 {
     [SerializeField] int requiredPlayers = 2;
@@ -46,8 +50,7 @@ public class LobbyManager : MonoBehaviour
         {
             matchStarted = true;
             Debug.Log("[Lobby] Starting game");
-            string targetScene = backendClient.Mode == "story" ? sceneConfig.storyScene : sceneConfig.serverMatch;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(targetScene);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.serverMatch);
             return;
         }
 

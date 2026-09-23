@@ -597,6 +597,67 @@ public class ServerTimelineManager : MonoBehaviour
     }
 
     // -------------------------------------------------------
+    // AI Decision Entry Point — story mode only.
+    // Called directly by ServerAIController (in-process, no RPC, no token check —
+    // the AI is server-trusted by definition). Still validates turn ownership and
+    // ready-queue membership to catch bugs in the AI controller itself.
+    // -------------------------------------------------------
+    public void HandleAIDecision(int aiTeamId, int unitId, Vector3Int target,
+        DecisionType decisionType, int skillCardId)
+    {
+        if (session.TimelineState != ServerSessionState.DecisionWaiting || !waitingForDecision)
+        {
+            Debug.LogWarning($"[Timeline] AI decision ignored — wrong state ({session.TimelineState}).");
+            return;
+        }
+
+        if (aiTeamId != session.CurrentTeamTurnId)
+        {
+            Debug.LogWarning($"[Timeline] AI decision ignored — not team {aiTeamId}'s turn " +
+                             $"(current={session.CurrentTeamTurnId}).");
+            return;
+        }
+
+        if (unitId == -1)
+        {
+            pendingDecision = null;
+            waitingForDecision = false;
+            Debug.Log($"[Timeline] AI team {aiTeamId} chose wait.");
+            return;
+        }
+
+        if (!session.ReadyUnitIds.Contains(unitId))
+        {
+            Debug.LogWarning($"[Timeline] AI decision ignored — unit {unitId} not ready.");
+            return;
+        }
+
+        var unit = session.GetUnitByUnitId(unitId);
+        if (unit == null || session.GetTeamIdByUnitId(unitId) != aiTeamId)
+        {
+            Debug.LogWarning($"[Timeline] AI decision ignored — unit {unitId} invalid or not owned by AI.");
+            return;
+        }
+
+        SkillDefinition skillDef = session.skillLibrary.Get(skillCardId);
+        if (skillDef != null && !session.CanUseSkill(unitId, skillCardId, skillDef))
+        {
+            Debug.LogWarning($"[Timeline] AI decision ignored — invalid skill usage.");
+            return;
+        }
+
+        LogTeamCommand(aiTeamId, unit, skillDef, target);
+
+        pendingDecision = (unitId, unit.CurrentCell, target, decisionType, skillCardId);
+        waitingForDecision = false;
+        Debug.Log($"[Timeline] AI decision accepted: team={aiTeamId} unit={unitId} target={target}");
+    }
+
+    // Read-only state ServerAIController polls to know when it's the AI's turn.
+    public bool IsWaitingForDecision => waitingForDecision;
+    public int CurrentDecisionTeamId => session.CurrentTeamTurnId;
+
+    // -------------------------------------------------------
     // Tick
     // -------------------------------------------------------
 
@@ -837,11 +898,31 @@ public class ServerTimelineManager : MonoBehaviour
             }
         };
 
-        // Notify clients before shutting down
+        // Notify backend before shutting down
 
         var backendClient = session.backendClient;
         if (backendClient != null)
-            yield return StartCoroutine(backendClient.ReportResult(winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
+        {
+            if (backendClient.Mode == "story")
+            {
+                // Player is always team 0 in story mode. Player wins if AI team (1) is wiped.
+                bool playerWon = team1Units == 0 && team0Units > 0;
+                string storyPlayerId = teams[0].playerId;
+
+                if (playerWon)
+                    yield return StartCoroutine(backendClient.ReportBattleComplete(storyPlayerId));
+                else
+                    Debug.Log("[Timeline] Story battle not won — no progress reported.");
+
+                yield return StartCoroutine(backendClient.ReportResult(
+                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
+            }
+            else
+            {
+                yield return StartCoroutine(backendClient.ReportResult(
+                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
+            }
+        }
         NetworkManager.Singleton.Shutdown();
     }
 

@@ -15,7 +15,14 @@ MonoBehaviour:
   loginScene: 1_Login
   devConnectScene: 2_DevConnect
   mainMenuScene: 3_MainMenu
-  lobbyScene: 4_Lobby
-  pvpScene: 5_Match
-  storyScene: 5_Story
+  clientMatch: 5_ClientMatch
+  matchResultScene: 6_MatchResult
+  unitListScene: 7_UnitList
+  unitConfigScene: 8_UnitConfig
+  inventoryScene: 10_Inventory
   gachaScene: 9_Gacha
+  storyScene: 5_Story
+  lobbyScene: 4_Lobby
+  singleLobbyScene: 4_SingleStoryLobby
+  serverMatch: 5_ServerMatch
+  serverStoryScene: 5_ServerStory

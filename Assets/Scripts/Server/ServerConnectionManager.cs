@@ -41,9 +41,9 @@ public class ServerConnectionManager : MonoBehaviour
 
         if (backendClient?.LoadoutResponse != null)
         {
-            Debug.Log($"[ConnectionManager] LoadoutResponse — p1={backendClient.LoadoutResponse.player1.playerId} p2={backendClient.LoadoutResponse.player2.playerId} checking for playerId={playerId}");
-            string p1 = backendClient.LoadoutResponse.player1.playerId;
-            string p2 = backendClient.LoadoutResponse.player2.playerId;
+            Debug.Log($"[ConnectionManager] LoadoutResponse — p1={backendClient.LoadoutResponse.player1?.playerId} p2={backendClient.LoadoutResponse.player2?.playerId} checking for playerId={playerId}");
+            string p1 = backendClient.LoadoutResponse.player1?.playerId;
+            string p2 = backendClient.LoadoutResponse.player2?.playerId;
 
             if (playerId != p1 && playerId != p2)
             {

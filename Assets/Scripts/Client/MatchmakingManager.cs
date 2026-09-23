@@ -9,7 +9,6 @@ public class MatchmakingManager : MonoBehaviour
     [SerializeField] private BackendConfig config;
     [SerializeField] private SceneConfig sceneConfig;
 
-
     [Header("UI")]
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private GameObject findMatchButton;
@@ -21,11 +20,6 @@ public class MatchmakingManager : MonoBehaviour
 
     private bool isInQueue = false;
     private Coroutine pollingCoroutine;
-
-    private void OnDestroy()
-    {
-        // OnClickCancel();
-    }
 
     public void OnClickFindMatch()
     {
@@ -52,6 +46,12 @@ public class MatchmakingManager : MonoBehaviour
         config.SetHeaders(request, PlayerSession.Token);
 
         yield return request.SendWebRequest();
+
+        if (request.responseCode == 409)
+        {
+            statusText.text = "Already in a match.";
+            yield break;
+        }
 
         if (request.result != UnityWebRequest.Result.Success)
         {
@@ -88,40 +88,70 @@ public class MatchmakingManager : MonoBehaviour
         while (isInQueue)
         {
             yield return new WaitForSeconds(3f);
-            yield return StartCoroutine(CheckQueueStatus());
+
+            using var request = UnityWebRequest.Get($"{config.backendUrl}/api/match/queue/status");
+            config.SetHeaders(request, PlayerSession.Token);
+            yield return request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"[Matchmaking] Poll failed: {request.error}");
+                continue;
+            }
+
+            var response = JsonUtility.FromJson<QueueStatusResponse>(request.downloadHandler.text);
+            Debug.Log($"[Matchmaking] Queue status: {response.status}");
+
+            if (response.status == "matched")
+            {
+                isInQueue = false;
+                if (pollingCoroutine != null) StopCoroutine(pollingCoroutine);
+
+                yield return StartCoroutine(FetchCurrentMatch(
+                    match => StartCoroutine(ShowMatchLoadingScreenAndLoad(match.player1Name, match.player2Name)),
+                    () => Debug.LogError("[Matchmaking] Matched but GET /match/current returned nothing.")
+                ));
+            }
         }
     }
 
-    public IEnumerator CheckQueueStatus()
-    {
-        using var request = UnityWebRequest.Get($"{config.backendUrl}/api/match/queue/status");
-        config.SetHeaders(request, PlayerSession.Token);
+    // -------------------------------------------------------
+    // Public: fetch GET /api/match/current
+    // Saves matchId/serverIp/serverPort to PlayerSession on success.
+    // -------------------------------------------------------
 
+    public IEnumerator FetchCurrentMatch(
+        System.Action<CurrentMatchResponse> onFound,
+        System.Action onNotFound = null)
+    {
+        using var request = UnityWebRequest.Get($"{config.backendUrl}/api/match/current");
+        config.SetHeaders(request, PlayerSession.Token);
         yield return request.SendWebRequest();
 
-        if (request.result != UnityWebRequest.Result.Success)
+        if (request.responseCode == 404 || request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError($"[Matchmaking] Poll failed: {request.error}");
+            PlayerSession.MatchId = string.Empty;
+            PlayerSession.ServerIp = string.Empty;
+            PlayerSession.ServerPort = 7777;
+            onNotFound?.Invoke();
             yield break;
         }
 
-        string rawResponseText = request.downloadHandler.text;
-        var response = JsonUtility.FromJson<QueueStatusResponse>(rawResponseText);
-        Debug.Log($"[Matchmaking] Queue status: {response.status}, player1Name='{response.player1Name}', player2Name='{response.player2Name}', raw: {rawResponseText}");
-
-        if (response.status == "matched")
-        {
-            PlayerSession.MatchId = response.matchId;
-            PlayerSession.ServerIp = response.serverIp;
-            PlayerSession.ServerPort = response.serverPort;
-
-            StartCoroutine(ShowMatchLoadingScreenAndLoad(response.player1Name, response.player2Name));
-        }
+        var match = JsonUtility.FromJson<CurrentMatchResponse>(request.downloadHandler.text);
+        PlayerSession.MatchId = match.matchId;
+        PlayerSession.ServerIp = match.serverIp;
+        PlayerSession.ServerPort = match.serverPort;
+        Debug.Log($"[Matchmaking] Ongoing match found: {match.matchId} mode={match.mode}");
+        onFound?.Invoke(match);
     }
 
-    IEnumerator ShowMatchLoadingScreenAndLoad(string p1Name, string p2Name)
+    // -------------------------------------------------------
+    // Public: show VS screen then load PvP match scene
+    // -------------------------------------------------------
+
+    public IEnumerator ShowMatchLoadingScreenAndLoad(string p1Name, string p2Name)
     {
-        Debug.Log($"[Matchmaking] ShowMatchLoadingScreenAndLoad: p1Name='{p1Name}', p2Name='{p2Name}'");
+        Debug.Log($"[Matchmaking] ShowMatchLoadingScreenAndLoad: {p1Name} vs {p2Name}");
         isInQueue = false;
         if (pollingCoroutine != null) StopCoroutine(pollingCoroutine);
 
@@ -131,22 +161,12 @@ public class MatchmakingManager : MonoBehaviour
         if (matchFoundPanel != null)
         {
             matchFoundPanel.SetActive(true);
-            Debug.Log($"[Matchmaking] matchFoundPanel active. player1Text={player1Text != null}, player2Text={player2Text != null}");
-            if (player1Text != null) 
-            {
-                player1Text.text = p1Name;
-                Debug.Log($"[Matchmaking] Set player1Text.text = '{p1Name}'");
-            }
-            if (player2Text != null) 
-            {
-                player2Text.text = p2Name;
-                Debug.Log($"[Matchmaking] Set player2Text.text = '{p2Name}'");
-            }
+            if (player1Text != null) player1Text.text = p1Name;
+            if (player2Text != null) player2Text.text = p2Name;
             if (vsText != null) vsText.text = "VS";
         }
         else
         {
-            // Fallback UI using statusText
             statusText.text = $"Match Found!\n\n{p1Name}\n  VS  \n{p2Name}\n\nLoading game...";
         }
 
@@ -155,13 +175,23 @@ public class MatchmakingManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.clientMatch);
     }
 
+    // -------------------------------------------------------
+    // DTOs
+    // -------------------------------------------------------
+
     [System.Serializable]
     private class QueueStatusResponse
     {
         public string status;
+    }
+
+    [System.Serializable]
+    public class CurrentMatchResponse
+    {
         public string matchId;
         public string serverIp;
         public int serverPort;
+        public string mode;
         public string player1Name;
         public string player2Name;
     }

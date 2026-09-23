@@ -22,6 +22,7 @@ public class ServerMatchSession : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] private MapRegistry mapRegistry;
+    [SerializeField] private StoryEncounterRegistry storyEncounterRegistry; // story mode only — null in PvP scenes
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public ServerEffectRegistry effectRegistry;
     public List<EffectBase> GlobalActiveEffects { get; set; } = new List<EffectBase>(); public int[] GlobalActiveEffectIds = new int[0];
@@ -109,10 +110,19 @@ public class ServerMatchSession : MonoBehaviour
     {
         backendClient = FindAnyObjectByType<ServerBackendClient>();
 
-        if (backendClient.LoadoutResponse != null)
+        if (backendClient.Mode == "story")
+        {
+            if (!InitStoryLoadouts())
+                return false;
+        }
+        else if (backendClient.LoadoutResponse != null)
+        {
             SetMatchData(backendClient.MatchId, backendClient.LoadoutResponse);
+        }
         else
+        {
             Debug.LogError("[MatchSession] No loadout data from backend — match cannot start correctly!");
+        }
 
         mapRegistry.Init();
         string resolvedMapId = (backendClient != null && !string.IsNullOrEmpty(backendClient.MapId))
@@ -148,6 +158,56 @@ public class ServerMatchSession : MonoBehaviour
             loadouts.Add(ConvertToTeamLoadout(1, data.player2));
 
         Debug.Log($"[MatchSession] Loaded {loadouts.Count} team loadouts from backend.");
+    }
+
+    // -------------------------------------------------------
+    // Story mode only — team 1 (AI) always from local config,
+    // team 0 (player) from local config if preset, else from backend.
+    // -------------------------------------------------------
+    private bool InitStoryLoadouts()
+    {
+        if (storyEncounterRegistry == null)
+        {
+            Debug.LogError("[MatchSession] storyEncounterRegistry not assigned!");
+            return false;
+        }
+
+        storyEncounterRegistry.Init();
+        var encounter = storyEncounterRegistry.Get(backendClient.ChapterId, backendClient.SceneId);
+        if (encounter == null)
+        {
+            Debug.LogError($"[MatchSession] No StoryEncounterConfig for " +
+                           $"chapter={backendClient.ChapterId} scene={backendClient.SceneId}!");
+            return false;
+        }
+
+        loadouts.Clear();
+
+        if (encounter.HasPresetPlayerLoadout)
+        {
+            string fallbackPlayerId = backendClient.LoadoutResponse?.player1?.playerId ?? "UNKNOWN";
+            loadouts.Add(encounter.ToPlayerTeamLoadout(fallbackPlayerId));
+            Debug.Log($"[MatchSession] Story player team — preset loadout " +
+                      $"({encounter.playerUnits.Count} units) playerId={fallbackPlayerId}");
+        }
+        else if (backendClient.LoadoutResponse?.player1 != null)
+        {
+            loadouts.Add(ConvertToTeamLoadout(0, backendClient.LoadoutResponse.player1));
+            Debug.Log($"[MatchSession] Story player team — backend loadout " +
+                      $"playerId={backendClient.LoadoutResponse.player1.playerId}");
+        }
+        else
+        {
+            Debug.LogError("[MatchSession] Story mode — no player loadout available " +
+                           "(neither preset config nor backend data found)!");
+            return false;
+        }
+
+        loadouts.Add(encounter.ToAITeamLoadout());
+        Debug.Log($"[MatchSession] Story AI team — {encounter.aiUnits.Count} units, " +
+                  $"alwaysWait={encounter.alwaysWait}");
+
+        return true;
     }
 
     private TeamLoadout ConvertToTeamLoadout(int teamId, PlayerLoadoutData data)
@@ -192,6 +252,11 @@ public class ServerMatchSession : MonoBehaviour
         };
     }
 
+    // Sentinel — never matches a real connected NGO client.
+    // AI decisions are made in-process (ServerAIController), never via RPC,
+    // so this clientId is never used for an actual network lookup.
+    public const ulong AI_CLIENT_ID = ulong.MaxValue;
+
     private void SetTeamFromLoadout()
     {
         teams = new List<TeamData>();
@@ -202,7 +267,10 @@ public class ServerMatchSession : MonoBehaviour
 
         foreach (var loadout in loadouts)
         {
-            ulong assignedClientId = FindClientIdForPlayerId(loadout.PlayerId, unassigned);
+            ulong assignedClientId = loadout.PlayerId == "AI"
+                ? AI_CLIENT_ID
+                : FindClientIdForPlayerId(loadout.PlayerId, unassigned);
+
             unassigned.Remove(assignedClientId);
 
             loadout.ClientId = assignedClientId;

@@ -11,6 +11,7 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
     [SerializeField] ServerMatchSession session;
     [SerializeField] ServerSpawnManager spawnManager;
     [SerializeField] ServerTimelineManager timeline;
+    [SerializeField] private ServerAIController aiController; // story mode only — leave null in PvP scenes
 
 
     private ServerBackendClient backendClient;
@@ -134,6 +135,13 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         // 8. Start timeline loop
         Debug.Log("[ServerController] Starting timeline.");
         timeline.RunTimeline();
+
+        // 9. Start AI controller — story mode only
+        if (backendClient.Mode == "story" && aiController != null)
+        {
+            aiController.StartAI();
+            Debug.Log("[ServerController] AI controller started.");
+        }
     }
 
     public void HandleAllInitialStateRequest(ulong clientId)

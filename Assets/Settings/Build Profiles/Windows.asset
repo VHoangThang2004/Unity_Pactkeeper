@@ -60,6 +60,12 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/9_Gacha.unity
     m_guid: e60011e8254d2f047b3f33615485e34b
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C0_S0.unity
+    m_guid: e9414f174dd9ddd49bf6279c2c254f02
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C0_S1.unity
+    m_guid: 6625f338745d0c64fbedfb18bf133bef
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
