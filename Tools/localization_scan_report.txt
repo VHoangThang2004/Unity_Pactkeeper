@@ -1,0 +1,610 @@
+﻿=== TABLE: ClientMatch (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\5_ClientMatch.unity) ===
+  KEY: SkillUsageText_key
+    GO: SkillUsageText | Parent: Root | Type: TextMeshProUGUI
+    EN: Limit per instant: 0/1 | Total Limit: \u221E
+
+  KEY: SpCooldownText_key
+    GO: SpCooldownText | Parent: Root | Type: TextMeshProUGUI
+    EN: 0
+
+  KEY: CommandLogText_9_key
+    GO: CommandLogText 9 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_2_key
+    GO: CommandLogText 2 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: CANCEL
+
+  KEY: SkillDescriptionText_key
+    GO: SkillDescriptionText | Parent: Root | Type: TextMeshProUGUI
+    EN: Skill description 1 2 23 23  32 3 2 32 432 4 334  3434 2 234 324 234 324
+
+  KEY: CommandLogText_8_key
+    GO: CommandLogText 8 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_1_key
+    GO: CommandLogText 1 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_0_key
+    GO: CommandLogText 0 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_5_key
+    GO: CommandLogText 5 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_7_key
+    GO: CommandLogText 7 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: SkillpointCostText_key
+    GO: SkillpointCostText | Parent: Root | Type: TextMeshProUGUI
+    EN: SP: ++
+
+  KEY: CommandLogText_3_key
+    GO: CommandLogText 3 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_6_key
+    GO: CommandLogText 6 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: SkillnameText_key
+    GO: SkillnameText | Parent: Root | Type: TextMeshProUGUI
+    EN: Skill name
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: >
+
+  KEY: StepCostMultiText_key
+    GO: StepCostMultiText | Parent: Root | Type: TextMeshProUGUI
+    EN: Step cost: 3 (x0.5)
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: WAIT
+
+  KEY: EffectTypeText_key
+    GO: EffectTypeText | Parent: Root | Type: TextMeshProUGUI
+    EN: HalfInstant
+
+  KEY: CommandLogText_4_key
+    GO: CommandLogText 4 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: TimerBarText_key
+    GO: TimerBarText | Parent: Root | Type: TextMeshProUGUI
+    EN: Overtime
+
+  KEY: InstantStatus_key
+    GO: InstantStatus | Parent: Root | Type: TextMeshProUGUI
+    EN: Your turn
+
+  KEY: CharacterInfoText_key
+    GO: CharacterInfoText | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit Name \nHP       \nSP: +++_\nSpeed 
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Loading...
+
+  KEY: InstantCounter_key
+    GO: InstantCounter | Parent: Root | Type: TextMeshProUGUI
+    EN: 150/150
+
+
+=== TABLE: DevConnect (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\2_DevConnect.unity) ===
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Join game
+
+  KEY: Text_key
+    GO: Text | Parent: Root | Type: TextMeshProUGUI
+    EN: \u200B
+
+  KEY: Placeholder_key
+    GO: Placeholder | Parent: Root | Type: TextMeshProUGUI
+    EN: Username
+
+  KEY: Placeholder_key
+    GO: Placeholder | Parent: Root | Type: TextMeshProUGUI
+    EN: Password
+
+  KEY: Status_key
+    GO: Status | Parent: Root | Type: TextMeshProUGUI
+    EN: ...
+
+
+=== TABLE: Gacha (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\9_Gacha.unity) ===
+  KEY: Title_key
+    GO: Title | Parent: Root | Type: TextMeshProUGUI
+    EN: Result
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 160
+
+  KEY: Content_key
+    GO: Content | Parent: Root | Type: TextMeshProUGUI
+    EN: Content
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: '65/80
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Close
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Rates Detail
+
+  KEY: BannerDesc_key
+    GO: BannerDesc | Parent: Root | Type: TextMeshProUGUI
+    EN: Desc
+
+  KEY: ErrorText_key
+    GO: ErrorText | Parent: Root | Type: TextMeshProUGUI
+    EN: New Text
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 1500
+
+  KEY: Title_key
+    GO: Title | Parent: Root | Type: TextMeshProUGUI
+    EN: Rates Detail
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 11111
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 125,680
+
+  KEY: BannerTitle_key
+    GO: BannerTitle | Parent: Root | Type: TextMeshProUGUI
+    EN: Title
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Button
+
+
+=== TABLE: Lobby (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\4_Lobby.unity) ===
+
+=== TABLE: Login (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\1_Login.unity) ===
+  KEY: Item_Label_key
+    GO: Item Label | Parent: Root | Type: TextMeshProUGUI
+    EN: Option A
+
+  KEY: WelcomeText_key
+    GO: WelcomeText | Parent: Root | Type: TextMeshProUGUI
+    EN: WELCOME TO THE FIRST PLAYTEST!
+
+  KEY: Label_key
+    GO: Label | Parent: Root | Type: TextMeshProUGUI
+    EN: English
+
+  KEY: English_key
+    GO: DropdownOption | Parent: Dropdown | Type: Dropdown
+    EN: English
+
+  KEY: Vietnamese_key
+    GO: DropdownOption | Parent: Dropdown | Type: Dropdown
+    EN: Vietnamese
+
+
+=== TABLE: MainMenu (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\3_MainMenu.unity) ===
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: VS
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: No ongoing event
+
+  KEY: Player2Text_key
+    GO: Player2Text | Parent: Root | Type: TextMeshProUGUI
+    EN: Player2Name
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 11111
+
+  KEY: Player1Text_key
+    GO: Player1Text | Parent: Root | Type: TextMeshProUGUI
+    EN: Player1Name
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Cancel
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 125,680
+
+  KEY: MatchHistoryText_key
+    GO: MatchHistoryText | Parent: Root | Type: TextMeshProUGUI
+    EN: 'History
+
+  KEY: ProfileText_key
+    GO: ProfileText | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Profile
+
+  KEY: LoadoutText_key
+    GO: LoadoutText | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Loadout
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Player
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: '65/80
+
+  KEY: WelcomeText_key
+    GO: WelcomeText | Parent: Root | Type: TextMeshProUGUI
+    EN: Welcome
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Loading...
+
+
+=== TABLE: MatchResult (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\6_MatchResult.unity) ===
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Return
+
+  KEY: result_text_key
+    GO: result text | Parent: Root | Type: TextMeshProUGUI
+    EN: Result
+
+
+=== TABLE: ServerMatch (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\5_ServerMatch.unity) ===
+
+=== TABLE: Shared_LoadingScreen (source: D:\Unity Project\SRPG-SRPG\Assets\Prefabs\UI\LoadingScreen.prefab) ===
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Loading...
+
+
+=== TABLE: Shared_MatchSession (source: D:\Unity Project\SRPG-SRPG\Assets\Prefabs\Units\MatchSessionCanvas.prefab) ===
+  KEY: WaitingCount_key
+    GO: WaitingCount | Parent: Root | Type: TextMeshProUGUI
+    EN: Timeleft : 0s | Overtime : 200s
+
+  KEY: InstantCounter_key
+    GO: InstantCounter | Parent: Root | Type: TextMeshProUGUI
+    EN: 150/150
+
+  KEY: InstantStatus_key
+    GO: InstantStatus | Parent: Root | Type: TextMeshProUGUI
+    EN: Your turn - Decide
+
+  KEY: CharacterInfoText_key
+    GO: CharacterInfoText | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Unit Name:
+
+
+=== TABLE: Shared_OptionContainer (source: D:\Unity Project\SRPG-SRPG\Assets\Prefabs\UI\OptionContainer.prefab) ===
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Equipped
+
+  KEY: OptionName_key
+    GO: OptionName | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Healing charm
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Using
+
+
+=== TABLE: Shared_UnitCanvas (source: D:\Unity Project\SRPG-SRPG\Assets\Prefabs\Units\UnitCanvas.prefab) ===
+  KEY: StepCount_key
+    GO: StepCount | Parent: Root | Type: TextMeshProUGUI
+    EN: 11
+
+
+=== TABLE: Shared_UnitContainer (source: D:\Unity Project\SRPG-SRPG\Assets\Prefabs\UI\UnitContainer.prefab) ===
+  KEY: Name_key
+    GO: Name | Parent: Root | Type: TextMeshProUGUI
+    EN: Paladin
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Select
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Change
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: -> Enter formation
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Configure
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Remove
+
+
+=== TABLE: Story_C0_S0 (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\StoryScenes\C0_S0.unity) ===
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: YOUR NAME?
+
+  KEY: Placeholder_key
+    GO: Placeholder | Parent: Root | Type: TextMeshProUGUI
+    EN: Enter text...
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: CONFIRM
+
+  KEY: Text_key
+    GO: Text | Parent: Root | Type: TextMeshProUGUI
+    EN: \u200B
+
+
+=== TABLE: Story_C0_S1 (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\StoryScenes\C0_S1.unity) ===
+  KEY: SkillUsageText_key
+    GO: SkillUsageText | Parent: Root | Type: TextMeshProUGUI
+    EN: Limit per instant: 0/1 | Total Limit: \u221E
+
+  KEY: SpCooldownText_key
+    GO: SpCooldownText | Parent: Root | Type: TextMeshProUGUI
+    EN: 0
+
+  KEY: CommandLogText_9_key
+    GO: CommandLogText 9 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_2_key
+    GO: CommandLogText 2 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: CANCEL
+
+  KEY: SkillDescriptionText_key
+    GO: SkillDescriptionText | Parent: Root | Type: TextMeshProUGUI
+    EN: Skill description 1 2 23 23  32 3 2 32 432 4 334  3434 2 234 324 234 324
+
+  KEY: CommandLogText_8_key
+    GO: CommandLogText 8 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_1_key
+    GO: CommandLogText 1 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_0_key
+    GO: CommandLogText 0 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_5_key
+    GO: CommandLogText 5 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_7_key
+    GO: CommandLogText 7 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: SkillpointCostText_key
+    GO: SkillpointCostText | Parent: Root | Type: TextMeshProUGUI
+    EN: SP: ++
+
+  KEY: CommandLogText_3_key
+    GO: CommandLogText 3 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: CommandLogText_6_key
+    GO: CommandLogText 6 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: SkillnameText_key
+    GO: SkillnameText | Parent: Root | Type: TextMeshProUGUI
+    EN: Skill name
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: >
+
+  KEY: StepCostMultiText_key
+    GO: StepCostMultiText | Parent: Root | Type: TextMeshProUGUI
+    EN: Step cost: 3 (x0.5)
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: WAIT
+
+  KEY: EffectTypeText_key
+    GO: EffectTypeText | Parent: Root | Type: TextMeshProUGUI
+    EN: HalfInstant
+
+  KEY: CommandLogText_4_key
+    GO: CommandLogText 4 | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID 1 SID
+
+  KEY: TimerBarText_key
+    GO: TimerBarText | Parent: Root | Type: TextMeshProUGUI
+    EN: Overtime
+
+  KEY: InstantStatus_key
+    GO: InstantStatus | Parent: Root | Type: TextMeshProUGUI
+    EN: Your turn
+
+  KEY: CharacterInfoText_key
+    GO: CharacterInfoText | Parent: Root | Type: TextMeshProUGUI
+    EN: Unit Name \nHP       \nSP: +++_\nSpeed 
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Loading...
+
+  KEY: InstantCounter_key
+    GO: InstantCounter | Parent: Root | Type: TextMeshProUGUI
+    EN: 150/150
+
+
+=== TABLE: Story_C0_S1_Server (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\StoryScenes\C0_S1_Server.unity) ===
+
+=== TABLE: StoryLobby (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\4_SingleStoryLobby.unity) ===
+
+=== TABLE: UnitConfig (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\8_UnitConfig.unity) ===
+  KEY: DmgMulti_key
+    GO: DmgMulti | Parent: Root | Type: TextMeshProUGUI
+    EN: Dmg Multiplier : 1.2
+
+  KEY: ItemDescription_key
+    GO: ItemDescription | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Stat ++ +
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Change
+
+  KEY: TS_AOE_key
+    GO: TS_AOE | Parent: Root | Type: TextMeshProUGUI
+    EN: AOE pattern
+
+  KEY: SkillName_key
+    GO: SkillName | Parent: Root | Type: TextMeshProUGUI
+    EN: Holy Sword and Shied ok ok ok ok ok ok ok ok
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Unequip
+
+  KEY: UnitSP_key
+    GO: UnitSP | Parent: Root | Type: TextMeshProUGUI
+    EN: MaxSP: ++++
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Tank
+
+  KEY: DmgReduct_key
+    GO: DmgReduct | Parent: Root | Type: TextMeshProUGUI
+    EN: Dmg Reduction: -0.1
+
+  KEY: ItemName_key
+    GO: ItemName | Parent: Root | Type: TextMeshProUGUI
+    EN: Holy Sword and Shield
+
+  KEY: UnitHP_key
+    GO: UnitHP | Parent: Root | Type: TextMeshProUGUI
+    EN: MaxHP : 5
+
+  KEY: SkillDescription_key
+    GO: SkillDescription | Parent: Root | Type: TextMeshProUGUI
+    EN: 'HP +100
+
+  KEY: CS_TP_key
+    GO: CS_TP | Parent: Root | Type: TextMeshProUGUI
+    EN: Target pattern
+
+  KEY: Name_key
+    GO: Name | Parent: Root | Type: TextMeshProUGUI
+    EN: Healing charm
+
+  KEY: SkillName_key
+    GO: SkillName | Parent: Root | Type: TextMeshProUGUI
+    EN: Holy Sword and Shield
+
+  KEY: Text_TMP_1_key
+    GO: Text (TMP) (1) | Parent: Root | Type: TextMeshProUGUI
+    EN: <-UnitList
+
+  KEY: TS_TP_key
+    GO: TS_TP | Parent: Root | Type: TextMeshProUGUI
+    EN: Target pattern
+
+  KEY: SkillName_key
+    GO: SkillName | Parent: Root | Type: TextMeshProUGUI
+    EN: 'Sword and Shield
+
+  KEY: WS_AOE_key
+    GO: WS_AOE | Parent: Root | Type: TextMeshProUGUI
+    EN: AOE pattern
+
+  KEY: M_AOE_key
+    GO: M_AOE | Parent: Root | Type: TextMeshProUGUI
+    EN: AOE pattern
+
+  KEY: WS_TP_key
+    GO: WS_TP | Parent: Root | Type: TextMeshProUGUI
+    EN: Target pattern
+
+  KEY: Name_key
+    GO: Name | Parent: Root | Type: TextMeshProUGUI
+    EN: Sneaky step
+
+  KEY: UnitSpeed_key
+    GO: UnitSpeed | Parent: Root | Type: TextMeshProUGUI
+    EN: Speed: 104 (BaseStep: 10)
+
+  KEY: SkillDescription_key
+    GO: SkillDescription | Parent: Root | Type: TextMeshProUGUI
+    EN: 'HP  +100
+
+  KEY: M_TP_key
+    GO: M_TP | Parent: Root | Type: TextMeshProUGUI
+    EN: Target pattern
+
+  KEY: Name_key
+    GO: Name | Parent: Root | Type: TextMeshProUGUI
+    EN: Guard!
+
+  KEY: Name_key
+    GO: Name | Parent: Root | Type: TextMeshProUGUI
+    EN: Slash!
+
+  KEY: CS_AOE_key
+    GO: CS_AOE | Parent: Root | Type: TextMeshProUGUI
+    EN: AOE pattern
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Configure
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: -> Enter formation
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Select
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Remove
+
+  KEY: Name_key
+    GO: Name | Parent: Root | Type: TextMeshProUGUI
+    EN: Paladin
+
+  KEY: Text_TMP_key
+    GO: Text (TMP) | Parent: Root | Type: TextMeshProUGUI
+    EN: Loading...
+
+
+=== TABLE: UnitList (source: D:\Unity Project\SRPG-SRPG\Assets\Scenes\7_UnitList.unity) ===
+

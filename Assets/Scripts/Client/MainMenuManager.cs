@@ -44,7 +44,7 @@ public class MainMenuManager : MonoBehaviour
                 usernameText = profileContainer.GetComponentInChildren<TMP_Text>();
         }
 
-        welcomeText.text = $"Welcome, {PlayerSession.Username}!";
+        welcomeText.text = Loc.Format(LocTables.MainMenu, LocKeys.MainMenu.WelcomeUser, PlayerSession.Username);
         if (usernameText != null)
             usernameText.text = PlayerSession.Username;
 
@@ -182,12 +182,12 @@ public class MainMenuManager : MonoBehaviour
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            profileText.text = "Profile: failed to load.";
+            profileText.text = Loc.Get(LocTables.MainMenu, LocKeys.MainMenu.ProfileLoadFailed);
             yield break;
         }
 
         var profile = JsonUtility.FromJson<PlayerProfileResponse>(request.downloadHandler.text);
-        profileText.text = $"Level {profile.level} | EXP {profile.experience}";
+        profileText.text = Loc.Format(LocTables.MainMenu, LocKeys.MainMenu.ProfileFormat, profile.level, profile.experience);
 
         if (gemsText != null)
             gemsText.text = profile.gems.ToString();

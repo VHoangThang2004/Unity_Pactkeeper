@@ -25,7 +25,7 @@ public class MatchmakingManager : MonoBehaviour
     {
         if (!PlayerSession.IsLoggedIn)
         {
-            statusText.text = "Not logged in.";
+            statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.NotLoggedIn);
             return;
         }
         StartCoroutine(JoinQueue());
@@ -38,7 +38,7 @@ public class MatchmakingManager : MonoBehaviour
 
     IEnumerator JoinQueue()
     {
-        statusText.text = "Joining queue...";
+        statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.JoiningQueue);
 
         using var request = new UnityWebRequest($"{config.backendUrl}/api/match/queue/join", "POST");
         request.uploadHandler = new UploadHandlerRaw(new byte[0]);
@@ -49,13 +49,13 @@ public class MatchmakingManager : MonoBehaviour
 
         if (request.responseCode == 409)
         {
-            statusText.text = "Already in a match.";
+            statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.AlreadyInMatch);
             yield break;
         }
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            statusText.text = "Failed to join queue.";
+            statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.FailedJoinQueue);
             Debug.LogError($"[Matchmaking] {request.error}");
             yield break;
         }
@@ -63,7 +63,7 @@ public class MatchmakingManager : MonoBehaviour
         isInQueue = true;
         findMatchButton.SetActive(false);
         cancelButton.SetActive(true);
-        statusText.text = "Finding match...";
+        statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.FindingMatch);
 
         pollingCoroutine = StartCoroutine(PollQueueStatus());
     }
@@ -80,7 +80,7 @@ public class MatchmakingManager : MonoBehaviour
         if (pollingCoroutine != null) StopCoroutine(pollingCoroutine);
         findMatchButton.SetActive(true);
         cancelButton.SetActive(false);
-        statusText.text = "Cancelled.";
+        statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.Cancelled);
     }
 
     IEnumerator PollQueueStatus()
@@ -163,11 +163,17 @@ public class MatchmakingManager : MonoBehaviour
             matchFoundPanel.SetActive(true);
             if (player1Text != null) player1Text.text = p1Name;
             if (player2Text != null) player2Text.text = p2Name;
-            if (vsText != null) vsText.text = "VS";
+            if (vsText != null) vsText.text = Loc.Get(LocTables.MainMenu, LocKeys.MainMenu.Vs);
         }
         else
         {
-            statusText.text = $"Match Found!\n\n{p1Name}\n  VS  \n{p2Name}\n\nLoading game...";
+            statusText.text = Loc.Format(
+                LocTables.MainMenu,
+                LocKeys.Matchmaking.MatchFoundFormat,
+                p1Name,
+                Loc.Get(LocTables.MainMenu, LocKeys.MainMenu.Vs),
+                p2Name,
+                Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.LoadingGame));
         }
 
         yield return new WaitForSeconds(4f);

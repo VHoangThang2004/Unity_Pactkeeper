@@ -1,0 +1,663 @@
+================================================================================
+  SRPG-SRPG — TỔNG QUAN GAMEPLAY, HỆ THỐNG & KIẾN TRÚC
+  (Tài liệu tổng hợp từ codebase — cập nhật: 29/06/2026)
+================================================================================
+
+Mục đích: Ghi lại gameplay, thông tin unit/class, cơ chế chiến đấu, backend,
+ghép trận và các hệ thống liên quan dựa trên mã nguồn Unity hiện tại.
+
+Lưu ý: Tài liệu này được rút ra từ code, không phải GDD/SRS chính thức.
+Nếu bạn có file GDD/SRS, gửi thêm để bổ sung phần thiết kế ý định và lore.
+
+
+================================================================================
+1. TỔNG QUAN GAME
+================================================================================
+
+Tên project : SRPG-SRPG
+Thể loại    : SRPG (Strategy RPG) — PvP chiến thuật theo lưới ô (grid)
+Engine      : Unity + Unity Netcode for GameObjects (UTP transport)
+Kiến trúc   : Server-authoritative (server quyết định logic, client chỉ hiển thị)
+
+Điểm khác biệt so với SRPG turn-based cổ điển:
+- KHÔNG phải "mỗi lượt 1 unit di chuyển rồi hết lượt".
+- Dùng hệ thống TIMELINE + INSTANT: thời gian trôi liên tục, unit "sẵn sàng"
+  khi bộ đếm step về 0, sau đó hai đội xen kẽ ra quyết định trong cửa sổ thời gian.
+
+Chế độ chơi hiện có:
+- PvP (chính) — ghép trận 1v1, mỗi bên tối đa 5 unit
+- Story — đang stub/WIP (có placeholder scene, chưa hoàn thiện)
+
+Meta-game (ngoài trận):
+- Đăng nhập (Google / Steam / Dev login)
+- Quản lý đội hình 5 slot
+- Cấu hình từng unit (skill, vũ khí, trinket)
+- Gacha (rút unit / weapon / trinket / gems)
+- Xem lịch sử trận đấu
+
+
+================================================================================
+2. KIẾN TRÚC HỆ THỐNG (3 TẦNG)
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  UNITY CLIENT                                                               │
+│  - UI, input, animation, hiệu ứng                                          │
+│  - Gọi REST API backend (JWT) cho profile, loadout, matchmaking, gacha     │
+│  - Kết nối Netcode tới Unity Game Server khi đã ghép trận                  │
+└───────────────────────────────┬─────────────────────────────────────────────┘
+                                │ HTTP (JWT)
+                                ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ASP.NET BACKEND — GameInventoryApi (repo riêng, không nằm trong Unity)  │
+│  - Auth, inventory, loadout, match queue, spawn game server              │
+│  - Lưu player data (unit ID, grade, equipment ownership, formation)      │
+│  - KHÔNG lưu combat stats chi tiết — stats tính lúc vào trận              │
+│  Local dev : http://localhost:5276                                        │
+│  Production: http://srpg-backend.duckdns.org:5276                          │
+│  VPS       : 103.110.87.249                                                 │
+└───────────────────────────────┬─────────────────────────────────────────────┘
+                                │ spawn process + cung cấp loadout
+                                ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  UNITY HEADLESS SERVER (Dedicated Server build)                             │
+│  - Chạy với args: -server -matchId <guid> -port <port> -batchmode         │
+│  - Scene Lobby → chờ 2 client → Scene ServerMatch                          │
+│  - ServerTimelineManager: logic combat, snapshot, báo kết quả về backend   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Nguyên tắc quan trọng:
+> Database chỉ lưu ID unit / equipment — KHÔNG lưu stats combat.
+> Stats, skill pattern, effect logic nằm trong Unity assets (.asset).
+> Cân bằng game = sửa asset + ship build mới, không cần migrate DB.
+
+
+================================================================================
+3. LUỒNG SCENE & TRẢI NGHIỆM NGƯỜI CHƠI
+================================================================================
+
+Scene flow (Assets/Scenes/):
+
+  0_Bootstrap      → Phân nhánh client vs dedicated server
+  1_Login          → Google / Steam / Dev login
+  2_DevConnect     → Kết nối local dev (bỏ qua login thật)
+  3_MainMenu       → Profile, loadout preview, nút Find Match
+  4_Lobby          → (Server) chờ đủ 2 người
+  5_ClientMatch    → (Client) xem & điều khiển trận
+  5_ServerMatch    → (Server) mô phỏng trận
+  6_MatchResult    → Kết quả sau trận
+  7_UnitList       → Chọn đội hình 5 slot
+  8_UnitConfig     → Cấu hình skill / weapon / trinket cho từng unit
+  9_Gacha          → Rút thưởng
+  9_Inventory      → (đã khai báo trong SceneConfig, có thể WIP)
+
+Luồng PvP điển hình:
+  Login → Main Menu → (tuỳ chọn chỉnh formation/config) → Find Match
+  → Backend ghép cặp → spawn headless server → Client nhận IP/port
+  → Client kết nối Netcode + gửi JWT → Lobby đủ 2 người → vào trận
+  → Hết trận → Server báo backend → Client xem Match Result
+
+
+================================================================================
+4. ACTOR / ROLE / UNIT — THUẬT NGỮ & ĐỊNH NGHĨA
+================================================================================
+
+Trong codebase KHÔNG có class tên "Actor" hay "Role" cho gameplay.
+"role" chỉ xuất hiện trong response đăng nhập backend (LoginResponse.role).
+
+Hệ thống dùng 3 khái niệm chính:
+
+  UNIT (nhân vật)     — Loại nhân vật, định danh bằng uId (permanent type ID)
+  CLASS (lớp nghề)    — classId 1–6, quyết định movement skill & class skill pool
+  TEAM (đội)          — 2 đội PvP, mỗi đội 1 player, tối đa 5 unit
+
+──────────────────────────────────────────────────────────────────────────────
+4.1. Unit Type (uId) — Danh sách hiện tại
+──────────────────────────────────────────────────────────────────────────────
+
+| uId | Tên hiển thị | Class tương ứng (classId) |
+|-----|---------------|-----------------------------|
+|  1  | Assasin       | 1 — Assassin                |
+|  2  | Paladin       | 2 — Tank                    |
+|  3  | Viking        | 3 — Warrior                 |
+|  4  | Archer        | 4 — Archer                  |
+|  5  | Doc           | 5 — Physician               |
+|  6  | Druid         | 6 — Druid                   |
+
+Nguồn: Assets/Data/Client/Units/UnitPrefabRegistry.asset
+- uId map tới prefab visual (client only)
+- uId bắt đầu từ 1, không dùng 0
+- Một khi uId đã production, không đổi / không tái sử dụng
+
+──────────────────────────────────────────────────────────────────────────────
+4.2. Class (classId 1–6)
+──────────────────────────────────────────────────────────────────────────────
+
+Class quyết định:
+- Pool movement skill (1001–1006)
+- Pool class skill (3001–3006)
+- Weapon có thể trang bị (weapon có classId riêng)
+
+Icon UI: Assets/Data/Client/ClassDefinitionRegistry.asset
+
+──────────────────────────────────────────────────────────────────────────────
+4.3. Unit sở hữu (meta — trên backend)
+──────────────────────────────────────────────────────────────────────────────
+
+Mỗi player sở hữu nhiều unit qua OwnedUnitDto:
+
+  ownedUnitId          — ID instance duy nhất trên DB
+  unitDefinitionUId    — uId loại unit (1–6)
+  grade                — cấp độ / tier unit
+  unlockedClassIds[]   — các class đã mở cho unit này
+  equippedMovementSkillId
+  equippedClassSkillId
+  equippedOwnedWeaponId
+  equippedOwnedTrinketId
+
+Profile player còn có: level, experience, gems, ownedWeapons[], ownedTrinkets[]
+
+──────────────────────────────────────────────────────────────────────────────
+4.4. Unit runtime (trong trận — UnitData)
+──────────────────────────────────────────────────────────────────────────────
+
+UnitData tồn tại chỉ trong bộ nhớ khi trận đang chạy. Server tạo từ loadout
+backend + tính toán stats. Client nhận qua Netcode snapshot/RPC.
+
+Identity:
+  Id            — ID instance trong trận (unique per match)
+  UId           — loại unit (1–6)
+  CurrentCell   — vị trí trên lưới
+
+Combat:
+  CurrentHP, MaxHP
+  CurrentSkillPoint, MaxSkillPoint
+  DamageMultiplier (%), DamageReduction (%)
+
+Timeline:
+  CurrentStep, NextStep, CurrentStepBase
+  Speed
+
+5 Skill slots:
+  MovementSkillId, WeaponSkillId, ClassSkillId, TrinketSkillId, PassiveSkillId
+
+Khác:
+  SkillUsages[]      — số lần đã dùng skill (giới hạn per instant / total)
+  SkillPatterns[]    — pattern đã được server dịch & lọc, client đọc để hiển thị
+  ActiveEffectIds[]  — buff/debuff đang active
+
+──────────────────────────────────────────────────────────────────────────────
+4.5. Cách tính stats khi vào trận
+──────────────────────────────────────────────────────────────────────────────
+
+ServerMatchSession.ConvertToTeamLoadout() cộng dồn:
+
+  gradeStats (từ backend theo grade)
+    + stat modifier từ equipped weapon
+    + stat modifier từ equipped trinket
+
+gradeStats gồm: maxHP, maxSkillPoint, speed, damageMultiplier, damageReduction
+
+Effect/buff trong trận có thể thay đổi stats tạm thời qua UnitRecalculator.
+
+
+================================================================================
+5. CƠ CHẾ GAMEPLAY — TIMELINE & INSTANT
+================================================================================
+
+File lõi: Assets/Scripts/Server/ServerTimelineManager.cs
+Config   : Assets/Data/Shared/PvPMatchConfig.asset
+
+──────────────────────────────────────────────────────────────────────────────
+5.1. Khái niệm Instant
+──────────────────────────────────────────────────────────────────────────────
+
+Một trận gồm nhiều "instant" (bước thời gian), tối đa 150 instant (config).
+Mỗi instant có 2 phase:
+
+  FLOWING  — thời gian trôi, unit tick step, buff tick, có thể regen SP
+  PAUSED   — có unit ready → hai đội xen kẽ ra lệnh trong cửa sổ chờ
+
+Tham số PvP (PvPMatchConfig.asset):
+  maxInstant                        = 150
+  instantDuration                   = 0.3 giây (visual pacing giữa instant)
+  actWaitWindowPerInstantPerReadyUnit = 15 giây (cửa sổ chờ mỗi unit ready)
+  maxWaitDurationMultiplier         = 5
+  overtimePerTeam                   = 200 giây (thời gian dự trữ/overtime)
+  conseRegenCap                     = 5 (số instant không ra lệnh trước khi +1 SP)
+  effectsChangedWaitDuration        = 1 giây
+
+──────────────────────────────────────────────────────────────────────────────
+5.2. Hệ thống Speed / Step (giống CT — Charge Time)
+──────────────────────────────────────────────────────────────────────────────
+
+Mỗi unit có Speed. Server map Speed → khoảng step cần chờ trước khi ready.
+Config: Assets/Data/Server/SpeedConfig_PVP_Patch1.asset
+
+Ví dụ:
+  Speed 0–109   → 10 step
+  Speed 110–119 → 9–10 step
+  Speed 120–129 → 9 step
+  Speed 130–139 → 8–9 step
+  Speed 140–149 → 8 step
+  Speed 150–159 → 7–8 step
+
+Mỗi instant FLOWING: CurrentStep giảm 1. Khi CurrentStep == 0 → vào Ready Queue.
+
+──────────────────────────────────────────────────────────────────────────────
+5.3. Vòng lặp chính mỗi Instant
+──────────────────────────────────────────────────────────────────────────────
+
+1. FLOWING
+   - Regen SP (nếu unit không ra lệnh đủ conseRegenCap instant liên tiếp)
+   - Tick step tất cả unit
+   - Tick duration buff/effect
+   - Cập nhật Ready Queue
+   - Broadcast tick hoặc snapshot
+
+2. Kiểm tra kết thúc sớm:
+   - Cả hai đội pass 3 instant liên tiếp (không có unit ready mới) → hết trận
+   - Chỉ còn 1 đội còn unit sống → hết trận
+
+3. INSTANT PAUSED — Decision Loop
+   - Hai đội xen kẽ (FlaggedTeamId xác định đội đi trước)
+   - Đội active có WaitDuration = 15s × số unit ready của đội đó
+   - Player gửi quyết định qua Netcode:
+       ActivateAction — dùng skill lên ô mục tiêu
+       Wait           — bỏ lượt unit đó trong instant này
+   - Skill resolve theo InstantType (xem mục 6)
+
+4. Cuối instant:
+   - Resolve effect NonInstant (theo thứ tự speed)
+   - Apply step cost sau khi dùng skill
+   - Broadcast snapshot
+   - CurrentInstant++
+
+5. Hết 150 instant → trận kết thúc (theo số unit còn sống nếu hòa)
+
+──────────────────────────────────────────────────────────────────────────────
+5.4. Skill Point (SP)
+──────────────────────────────────────────────────────────────────────────────
+
+- Mỗi skill có skillPointCost (0 hoặc 1+)
+- Nếu unit không ra lệnh trong instant, ConsecutiveRegenInstants tăng
+- Sau conseRegenCap (5) instant liên tiếp không ra lệnh → +1 SP, reset counter
+- Unit đã ra lệnh trong instant → reset ConsecutiveRegenInstants
+
+──────────────────────────────────────────────────────────────────────────────
+5.5. Điều kiện thắng / thua
+──────────────────────────────────────────────────────────────────────────────
+
+Trận kết thúc khi:
+  a) Một đội bị wipe (không còn unit sống)
+  b) 3 instant liên tiếp không có unit mới ready (cả hai đội pass)
+  c) Đạt maxInstant (150)
+
+Xác định thắng: đội còn nhiều unit sống hơn.
+Nếu bằng nhau → winnerId rỗng (hòa).
+
+Server gọi ReportResult() về backend, sau đó shutdown Netcode.
+
+
+================================================================================
+6. HỆ THỐNG SKILL
+================================================================================
+
+Định nghĩa: Assets/Scripts/Shared/GameSystems/Skills/SkillDefinition.cs
+Thư viện  : Assets/Data/Shared/Skills/SkillLibrary.asset
+
+Mỗi unit có tối đa 5 slot skill (từ loadout backend):
+
+  Slot      | ID band   | Nguồn
+  ----------|-----------|------------------------------------------
+  Movement  | 1001–1006 | Class movement skill
+  Weapon    | 2001–2006 | Từ vũ khí đang trang bị
+  Class     | 3001–3006 | Class skill đã chọn
+  Trinket   | 4002–4004 | Từ trinket đang trang bị
+  Passive   | (varies)  | Passive skill (nếu có)
+
+──────────────────────────────────────────────────────────────────────────────
+6.1. Bảng skill hiện có
+──────────────────────────────────────────────────────────────────────────────
+
+MOVEMENT (100x):
+  1001 Sneaky Steps          — Assassin
+  1002 Tanky Movement        — Tank
+  1003 Warrior's Movement    — Warrior
+  1004 Archer's Movement     — Archer
+  1005 Physician's Movement  — Physician
+  1006 Druid's Movement      — Druid
+
+WEAPON (200x):
+  2001 Dagger Thrust         — Dagger
+  2002 Defensive Slash       — Sword + Shield
+  2003 Axe swing             — Axe
+  2004 Accurate shot         — Bow
+  2005 Heal!                 — Book
+  2006 Thorns attack!        — Staff
+
+CLASS (300x):
+  3001 Limit break!          — Assassin
+  3002 Guard!                — Tank
+  3003 Push!                 — Warrior
+  3004 Focused aim.          — Archer
+  3005 Triage!               — Physician
+  3006 Pull!                 — Druid
+
+TRINKET (400x):
+  4002 Far Sight!
+  4003 Turbo!
+  4004 Sharp sight!
+
+──────────────────────────────────────────────────────────────────────────────
+6.2. Thuộc tính SkillDefinition
+──────────────────────────────────────────────────────────────────────────────
+
+  skillId, skillName
+  targetPattern        — ScriptableObject pattern (ô có thể chọn)
+  isTargetPatternFixed — pattern cố định hay xoay theo hướng
+  targeting            — TargetFilter (AnyCell, EmptyCell, EnemyUnit, AllyUnit...)
+  skillPointCost
+  stepCostMultiplier   — nhân với step base sau khi dùng skill
+  useLimitPerInstant   — -1 = không giới hạn
+  useLimitTotal        — -1 = không giới hạn
+  effectIds[]          — tham chiếu effect server (active skill thường 1 effect)
+
+──────────────────────────────────────────────────────────────────────────────
+6.3. InstantType — Cách skill resolve
+──────────────────────────────────────────────────────────────────────────────
+
+  Instant      — Không rời Ready Queue, resolve ngay
+  HalfInstant  — Rời Ready Queue, resolve ngay
+  NonInstant   — Rời Ready Queue, resolve cuối instant theo thứ tự speed
+  PassiveBuff  — Chỉ sửa stat, không animation resolve
+
+
+================================================================================
+7. HỆ THỐNG EFFECT
+================================================================================
+
+Tách registry server / client:
+
+  Server: Assets/Data/Server/Effects/ServerEffectRegistry.asset
+  Client: Assets/Data/Client/Effects/ClientEffectRegistry.asset
+
+Server chạy logic; client chỉ hiển thị visual tương ứng.
+
+Effect types đã implement (từ codebase):
+  Active   : Move, NormalAttack, NormalProjectileAttack, NormalHeal,
+             Guard, Push, Pull, ApplyBuff, ClassSkillAssassin, Triage
+  Passive  : FocusedAim, HorizontalReach, VerticalReach,
+             MovementHorizontalReach, MovementVerticalReach
+
+Pattern resolve: ServerPatternResolver, UnitRecalculator (server only)
+
+
+================================================================================
+8. LƯỚI & BẢN ĐỒ
+================================================================================
+
+  GridMap / GridMapAsset  — walkability bake từ tilemap
+  MapRegistry             — Assets/Data/Shared/Maps/MapRegistry.asset
+  Map PvP hiện tại        — mapId: MD_PVP_001 (defaultPvpMap fallback)
+
+Mỗi map asset chứa:
+  - Lưới ô đi được / không đi được
+  - Spawn point theo team
+
+Backend có thể chỉ định mapId khi tạo match (MatchInfoResponse.mapId).
+
+
+================================================================================
+9. BACKEND — GameInventoryApi
+================================================================================
+
+Repo backend: C:\Users\Admin\GameInventoryApi (ngoài Unity project)
+Chạy local  : dotnet run (port 5276)
+Production  : VPS 103.110.87.249, path ~/unnamed-srpg-backend
+
+──────────────────────────────────────────────────────────────────────────────
+9.1. API Endpoints (từ Unity client/server)
+──────────────────────────────────────────────────────────────────────────────
+
+AUTH:
+  POST /api/auth/login          — Server credentials login
+  POST /api/Auth/login          — Dev client login
+  POST /api/Auth/steam          — Steam login
+  GET  /api/auth/google-callback — Google OAuth redirect
+
+PROFILE & INVENTORY:
+  GET  /api/PlayerProfile
+  GET  /api/PlayerProfile/unit/{ownedUnitId}
+  PUT  /api/PlayerProfile/unit/{ownedUnitId}
+
+FORMATION:
+  GET  /api/TeamLoadout
+  PUT  /api/TeamLoadout         — Lưu đội hình 5 slot (mảng uId / owned unit)
+
+EQUIPMENT DEFINITIONS:
+  GET  /api/WeaponDefinition
+  GET  /api/TrinketDefinition
+
+CLASS SKILLS:
+  POST /api/ClassDefinition/movement-skills  — body: { classIds: [...] }
+  POST /api/ClassDefinition/class-skills
+
+MATCHMAKING:
+  POST   /api/match/queue/join
+  DELETE /api/match/queue/leave
+  GET    /api/match/queue/status   — poll mỗi 3 giây
+
+MATCH (server-side):
+  GET   /api/match/{matchId}/info      — mode, mapId
+  GET   /api/match/{matchId}/loadouts  — loadout 2 player
+  PATCH /api/match/{matchId}/status    — completed / cancelled
+
+MATCH HISTORY:
+  GET /api/Match/history
+  GET /api/match/history/{id}
+
+GACHA:
+  GET  /api/gachabanner/active
+  GET  /api/gachabanner/{id}/droprates
+  POST /api/gacha/pull
+
+──────────────────────────────────────────────────────────────────────────────
+9.2. Dữ liệu backend LƯU vs KHÔNG LƯU
+──────────────────────────────────────────────────────────────────────────────
+
+LƯU trên DB:
+  - Player profile (level, exp, gems)
+  - Owned units (uId, grade, unlocked classes, equipment refs, skill choices)
+  - Owned weapons / trinkets
+  - Formation (thứ tự unit trong đội)
+  - Match history, queue state
+
+KHÔNG LƯU trên DB (nằm trong Unity assets):
+  - Combat stats chi tiết (HP, speed, damage multiplier...)
+  - Skill pattern, effect logic
+  - Map walkability
+  - Speed tier table
+
+
+================================================================================
+10. GHÉP TRẬN & NETWORKING
+================================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+10.1. Matchmaking flow (Client)
+──────────────────────────────────────────────────────────────────────────────
+
+File: Assets/Scripts/Client/MatchmakingManager.cs
+
+1. Player bấm Find Match
+2. POST /api/match/queue/join (JWT header)
+3. Poll GET /api/match/queue/status mỗi 3 giây
+4. Khi status == "matched":
+     - Lưu matchId, serverIp, serverPort vào PlayerSession
+     - Load scene 5_ClientMatch
+5. ClientController kết nối Unity Transport tới game server
+
+Hủy queue: DELETE /api/match/queue/leave
+
+──────────────────────────────────────────────────────────────────────────────
+10.2. Game Server startup (Backend → Headless Unity)
+──────────────────────────────────────────────────────────────────────────────
+
+Backend spawn process:
+  SRPG_SERVER.exe -server -matchId <guid> -port <port> -batchmode -nographics
+
+ServerBootstrap:
+  - Parse -port (default 7777)
+  - Start Netcode server trên 0.0.0.0:port
+  - Load scene 4_Lobby
+
+ServerBackendClient (trên game server):
+  1. Login server credentials → POST /api/auth/login
+  2. GET /api/match/{matchId}/info
+  3. GET /api/match/{matchId}/loadouts
+  4. IsReady = true
+
+LobbyManager:
+  - Chờ backend ready
+  - Poll số client kết nối mỗi 1 giây
+  - Đủ 2 player → load 5_ServerMatch
+  - Timeout 120 giây → shutdown + PATCH status cancelled
+
+──────────────────────────────────────────────────────────────────────────────
+10.3. Xác thực kết nối client
+──────────────────────────────────────────────────────────────────────────────
+
+File: Assets/Scripts/Server/ServerConnectionManager.cs
+
+- Client gửi JWT trong ConnectionData (payload Netcode)
+- Server decode playerId qua TokenHelper
+- Chỉ approve nếu playerId khớp player1 hoặc player2 trong loadout
+- MatchIdentityRegistry map clientId ↔ playerId
+
+──────────────────────────────────────────────────────────────────────────────
+10.4. Đồng bộ trong trận (SyncedBridge)
+──────────────────────────────────────────────────────────────────────────────
+
+Client → Server:
+  RequestInitialStateServerRpc   — xin snapshot ban đầu
+  SendDecisionServerRpc          — gửi quyết định (unit, target, skill, Wait/Action)
+
+Server → Clients:
+  SpawnUnitClientRpc
+  BroadcastTimelineTickClientRpc — tick nhẹ khi không có thay đổi lớn
+  SendSnapshotToClientRpc        — full snapshot + resolve data
+
+ClientMatchSession state machine: Idle / Syncing / Resolving
+
+
+================================================================================
+11. META-GAME — ĐỘI HÌNH, CẤU HÌNH, GACHA
+================================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+11.1. Đội hình (Formation) — 5 slot cố định
+──────────────────────────────────────────────────────────────────────────────
+
+File: Assets/Scripts/Client/UnitListManager.cs
+  - GET /api/TeamLoadout → danh sách unit trong formation
+  - Kéo thả unit từ inventory vào 5 slot
+  - PUT /api/TeamLoadout khi lưu
+
+Formation quyết định unit nào vào trận và thứ tự spawn.
+
+──────────────────────────────────────────────────────────────────────────────
+11.2. Cấu hình unit (Unit Config)
+──────────────────────────────────────────────────────────────────────────────
+
+File: Assets/Scripts/Client/UnitConfigManager.cs
+
+Cho từng owned unit, player chọn:
+  - Movement skill (theo unlocked class)
+  - Class skill
+  - Weapon (owned, phải đúng class)
+  - Trinket (owned)
+  - Passive skill
+
+Lưu qua PUT /api/PlayerProfile/unit/{ownedUnitId}
+
+──────────────────────────────────────────────────────────────────────────────
+11.3. Gacha
+──────────────────────────────────────────────────────────────────────────────
+
+File: Assets/Scripts/Client/GachaManager.cs
+
+  - GET banner active
+  - Pull: Single / Five / Ten (gems)
+  - Reward types: Unit, Weapon, Trinket, Gems
+  - Có pity threshold, duplicate compensation gems
+  - Xem drop rates: GET /api/gachabanner/{id}/droprates
+
+
+================================================================================
+12. CẤU TRÚC CODE UNITY
+================================================================================
+
+Assets/Scripts/
+  Shared/     — Data types, grid, skills, SyncedBridge, configs dùng chung
+  Server/     — ServerTimelineManager, ServerMatchSession, effects, spawn
+  Client/     — UI, input, visuals, matchmaking, gacha, unit config
+
+Assets/Data/
+  Shared/     — Skills, Maps, PvPMatchConfig
+  Server/     — Effects, SpeedConfig, ServerBackendConfig
+  Client/     — UnitPrefabRegistry, Class/Weapon/Trinket registries,
+                Client effects, GachaBannerRegistry, ClientBackendConfig
+
+Packages chính (Packages/manifest.json):
+  - Unity Netcode for GameObjects
+  - Unity Transport (UTP)
+  - Unity Dedicated Server
+  - Steamworks.NET
+  - 2D Tilemap
+
+
+================================================================================
+13. TÀI LIỆU LIÊN QUAN TRONG PROJECT
+================================================================================
+
+  UnitRelated_Readme.txt   — Mô tả unit system (MỘT PHẦN ĐÃ LỖI THỜI:
+                             tham chiếu UnitDefinition/UnitLibrary không còn
+                             trong repo; stats giờ tính từ backend loadout)
+  CMD_commands.txt         — Lệnh deploy backend/server, VPS ops
+  GameOverview_Vietnamese.txt — File này
+
+
+================================================================================
+14. WIP / GHI CHÚ / HẠN CHẾ HIỆN TẠI
+================================================================================
+
+- Story mode: có scene placeholder (5_Story), loadout fetch bị skip
+- UnitRelated_Readme.txt chưa cập nhật theo kiến trúc backend-driven
+- Không có GDD/SRS trong repo — cần bổ sung từ tài liệu thiết kế nếu có
+- Backend source nằm repo riêng (GameInventoryApi), chi tiết DB schema
+  cần đọc thêm từ backend project
+- Inventory scene (9_Inventory) khai báo nhưng có thể chưa hoàn thiện
+- Match end khi đạt maxInstant: code có TODO trigger match end flow đầy đủ
+- Assassin unit name viết "Assasin" (typo trong asset, chưa sửa)
+
+
+================================================================================
+15. GỢI Ý BỔ SUNG TỪ GDD/SRS (nếu bạn gửi thêm)
+================================================================================
+
+Các phần thường có trong GDD/SRS mà code chưa thể hiện đầy đủ:
+  - Lore, cốt truyện, worldbuilding
+  - Roadmap class/unit mới
+  - Công thức grade scaling chi tiết
+  - Economy balancing (gem income, gacha rates chính thức)
+  - UX flow chi tiết, tutorial
+  - Anti-cheat policy, reconnect UX
+  - Ranking / MMR / season system (nếu có)
+
+Gửi GDD/SRS để merge vào tài liệu này hoặc tạo file bổ sung.
+
+
+================================================================================
+  HẾT TÀI LIỆU
+================================================================================

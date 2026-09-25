@@ -30,7 +30,7 @@ public class DevLoginManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(usernameInput.text) || string.IsNullOrEmpty(passwordInput.text))
         {
-            statusText.text = "Enter username and password.";
+            statusText.text = Loc.Get(LocTables.DevConnect, LocKeys.DevConnect.EnterCredentials);
             return;
         }
 
@@ -39,7 +39,7 @@ public class DevLoginManager : MonoBehaviour
 
     IEnumerator LoginRoutine()
     {
-        statusText.text = "Logging in...";
+        statusText.text = Loc.Get(LocTables.DevConnect, LocKeys.DevConnect.LoggingIn);
 
         string json = $"{{\"username\":\"{usernameInput.text}\",\"password\":\"{passwordInput.text}\"}}";
         byte[] body = Encoding.UTF8.GetBytes(json);
@@ -54,7 +54,7 @@ public class DevLoginManager : MonoBehaviour
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            statusText.text = "Login failed.";
+            statusText.text = Loc.Get(LocTables.DevConnect, LocKeys.DevConnect.LoginFailed);
             Debug.LogError($"[DevLogin] {request.error}");
             yield break;
         }
@@ -62,7 +62,7 @@ public class DevLoginManager : MonoBehaviour
         var response = JsonUtility.FromJson<AuthResponse>(request.downloadHandler.text);
         if (string.IsNullOrEmpty(response.token))
         {
-            statusText.text = "Invalid credentials.";
+            statusText.text = Loc.Get(LocTables.DevConnect, LocKeys.DevConnect.InvalidCredentials);
             yield break;
         }
 

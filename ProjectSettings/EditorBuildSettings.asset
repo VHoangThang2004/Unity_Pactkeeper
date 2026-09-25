@@ -36,4 +36,6 @@ EditorBuildSettings:
     path: Assets/Scenes/9_Gacha.unity
     guid: e60011e8254d2f047b3f33615485e34b
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 2d4cb3d70441b4844bbbb96d81739dd7, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    com.unity.localization.settings: {fileID: 11400000, guid: c30efb940ad06bb4f8bc15ec6f77f541, type: 2}

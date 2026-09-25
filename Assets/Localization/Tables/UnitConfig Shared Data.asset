@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UnitConfig Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: UnitConfig
+  m_TableCollectionNameGuidString: f30fdfa5919738849b4dfd5c6723da94
+  m_Entries:
+  - m_Id: 24033906688
+    m_Key: Change_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26311413760
+    m_Key: Unequip_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28932853760
+    m_Key: Configure_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31365550080
+    m_Key: Select_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33630474240
+    m_Key: Remove_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 199938822144
+    m_Key: EnterFormation_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 201616543744
+    m_Key: BackToUnitList_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 203013246976
+    m_Key: Empty_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 204548362240
+    m_Key: Equipped_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 206314164224
+    m_Key: Using_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 408668360704
+    m_Key: TargetPatternFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 410245419008
+    m_Key: AoePatternFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 411486932992
+    m_Key: HpFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 412795555840
+    m_Key: SpFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 414523609088
+    m_Key: SpeedFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 601824448512
+    m_Key: DmgPercentFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 683261054976
+    m_Key: DmgReductionFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 684984913920
+    m_Key: FailedLoadUnits_key
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2674576403968819517
+  references:
+    version: 2
+    RefIds:
+    - rid: 2674576403968819517
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1783074615136

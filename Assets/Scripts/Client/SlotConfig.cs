@@ -72,7 +72,7 @@ public class SlotConfig : MonoBehaviour
                     if (skill == null)
                     {
                         slotIcon.sprite = emptyIndicator.GetComponent<Image>()?.sprite;
-                        name = "Empty";
+                        name = Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
                     }
                     else
                     {
@@ -83,7 +83,7 @@ public class SlotConfig : MonoBehaviour
                 else
                 {
                     if (slotIcon != null) slotIcon.sprite = emptyIndicator.GetComponent<Image>()?.sprite;
-                    name = "Empty";
+                    name = Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
                 }
                 break;
 
@@ -95,7 +95,7 @@ public class SlotConfig : MonoBehaviour
                     if (skill == null)
                     {
                         slotIcon.sprite = emptyIndicator.GetComponent<Image>()?.sprite;
-                        name = "Empty";
+                        name = Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
                     }
                     else
                     {
@@ -106,7 +106,7 @@ public class SlotConfig : MonoBehaviour
                 else
                 {
                     if (slotIcon != null) slotIcon.sprite = emptyIndicator.GetComponent<Image>()?.sprite;
-                    name = "Empty";
+                    name = Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
                 }
                 break;
 
@@ -121,7 +121,7 @@ public class SlotConfig : MonoBehaviour
                 else
                 {
                     if (slotIcon != null) slotIcon.sprite = emptyIndicator.GetComponent<Image>()?.sprite;
-                    name = "Empty";
+                    name = Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
                 }
                 break;
 
@@ -136,12 +136,12 @@ public class SlotConfig : MonoBehaviour
                 else
                 {
                     if (slotIcon != null) slotIcon.sprite = emptyIndicator.GetComponent<Image>()?.sprite;
-                    name = "Empty";
+                    name = Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
                 }
                 break;
         }
 
-        if (slotNameText != null) slotNameText.text = hasItem ? name : "Empty";
+        if (slotNameText != null) slotNameText.text = hasItem ? name : Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
         if (emptyIndicator != null) emptyIndicator.SetActive(!hasItem);
     }
 
@@ -302,7 +302,7 @@ public class SlotConfig : MonoBehaviour
                         SkillNameText.text = skill?.skillName ?? $"Skill {manager.CurrentUnit.equippedMovementSkillId}";
                         SkillDescText.text = skill.description + " => ";
                         string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
-                        TargetPatternType.text = $"Target Pattern ({tptype})";
+                        TargetPatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.TargetPatternFormat, tptype);
                         TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
                         if (skill.effectIds.Length > 0)
                         {
@@ -310,7 +310,7 @@ public class SlotConfig : MonoBehaviour
                             if (effect0 != null)
                             {
                                 string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
                                 AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                             }
                         }
@@ -345,7 +345,7 @@ public class SlotConfig : MonoBehaviour
                         SkillNameText.text = skill.skillName;
                         SkillDescText.text = skill.description + " => ";
                         string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
-                        TargetPatternType.text = $"Target Pattern ({tptype})";
+                        TargetPatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.TargetPatternFormat, tptype);
                         TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
                         if (skill.effectIds.Length > 0)
                         {
@@ -353,7 +353,7 @@ public class SlotConfig : MonoBehaviour
                             if (effect0 != null)
                             {
                                 string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
                                 AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                             }
                         }
@@ -398,7 +398,7 @@ public class SlotConfig : MonoBehaviour
                             SkillNameText.text = skill.skillName;
                             SkillDescText.text = skill.description + " => ";
                             string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
-                            TargetPatternType.text = $"Target Pattern ({tptype})";
+                            TargetPatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.TargetPatternFormat, tptype);
                             TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
                             if (skill.effectIds.Length > 0)
                             {
@@ -406,7 +406,7 @@ public class SlotConfig : MonoBehaviour
                                 if (effect0 != null)
                                 {
                                     string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                    AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                    AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
                                     AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                                 }
                             }
@@ -453,7 +453,7 @@ public class SlotConfig : MonoBehaviour
                             SkillNameText.text = skill.skillName;
                             SkillDescText.text = skill.description + " => ";
                             string tptype = skill.isTargetPatternFixed ? "Fixed" : "Flexible";
-                            TargetPatternType.text = $"Target Pattern ({tptype})";
+                            TargetPatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.TargetPatternFormat, tptype);
                             TargetPatternInfo?.Init(skill.targetPattern.cells.ToList(), true);
                             if (skill.effectIds.Length > 0)
                             {
@@ -461,7 +461,7 @@ public class SlotConfig : MonoBehaviour
                                 if (effect0 != null)
                                 {
                                     string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                    AoePatternType.text = $"Aoe Pattern ({tptype})";
+                                    AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
                                     AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                                 }
                             }

@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Gacha_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 53b6fea500837bc4098e2cc7db95a21e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 12365352960
+    m_Localized: Result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 54228701184
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56392962048
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58385256448
+    m_Localized: Rates Detail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 60335607808
+    m_Localized: BANNER DROP RATES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62663446528
+    m_Localized: RECRUITMENT RESULTS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64307613696
+    m_Localized: NOTICE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 263784517632
+    m_Localized: 'Error: Failed to connect to server. Check your connection.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 265365770240
+    m_Localized: 'Error: Failed to retrieve active Gacha banners.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 266569535488
+    m_Localized: There are currently no active summon banners.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

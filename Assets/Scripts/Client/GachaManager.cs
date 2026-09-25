@@ -200,7 +200,7 @@ public class GachaManager : MonoBehaviour
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError($"[Gacha] FetchPlayerProfile failed: {request.error}");
-            ShowErrorOverlay("Error: Failed to connect to server. Check your connection.");
+            ShowErrorOverlay(Loc.Get(LocTables.Gacha, LocKeys.Gacha.ConnectionError));
             yield break;
         }
 
@@ -217,7 +217,7 @@ public class GachaManager : MonoBehaviour
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError($"[Gacha] FetchActiveBanners failed: {request.error}");
-            ShowErrorOverlay("Error: Failed to retrieve active Gacha banners.");
+            ShowErrorOverlay(Loc.Get(LocTables.Gacha, LocKeys.Gacha.FetchBannersFailed));
             yield break;
         }
 
@@ -226,7 +226,7 @@ public class GachaManager : MonoBehaviour
 
         if (activeBanners.Count == 0)
         {
-            ShowErrorOverlay("There are currently no active summon banners.");
+            ShowErrorOverlay(Loc.Get(LocTables.Gacha, LocKeys.Gacha.NoActiveBanners));
         }
     }
 
@@ -782,7 +782,7 @@ public class GachaManager : MonoBehaviour
         titleRt.sizeDelta = new Vector2(500f, 40f);
         var titleText = titleGo.AddComponent<TextMeshProUGUI>();
         if (gameFont != null) titleText.font = gameFont;
-        titleText.text = "BANNER DROP RATES";
+        titleText.text = Loc.Get(LocTables.Gacha, LocKeys.Gacha.BannerDropRates);
         titleText.fontSize = 24;
         titleText.color = Color.yellow;
         titleText.alignment = TextAlignmentOptions.Center;
@@ -881,7 +881,7 @@ public class GachaManager : MonoBehaviour
         titleRt.sizeDelta = new Vector2(800f, 60f);
         var titleText = titleGo.AddComponent<TextMeshProUGUI>();
         if (gameFont != null) titleText.font = gameFont;
-        titleText.text = "RECRUITMENT RESULTS";
+        titleText.text = Loc.Get(LocTables.Gacha, LocKeys.Gacha.RecruitmentResults);
         titleText.fontSize = 42;
         titleText.color = Color.yellow;
         titleText.alignment = TextAlignmentOptions.Center;
@@ -965,7 +965,7 @@ public class GachaManager : MonoBehaviour
         titleRt.sizeDelta = new Vector2(400f, 40f);
         var titleText = titleGo.AddComponent<TextMeshProUGUI>();
         if (gameFont != null) titleText.font = gameFont;
-        titleText.text = "NOTICE";
+        titleText.text = Loc.Get(LocTables.Gacha, LocKeys.Gacha.Notice);
         titleText.fontSize = 24;
         titleText.color = Color.yellow;
         titleText.alignment = TextAlignmentOptions.Center;

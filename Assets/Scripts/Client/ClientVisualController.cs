@@ -254,12 +254,17 @@ public class ClientVisualController : MonoBehaviour
             ClientActiveEffectBase effect = scene.effectRegistry.Get(effectId);
             scene.SkillDescription.text += " " + effect.GetDescription(session.GetUnitDataById(session.selectedUnitId), scene.effectRegistry);
         }
-        scene.SkillCost.text = $"SP Cost: {skill.skillPointCost}";
-        scene.StepMultiplier.text = $"Step Cost: {skill.stepCostMultiplier * unit.CurrentStepBase} (x{skill.stepCostMultiplier})";
+        scene.SkillCost.text = Loc.Format(LocTables.ClientMatch, LocKeys.ClientMatch.SpCostFormat, skill.skillPointCost);
+        scene.StepMultiplier.text = Loc.Format(
+            LocTables.ClientMatch,
+            LocKeys.ClientMatch.StepCostFormat,
+            skill.stepCostMultiplier * unit.CurrentStepBase,
+            skill.stepCostMultiplier);
 
-        string totalLimit = skill.useLimitTotal > 0 ? usageCopy[index].UsageTotal + "/" + skill.useLimitTotal.ToString() : "∞";
-        string instantLimit = skill.useLimitPerInstant < 0 ? "∞" : (index < 0 ? "0/" + skill.useLimitPerInstant : usageCopy[index].UsageThisInstant + "/" + skill.useLimitPerInstant);
-        scene.SkillUsageText.text = $"Limit per instant: {instantLimit} | Total Limit: {totalLimit}";
+        string unlimited = Loc.Get(LocTables.ClientMatch, LocKeys.ClientMatch.Unlimited);
+        string totalLimit = skill.useLimitTotal > 0 ? usageCopy[index].UsageTotal + "/" + skill.useLimitTotal.ToString() : unlimited;
+        string instantLimit = skill.useLimitPerInstant < 0 ? unlimited : (index < 0 ? "0/" + skill.useLimitPerInstant : usageCopy[index].UsageThisInstant + "/" + skill.useLimitPerInstant);
+        scene.SkillUsageText.text = Loc.Format(LocTables.ClientMatch, LocKeys.ClientMatch.SkillUsageFormat, instantLimit, totalLimit);
     }
 
     // -------------------------------------------------------
@@ -548,11 +553,13 @@ public class ClientVisualController : MonoBehaviour
             if (instantStatusText != null)
             {
                 if (!session.Timeline.isPaused)
-                    instantStatusText.text = "Time is flowing";
+                    instantStatusText.text = Loc.Get(LocTables.ClientMatch, LocKeys.ClientMatch.TimeFlowing);
                 else if (session.LastResolve.HasResolve && session.SyncState != SyncStateValue.Idle)
-                    instantStatusText.text = "Resolving";
+                    instantStatusText.text = Loc.Get(LocTables.ClientMatch, LocKeys.ClientMatch.Resolving);
                 else
-                    instantStatusText.text = session.IsMyTurn() ? "Your turn" : "Enemy turn";
+                    instantStatusText.text = session.IsMyTurn()
+                        ? Loc.Get(LocTables.ClientMatch, LocKeys.ClientMatch.YourTurn)
+                        : Loc.Get(LocTables.ClientMatch, LocKeys.ClientMatch.EnemyTurn);
             }
 
             // Turn flip — update button visibility on turn change

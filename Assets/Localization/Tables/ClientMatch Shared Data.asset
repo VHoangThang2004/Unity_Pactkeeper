@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: ClientMatch Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: ClientMatch
+  m_TableCollectionNameGuidString: cd0999a0f8eae634dadb7984e99b9793
+  m_Entries:
+  - m_Id: 251201605632
+    m_Key: Cancel_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 253869182976
+    m_Key: Wait_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 255928586240
+    m_Key: Overtime_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 259284029440
+    m_Key: YourTurn_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 261364404224
+    m_Key: YourTurnDecide_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 435222499328
+    m_Key: EnemyTurn_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436900220928
+    m_Key: TimeFlowing_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 438653440000
+    m_Key: Resolving_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 563547230208
+    m_Key: Loading_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 565208174592
+    m_Key: SkillUsageFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 681910489088
+    m_Key: SpCostFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 683688873984
+    m_Key: StepCostFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 685316263936
+    m_Key: Unlimited_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 789871874048
+    m_Key: New Entry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 791625093120
+    m_Key: TimerFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 878082281472
+    m_Key: InstantCounterFormat_key
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2674576403968819514
+  references:
+    version: 2
+    RefIds:
+    - rid: 2674576403968819514
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1783074247974

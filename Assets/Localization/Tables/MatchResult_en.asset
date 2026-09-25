@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MatchResult_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 39a3d0c6cbd73e64d97b7538d06dfc3d, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 34481917952
+    m_Localized: Result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37082386432
+    m_Localized: Return
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39078875136
+    m_Localized: Failed to load match result.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41108918272
+    m_Localized: 'Draw.\n Instants: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 43763912704
+    m_Localized: 'Instants: {0}'
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -119,11 +119,11 @@ public class UnitConfigManager : MonoBehaviour
                                + (CurrentUnit.equippedTrinket != null ? CurrentUnit.equippedTrinket.damageReduction : 0)
         };
 
-        unitHp.text = $"HP: {CurrentStats.maxHP}";
-        unitSP.text = $"SP: {CurrentStats.maxSkillPoint}";
-        unitSpeed.text = $"Speed: {CurrentStats.speed}";
-        unitDamageMultiplier.text = $"DMG%: {CurrentStats.damageMultiplier * 1}%";
-        unitDamageReduction.text = $"DMG Reduction%: {CurrentStats.damageReduction}%";
+        unitHp.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.HpFormat, CurrentStats.maxHP);
+        unitSP.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.SpFormat, CurrentStats.maxSkillPoint);
+        unitSpeed.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.SpeedFormat, CurrentStats.speed);
+        unitDamageMultiplier.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.DmgPercentFormat, CurrentStats.damageMultiplier);
+        unitDamageReduction.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.DmgReductionFormat, CurrentStats.damageReduction);
 
     }
 
@@ -139,7 +139,7 @@ public class UnitConfigManager : MonoBehaviour
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            loadingScreen?.Show("Failed to load units.");
+            loadingScreen?.Show(Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.FailedLoadUnits));
             Debug.LogError($"[UnitList] FetchOwnedUnits: {request.error}");
             yield break;
         }

@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: MainMenu Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: MainMenu
+  m_TableCollectionNameGuidString: fa85cbc8f4a4a794d887b65af6337019
+  m_Entries:
+  - m_Id: 12923195392
+    m_Key: Welcome_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15712407552
+    m_Key: WelcomeUser_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18631643136
+    m_Key: Profile_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21118865408
+    m_Key: Loadout_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23710945280
+    m_Key: History_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 241974136832
+    m_Key: Cancel_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 243798659072
+    m_Key: Vs_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245249888256
+    m_Key: NoOngoingEvent_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 351965564928
+    m_Key: ProfileLoadFailed_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 353794281472
+    m_Key: ProfileFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 361759264768
+    m_Key: NotLoggedIn_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 493577850880
+    m_Key: JoiningQueue_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 498380328960
+    m_Key: AlreadyInMatch_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 499772837888
+    m_Key: FailedJoinQueue_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 642689552384
+    m_Key: FindingMatch_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 644400828416
+    m_Key: Cancelled_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 722867867648
+    m_Key: MatchFoundFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 724927270912
+    m_Key: LoadingGame_key
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2674576403968819513
+  references:
+    version: 2
+    RefIds:
+    - rid: 2674576403968819513
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1783074025617

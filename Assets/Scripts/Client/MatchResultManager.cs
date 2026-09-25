@@ -49,7 +49,7 @@ public class MatchResultManager : MonoBehaviour
         }
 
         Debug.LogError("[MatchResult] Failed to fetch result after max retries.");
-        if (resultText != null) resultText.text = "Failed to load match result.";
+        if (resultText != null) resultText.text = Loc.Get(LocTables.MatchResult, LocKeys.MatchResult.LoadFailed);
     }
 
     IEnumerator TryFetchResult(string matchId)
@@ -85,8 +85,8 @@ public class MatchResultManager : MonoBehaviour
         {
             bool isDraw = string.IsNullOrEmpty(data.result.winnerId);
             resultText.text = isDraw
-                ? $"Draw.\n Instants: {TotalInstants}"
-                : $" Instants: {TotalInstants}";
+                ? Loc.Format(LocTables.MatchResult, LocKeys.MatchResult.DrawFormat, TotalInstants)
+                : Loc.Format(LocTables.MatchResult, LocKeys.MatchResult.InstantsFormat, TotalInstants);
         }
 
         OnResultLoaded();
