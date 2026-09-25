@@ -853,6 +853,7 @@ GameObject:
   - component: {fileID: 8144179461463157238}
   - component: {fileID: 8571471000471783807}
   - component: {fileID: 5149073666899933881}
+  - component: {fileID: 343796218534497816}
   m_Layer: 5
   m_Name: ChangeUnitOptionPanel
   m_TagString: Untagged
@@ -974,6 +975,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &343796218534497816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4822034537698237415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: C0S3_X
 --- !u!1 &5098135073083360398
 GameObject:
   m_ObjectHideFlags: 0

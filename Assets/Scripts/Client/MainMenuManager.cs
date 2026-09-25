@@ -55,6 +55,13 @@ public class MainMenuManager : MonoBehaviour
     {
         yield return StartCoroutine(FetchProfile());
 
+        // ── 0. Skip all flow checks if loaded as additive subscene (e.g. under C0_S2)
+        if (TutorialContext.IsActive)
+        {
+            loadingScreen?.SetActive(false);
+            yield break;
+        }
+
         // ── 1. Ongoing match check ─────────────────────────────────────────
         bool reconnectedToPvP = false;
         yield return StartCoroutine(matchmakingManager.FetchCurrentMatch(
@@ -124,6 +131,9 @@ public class MainMenuManager : MonoBehaviour
             return false;
         }
 
+        // Dialogue scenes own the stage — they load as Single and pull
+        // whatever subscenes they need additively themselves.
+        // (e.g. C0_S2 loads 3_MainMenu additively under itself)
         SceneManager.LoadScene(targetScene);
         return false;
     }
