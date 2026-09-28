@@ -26,6 +26,17 @@ MonoBehaviour:
     speed: 130
     damageMultiplier: 100
     damageReduction: 0
+  - uId: 2
+    passiveSkillId: -1
+    movementSkillId: 1002
+    weaponSkillId: 2002
+    classSkillId: 3002
+    trinketSkillId: -1
+    maxHP: 3
+    maxSkillPoint: 3
+    speed: 100
+    damageMultiplier: 100
+    damageReduction: 0
   aiUnits:
   - uId: 2
     passiveSkillId: -1

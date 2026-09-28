@@ -10,6 +10,7 @@ public class InputReader : MonoBehaviour
     public bool IsFastMove { get; private set; }
 
     public event Action OnLeftClick;
+    public event Action OnRightClick;
 
     void Update()
     {
@@ -36,6 +37,9 @@ public class InputReader : MonoBehaviour
 
             if (mouse.leftButton.wasPressedThisFrame)
                 OnLeftClick?.Invoke();
+
+            if (mouse.rightButton.wasPressedThisFrame)
+                OnRightClick?.Invoke();
         }
     }
 }

@@ -22,7 +22,16 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Now we will learn the basic mechanics
+    text: '<u>WASD</u> : move camera around.
+
+      <u>Scroll your mouse</u>: zoom
+      in/out/'
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Now we will learn the basic mechanics of the game.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -70,7 +79,7 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 2
+  - type: 3
     text: Perfect. On select a unit, you can select another <u>blue cell</u> as a
       target to move there. Click this cell first.
     tutorialTargetId: 
@@ -144,6 +153,65 @@ MonoBehaviour:
       the bot for this tutorial auto skips its turn, and you can feel free to explore
       the game mechanism. (this explain the nearst eye closing)'
     tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Ok now select a unit.
+    tutorialTargetId: C0S1_5
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Here are your unit's information. Avoid getting HP to 0 is recommended.
+    tutorialTargetId: C0S1_CharStat
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: These are your unit's skills.
+    tutorialTargetId: C0S1_Skills
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 2
+    text: Right click (or hold) on any skill for detailed description.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: This is the skill description, all information on this panel is important,
+      you will find out later.
+    tutorialTargetId: C0S1_InspectPanel
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now let's click here to cancel (in fact you can click anywhere else).
+    tutorialTargetId: C0S1_CancelButton
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: "Now here is the fun part: you can decide to <u>Wait</u> even if you haven't
+      commanded any unit. \nThis strategic decision can help you preserve units for
+      the following <u>paused instants</u>."
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 12
+    targetWaitTimeout: 10
+  - type: 0
+    text: NIce to meet you again, this time we'll get to the beautiful part of the
+      game.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Notice you have 2 units in the <u>ready queue</u>? Thats right, one is
+      reserved from the previous <u>paused instant (PI)</u>.
+    tutorialTargetId: C0S1_2
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10

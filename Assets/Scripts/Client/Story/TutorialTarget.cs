@@ -8,11 +8,13 @@ public class TutorialTarget : MonoBehaviour
 
     public RectTransform RectTransform { get; private set; }
     public Button Button { get; private set; }
+    public ExtendedButton ExtendedButton { get; private set; }
 
     void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
         Button = GetComponent<Button>();
+        ExtendedButton = GetComponent<ExtendedButton>();
     }
 
     void OnEnable() => TutorialTargetRegistry.Register(targetId, this);

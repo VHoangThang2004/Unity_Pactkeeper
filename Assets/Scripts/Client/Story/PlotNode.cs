@@ -4,6 +4,7 @@ public enum PlotNodeType
 {
     TextBox,            // Show text panel, player clicks Next to continue
     GuidedClick,        // Highlight a real UI button, player MUST click it to advance
+    GuidedRightClick,   // Highlight a real UI button, player MUST right-click it to advance
     GuidedCellClick,    // Highlight a world-space grid cell, player MUST click it to advance
     AutoAdvance,        // No input — auto-moves to next node after a delay
     CompleteAndExit     // Final button — marks story progress complete and reloads main menu

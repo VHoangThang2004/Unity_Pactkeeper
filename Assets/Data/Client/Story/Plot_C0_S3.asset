@@ -52,7 +52,7 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 0.1
     targetWaitTimeout: 10
-  - type: 4
+  - type: 5
     text: Now click here to config your unit.
     tutorialTargetId: C0S3_5
     targetCell: {x: 0, y: 0}

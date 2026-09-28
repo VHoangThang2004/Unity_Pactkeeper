@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Reads a PlotConfig and drives the tutorial UI step by step.
@@ -29,6 +31,7 @@ public class PlotSequencer : MonoBehaviour
     [Tooltip("Camera used to convert world cell position to screen position.")]
     [SerializeField] private Camera gameCamera;
     [SerializeField] private ClientInteractionSystem interactionSystem; // C0_S1 only (guided cell click)
+    [SerializeField] private InputReader inputReader; // C0_S1 only (guided right click)
 
     private int _currentIndex = 0;
     private bool _waitingForInput = false;
@@ -156,6 +159,10 @@ public class PlotSequencer : MonoBehaviour
 
             case PlotNodeType.GuidedClick:
                 yield return StartCoroutine(RunGuidedClick(node));
+                break;
+
+            case PlotNodeType.GuidedRightClick:
+                yield return StartCoroutine(RunGuidedRightClick(node));
                 break;
 
             case PlotNodeType.GuidedCellClick:
@@ -293,6 +300,62 @@ public class PlotSequencer : MonoBehaviour
         HideAll();
     }
 
+    // -------------------------------------------------------
+
+    IEnumerator RunGuidedRightClick(PlotNode node)
+    {
+        HideAll();
+        blockerPanel.SetActive(true);
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        // Wait for target to register
+        TutorialTarget target = null;
+        float waited = 0f;
+        while (target == null && waited < node.targetWaitTimeout)
+        {
+            target = TutorialTargetRegistry.Get(node.tutorialTargetId);
+            if (target == null)
+            {
+                waited += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        if (target == null || inputReader == null)
+        {
+            Debug.LogError($"[PlotSequencer] GuidedRightClick: target '{node.tutorialTargetId}' " +
+                           $"not found after {node.targetWaitTimeout}s.");
+            yield break;
+        }
+
+        PositionButtonHighlight(target);
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        
+        _waitingForInput = true;
+
+        Action onRightClick = () =>
+        {
+            if (!_waitingForInput) return;
+            if (RectTransformUtility.RectangleContainsScreenPoint(
+                target.RectTransform, Mouse.current.position.ReadValue()))
+            {
+                Debug.Log($"[PlotSequencer] GuidedRightClick: right-click detected on target '{node.tutorialTargetId}'");
+                target.ExtendedButton?.onRightClick?.Invoke();
+                _waitingForInput = false;
+            }
+        };
+
+        inputReader.OnRightClick += onRightClick;
+        yield return new WaitUntil(() => !_waitingForInput);
+        inputReader.OnRightClick -= onRightClick;
+        HideAll();
+    }
     // -------------------------------------------------------
     // GuidedCellClick — highlight a world-space grid cell
     // -------------------------------------------------------
