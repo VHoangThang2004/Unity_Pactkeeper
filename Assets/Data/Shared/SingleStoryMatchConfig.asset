@@ -15,9 +15,9 @@ MonoBehaviour:
   maxInstant: 150
   instantDuration: 0.3
   effectsChangedWaitDuration: 1
-  actWaitWindowPerInstantPerReadyUnit: 15
-  maxWaitDurationMultiplier: 5
-  overtimePerTeam: 200
+  actWaitWindowPerInstantPerReadyUnit: -1
+  maxWaitDurationMultiplier: -1
+  overtimePerTeam: -1
   conseRegenCap: 5
   maxLogCount: 10
   eyeAnimDur: 2

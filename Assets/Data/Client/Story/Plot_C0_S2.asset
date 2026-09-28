@@ -17,16 +17,19 @@ MonoBehaviour:
   nodes:
   - type: 0
     text: Hello, welcome to the tutorial
-    targetButtonId: 
-    highlightHint: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10
   - type: 0
     text: It's still me, your guide, click to continue
-    targetButtonId: 
-    highlightHint: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0.1
-  - type: 3
-    text: 
-    targetButtonId: C0S2_1
-    highlightHint: Ok now first please click the unit list button.
+    targetWaitTimeout: 10
+  - type: 4
+    text: Now click here to access Unit List
+    tutorialTargetId: C0S2_1
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10

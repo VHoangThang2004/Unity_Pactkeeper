@@ -14,6 +14,12 @@ public enum ServerSessionState
     Finished,
 }
 
+public enum WinCondition
+{
+    MostUnitsAlive,  // PvP default — whoever has more units wins on timeout
+    EliminateAll,    // PvE default — must eliminate all enemies to win
+}
+
 public class ServerTimelineManager : MonoBehaviour
 {
     // -------------------------------------------------------
@@ -27,6 +33,10 @@ public class ServerTimelineManager : MonoBehaviour
     [SerializeField] private SkillLibrary skillLibrary;
     [SerializeField] private ServerSpawnManager spawnManager;
 
+    [Header("Match Settings")]
+    [SerializeField] public bool isPvE = false;
+    [SerializeField] public WinCondition winCondition = WinCondition.MostUnitsAlive;
+
 
 
     // Internal coroutine control — not observable, not session data
@@ -39,6 +49,9 @@ public class ServerTimelineManager : MonoBehaviour
     private List<(int unitId, Vector3Int sourceCell, Vector3Int targetCell, int effectId, int skillCardId)> effectRecord;
     // Sync token — control concern, client/server handshake only
     private int Token = 0;
+    private float _matchStartTime = 0f;
+    private const float MAX_MATCH_DURATION = 3600f; // 60 minutes
+    private const float DISCONNECT_TIMEOUT = 60f;   // 60s after all clients disconnect
 
     // -------------------------------------------------------
     // State Machine
@@ -100,13 +113,19 @@ public class ServerTimelineManager : MonoBehaviour
     }
     public void RunTimeline()
     {
+        _matchStartTime = Time.time;
         StartCoroutine(TimelineLoop());
         StartCoroutine(WaitingTimeProcess());
+        StartCoroutine(DisconnectWatchdog());
+        StartCoroutine(MatchTimeoutWatchdog());
         Debug.Log("[Timeline] Running.");
     }
 
     IEnumerator WaitingTimeProcess()
     {
+        // PvE: no time pressure — player and AI can take as long as needed
+        if (isPvE) yield break;
+
         while (true)
         {
             TeamData currentTeam = session.GetCurrentTurnTeamData();
@@ -864,6 +883,56 @@ public class ServerTimelineManager : MonoBehaviour
         session.AddLog($"Team {teamId} — {unitLink} used {skillLink} on {cellLink}.");
     }
     // -------------------------------------------------------
+    // Watchdogs
+    // -------------------------------------------------------
+
+    // Cancel match if all real clients disconnect for 60s
+    IEnumerator DisconnectWatchdog()
+    {
+        float disconnectedSince = -1f;
+
+        while (session.TimelineState != ServerSessionState.Finished)
+        {
+            int realClients = 0;
+            foreach (var id in NetworkManager.Singleton.ConnectedClientsIds)
+                if (id != NetworkManager.Singleton.LocalClientId) realClients++;
+
+            if (realClients == 0)
+            {
+                if (disconnectedSince < 0)
+                    disconnectedSince = Time.time;
+                else if (Time.time - disconnectedSince >= DISCONNECT_TIMEOUT)
+                {
+                    Debug.Log("[Timeline] All clients disconnected for 60s — cancelling match.");
+                    yield return StartCoroutine(EndMatch());
+                    yield break;
+                }
+            }
+            else
+            {
+                disconnectedSince = -1f; // reset if someone reconnects
+            }
+
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
+    // Cancel match if running longer than 60 minutes
+    IEnumerator MatchTimeoutWatchdog()
+    {
+        while (session.TimelineState != ServerSessionState.Finished)
+        {
+            if (Time.time - _matchStartTime >= MAX_MATCH_DURATION)
+            {
+                Debug.Log("[Timeline] Match exceeded 60 minutes — ending match.");
+                yield return StartCoroutine(EndMatch());
+                yield break;
+            }
+            yield return new WaitForSeconds(30f);
+        }
+    }
+
+    // -------------------------------------------------------
     // Match End
     // -------------------------------------------------------
     IEnumerator EndMatch()
@@ -875,10 +944,23 @@ public class ServerTimelineManager : MonoBehaviour
         int team1Units = teams[1].unitIds.Count;
 
         string winnerId = string.Empty;
-        if (team0Units > team1Units)
-            winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
-        else if (team1Units > team0Units)
-            winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+        if (winCondition == WinCondition.EliminateAll)
+        {
+            // PvE: only wins if opponent is fully eliminated
+            if (team1Units == 0 && team0Units > 0)
+                winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
+            else if (team0Units == 0 && team1Units > 0)
+                winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+            // else: no winner (timeout/draw — no progress reported for story)
+        }
+        else
+        {
+            // PvP: more units alive = winner
+            if (team0Units > team1Units)
+                winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
+            else if (team1Units > team0Units)
+                winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+        }
 
         Debug.Log($"[Timeline] Match ended — winner={winnerId}");
 
@@ -897,6 +979,8 @@ public class ServerTimelineManager : MonoBehaviour
                 totalUnits = session.GetTeamLoadoutDataByTeamId(teams[1].teamId)?.Units?.Count ?? 0
             }
         };
+        
+        NetworkManager.Singleton.Shutdown();
 
         // Notify backend before shutting down
 
@@ -923,7 +1007,6 @@ public class ServerTimelineManager : MonoBehaviour
                     winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
             }
         }
-        NetworkManager.Singleton.Shutdown();
     }
 
 }

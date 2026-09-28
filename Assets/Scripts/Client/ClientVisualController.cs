@@ -273,7 +273,7 @@ public class ClientVisualController : MonoBehaviour
 
     public void ShowWaitButton(bool isShown)
     {
-        waitButtonLayer.SetActive(session.IsMyTurn() && isShown);
+        waitButtonLayer.SetActive(session.IsMyTurn() && isShown && scene.clientInteractionSystem.decisionSpamRoutine==null);
     }
 
     public void ShowCancelButton(bool isShown)

@@ -1,13 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Add this component to any UI button/element that can be targeted
-/// by a GuidedClick plot node. The element self-registers into
-/// TutorialTargetRegistry on enable and unregisters on disable.
-///
-/// The targetId string must match the PlotNode.targetButtonId exactly.
-/// </summary>
 [RequireComponent(typeof(RectTransform))]
 public class TutorialTarget : MonoBehaviour
 {
@@ -23,5 +16,5 @@ public class TutorialTarget : MonoBehaviour
     }
 
     void OnEnable() => TutorialTargetRegistry.Register(targetId, this);
-    void OnDisable() => TutorialTargetRegistry.Unregister(targetId);
+    void OnDisable() => TutorialTargetRegistry.Unregister(targetId, this);
 }

@@ -13,6 +13,8 @@ using UnityEngine;
 /// </summary>
 public class ClientController : MonoBehaviour, ISyncedBridgeClient
 {
+    public event System.Action OnMatchReady;
+
     public SyncedBridge bridge;
 
     [Header("Data")]
@@ -56,6 +58,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     // -------------------------------------------------------
     private void Start()
     {
+        scene.loadingScreen.Show("Connecting to server...");
         ConnectToServer();
     }
 
@@ -127,6 +130,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
         Debug.Log("[ClientController] Client initialized successfully.");
         //Start the statemachines that requires data from now on
         scene.visualController.StartUILoop();
+        OnMatchReady?.Invoke();
     }
 
     IEnumerator TryRequestInitialStateServer()

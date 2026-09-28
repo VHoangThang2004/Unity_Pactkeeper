@@ -233,6 +233,8 @@ MonoBehaviour:
   speedConfig: {fileID: 11400000, guid: a536431617c5bcd428e100c3d53af3d8, type: 2}
   skillLibrary: {fileID: 11400000, guid: 80af1d814cd15c34e8ce7e04aec1fdc5, type: 2}
   spawnManager: {fileID: 1526325097}
+  isPvE: 1
+  winCondition: 1
 --- !u!114 &1526325099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Server::ServerMatchSession
   CurrentTeamTurnId: -1
-  mapId: MD_PVP_001
+  mapId: MD_PVE_000
   backendClient: {fileID: 0}
   matchConfig: {fileID: 11400000, guid: e7d9f85d888aed240b436c42f4569508, type: 2}
   mapRegistry: {fileID: 11400000, guid: fdb7288db9eb84f47833aea95ab3fb05, type: 2}

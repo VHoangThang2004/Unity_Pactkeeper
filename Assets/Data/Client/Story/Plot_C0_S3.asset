@@ -13,30 +13,48 @@ MonoBehaviour:
   m_Name: Plot_C0_S3
   m_EditorClassIdentifier: Client::PlotConfig
   chapterId: 0
-  sceneId: 2
+  sceneId: 3
   nodes:
   - type: 0
     text: Hello, it's me again
-    targetButtonId: 
-    highlightHint: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10
   - type: 0
     text: Here we will learn how to setup your team
-    targetButtonId: 
-    highlightHint: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10
+  - type: 0
+    text: You can enter "unit configuation" by directly clicking on each unit in
+      this list.
+    tutorialTargetId: C0S3_0
+    targetCell: {x: 0, y: 0}
+    delay: 0.1
+    targetWaitTimeout: 10
   - type: 1
-    text: 
-    targetButtonId: C0S3_1
-    highlightHint: First please click here to add a unit to your team.
+    text: Click herer to add a unit into your team
+    tutorialTargetId: C0S3_1
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10
   - type: 1
-    text: 
-    targetButtonId: C0S3_X
-    highlightHint: Finally click into a unit to enter configuration.
+    text: Click here to add this unit to your team
+    tutorialTargetId: C0S3_2
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10
   - type: 1
-    text: 
-    targetButtonId: C0S3_X
-    highlightHint: Click this unit to add to your team.
+    text: Click here if you need to adjust your team.
+    tutorialTargetId: C0S3_4
+    targetCell: {x: 0, y: 0}
     delay: 0.1
+    targetWaitTimeout: 10
+  - type: 4
+    text: Now click here to config your unit.
+    tutorialTargetId: C0S3_5
+    targetCell: {x: 0, y: 0}
+    delay: 0.1
+    targetWaitTimeout: 10

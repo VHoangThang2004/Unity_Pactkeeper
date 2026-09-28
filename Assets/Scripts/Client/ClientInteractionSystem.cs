@@ -10,6 +10,8 @@ public class ClientInteractionSystem : MonoBehaviour
     [SerializeField] private ClientScene scene;
 
     public InteractionStateMachine stateMachine;
+    
+    public Coroutine decisionSpamRoutine;
     // this state machine will affect most of the visible of UI elements to control the input & flow of UI for inputs. One of the main-most important state machine beside sync-machine
 
     // -------------------------------------------------------
@@ -65,6 +67,16 @@ public class ClientInteractionSystem : MonoBehaviour
     // -------------------------------------------------------
     // Interaction
     // -------------------------------------------------------
+
+    public void StopDecisionSpam()
+    {
+        Debug.Log($"[UnitSelected] Stopping decision spam routine for any reason");
+        if (scene.clientInteractionSystem.decisionSpamRoutine != null)
+        {
+            session.StopCoroutine(scene.clientInteractionSystem.decisionSpamRoutine);
+            scene.clientInteractionSystem.decisionSpamRoutine = null;
+        }
+    }
 
     public bool isScrolling = false;
     public void OnScrollButtonClicked()
@@ -158,6 +170,7 @@ public class ClientInteractionSystem : MonoBehaviour
     {
         stateMachine?.OnDecisionInspectSkill(skillId);
     }
+    //Important function, fire the decision to server
     public void HandleDecisionMoveOrSkill()
     {
         if (stateMachine.currentState is UnitSelectedState)

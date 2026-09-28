@@ -597,7 +597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -51.026, y: 146.1196}
+  m_AnchoredPosition: {x: -51.026, y: -651}
   m_SizeDelta: {x: 331.9358, y: 178.8583}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &978349978
@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 999043117}
   - component: {fileID: 999043118}
   m_Layer: 5
-  m_Name: HighlightButton
+  m_Name: TutorialButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -700,7 +700,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -51.02594, y: 146.11961}
+  m_AnchoredPosition: {x: -51.02594, y: -651}
   m_SizeDelta: {x: 331.9358, y: 179.54443}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &999043113
@@ -1009,8 +1009,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.90185547, y: -240.73563}
-  m_SizeDelta: {x: -145.39, y: 292.0346}
+  m_AnchoredPosition: {x: 0.88739, y: -240.73563}
+  m_SizeDelta: {x: -177.75, y: 292.0346}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1480767196
 MonoBehaviour:
@@ -1032,8 +1032,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'This is tutorial so soososo soasoos aooasoaos odaodosaodos aodosa oasdood
-    asosdo aodoaso dasoas '
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1060,7 +1059,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 63.9
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1164,8 +1163,9 @@ MonoBehaviour:
   nextButton: {fileID: 176868130}
   skipButton: {fileID: 1898602589}
   blockerPanel: {fileID: 346793039}
-  highlightButton: {fileID: 999043111}
+  tutorialButton: {fileID: 999043111}
   highlighter: {fileID: 978349976}
+  gameCamera: {fileID: 0}
 --- !u!114 &1696925145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1326,7 +1326,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 101
+  m_SortingOrder: 1010
   m_TargetDisplay: 0
 --- !u!114 &1898602593
 MonoBehaviour:
@@ -1380,10 +1380,10 @@ RectTransform:
   - {fileID: 1480767195}
   m_Father: {fileID: 3390161900869238475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 9.648071, y: 297.20563}
-  m_SizeDelta: {x: -855.835, y: 426.8329}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 9.648071, y: -200.79437}
+  m_SizeDelta: {x: -855.835, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1993208497
 MonoBehaviour:

@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C0_S1
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 0
+  sceneId: 1
+  nodes:
+  - type: 0
+    text: Welcome to the combat tutorial
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Now we will learn the basic mechanics
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: This is "instant", you can think of it as a fraction of time. A battle
+      = 150 instants.
+    tutorialTargetId: C0S1_1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 60
+  - type: 0
+    text: 'It is just like an hour = 60 minutes, a second = 1000 miliseconds...
+
+      Just
+      different ways to calculate time, but all similar ideas.'
+    tutorialTargetId: C0S1_1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'It is just like an hour = 60 minutes, a second = 1000 miliseconds...
+
+      Just
+      different ways to calculate time, but all similar ideas.'
+    tutorialTargetId: C0S1_1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

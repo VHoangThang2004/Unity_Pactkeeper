@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UnitSelectedState : IInteractionState
 {
@@ -35,6 +36,7 @@ public class UnitSelectedState : IInteractionState
     public void OnExit()
     {
         session.currentSkillId = -1;
+        // StopDecisionSpam();
         session.ClearPatternData();
         scene.visualController.ClearRange();
     }
@@ -63,6 +65,12 @@ public class UnitSelectedState : IInteractionState
             return;
         }
 
+        // Click cell.z = 0 (non-selectable) - do nothing (remains in UnitSelectedState)
+        cell.z = 0;
+        if (session.CurrentTargetableCells.Contains(cell))
+        {
+            return;
+        }
         // Click own unit or invalid cell — deselect
         sm.GoToNone();
     }
@@ -79,20 +87,53 @@ public class UnitSelectedState : IInteractionState
         scene.visualController.HoverShadow();
     }
 
+    //important function, fire the decision to server
+
     public void OnDecision()
     {
         int unitId = session.selectedUnitId;
         int skillId = session.currentSkillId;
-        if (unitId == -1 || skillId == -1) return;
-        if (!session.isTargetLocked) return;
+        if (unitId == -1 || skillId == -1)
+        {
+            Debug.LogWarning($"[UnitSelected] OnDecision called with invalid unitId={unitId} or skillId={skillId}");
+            return;
+        }
+        if (!session.isTargetLocked)
+        {
+            Debug.LogWarning($"[UnitSelected] OnDecision called without locked target.");
+            return;
+        }
 
-        scene.controller.bridge.SendDecisionServerRpc(
+        scene.clientInteractionSystem.StopDecisionSpam(); // guard against double-start
+
+        scene.clientInteractionSystem.decisionSpamRoutine = session.StartCoroutine(SpamDecision(
             unitId,
             session.currentPreviewCell,
             DecisionType.ActivateAction,
             skillId,
-            session.CurrentToken);
-        sm.GoToNone();
+            session.CurrentToken));
+    }
+
+    private IEnumerator SpamDecision(int unitId, Vector3Int cell, DecisionType type, int skillId, int token)
+    {
+        Debug.Log($"[UnitSelected] Spamming decision to server: unitId={unitId}, cell={cell}, type={type}, skillId={skillId}, token={token}");
+        const float timeout = 2.5f;
+        const float interval = 0.1f; // set to 0 for true every-frame spam
+
+        float elapsed = 0f;
+
+        while (elapsed < timeout)
+        {
+            scene.controller.bridge.SendDecisionServerRpc(unitId, cell, type, skillId, token);
+            yield return new WaitForSeconds(interval);
+
+            elapsed += interval <= 0f ? Time.deltaTime : interval;
+        }
+
+        // Timed out with no snapshot — decide what you want here,
+        // e.g. sm.GoToNone(), an error toast, etc.
+        scene.clientInteractionSystem.decisionSpamRoutine = null;
+        Debug.LogWarning($"[UnitSelected] Decision spam timed out after {timeout} seconds. No snapshot received from server.");
     }
 
     public void OnDecision(int skillId)
@@ -104,12 +145,12 @@ public class UnitSelectedState : IInteractionState
         Debug.Log($"[UnitSelected] OnDecision — switched to skillId={skillId}, targetable={session.CurrentTargetableCells.Count}");
         scene.visualController.UpdateVisualOnStateChange();
 
-        // int targetable = 0;
-        // foreach (Vector3Int cell in session.CurrentTargetableCells)
-        // {
-        //     targetable += cell.z;
-        // }
-        if (session.CurrentTargetableCells.Count == 1 && session.IsMyUnit(session.selectedUnitId))
+        int targetable = 0;
+        foreach (Vector3Int cell in session.CurrentTargetableCells)
+        {
+            targetable += cell.z;
+        }
+        if (targetable == 1 && session.IsMyUnit(session.selectedUnitId))
         {
             OnTileClick(session.CurrentTargetableCells[0]);
         }

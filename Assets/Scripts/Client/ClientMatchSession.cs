@@ -118,6 +118,9 @@ public class ClientMatchSession : MonoBehaviour
         SyncState = SyncStateValue.Syncing;
         PendingToken = token;
 
+        if (PendingToken > CurrentToken)
+            scene.clientInteractionSystem.StopDecisionSpam();
+
         if (before.HasMapId) LoadMapData(before.MapId);
         ApplyFullSnapshot(before);
         scene.visualController.UpdateReadyUnitBar();
