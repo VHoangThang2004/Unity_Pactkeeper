@@ -16,5 +16,5 @@ public class TutorialTarget : MonoBehaviour
     }
 
     void OnEnable() => TutorialTargetRegistry.Register(targetId, this);
-    void OnDisable() => TutorialTargetRegistry.Unregister(targetId, this);
+    void OnDestroy() => TutorialTargetRegistry.Unregister(targetId, this);
 }

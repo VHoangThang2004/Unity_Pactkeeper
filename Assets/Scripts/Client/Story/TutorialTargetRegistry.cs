@@ -29,9 +29,15 @@ public static class TutorialTargetRegistry
     // Returns first available (non-null, active) target for this id
     public static TutorialTarget Get(string id)
     {
-        if (!_targets.TryGetValue(id, out var list)) return null;
+        // Debug.Log($"[Registry] All keys: {string.Join(", ", _targets.Keys)}");
+        if (!_targets.TryGetValue(id, out var list))
+        {
+            // Debug.LogWarning($"[Registry] Key '{id}' not found.");
+            return null;
+        }
         foreach (var t in list)
             if (t != null && t.gameObject.activeInHierarchy) return t;
+        // Debug.LogWarning($"[Registry] Key '{id}' found but no active target. List count: {list.Count}");
         return null;
     }
 

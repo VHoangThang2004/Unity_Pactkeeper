@@ -28,6 +28,7 @@ public class PlotSequencer : MonoBehaviour
     [Header("GuidedCellClick UI")]
     [Tooltip("Camera used to convert world cell position to screen position.")]
     [SerializeField] private Camera gameCamera;
+    [SerializeField] private ClientInteractionSystem interactionSystem; // C0_S1 only (guided cell click)
 
     private int _currentIndex = 0;
     private bool _waitingForInput = false;
@@ -93,12 +94,16 @@ public class PlotSequencer : MonoBehaviour
 
     void HandleTrigger(string triggerId)
     {
-        if (_plotRunning) return; // one plot at a time
+        Debug.Log($"[PlotSequencer] Received trigger: {triggerId}");
+        if (_plotRunning) return;
 
-        foreach (var entry in _pendingPlots)
+        var list = new System.Collections.Generic.List<PlotEntry>(_pendingPlots);
+        foreach (var entry in list)
         {
             if (entry.startTrigger == triggerId)
             {
+                _pendingPlots = new System.Collections.Generic.Queue<PlotEntry>(
+                    list.FindAll(e => e != entry));
                 StartCoroutine(RunPlotConfig(entry.plot));
                 return;
             }
@@ -115,11 +120,11 @@ public class PlotSequencer : MonoBehaviour
 
         while (_currentIndex < plot.nodes.Count)
         {
-            var node = plot.nodes[_currentIndex];
+            PlotNode node = plot.nodes[_currentIndex];
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
             _currentIndex++;
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(node.delay);
         }
 
         HideAll();
@@ -254,7 +259,7 @@ public class PlotSequencer : MonoBehaviour
         {
             Debug.LogError($"[PlotSequencer] GuidedClick: target '{node.tutorialTargetId}' " +
                            $"not found after {node.targetWaitTimeout}s — reloading scene.");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // SceneManager.LoadScene("3_MainMenu");
             yield break;
         }
 
@@ -318,8 +323,8 @@ public class PlotSequencer : MonoBehaviour
         var highlighterRect = highlighter.GetComponent<RectTransform>();
         highlightRect.position = screenPos;
         highlighterRect.position = screenPos;
-        highlightRect.sizeDelta = new Vector2(60f, 60f);     // one cell size approx
-        highlighterRect.sizeDelta = new Vector2(72f, 72f);   // 1.2x
+        highlightRect.sizeDelta = new Vector2(160f, 160f);     // one cell size approx
+        highlighterRect.sizeDelta = new Vector2(192f, 192f);   // 1.2x
         tutorialButton.SetActive(true);
         highlighter.SetActive(true);
 
@@ -334,9 +339,23 @@ public class PlotSequencer : MonoBehaviour
         var btn = tutorialButton.GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
         _waitingForInput = true;
-        btn.onClick.AddListener(() => _waitingForInput = false);
+        btn.onClick.AddListener(() =>
+        {
+            // Fire the actual cell click in the game
+            if (interactionSystem != null)
+                interactionSystem.HandleTileClick(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
+            _waitingForInput = false;
+        });
 
-        yield return new WaitUntil(() => !_waitingForInput);
+        while (_waitingForInput)
+        {
+            screenPos = cam.WorldToScreenPoint(worldPos);
+            highlightRect.position = screenPos;
+            highlighterRect.position = screenPos;
+            if (textBoxPanel.activeSelf)
+                PositionTextBoxAwayFrom(screenPos.y);
+            yield return null;
+        }
 
         HideAll();
     }
@@ -452,6 +471,15 @@ public class PlotSequencer : MonoBehaviour
 
         // Target below center → textbox above center, and vice versa
         if (targetRect.position.y < screenMid)
+            textRect.anchoredPosition = new Vector2(textRect.anchoredPosition.x, Mathf.Abs(textRect.anchoredPosition.y));
+        else
+            textRect.anchoredPosition = new Vector2(textRect.anchoredPosition.x, -Mathf.Abs(textRect.anchoredPosition.y));
+    }
+    void PositionTextBoxAwayFrom(float targetScreenY)
+    {
+        var textRect = textBoxPanel.GetComponent<RectTransform>();
+        float screenMid = Screen.height / 2f;
+        if (targetScreenY < screenMid)
             textRect.anchoredPosition = new Vector2(textRect.anchoredPosition.x, Mathf.Abs(textRect.anchoredPosition.y));
         else
             textRect.anchoredPosition = new Vector2(textRect.anchoredPosition.x, -Mathf.Abs(textRect.anchoredPosition.y));

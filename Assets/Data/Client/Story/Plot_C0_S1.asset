@@ -44,11 +44,106 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: 'It is just like an hour = 60 minutes, a second = 1000 miliseconds...
-
-      Just
-      different ways to calculate time, but all similar ideas.'
+    text: 'Now look at this bar over here: you can (and only can) command units that
+      is on this bar when it''s your turn.'
+    tutorialTargetId: C0S1_2
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: And this bar is your opponent's bar, similar rule is applied.
+    tutorialTargetId: C0S1_3
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Oh and when is your turn? Look over there, you can tell if the <u>Wait</u>
+      button is visible.
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: So yes, it is currently your turn. Click here to select your only available
+      unit.
+    tutorialTargetId: C0S1_5
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Perfect. On select a unit, you can select another <u>blue cell</u> as a
+      target to move there. Click this cell first.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your decision by clicking here.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4
+    targetWaitTimeout: 10
+  - type: 0
+    text: Notice anything special? It is still your turn right?
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Dont worry, you are not breaking any rule. And the rule is really simple.
+      Please look above, see the eyes? This is your eye.
+    tutorialTargetId: C0S1_YourEye
+    targetCell: {x: 0, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: And this is your opponent's eye. Notice the difference yet?
+    tutorialTargetId: C0S1_EnemyEye
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: So yes, this is a turn-based game. The most obvious rule is each side take
+      turns sequentially. But if one side's eye is closed, then that side no longer
+      takes any turn. Simple right?
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'Also you can rest assured: an eye will not re-open if the instant hasn''t
+      passed. Look: its still the same <u>instant</u> isn''t it?'
     tutorialTargetId: C0S1_1
     targetCell: {x: 0, y: 0}
     delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: But when will the eyes open again? => The next <u>paused instant</u> if
+      that side has <u>ready unit</u>.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Then when is the next <u>paused instant</u>? => It is simple, after both
+      sides closes the eyes, time flows again, and it will pause the <u>instant</u>
+      when any new unit(s) enters the Ready Queue.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Too much to handle? Dont worry just hit the <u>Wait button</u> and follow
+      the tutorial, you will understand soon enough.
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 13
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'Alot happened right? Eyes closed, opened, then closed.... So brief explanation:
+      the bot for this tutorial auto skips its turn, and you can feel free to explore
+      the game mechanism. (this explain the nearst eye closing)'
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
     targetWaitTimeout: 10

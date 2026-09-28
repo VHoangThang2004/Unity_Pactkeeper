@@ -25,8 +25,8 @@ public class PlotNode
     [Header("GuidedCellClick")]
     public Vector2Int targetCell;       // World-space grid cell (x, y)
 
-    [Header("AutoAdvance")]
-    public float delay = 1.5f;
+    [Header("AdvanceDelay")]
+    public float delay = 0.5f;
 
     [Header("Timeout")]
     [Tooltip("Seconds to wait for target to register before reloading scene.")]

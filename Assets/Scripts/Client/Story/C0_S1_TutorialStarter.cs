@@ -15,13 +15,6 @@ public class C0_S1_TutorialStarter : MonoBehaviour
              "Leave startTrigger empty to start immediately on match ready.")]
     [SerializeField] private List<PlotSequencer.PlotEntry> plots;
 
-    void Awake()
-    {
-        // Clear stale registrations from previous story scenes
-        // before any OnEnable fires in this scene
-        TutorialTargetRegistry.Clear();
-        PlotDirector.Clear();
-    }
 
     void Start()
     {
