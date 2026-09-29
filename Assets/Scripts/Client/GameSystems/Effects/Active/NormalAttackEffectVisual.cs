@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NormalAttackEffectVisual", menuName = "SRPG/Effects/Client/NormalAttack")]
 public class NormalAttackEffectVisual : ClientActiveEffectBase
 {
+    public AudioClip hitSfx;
     public override InstantType InstantType => InstantType.NonInstant;
     public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
@@ -67,6 +68,11 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
             t += Time.deltaTime / half;
             sceneUnit.transform.position = Vector3.Lerp(startPos, midPos, t);
             yield return null;
+        }
+
+        if (AudioManager.Instance != null && hitSfx != null)
+        {
+            AudioManager.Instance.PlaySFX(hitSfx);
         }
 
         // Move back

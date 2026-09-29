@@ -13,6 +13,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TMP_Text usernameText;
     [SerializeField] private GameObject loadingScreen;
 
+    [Header("Audio")]
+    public AudioClip mainMenuBGM;
+
     [Header("Config")]
     [SerializeField] private BackendConfig config;
     [SerializeField] private SceneConfig sceneConfig;
@@ -45,6 +48,12 @@ public class MainMenuManager : MonoBehaviour
                 usernameText = profileContainer.GetComponentInChildren<TMP_Text>();
         }
 
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayBGM(mainMenuBGM);
+        }
+
+        loadingScreen?.SetActive(true);
         welcomeText.text = Loc.Format(LocTables.MainMenu, LocKeys.MainMenu.WelcomeUser, PlayerSession.Username);
         if (usernameText != null)
             usernameText.text = PlayerSession.Username;

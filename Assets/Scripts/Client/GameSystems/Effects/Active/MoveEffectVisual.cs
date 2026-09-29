@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Effect_Move_Visual", menuName = "SRPG/Effects/Client/Move")]
 public class MoveEffectVisual : ClientActiveEffectBase
 {
+    public AudioClip moveSfx;
     public override InstantType InstantType => InstantType.Instant;
     public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
     {
@@ -35,6 +36,11 @@ public class MoveEffectVisual : ClientActiveEffectBase
 
         Vector3 start = sceneUnit.transform.position;
         Vector3 end = scene.movableTilemap.GetCellCenterWorld(targetCell);
+
+        if (AudioManager.Instance != null && moveSfx != null)
+        {
+            AudioManager.Instance.PlaySFX(moveSfx);
+        }
 
         float t = 0f;
         while (t < 1f)

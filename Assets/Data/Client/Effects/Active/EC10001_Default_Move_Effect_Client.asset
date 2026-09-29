@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveEffectVisual
   effectId: 10001
   resolveDuration: 1
+  baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
-  description: move to the selected cell
+  moveSfx: {fileID: 8300000, guid: f44c8a0a76137fa42b6024ad7899b74b, type: 3}

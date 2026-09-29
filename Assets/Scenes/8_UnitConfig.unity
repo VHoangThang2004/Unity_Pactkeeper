@@ -13065,6 +13065,7 @@ GameObject:
   - component: {fileID: 932975982}
   - component: {fileID: 932975983}
   - component: {fileID: 932975984}
+  - component: {fileID: 932975985}
   m_Layer: 5
   m_Name: TrinketSlotContainer
   m_TagString: Untagged
@@ -13217,6 +13218,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 932975985}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &932975984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13230,6 +13243,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialTarget
   targetId: TSLOT
+--- !u!114 &932975985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932975978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &934459522
 GameObject:
   m_ObjectHideFlags: 0
@@ -18095,6 +18121,7 @@ GameObject:
   - component: {fileID: 1313765633}
   - component: {fileID: 1313765634}
   - component: {fileID: 1313765635}
+  - component: {fileID: 1313765636}
   m_Layer: 5
   m_Name: MovementSlotContainer
   m_TagString: Untagged
@@ -18247,6 +18274,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1313765636}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1313765635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18260,6 +18299,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialTarget
   targetId: MSLOT
+--- !u!114 &1313765636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313765629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1322696550
 GameObject:
   m_ObjectHideFlags: 0
@@ -20816,6 +20868,7 @@ GameObject:
   - component: {fileID: 1471496923}
   - component: {fileID: 1471496926}
   - component: {fileID: 1471496927}
+  - component: {fileID: 1471496928}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -20899,6 +20952,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1471496928}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1471496924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20963,6 +21028,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialTarget
   targetId: MainMenuButton
+--- !u!114 &1471496928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471496921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1484748857
 GameObject:
   m_ObjectHideFlags: 0
@@ -23001,6 +23079,7 @@ GameObject:
   - component: {fileID: 1634768241}
   - component: {fileID: 1634768242}
   - component: {fileID: 1634768243}
+  - component: {fileID: 1634768244}
   m_Layer: 5
   m_Name: MainWeaponSlotContainer
   m_TagString: Untagged
@@ -23153,6 +23232,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1634768244}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1634768243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23166,6 +23257,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialTarget
   targetId: WSLOT
+--- !u!114 &1634768244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634768237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1639640843
 GameObject:
   m_ObjectHideFlags: 0
@@ -25159,6 +25263,7 @@ GameObject:
   - component: {fileID: 1747740024}
   - component: {fileID: 1747740025}
   - component: {fileID: 1747740026}
+  - component: {fileID: 1747740027}
   m_Layer: 5
   m_Name: ClassSlotContainer
   m_TagString: Untagged
@@ -25311,6 +25416,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1747740027}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1747740026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25324,6 +25441,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialTarget
   targetId: CSLOT
+--- !u!114 &1747740027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747740020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1757257058
 GameObject:
   m_ObjectHideFlags: 0
@@ -28690,6 +28820,7 @@ GameObject:
   - component: {fileID: 2057893928}
   - component: {fileID: 2057893927}
   - component: {fileID: 2057893926}
+  - component: {fileID: 2057893929}
   m_Layer: 5
   m_Name: BackToUnitListButton
   m_TagString: Untagged
@@ -28773,6 +28904,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2057893929}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2057893927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28811,6 +28954,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2057893924}
   m_CullTransparentMesh: 1
+--- !u!114 &2057893929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057893924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &2067394935
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NormalAttackEffectVisual
   effectId: 10002
   resolveDuration: 1
+  baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
-  description: damage the target
+  hitSfx: {fileID: 8300000, guid: d8b951e8256928549a01f59b34badbee, type: 3}
