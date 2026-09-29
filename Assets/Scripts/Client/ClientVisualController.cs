@@ -106,7 +106,6 @@ public class ClientVisualController : MonoBehaviour
     {
         var state = scene?.clientInteractionSystem?.stateMachine?.currentState;
         ClearRange();
-        ClearShadowBrute();
         RedrawRange();
         ShowInspectPanel(false);
         // scene.IsCenteringCell = false;
@@ -126,6 +125,7 @@ public class ClientVisualController : MonoBehaviour
         }
         else if (state is NoneState)
         {
+            ClearShadowBrute();
             ShowWaitButton(true);
             ShowCancelButton(false);
             ShowConfirmButton(false);
@@ -134,6 +134,7 @@ public class ClientVisualController : MonoBehaviour
         }
         else if (state is LockedInputState)
         {
+            ClearShadowBrute();
             ShowWaitButton(false);
             ShowCancelButton(false);
             ShowConfirmButton(false);
@@ -273,7 +274,7 @@ public class ClientVisualController : MonoBehaviour
 
     public void ShowWaitButton(bool isShown)
     {
-        waitButtonLayer.SetActive(session.IsMyTurn() && isShown && scene.clientInteractionSystem.decisionSpamRoutine==null);
+        waitButtonLayer.SetActive(session.IsMyTurn() && isShown && scene.clientInteractionSystem.decisionSpamRoutine == null);
     }
 
     public void ShowCancelButton(bool isShown)

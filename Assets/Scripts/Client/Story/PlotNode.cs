@@ -7,7 +7,8 @@ public enum PlotNodeType
     GuidedRightClick,   // Highlight a real UI button, player MUST right-click it to advance
     GuidedCellClick,    // Highlight a world-space grid cell, player MUST click it to advance
     AutoAdvance,        // No input — auto-moves to next node after a delay
-    CompleteAndExit     // Final button — marks story progress complete and reloads main menu
+    CompleteAndExit,     // Final button — marks story progress complete and reloads main menu
+    GuidedLeftClick       // Special case of GuidedClick that involves the extended button component
 }
 
 [System.Serializable]

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.InputSystem;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Reads a PlotConfig and drives the tutorial UI step by step.
@@ -162,7 +163,11 @@ public class PlotSequencer : MonoBehaviour
                 break;
 
             case PlotNodeType.GuidedRightClick:
-                yield return StartCoroutine(RunGuidedRightClick(node));
+                yield return StartCoroutine(RunGuidedRightClickExtendedButton(node));
+                break;
+
+            case PlotNodeType.GuidedLeftClick:
+                yield return StartCoroutine(RunGuidedLeftClickExtendedButton(node));
                 break;
 
             case PlotNodeType.GuidedCellClick:
@@ -302,7 +307,7 @@ public class PlotSequencer : MonoBehaviour
 
     // -------------------------------------------------------
 
-    IEnumerator RunGuidedRightClick(PlotNode node)
+    IEnumerator RunGuidedRightClickExtendedButton(PlotNode node)
     {
         HideAll();
         blockerPanel.SetActive(true);
@@ -336,7 +341,7 @@ public class PlotSequencer : MonoBehaviour
         PositionButtonHighlight(target);
         var btn = tutorialButton.GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
-        
+
         _waitingForInput = true;
 
         Action onRightClick = () =>
@@ -354,6 +359,61 @@ public class PlotSequencer : MonoBehaviour
         inputReader.OnRightClick += onRightClick;
         yield return new WaitUntil(() => !_waitingForInput);
         inputReader.OnRightClick -= onRightClick;
+        HideAll();
+    }
+
+    IEnumerator RunGuidedLeftClickExtendedButton(PlotNode node)
+    {
+        HideAll();
+        blockerPanel.SetActive(true);
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        // Wait for target to register
+        TutorialTarget target = null;
+        float waited = 0f;
+        while (target == null && waited < node.targetWaitTimeout)
+        {
+            target = TutorialTargetRegistry.Get(node.tutorialTargetId);
+            if (target == null)
+            {
+                waited += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        if (target == null || inputReader == null)
+        {
+            Debug.LogError($"[PlotSequencer] GuidedLeftClick: target '{node.tutorialTargetId}' " +
+                           $"not found after {node.targetWaitTimeout}s.");
+            yield break;
+        }
+
+        PositionButtonHighlight(target);
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+
+        _waitingForInput = true;
+
+        Action onLeftClick = () =>
+        {
+            if (!_waitingForInput) return;
+            if (RectTransformUtility.RectangleContainsScreenPoint(
+                target.RectTransform, Mouse.current.position.ReadValue()))
+            {
+                Debug.Log($"[PlotSequencer] GuidedLeftClick: left-click detected on target '{node.tutorialTargetId}'");
+                target.ExtendedButton?.onLeftClick?.Invoke();
+                _waitingForInput = false;
+            }
+        };
+
+        inputReader.OnLeftClick += onLeftClick;
+        yield return new WaitUntil(() => !_waitingForInput);
+        inputReader.OnLeftClick -= onLeftClick;
         HideAll();
     }
     // -------------------------------------------------------
@@ -406,7 +466,13 @@ public class PlotSequencer : MonoBehaviour
         {
             // Fire the actual cell click in the game
             if (interactionSystem != null)
+            {
+                interactionSystem.stateMachine.OnTileHover(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
+                Task.Delay(1);
                 interactionSystem.HandleTileClick(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
+                Task.Delay(1);
+                interactionSystem.stateMachine.OnTileHover(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
+            }
             _waitingForInput = false;
         });
 

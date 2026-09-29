@@ -75,7 +75,7 @@ MonoBehaviour:
   - type: 1
     text: So yes, it is currently your turn. Click here to select your only available
       unit.
-    tutorialTargetId: C0S1_5
+    tutorialTargetId: C0S1_Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
@@ -158,7 +158,7 @@ MonoBehaviour:
     targetWaitTimeout: 10
   - type: 1
     text: Ok now select a unit.
-    tutorialTargetId: C0S1_5
+    tutorialTargetId: C0S1_Unit1
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
@@ -215,3 +215,372 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
+  - type: 1
+    text: Now select this unit.
+    tutorialTargetId: C0S1_Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Let's move to this cell.
+    tutorialTargetId: 
+    targetCell: {x: -2, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm the decision.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now select this unit.
+    tutorialTargetId: C0S1_Unit2
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 6
+    text: Let's see what he can do. Select his main weapon skill.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Notice the blue cells? These cells are cells that he can attack from his
+      position, memorize  this quickly. (move camera around if necessary)
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now we have to re-select him to select his movement skill. First click
+      the cancel button.
+    tutorialTargetId: C0S1_CancelButton
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Let's select him again.
+    tutorialTargetId: C0S1_Unit2
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: There are 2 cells that are suitable, the first one is this cell
+    tutorialTargetId: 
+    targetCell: {x: 2, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: This is the second suitable cell, let's choose this one, it is for something
+      I want to show you later.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm the movement.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 1, y: 1}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: Perfect. Now select him again.
+    tutorialTargetId: C0S1_Unit2
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 6
+    text: Select his main weapon skill.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Lock the target.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm the decision and focus here, the interesting part is about to come.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 1, y: 0}
+    delay: 1
+    targetWaitTimeout: 10
+  - type: 0
+    text: Hmm an aura appears, aside from that, nothing happened right?
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: To answer your questions, let's inspect the skill you commanded previously.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Oh right, he is not on the <u>Ready queue</u> anymore, see?
+    tutorialTargetId: C0S1_2
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Select him directly instead.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 2
+    text: Inspect the skill.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'The skill description is simple isnt it? Attack the target... but it did
+      not happen... has anything gone wrong? Actually, everything is working as designed. '
+    tutorialTargetId: C0S1_InspectPanel
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Look at this part, this is the skill type.
+    tutorialTargetId: C0S1_STYPE
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'There are 3 types: Instant / HalfInstant / NonInstant.
+
+      An example
+      for <u>Instant skill</u> is the movement skill you have been using, it''s effect
+      is applied immediately after you commanded.'
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'So the attack skill you just used, is the most simple example for <u>NonInstant</u>
+      skill.
+
+      How it works: time paused (eye(s) opens) -> commands -> both
+      eyes closes -> non-instant skills that was commanded now takes effect -> time
+      flows again.'
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "So, to simplify this: \nIt is not <u>\"what you commanded did not happen\"
+      </u>\nIt is <u>\"what you commanded has not happened yet\" </u>"
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Oh and by the way, the <u>NonInstant</u> skill command also immediately
+      removes the unit from <u>Ready queue</u>.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now, for the skill to happen, click the wait button and watch
+    tutorialTargetId: C0S1_CancelButton
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now, for the skill to happen, click the wait button and watch
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 1, y: 1}
+    delay: 12
+    targetWaitTimeout: 10
+  - type: 0
+    text: Simple isn't it?
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: Hmm last <u>paused instant</u> you commanded both units, but now only this
+      one available, wonder why?
+    tutorialTargetId: C0S1_2
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Let's see... oh! There is a number, see?
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: 'For a simple explanation: because in the same <u>paused instant </u> ,
+      the tank unit act faster (fewer commands), so he recovers faster. The calculation
+      part is up to you, goodluck.'
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: For now, take it easy, you have been doing well.
+    tutorialTargetId: 
+    targetCell: {x: -2, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Let's setup for a final blow. Select this unit.
+    tutorialTargetId: 
+    targetCell: {x: -2, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Move to this cell.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Move to this cell.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: Ok that's enough, let's save for the final blow.
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 11
+    targetWaitTimeout: 10
+  - type: 1
+    text: Yes. We keep saving for the final blow, another wait please.
+    tutorialTargetId: C0S1_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 10
+    targetWaitTimeout: 10
+  - type: 0
+    text: Alright, all our units are ready. Let's begin.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select this unit first.
+    tutorialTargetId: C0S1_Unit2
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Move him to this cell.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: -1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 0, y: -1}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select him again.
+    tutorialTargetId: C0S1_Unit2
+    targetCell: {x: 0, y: -1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 6
+    text: Select his attack skill.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Select this cell to attack. No one is there? Haha don't worry, Im about
+      to show you an interesting final blow.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: -1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm. Trust me, it will work.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 2, y: 1}
+    delay: 2
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now we select the last unit.
+    tutorialTargetId: C0S1_Unit1
+    targetCell: {x: 2, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 2
+    text: Inspect this skill, we will use this skill next.
+    tutorialTargetId: C0S1_CSKILL
+    targetCell: {x: 2, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Take your time, read it. \nHave you understand the plan? "
+    tutorialTargetId: C0S1_InspectPanel
+    targetCell: {x: 2, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 3
+    text: Select the only selectable target, according to our plan this is the suitable
+      target (lol).
+    tutorialTargetId: 
+    targetCell: {x: 0, y: -1}
+    delay: 0.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm to continue.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 1, y: 1}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select the unit.
+    tutorialTargetId: C0S1_Unit1
+    targetCell: {x: 1, y: 1}
+    delay: 0.5
+    targetWaitTimeout: 0.5
+  - type: 3
+    text: Move to this cell.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: -1}
+    delay: 0.5
+    targetWaitTimeout: 0.5
+  - type: 1
+    text: Confirm
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 1, y: 0}
+    delay: 3
+    targetWaitTimeout: 0.5
+  - type: 1
+    text: Select him again.
+    tutorialTargetId: C0S1_Unit1
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 0.5
+  - type: 6
+    text: Now select his main attack skill.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 1, y: -1}
+    delay: 0.5
+    targetWaitTimeout: 0.5
+  - type: 3
+    text: Select the target.
+    tutorialTargetId: C0S1_WSKILL
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 0.5
+  - type: 1
+    text: Confirm and watch. This is the end of the tutorial, thankyou for participating,
+      and hope to see you again.
+    tutorialTargetId: C0S1_ConfirmButton
+    targetCell: {x: 1, y: 0}
+    delay: 0.5
+    targetWaitTimeout: 0.5
