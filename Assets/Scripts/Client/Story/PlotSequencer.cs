@@ -505,6 +505,7 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
+
         // Wait for target to register — reload scene if timeout exceeded
         TutorialTarget target = null;
         float waited = 0f;
@@ -522,7 +523,7 @@ public class PlotSequencer : MonoBehaviour
         {
             Debug.LogError($"[PlotSequencer] CompleteAndExit: target '{node.tutorialTargetId}' " +
                            $"not found after {node.targetWaitTimeout}s — reloading scene.");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             yield break;
         }
 

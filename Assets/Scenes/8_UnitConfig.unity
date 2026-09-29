@@ -13064,6 +13064,7 @@ GameObject:
   - component: {fileID: 932975980}
   - component: {fileID: 932975982}
   - component: {fileID: 932975983}
+  - component: {fileID: 932975984}
   m_Layer: 5
   m_Name: TrinketSlotContainer
   m_TagString: Untagged
@@ -13216,6 +13217,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &932975984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932975978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: TSLOT
 --- !u!1 &934459522
 GameObject:
   m_ObjectHideFlags: 0
@@ -14953,6 +14967,7 @@ GameObject:
   - component: {fileID: 1108247345}
   - component: {fileID: 1108247347}
   - component: {fileID: 1108247346}
+  - component: {fileID: 1108247348}
   m_Layer: 5
   m_Name: StatPanel
   m_TagString: Untagged
@@ -15022,6 +15037,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108247344}
   m_CullTransparentMesh: 1
+--- !u!114 &1108247348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1108247344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: StatPanel
 --- !u!1 &1122708752
 GameObject:
   m_ObjectHideFlags: 0
@@ -17345,6 +17373,7 @@ GameObject:
   - component: {fileID: 1259023264}
   - component: {fileID: 1259023263}
   - component: {fileID: 1259023262}
+  - component: {fileID: 1259023265}
   m_Layer: 5
   m_Name: SkillSlots
   m_TagString: Untagged
@@ -17372,8 +17401,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 610.8412, y: 42.654}
-  m_SizeDelta: {x: -1148.098, y: -85.307}
+  m_AnchoredPosition: {x: 610.8412, y: 0.0002746582}
+  m_SizeDelta: {x: -1148.098, y: 0.00048828}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1259023262
 MonoBehaviour:
@@ -17439,6 +17468,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1259023260}
   m_CullTransparentMesh: 1
+--- !u!114 &1259023265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259023260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: SkillSlots
 --- !u!1 &1268998831
 GameObject:
   m_ObjectHideFlags: 0
@@ -18052,6 +18094,7 @@ GameObject:
   - component: {fileID: 1313765631}
   - component: {fileID: 1313765633}
   - component: {fileID: 1313765634}
+  - component: {fileID: 1313765635}
   m_Layer: 5
   m_Name: MovementSlotContainer
   m_TagString: Untagged
@@ -18204,6 +18247,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1313765635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313765629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: MSLOT
 --- !u!1 &1322696550
 GameObject:
   m_ObjectHideFlags: 0
@@ -20759,6 +20815,7 @@ GameObject:
   - component: {fileID: 1471496924}
   - component: {fileID: 1471496923}
   - component: {fileID: 1471496926}
+  - component: {fileID: 1471496927}
   m_Layer: 5
   m_Name: MainMenuButton
   m_TagString: Untagged
@@ -20893,6 +20950,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Mask
   m_ShowMaskGraphic: 1
+--- !u!114 &1471496927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471496921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: MainMenuButton
 --- !u!1 &1484748857
 GameObject:
   m_ObjectHideFlags: 0
@@ -22930,6 +23000,7 @@ GameObject:
   - component: {fileID: 1634768239}
   - component: {fileID: 1634768241}
   - component: {fileID: 1634768242}
+  - component: {fileID: 1634768243}
   m_Layer: 5
   m_Name: MainWeaponSlotContainer
   m_TagString: Untagged
@@ -23082,6 +23153,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1634768243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634768237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: WSLOT
 --- !u!1 &1639640843
 GameObject:
   m_ObjectHideFlags: 0
@@ -25074,6 +25158,7 @@ GameObject:
   - component: {fileID: 1747740022}
   - component: {fileID: 1747740024}
   - component: {fileID: 1747740025}
+  - component: {fileID: 1747740026}
   m_Layer: 5
   m_Name: ClassSlotContainer
   m_TagString: Untagged
@@ -25226,6 +25311,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1747740026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747740020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::TutorialTarget
+  targetId: CSLOT
 --- !u!1 &1757257058
 GameObject:
   m_ObjectHideFlags: 0
