@@ -34,6 +34,15 @@ public static class LocKeys
         public const string NoOngoingEvent = "NoOngoingEvent_key";
         public const string ProfileLoadFailed = "ProfileLoadFailed_key";
         public const string ProfileFormat = "ProfileFormat_key";
+        public const string ProfileLevelFormat = "ProfileLevelFormat_key";
+        public const string ProfileExpFormat = "ProfileExpFormat_key";
+        public const string ProfileGemsFormat = "ProfileGemsFormat_key";
+        public const string ProfileUnitsFormat = "ProfileUnitsFormat_key";
+        public const string ProfileWeaponsFormat = "ProfileWeaponsFormat_key";
+        public const string ProfileTrinketsFormat = "ProfileTrinketsFormat_key";
+        public const string ProfileStoryFormat = "ProfileStoryFormat_key";
+        public const string ProfileStoryChapterDoneFormat = "ProfileStoryChapterDoneFormat_key";
+        public const string ProfileStoryUnavailable = "ProfileStoryUnavailable_key";
     }
 
     public static class Matchmaking

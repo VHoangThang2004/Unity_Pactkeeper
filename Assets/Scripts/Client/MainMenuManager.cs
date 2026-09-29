@@ -19,6 +19,7 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Ref")]
     [SerializeField] private MatchmakingManager matchmakingManager;
+    [SerializeField] private ProfileTabManager profileTab;
 
     void Start()
     {
@@ -209,6 +210,16 @@ public class MainMenuManager : MonoBehaviour
     // -------------------------------------------------------
     // Scene Navigation
     // -------------------------------------------------------
+
+    public void OpenProfileTab()
+    {
+        profileTab?.Open();
+    }
+
+    public void CloseProfileTab()
+    {
+        profileTab?.Close();
+    }
 
     public void GoToUnitList()
     {
