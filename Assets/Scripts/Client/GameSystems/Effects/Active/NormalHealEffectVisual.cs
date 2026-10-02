@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NormalHealEffectVisual", menuName = "SRPG/Effects/Client/NormalHeal")]
 public class NormalHealEffectVisual : ClientActiveEffectBase
 {
+    public AudioClip healSfx;
     public override InstantType InstantType => InstantType.HalfInstant;
     public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
@@ -68,6 +69,9 @@ public class NormalHealEffectVisual : ClientActiveEffectBase
             sceneUnit.transform.position = Vector3.Lerp(startPos, bobPos, t);
             yield return null;
         }
+
+        if (AudioManager.Instance != null && healSfx != null)
+            AudioManager.Instance.PlaySFX(healSfx);
 
         // Move back
         t = 0f;

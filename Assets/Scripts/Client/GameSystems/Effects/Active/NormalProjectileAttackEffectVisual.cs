@@ -8,6 +8,9 @@ public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
     public override InstantType InstantType => InstantType.NonInstant;
     public string sourceVFXname;
     public string targetVFXname;
+    public AudioClip shootSfx;
+    public AudioClip impactSfx;
+
     public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
     {
         return " Deal " + Mathf.RoundToInt(baseValue * unit.DamageMultiplier / 100) + " damage to selected enemy target.";
@@ -37,6 +40,9 @@ public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
         sceneUnit.VFXAnimator.SetBool("IsIdling", false);
         sceneUnit.VFXAnimator.Play(sourceVFXname, 0, 0f);
 
+        if (AudioManager.Instance != null && shootSfx != null)
+            AudioManager.Instance.PlaySFX(shootSfx);
+
         yield return null;
         float animLength = sceneUnit.VFXAnimator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animLength);
@@ -46,6 +52,10 @@ public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
         sceneUnit.VFXSprite.transform.position = targetPos;
         sceneUnit.VFXAnimator.SetBool("IsIdling", false);
         sceneUnit.VFXAnimator.Play(targetVFXname, 0, 0f);
+
+        if (AudioManager.Instance != null && impactSfx != null)
+            AudioManager.Instance.PlaySFX(impactSfx);
+
         yield return null;
         float targetAnimLength = sceneUnit.VFXAnimator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(targetAnimLength);

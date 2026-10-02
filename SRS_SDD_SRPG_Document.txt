@@ -1,0 +1,908 @@
+================================================================================
+MINISTRY OF EDUCATION AND TRAINING
+                          FPT UNIVERSITY
+
+              Software Requirement Specification &
+              Software Design Description (SRS/SDD)
+
+        SRPG Online — Tactical Strategy Role-Playing Game System
+              (Unity Client + ASP.NET Backend + Dedicated Server)
+
+================================================================================
+
+Group Members
+  [Full name] - Team leader - [Student ID]
+  [Full name] - Team member - [Student ID]
+  [Full name] - Team member - [Student ID]
+  [Full name] - Team member - [Student ID]
+
+Supervisor
+  [Supervisor name]
+
+- Ho Chi Minh, [Month/Year] 2026 -
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+Acknowledgement .......................................................... [ ]
+Definition and Acronyms .................................................. 4
+I.   Project Introduction ................................................ 5
+     1. Overview .......................................................... 3
+     2. Product Background ................................................ 4
+     3. Existing Systems .................................................. 4
+     4. Business Opportunity .............................................. 5
+     5. Software Product Vision ............................................. 5
+II.  Software Requirement Specification .................................. 6
+     1. Product Overview .................................................. 6
+     2. User Requirements ................................................. 6
+     3. Functional Requirements ........................................... 10
+     4. Non-Functional Requirements ..................................... 11
+     5. Requirement Appendix .............................................. 12
+III. Software Design Diagram ......................................... 13
+     1. Class Diagram ..................................................... 13
+     2. State Diagram ................................................... 14
+
+================================================================================
+DEFINITION AND ACRONYMS
+================================================================================
+
+Acronym    | Definition
+-----------|------------------------------------------------------------------
+API        | Application Programming Interface
+ASP.NET    | Active Server Pages .NET — backend framework
+BA         | Business Analysis
+BR         | Business Rule
+CT         | Charge Time — step/timeline system in combat
+DTO        | Data Transfer Object
+ERD        | Entity Relationship Diagram
+GUI        | Graphical User Interface
+JWT        | JSON Web Token — authentication token after login
+NGO        | Netcode for GameObjects (Unity multiplayer)
+PM         | Project Manager
+PvP        | Player versus Player
+PvE        | Player versus Environment (Story mode)
+REST       | Representational State Transfer
+SDD        | Software Design Description
+SPMP       | Software Project Management Plan
+SRPG       | Strategy Role-Playing Game
+SRS        | Software Requirement Specification
+UC         | Use Case
+UAT        | User Acceptance Test
+UTP        | Unity Transport Protocol
+VPS        | Virtual Private Server — virtual host for production deployment
+
+================================================================================
+I. PROJECT INTRODUCTION
+================================================================================
+
+1. OVERVIEW
+-----------
+
+1.1 Project Information
+
+  Project name   : SRPG Online — Tactical Strategy Role-Playing Game System
+  Group name     : [Group name — fill in]
+  Software type  : Game application (Unity Client) + Web API Backend
+  Platform       : Windows PC (Client); Linux VPS (Dedicated Server + Backend)
+  Engine         : Unity 6.x + Unity Netcode for GameObjects
+  Backend        : ASP.NET — GameInventoryApi (separate repository)
+
+1.2 Project Team
+
+  Full Name              | Role        | Email              | Mobile
+  -----------------------|-------------|--------------------|---------
+  [Full name]            | Leader      | [email]            | [Phone]
+  [Full name]            | Member      | [email]            | [Phone]
+  [Full name]            | Member      | [email]            | [Phone]
+  [Full name]            | Member      | [email]            | [Phone]
+  [Supervisor name]      | Supervisor  | [supervisor email] | [Phone]
+
+
+2. PRODUCT BACKGROUND
+---------------------
+
+The grid-based tactical SRPG market still has stable demand for competitive
+PvP experiences combined with meta-game systems (character collection,
+equipment, gacha). However, many indie products or academic prototypes face
+difficulties when implementing a reliable multiplayer architecture: if the
+client handles combat logic itself, cheating becomes easy; manual matchmaking
+does not scale; and separating player data from game logic makes balance
+maintenance hard.
+
+The SRPG-SRPG development team aims to build an online tactical game system
+with server-authoritative combat (the server is the source of truth), a
+timeline/instant model instead of classic turn-based play, and a meta-game
+served through a REST API backend. Players can log in, manage formations,
+configure characters, use gacha, matchmake for 1v1 PvP, and (under development)
+play Story PvE mode.
+
+
+3. EXISTING SYSTEMS
+-------------------
+
+3.1 Traditional turn-based tactical games (e.g., Fire Emblem-style local)
+
+  Description:
+    Classic SRPG games: each turn one side moves all of its units; combat and
+    AI run locally, with no backend or multiplayer.
+
+  Drawbacks:
+    - No support for online PvP and anti-cheat.
+    - No meta-game persistence (inventory, gacha) through a server.
+    - Not suitable for matchmaking and dedicated server models.
+
+3.2 Peer-to-peer multiplayer games (client as host)
+
+  Description:
+    One client acts as host and synchronizes state directly over the network
+    between players.
+
+  Drawbacks:
+    - The host can modify memory / cheat in combat.
+    - Connection quality depends on the host; reconnection is difficult.
+    - Hard to store match history and loadouts in a centralized way.
+
+3.3 Unity asset marketplace (SRPG template / toolkit)
+
+  Description:
+    The Asset Store provides grids, turn systems, and sample UI.
+
+  Drawbacks:
+    - No built-in backend auth, matchmaking, or gacha integration.
+    - Default turn-based model; no CT-like timeline as in this project.
+    - Requires heavy customization to achieve a 3-tier architecture
+      (Client / API / Headless Server).
+
+
+4. BUSINESS OPPORTUNITY
+-----------------------
+
+The opportunity lies in providing a scalable online SRPG game platform:
+
+  - Ranked / casual PvP matchmaking for communities that prefer timeline-based
+    tactics instead of rigid turns.
+  - Meta-game monetization through gacha (units, weapons, trinkets) and Story
+    progression.
+  - Separating data persistence (backend DB) from combat logic (Unity assets)
+    enables fast game balancing without complex database migrations.
+  - Headless dedicated servers deployed on a VPS allow control of the
+    production environment (currently: srpg-backend.duckdns.org,
+    VPS 103.110.87.249).
+
+Initial audience: PC players, internal playtests, and academic demos; later
+expansion may include ranking seasons, Steam distribution, and a mobile client.
+
+
+5. SOFTWARE PRODUCT VISION
+--------------------------
+
+Build an online SRPG game with the following core experience:
+
+  "Players log in, build a formation of 5 characters, matchmake for PvP or play
+   Story, join grid-based tactical combat with a fair timeline/instant system
+   thanks to server-authoritative design, and manage progression through gacha
+   and equipment configuration."
+
+Technical vision:
+  - Unity Client: UI, input, effects, localization (EN/VI).
+  - GameInventoryApi backend: auth, profile, inventory, matchmaking, gacha, story.
+  - Headless Unity Server: lobby, combat simulation, result reporting.
+  - One Unity codebase, with separate Client and Dedicated Server builds.
+
+
+================================================================================
+II. SOFTWARE REQUIREMENT SPECIFICATION
+================================================================================
+
+1. PRODUCT OVERVIEW
+-------------------
+
+  [INSERT FIGURE: SRPG — Context Diagram]
+
+Description:
+  The Context Diagram presents the SRPG System as a single central boundary and
+  shows how it exchanges data with four external entities: Player, Steam
+  Platform (Steamworks), Google OAuth, and Dev/Ops. The Player sends login
+  requests, game actions, team and character configuration, as well as gacha,
+  matchmaking, and story mode requests, and receives login results, player
+  information, inventory and progression data, match information, combat
+  results, and rewards. Steam and Google handle authentication requests and
+  return authentication or authorization results. Dev/Ops deploy and configure
+  the system, request monitoring, and receive logs, alerts, and system status.
+
+
+2. USER REQUIREMENTS
+--------------------
+
+  User Requirements are derived from the Context Diagram. The actors below are
+  the external entities that interact with the SRPG System.
+
+2.1 Actors
+
+  # | Actor                         | Description
+  --|-------------------------------|--------------------------------------------
+  1 | Player                        | Primary end user of the SRPG System. Sends
+    | (Người chơi)                  | login requests, game actions, team and
+    |                               | character configuration, and gacha /
+    |                               | matchmaking / story mode requests. Receives
+    |                               | login results, player information,
+    |                               | inventory and progression, match
+    |                               | information, combat results, and rewards.
+  2 | Steam Platform                | External authentication provider
+    | (Steamworks)                  | (Steamworks). Receives Steam authentication
+    |                               | requests from the SRPG System and returns
+    |                               | authentication results.
+  3 | Google OAuth                  | External authentication provider
+    | (accounts.google.com)         | (accounts.google.com). Receives OAuth login
+    |                               | requests from the SRPG System and returns
+    |                               | authorization results and account
+    |                               | information.
+  4 | Dev / Ops                     | Deployment and monitoring role. Sends
+    | (Deployment & Monitoring)     | deployment, configuration, and monitoring
+    |                               | requests to the SRPG System, and receives
+    |                               | logs, alerts, and system status.
+
+
+2.2 Use Cases — Diagram
+
+  The system uses a Use Case Diagram (Simplified) with 18 use cases, divided
+  into 2 groups:
+    - Player (UC01–UC10): operations on the Client.
+    - System (UC11–UC18): backend and game server processing.
+
+  [INSERT FIGURE: SRPG — Use Case Diagram (Simplified)]
+  Reference file: completed Use Case diagram (PlantUML / PNG export).
+
+  Actors on the diagram:
+    - Player, Opponent
+    - GameInventoryApi <<system>>
+    - Game Server <<system>>
+
+  Packages:
+    - Player: UC01–UC10
+    - System: UC11–UC18
+
+
+2.2.2 Use Case Descriptions
+
+  Detailed description table (Pre-Condition / Post-Condition / Normal / Abnormal):
+
+
+  --- UC01: Log In ---
+  Actor          : Player
+  Description    : The player authenticates an account via Google OAuth, Steam,
+                   or Dev credentials (development environment).
+  Pre-Condition  : The client has started; network connection to the backend
+                   is available.
+  Post-Condition : JWT is stored in PlayerSession; navigate to Main Menu or
+                   Dev Connect.
+  Include        : UC11 (Authenticate & Issue Token)
+  Normal Case    : Choose login method → backend returns a valid token → save
+                   session → enter the game.
+  Abnormal Case  : Wrong credentials / OAuth timeout → show error message;
+                   do not enter the game.
+  Related code   : GoogleLoginManager, SteamLoginManager, DevLoginManager
+
+
+  --- UC02: View Player Information ---
+  Actor          : Player
+  Description    : View profile: username, level, experience, gems.
+  Pre-Condition  : Already logged in (UC01).
+  Post-Condition : UI displays updated profile information.
+  Include        : UC12
+  Normal Case    : Enter Main Menu → GET /api/PlayerProfile → display.
+  Abnormal Case  : API error → message "Profile: failed to load".
+  Related code   : MainMenuManager.FetchProfile()
+
+
+  --- UC03: Manage Team Formation ---
+  Actor          : Player
+  Description    : Select and arrange up to 5 units into a formation
+                   (Team Loadout).
+  Pre-Condition  : Already logged in; may own 0 or more units (slots may be
+                   empty).
+  Post-Condition : Formation is saved on the backend.
+  Include        : UC12
+  Normal Case    : Open Unit List → drag and drop units → PUT /api/TeamLoadout.
+  Abnormal Case  : Save failed → keep previous formation, log error.
+  Related code   : UnitListManager
+
+
+  --- UC04: Configure Character ---
+  Actor          : Player
+  Description    : Assign movement skill, class skill, weapon, and trinket to
+                   each owned unit.
+  Pre-Condition  : Already logged in; has owned units.
+  Post-Condition : Unit loadout is updated on the backend.
+  Include        : UC12
+  Normal Case    : Select unit → change equipment/skill → PATCH unit API.
+  Abnormal Case  : Weapon does not match class → cannot equip.
+  Related code   : UnitConfigManager, SlotConfig
+
+
+  --- UC05: Gacha ---
+  Actor          : Player
+  Description    : View banners, drop rates, perform rolls (Single/Ten), receive
+                   units/weapons/trinkets/gems.
+  Pre-Condition  : Already logged in; enough gems (if the pull has a cost).
+  Post-Condition : Inventory updated; gems deducted according to the pull.
+  Include        : UC12
+  Normal Case    : Select banner → pull → display results.
+  Abnormal Case  : Not enough gems / API error → notification popup.
+  Related code   : GachaManager
+
+
+  --- UC06: Find PvP Match ---
+  Actor          : Player
+  Description    : Join the 1v1 matchmaking queue or cancel match search.
+  Pre-Condition  : Already logged in; not already in another match
+                   (409 if duplicate).
+  Post-Condition : Currently in queue OR already matched and proceed to
+                   UC14/UC07.
+  Include        : UC13
+  Normal Case    : POST queue/join → poll status every 3s → matched.
+  Abnormal Case  : Join failed / queue timeout → notify, cancel queue.
+  Related code   : MatchmakingManager
+
+
+  --- UC07: Participate in Match ---
+  Actor          : Player, Opponent
+  Description    : Connect to the dedicated server, receive snapshots, submit
+                   decisions (move/skill/wait), view combat UI and timeline.
+  Pre-Condition  : Already matched (UC06) or reconnect; server IP/port available.
+  Post-Condition : Match ends → UC08 or disconnect.
+  Include        : UC14, UC15, UC16
+  Normal Case    : Connect Netcode + JWT → lobby has enough players → combat
+                   loop.
+  Abnormal Case  : Invalid token / server full → connection rejected.
+  Related code   : ClientController, ClientInteractionSystem,
+                   ClientVisualController, ServerTimelineManager
+
+
+  --- UC08: View Match Result ---
+  Actor          : Player
+  Description    : View win/loss/draw, number of instants, match duration.
+  Pre-Condition  : Match is completed on the backend.
+  Post-Condition : Player knows the result; may return to menu.
+  Include        : UC17
+  Normal Case    : GET /api/match/history/{matchId} → display result.
+  Abnormal Case  : Result not ready yet → retry polling.
+  Related code   : MatchResultManager
+
+
+  --- UC09: Play Story ---
+  Actor          : Player
+  Description    : Continue story progress: dialogue scenes, battles with AI,
+                   complete scenes.
+  Pre-Condition  : Already logged in; story progress exists on the backend.
+  Post-Condition : Story progress updated; next scene may be unlocked.
+  Include        : UC12, UC13, UC07, UC18
+  Extend         : Dialogue extends UC09
+  Normal Case    : Main menu resume story → route to scene C{n}_S{m} →
+                   battle/story.
+  Abnormal Case  : Story API error → chapter cannot be loaded.
+  Related code   : StoryClient, PlotSequencer, ServerAIController
+
+
+  --- UC10: Change Language ---
+  Actor          : Player
+  Description    : Switch locale EN / VI; UI is localized via Unity Localization.
+  Pre-Condition  : Localization Settings have been configured.
+  Post-Condition : SelectedLocale saved in PlayerPrefs; UI text changes language.
+  Normal Case    : Select language dropdown → ApplySavedLocale / SaveLocale.
+  Abnormal Case  : Missing translation → fallback displays the key.
+  Related code   : LanguageSeclector, LanguageDropdown, Loc
+
+
+  --- UC11: Authenticate & Issue Token ---
+  Actor          : GameInventoryApi
+  Description    : Authenticate Google/Steam/Dev login; issue JWT for the client
+                   and credentials for the game server.
+  Pre-Condition  : Valid request to the auth endpoint.
+  Post-Condition : Token issued; client/server store the token.
+  Include        : (called by UC01, UC14)
+  Normal Case    : POST /api/auth/login or OAuth callback → JWT.
+  Abnormal Case  : Invalid credentials → 401.
+
+
+  --- UC12: Manage Meta-Game Data ---
+  Actor          : GameInventoryApi
+  Description    : CRUD for profile, owned units/weapons/trinkets, formation,
+                   unit config, gacha inventory, story progress pointer.
+  Pre-Condition  : Request has a valid JWT.
+  Post-Condition : Data persisted in the database.
+  Normal Case    : GET/PUT/PATCH PlayerProfile, TeamLoadout, Gacha APIs, etc.
+  Abnormal Case  : Unauthorized → 401.
+
+
+  --- UC13: Matchmaking & Server Initialization ---
+  Actor          : GameInventoryApi
+  Description    : Queue matching, spawn a headless Unity process, return IP/port
+                   to the client; story match spawning works similarly.
+  Pre-Condition  : Player is in the queue or requests a story match.
+  Post-Condition : Match record created; server process runs with -matchId.
+  Include        : Game Server (spawn)
+  Normal Case    : 2 players matched → spawn server → status matched.
+  Abnormal Case  : Insufficient VPS resources → match failed.
+
+
+  --- UC14: Authenticate Client for Match Entry ---
+  Actor          : Game Server
+  Description    : ApprovalCheck: decode JWT, map playerId, approve only if the
+                   player belongs to player1/player2 loadout of the match.
+  Pre-Condition  : Server has fetched loadouts from the backend.
+  Post-Condition : Client approved or rejected.
+  Include        : UC11
+  Related code   : ServerConnectionManager
+
+
+  --- UC15: Simulate Combat (Timeline) ---
+  Actor          : Game Server
+  Description    : Run ServerTimelineManager: flowing instants, ready queue,
+                   decision loop, skill resolve, win conditions.
+  Pre-Condition  : Match session initialized; units spawned.
+  Post-Condition : Match ends → UC17.
+  Include        : UC16
+  Related code   : ServerTimelineManager, ServerMatchSession
+
+
+  --- UC16: Synchronize Match State ---
+  Actor          : Game Server
+  Description    : Broadcast snapshot/tick via SyncedBridge RPC to clients.
+  Pre-Condition  : There is a state change or timeline tick.
+  Post-Condition : Client applies snapshot; UI updates.
+  Include        : (within UC15)
+  Related code   : SyncedBridge, ClientMatchSession
+
+
+  --- UC17: Record Match Result ---
+  Actor          : GameInventoryApi (receives from Game Server)
+  Description    : Store winner, duration, instants, units alive; match history.
+  Pre-Condition  : Server calls PATCH status completed.
+  Post-Condition : Match status = completed; client can perform UC08.
+  Related code   : ServerBackendClient.ReportResult()
+
+
+  --- UC18: Control AI (Story) ---
+  Actor          : Game Server
+  Description    : ServerAIController makes decisions for the AI team in Story.
+  Pre-Condition  : Mode = story; it is the AI team's turn.
+  Post-Condition : AI action is processed like a player decision.
+  Include        : UC15
+  Related code   : ServerAIController
+
+
+2.3 State Diagram
+
+  [INSERT FIGURE: SRPG — State Diagram]
+
+  Description:
+    [To be filled in by the team]
+
+
+
+2.4 Screen Authorization (Simplified)
+
+  Screen / Feature        | Player | Opponent | Guest
+  ------------------------|--------|----------|------
+  Login                   |   X    |    X     |   X
+  Main Menu / Profile      |   X    |    -     |   -
+  Unit List / Config       |   X    |    -     |   -
+  Gacha                    |   X    |    -     |   -
+  Matchmaking              |   X    |    -     |   -
+  Client Match             |   X    |    X     |   -
+  Match Result             |   X    |    X     |   -
+  Story Scenes             |   X    |    -     |   -
+
+
+3. FUNCTIONAL REQUIREMENTS
+--------------------------
+
+3.1 System Functional Overview
+
+3.1.1 Core Feature Groups
+
+  FR-AUTH     : Google / Steam / Dev login; JWT session
+  FR-PROFILE  : Profile, gems, level, experience
+  FR-LOADOUT  : 5-slot formation, unit config equipment/skills
+  FR-GACHA    : Banner, pull, duplicate compensation
+  FR-MATCH    : PvP queue, reconnect, match history
+  FR-COMBAT   : Timeline combat, grid, skills, server sync
+  FR-STORY    : Progress, dialogue, AI battle (WIP)
+  FR-I18N     : Localization EN/VI
+
+
+3.1.2 Functional Requirements Detail (summarized by group)
+
+  --- FR-AUTH-01: Log In ---
+  Trigger      : Player selects a login method on the Login scene.
+  Actors       : Player, Google OAuth, Steam, Backend.
+  Processing   : OAuth or POST credentials → receive JWT → PlayerSession.
+  Validation   : Token is not empty; playerId is valid.
+  Related BRs  : BR-01, BR-02.
+
+
+  --- FR-LOADOUT-01: Manage Formation ---
+  Trigger      : Player opens Unit List and saves formation.
+  API          : GET/PUT /api/TeamLoadout
+  Processing   : Array of uId / owned unit order, maximum 5 slots.
+  Related BRs  : BR-03.
+
+
+  --- FR-LOADOUT-02: Configure Unit ---
+  Trigger      : Player changes skill/weapon/trinket in Unit Config.
+  API          : GET/PATCH /api/PlayerProfile/unit/{id}
+  Related BRs  : BR-04, BR-05.
+
+
+  --- FR-GACHA-01: Gacha Pull ---
+  Trigger      : Player presses Roll on the Gacha scene.
+  API          : POST /api/gacha/pull
+  Related BRs  : BR-06.
+
+
+  --- FR-MATCH-01: PvP Matchmaking ---
+  Trigger      : Find Match on Main Menu.
+  API          : POST join, GET status, DELETE leave
+  Processing   : Poll every 3s; on matched → save IP/port → load Client Match.
+  Related BRs  : BR-07, BR-08.
+
+
+  --- FR-COMBAT-01: Combat Timeline ---
+  Trigger      : Enough players in lobby → Server Match starts.
+  Processing   :
+    - Flowing: tick step, regen SP, buff duration
+    - Paused: decision window per team (wait/overtime)
+    - Resolve skills by InstantType
+    - End: wipe / 3 consecutive pass instants / max 150 instants
+  Related BRs  : BR-09, BR-10, BR-11.
+
+
+  --- FR-COMBAT-02: Client Synchronization ---
+  Trigger      : Server PackFinal / BroadcastTick.
+  RPC          : SendSnapshotToClientRpc, BroadcastTimelineTickClientRpc
+  Client states: Uninitialized → Idle → Syncing → Resolving → Idle
+  Related BRs  : BR-12.
+
+
+  --- FR-STORY-01: Story Progress ---
+  API          : /api/story/progress/*, /api/story/match
+  Status       : WIP — some scenes and AI already exist.
+  Related BRs  : BR-13.
+
+
+4. NON-FUNCTIONAL REQUIREMENTS
+------------------------------
+
+4.1 External Interfaces
+
+  Client Interface:
+    - Unity standalone Windows build; Editor for development.
+    - UI: TextMeshPro; Unity Localization (EN/VI).
+    - Input: mouse click on grid, action menu (skill slots, wait, cancel).
+
+  Backend Interface:
+    - REST JSON over HTTP; JWT Authorization header.
+    - Production: http://srpg-backend.duckdns.org:5276
+
+  Game Server Interface:
+    - Unity Netcode + Unity Transport (UDP).
+    - Connection payload: JWT string.
+
+  Third-party:
+    - Google OAuth (accounts.google.com)
+    - Steamworks.NET (Steam authentication)
+    - Linux VPS (headless server deployment)
+
+
+4.2 Quality Attributes
+
+  4.2.1 Usability
+    - Clear menu flow: Login → Main Menu → sub-features.
+    - Combat UI shows timeline, turn indicator, skill info.
+    - Supports language switching EN/VI.
+
+  4.2.2 Reliability
+    - Server-authoritative combat: client does not decide damage/HP.
+    - Match result is reported to the backend before the server shuts down.
+    - Reconnect: GET /api/match/current when entering Main Menu.
+
+  4.2.3 Performance
+    - Matchmaking poll interval: 3 seconds.
+    - instantDuration: 0.3s (visual pacing between instants).
+    - actWaitWindowPerInstantPerReadyUnit: 15s; overtimePerTeam: 200s.
+    - maxInstant per match: 150.
+
+  4.2.4 Security
+    - JWT for all client APIs and game server connection approval.
+    - Only players in the match loadout are approved for Netcode.
+    - Separate server credentials for ServerBackendClient.
+
+  4.2.5 Maintainability
+    - Combat balance via Unity ScriptableObject (.asset), not via DB.
+    - Code split into 3 folders: Client / Server / Shared.
+
+
+4.3 Technology Stack
+
+  Client Game     : Unity 6.x, C#, Unity Netcode for GameObjects, UTP
+  Dedicated Server: Unity Headless Linux build (-batchmode -nographics)
+  Backend API     : ASP.NET (GameInventoryApi), C#
+  Database        : [SQL/DB engine per backend repo — fill in when official ERD
+                     is available]
+  Localization    : Unity Localization Package + Auto Translate asset
+  Version Control : Git
+  Deployment      : VPS 103.110.87.249 (backend + headless server)
+
+
+5. REQUIREMENT APPENDIX
+-----------------------
+
+5.1 Business Rules
+
+  ID    | Rule Definition
+  ------|-----------------------------------------------------------------
+  BR-01 | The player must log in (UC01) before using meta-game and matchmaking.
+  BR-02 | Expired or invalid JWT → reject API and Netcode connection.
+  BR-03 | Formation has a maximum of 5 units; only owned units may be placed
+        | into formation.
+  BR-04 | Equipped weapons must match the unit's classId.
+  BR-05 | Combat stats are computed from grade + equipment at match entry and
+        | are not stored in the DB.
+  BR-06 | Gacha pulls deduct gems by pullType; duplicates grant compensation
+        | gems.
+  BR-07 | A player may join only one match queue at a time.
+  BR-08 | When matched, the client receives serverIp and serverPort from the
+        | backend.
+  BR-09 | The server is the source of truth for HP, position, skill resolve,
+        | and timeline.
+  BR-10 | A match ends when: one side is wiped, 3 consecutive pass instants
+        | occur, or maxInstant (150) is reached.
+  BR-11 | Match victory: the side with more living units wins; draw if equal.
+  BR-12 | The client may send a decision only when SyncState = Idle and it is
+        | that team's turn.
+  BR-13 | Story battles use an AI team; the player does not need a human
+        | opponent to connect.
+  BR-14 | PvP lobby timeout 120s → cancel the match if fewer than 2 players.
+  BR-15 | Unit uId starts from 1; do not reuse a uId that has already been in
+        | production.
+
+
+5.2 Common Requirements
+
+  - Authentication: JWT-based; PlayerSession on the client.
+  - Data privacy: Do not log plaintext passwords; tokens over HTTPS
+    (production).
+  - Scalability: Backend spawns additional headless processes per match
+    (horizontal).
+  - Localization: String tables by scene; runtime Loc.Get() for dynamic text.
+
+
+================================================================================
+III. SOFTWARE DESIGN DESCRIPTION
+================================================================================
+
+1. SYSTEM DESIGN
+----------------
+
+1.1 System Architecture Overview
+
+  3-tier architecture:
+
+    [Player] ──► [Unity Client]
+                      │ HTTP/JWT
+                      ▼
+                 [GameInventoryApi] ◄──► [Database]
+                      │ spawn -matchId
+                      ▼
+                 [Unity Headless Server]
+                      │ Netcode/UTP
+                      ▼
+                 [Unity Client] (opponent)
+
+
+1.2 Context Diagram
+
+  [INSERT FIGURE: SRPG — Context Diagram]
+
+  Description (based on the completed diagram):
+
+  Central system: SRPG System
+
+  External entities and data flows:
+
+  Player → SRPG System:
+    - Login request, game actions, team & character configuration
+    - Gacha / matchmaking / story mode requests
+
+  SRPG System → Player:
+    - Login result, player information, inventory & progression
+    - Match information, combat result, rewards
+
+  Google OAuth ↔ SRPG System:
+    - OAuth login request / authorization result & account info
+
+  Steam Platform ↔ SRPG System:
+    - Steam authentication request / authentication result
+
+  Dev/Ops ↔ SRPG System:
+    - Deployment & configuration / logs & alerts / system status
+
+
+1.3 Use Case Diagram (Simplified)
+
+  [INSERT FIGURE: SRPG — Use Case Diagram (Simplified)]
+
+  Summary of 18 UCs — see section II.2.2.2.
+
+
+1.4 Class Diagram (Simplified)
+
+  [INSERT FIGURE: SRPG — Class Diagram (Simplified)]
+
+Description:
+  The Class Diagram (Simplified) presents the main software structure of the
+  SRPG system in three packages: Client, Shared, and Server. The Client package
+  covers player session, meta-game UI, matchmaking, and match presentation
+  (ClientController, ClientMatchSession, ClientScene). The Shared package
+  defines common match data and network communication (UnitData, TeamData,
+  MatchState, GridMap, SkillLibrary, SyncedBridge). The Server package covers
+  authoritative match control (ServerController, ServerMatchSession,
+  ServerTimelineManager), lobby handling (LobbyManager), and backend reporting
+  (ServerBackendClient). Client and Server communicate through SyncedBridge,
+  while both sides use Shared data types to keep match state consistent.
+
+
+1.5 Component Diagram
+
+  [INSERT FIGURE: Component Diagram — to be completed by the team]
+
+  Suggested description for the team to draw the Component Diagram:
+
+  Components:
+    C1  Unity Game Client
+        - Sub: UI Layer, Match Client, Meta Game UI, Network Client
+    C2  GameInventoryApi (ASP.NET)
+        - Sub: Auth Service, Profile Service, Matchmaking Service,
+               Gacha Service, Story Service
+    C3  Unity Headless Game Server
+        - Sub: Lobby, Match Simulation, Timeline Engine, AI Controller
+    C4  Database
+    C5  Google OAuth (external)
+    C6  Steam API (external)
+
+  Connectors:
+    C1 --(REST/JWT)--> C2
+    C2 --(SQL)--> C4
+    C2 --(spawn process)--> C3
+    C3 --(REST)--> C2
+    C1 --(Netcode/UTP)--> C3
+    C1 --(OAuth)--> C5, C6
+
+
+1.6 State Diagram
+
+  [INSERT FIGURE: State Diagram — to be completed by the team]
+
+  Suggested 2 main state machines (may draw 2 diagrams or 1 composite):
+
+  A) Match Lifecycle (Player / System):
+    [Idle] → JoinQueue → [InQueue] → Matched → [Connecting]
+         → InLobby → [InMatch] → [MatchEnded] → ViewResult → [Idle]
+
+  B) Server Timeline (ServerSessionState):
+    None → Flowing → InstantPaused → DecisionWaiting
+         → Resolving → (loop) → Finished
+
+  C) Client Sync (SyncStateValue):
+    Uninitialized → Idle ↔ Syncing → Resolving → Idle
+
+  Code reference:
+    ServerSessionState: ServerTimelineManager.cs
+    SyncStateValue: ClientMatchSession.cs
+
+
+1.7 Entity Relationship Diagram (ERD)
+
+  [INSERT FIGURE: ERD — to be completed by the team]
+
+  Suggested entities (from DTOs and APIs — need confirmation with the backend
+  repository):
+
+  PLAYER (playerId PK, username, level, experience, gems, ...)
+    |
+    | 1:N
+    v
+  OWNED_UNIT (ownedUnitId PK, playerId FK, unitDefinitionUId, grade, ...)
+    |
+    | N:M via equipment
+    v
+  OWNED_WEAPON, OWNED_TRINKET
+
+  PLAYER --1:1-- TEAM_LOADOUT (5 slots → owned unit refs)
+
+  MATCH (matchId PK, player1Id, player2Id, status, serverIp, serverPort, ...)
+    |
+    | 1:1
+    v
+  MATCH_RESULT (winnerId, durationSeconds, totalInstants, ...)
+
+  GACHA_BANNER, GACHA_PULL_HISTORY
+
+  STORY_PROGRESS (playerId FK, chapterId, sceneId, completed, ...)
+
+  WEAPON_DEFINITION, TRINKET_DEFINITION, CLASS_DEFINITION (catalog tables)
+
+  Main relationships:
+    PLAYER 1──* OWNED_UNIT
+    PLAYER 1──1 TEAM_LOADOUT
+    PLAYER 1──* MATCH (as player1 or player2)
+    MATCH 1──0..1 MATCH_RESULT
+
+
+2. DETAILED DESIGN
+------------------
+
+2.1 Sequence Diagrams (Suggested — figures to be added later)
+
+  Important sequences that should be drawn for the report:
+
+  SD-01  Player Login (Google / Steam / Dev)
+  SD-02  PvP Matchmaking & Connect to Game Server
+  SD-03  Combat Decision Loop (Client → Server → Snapshot)
+  SD-04  Match End & Report Result
+  SD-05  Gacha Pull
+  SD-06  Save Formation & Unit Config
+
+  SD-02 flow summary:
+    Player → MatchmakingManager → Backend (join queue)
+    Backend → spawn Headless Server
+    Backend → Client (matched, IP, port)
+    Client → Game Server (Netcode + JWT)
+    Game Server → Backend (loadouts)
+    LobbyManager → start match when 2 players
+
+
+2.2 Deployment Diagram (Optional)
+
+  [Client PC] ──internet──► [VPS: GameInventoryApi + DB]
+                              │
+                              └── spawns [Headless Unity Server processes]
+
+
+2.3 Data Design Notes
+
+  - Combat stats: SkillDefinition, SpeedConfig, MatchConfig in Unity assets.
+  - Runtime: UnitData exists only in match memory and is synced via Netcode.
+  - Backend stores IDs and ownership, not CurrentHP in the DB.
+
+
+================================================================================
+DIAGRAM CHECKLIST (6 diagrams the team is preparing)
+================================================================================
+
+  # | Diagram              | Status          | Insert location in document
+  --|----------------------|-----------------|----------------------------
+  1 | Context Diagram      | COMPLETED       | III.1.2
+  2 | Use Case (Simplified)| COMPLETED       | III.1.3, II.2.2
+  3 | Class Diagram        | COMPLETED       | III.1.4
+  4 | Component Diagram    | [Fill in]       | III.1.5
+  5 | State Diagram        | [Fill in]       | III.1.6
+  6 | ERD                  | [Fill in]       | III.1.7
+
+  State Diagram: also inserted in section II.2.3 (description left blank for
+  the team). Screen Flow is not included in this document.
+
+
+================================================================================
+ACKNOWLEDGEMENT
+================================================================================
+
+  [Acknowledgement paragraph for the supervisor, the team, and FPT University
+   — to be filled in by the team]
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

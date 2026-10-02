@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GuardEffectVisual", menuName = "SRPG/Effects/Client/Guard")]
 public class GuardEffectVisual : ClientActiveEffectBase
 {
+    public AudioClip swapSfx;
     public override InstantType InstantType => InstantType.Instant;
     public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
     {
@@ -33,6 +34,9 @@ public class GuardEffectVisual : ClientActiveEffectBase
 
         Vector3 sourceStart = sourceSceneUnit.transform.position;
         Vector3 targetStart = targetSceneUnit.transform.position;
+
+        if (AudioManager.Instance != null && swapSfx != null)
+            AudioManager.Instance.PlaySFX(swapSfx);
 
         float t = 0f;
         while (t < 1f)

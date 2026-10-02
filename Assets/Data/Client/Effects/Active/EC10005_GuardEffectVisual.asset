@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuardEffectVisual
   effectId: 10005
   resolveDuration: 0.5
+  baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
-  description: immediately switch position with the target
+  swapSfx: {fileID: 8300000, guid: 40429332cf556424fa9a49ef7e8ebd87, type: 3}

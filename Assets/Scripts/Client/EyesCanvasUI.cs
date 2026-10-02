@@ -22,6 +22,8 @@ public class EyesCanvasUI : MonoBehaviour
     public float fadeStartAlpha = 0f;
     public float fadeEndAlpha = 1f;
 
+    [Header("Audio")]
+    public AudioClip eyeSfx;
 
     public IEnumerator BackgroundFades(bool fadeIn)
     {
@@ -99,6 +101,9 @@ public class EyesCanvasUI : MonoBehaviour
 
         // Step 2: Fade in
         yield return StartCoroutine(BackgroundFades(true));
+
+        if (AudioManager.Instance != null && eyeSfx != null)
+            AudioManager.Instance.PlaySFX(eyeSfx);
 
         // Step 3: Play animations only for eyes that need to animate
         if (animateLeft && leftEyeAnimator != null)

@@ -810,6 +810,7 @@ GameObject:
   - component: {fileID: 139925346}
   - component: {fileID: 139925345}
   - component: {fileID: 139925348}
+  - component: {fileID: 139925349}
   m_Layer: 0
   m_Name: ConfirmButton
   m_TagString: Untagged
@@ -892,6 +893,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 139925349}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &139925346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,6 +955,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &139925349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139925343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &141299937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1841,6 +1867,7 @@ GameObject:
   - component: {fileID: 353959688}
   - component: {fileID: 353959687}
   - component: {fileID: 353959686}
+  - component: {fileID: 353959689}
   m_Layer: 0
   m_Name: CancelButton
   m_TagString: Untagged
@@ -1924,6 +1951,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 353959689}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &353959687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1962,6 +2001,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 353959684}
   m_CullTransparentMesh: 1
+--- !u!114 &353959689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353959684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &404157841
 GameObject:
   m_ObjectHideFlags: 0
@@ -2525,6 +2577,7 @@ GameObject:
   - component: {fileID: 488969876}
   - component: {fileID: 488969875}
   - component: {fileID: 488969874}
+  - component: {fileID: 488969877}
   m_Layer: 0
   m_Name: WaitButton
   m_TagString: Untagged
@@ -2608,6 +2661,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 488969877}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &488969875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2646,6 +2711,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488969872}
   m_CullTransparentMesh: 1
+--- !u!114 &488969877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488969872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &552261987
 GameObject:
   m_ObjectHideFlags: 0
@@ -6049,6 +6127,7 @@ GameObject:
   - component: {fileID: 1059940248}
   - component: {fileID: 1059940247}
   - component: {fileID: 1059940246}
+  - component: {fileID: 1059940249}
   m_Layer: 5
   m_Name: ScrollButton
   m_TagString: Untagged
@@ -6132,6 +6211,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1059940249}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1059940247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6170,6 +6261,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1059940244}
   m_CullTransparentMesh: 1
+--- !u!114 &1059940249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059940244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1064529758
 GameObject:
   m_ObjectHideFlags: 0
@@ -10175,6 +10279,7 @@ MonoBehaviour:
   session: {fileID: 2127351871}
   scene: {fileID: 2127351875}
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
+  battleBGM: {fileID: 8300000, guid: 6a10f70662079684f89701ba9edf53c8, type: 3}
 --- !u!114 &2127351869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10402,6 +10507,7 @@ MonoBehaviour:
   eyeAnimDur: 1
   fadeStartAlpha: 0
   fadeEndAlpha: 1
+  eyeSfx: {fileID: 8300000, guid: 26cef7fba254d334cad0baa53fca3b5c, type: 3}
 --- !u!1 &2133587666
 GameObject:
   m_ObjectHideFlags: 0

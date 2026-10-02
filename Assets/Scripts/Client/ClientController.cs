@@ -23,6 +23,10 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     [Header("Ref")]
     [SerializeField] private ClientScene scene;
     [SerializeField] private SceneConfig sceneConfig;
+
+    [Header("Audio")]
+    public AudioClip battleBGM;
+
     // -------------------------------------------------------
     // Error Guard
     // -------------------------------------------------------
@@ -128,6 +132,10 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
         }
 
         Debug.Log("[ClientController] Client initialized successfully.");
+
+        if (AudioManager.Instance != null && battleBGM != null)
+            AudioManager.Instance.PlayBGM(battleBGM);
+
         //Start the statemachines that requires data from now on
         scene.visualController.StartUILoop();
         OnMatchReady?.Invoke();

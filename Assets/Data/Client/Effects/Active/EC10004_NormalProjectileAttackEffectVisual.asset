@@ -19,3 +19,5 @@ MonoBehaviour:
   isAoePatternFixed: 1
   sourceVFXname: ArrowSourceVFX
   targetVFXname: ArrowTargetVFX
+  shootSfx: {fileID: 8300000, guid: 1d85542c1c700f540ac8b4879c7e061d, type: 3}
+  impactSfx: {fileID: 8300000, guid: 38a31843d0332db4988208a44e73f3a9, type: 3}
