@@ -23,6 +23,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Ref")]
     [SerializeField] private MatchmakingManager matchmakingManager;
     [SerializeField] private ProfileTabManager profileTab;
+    [SerializeField] private MailboxManager mailboxManager;
 
     void Start()
     {

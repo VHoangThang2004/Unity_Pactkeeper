@@ -240,3 +240,47 @@ public class BannerDropRatesDto
     public string bannerName;
     public DropRateItemDto[] items;
 }
+
+// -------------------------------------------------------
+// Notifications
+// -------------------------------------------------------
+
+[System.Serializable]
+public class NotificationDto
+{
+    public string id;
+    public string type; // "GachaReward", "MatchResult", "StoryProgress", "System", "FriendRequest"
+    public string title;
+    public string message;
+    public bool isRead;
+    public string createdAt;
+    public NotificationDataDto data;
+}
+
+[System.Serializable]
+public class NotificationDataDto
+{
+    // Gacha Reward
+    public string rewardType; // "Unit", "Weapon", "Trinket", "Gems"
+    public int rewardDefinitionId;
+    public int rewardClassId;
+    public int rewardAmount;
+    public bool isDuplicate;
+    public int compensationGems;
+
+    // Match Result
+    public bool isWin;
+    public string opponentName;
+    public int playerScore;
+    public int opponentScore;
+    public int gemsReward;
+
+    // Story Progress
+    public int chapterId;
+    public int sceneId;
+    public bool isChapterCompleted;
+
+    // System
+    public string actionType; // "Maintenance", "Event", "LoginReward"
+    public string actionUrl;
+}
