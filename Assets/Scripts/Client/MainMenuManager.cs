@@ -24,6 +24,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private MatchmakingManager matchmakingManager;
     [SerializeField] private ProfileTabManager profileTab;
     [SerializeField] private MailboxManager mailboxManager;
+    [SerializeField] private SettingsManager settingsManager;
 
     void Start()
     {
@@ -229,6 +230,26 @@ public class MainMenuManager : MonoBehaviour
     public void CloseProfileTab()
     {
         profileTab?.Close();
+    }
+
+    public void OpenMailBoxTab()
+    {
+        mailboxManager?.Open();
+    }
+
+    public void CloseMailBoxTab()
+    {
+        mailboxManager?.Close();
+    }
+
+    public void OpenSettingsTab()
+    {
+        settingsManager?.Open();
+    }
+
+    public void CloseSettingsTab()
+    {
+        settingsManager?.Close();
     }
 
     public void GoToUnitList()
