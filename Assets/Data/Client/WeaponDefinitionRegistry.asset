@@ -15,13 +15,133 @@ MonoBehaviour:
   entries:
   - weaponId: 1
     icon: {fileID: -2486521743634864436, guid: cbb82d61ad8ef4341bdb64d45ea6b201, type: 3}
+    name: Dagger
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
   - weaponId: 2
     icon: {fileID: 712035800519618848, guid: 0e9a0b9dded21724d958432a6016617f, type: 3}
+    name: Sword & Shield
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
   - weaponId: 3
     icon: {fileID: -5825250732961213246, guid: e1b98324117a5c14fbc3e441c5a69dc1, type: 3}
+    name: Axe
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
   - weaponId: 4
     icon: {fileID: -5662285254915375189, guid: 83e14d66d5e118f44bd3413b4ec62a63, type: 3}
+    name: CrossBow
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
   - weaponId: 5
     icon: {fileID: 7115369033525605651, guid: ed4a9e7fada601749bd4996494b86cd9, type: 3}
+    name: Holy Book
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
   - weaponId: 6
     icon: {fileID: -4421300922047078791, guid: 8ed9f126e3314204ca9f840407f303ef, type: 3}
+    name: Staff of the Druid
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
+  - weaponId: 7
+    icon: {fileID: -2486521743634864436, guid: cbb82d61ad8ef4341bdb64d45ea6b201, type: 3}
+    name: Sharp Dagger
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
+  - weaponId: 8
+    icon: {fileID: -6717884257390833292, guid: c9196d4d46da80048a14213cf18af5a9, type: 3}
+    name: Kite Shield
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
+  - weaponId: 9
+    icon: {fileID: -5825250732961213246, guid: e1b98324117a5c14fbc3e441c5a69dc1, type: 3}
+    name: War Axe
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
+  - weaponId: 10
+    icon: {fileID: -5662285254915375189, guid: 83e14d66d5e118f44bd3413b4ec62a63, type: 3}
+    name: Compound Bow
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
+  - weaponId: 11
+    icon: {fileID: 7115369033525605651, guid: ed4a9e7fada601749bd4996494b86cd9, type: 3}
+    name: Sacred Tome
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0
+  - weaponId: 12
+    icon: {fileID: -4421300922047078791, guid: 8ed9f126e3314204ca9f840407f303ef, type: 3}
+    name: Ancient Staff
+    classId: 0
+    skillId: 0
+    statModifiers:
+      maxHP: 0
+      speed: 0
+      maxSkillPoint: 0
+      damageMultiplier: 0
+      damageReduction: 0

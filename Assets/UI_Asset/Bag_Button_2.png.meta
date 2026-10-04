@@ -1,0 +1,2145 @@
+fileFormatVersion: 2
+guid: 2ce236f8dd53b514cb8b4bb519bf17ad
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5935553102104886922
+    second: Bag_Button_2_0
+  - first:
+      213: 661485739508059169
+    second: Bag_Button_2_1
+  - first:
+      213: -4321843440543622299
+    second: Bag_Button_2_2
+  - first:
+      213: -424189152687940149
+    second: Bag_Button_2_3
+  - first:
+      213: 6685321478511465380
+    second: Bag_Button_2_4
+  - first:
+      213: 8336557117602734475
+    second: Bag_Button_2_5
+  - first:
+      213: 3146051081057788351
+    second: Bag_Button_2_6
+  - first:
+      213: -2685641247126292881
+    second: Bag_Button_2_7
+  - first:
+      213: -8167270762328934847
+    second: Bag_Button_2_8
+  - first:
+      213: -126290539018290676
+    second: Bag_Button_2_9
+  - first:
+      213: -40948017173408938
+    second: Bag_Button_2_10
+  - first:
+      213: 4914535059494089841
+    second: Bag_Button_2_11
+  - first:
+      213: -1497517662571188985
+    second: Bag_Button_2_12
+  - first:
+      213: -9061362900833748381
+    second: Bag_Button_2_13
+  - first:
+      213: -6249870991862135589
+    second: Bag_Button_2_14
+  - first:
+      213: 7644699549067536790
+    second: Bag_Button_2_15
+  - first:
+      213: -6208881173804365691
+    second: Bag_Button_2_16
+  - first:
+      213: -4845537156347156221
+    second: Bag_Button_2_17
+  - first:
+      213: -4367556855566974187
+    second: Bag_Button_2_18
+  - first:
+      213: 2271851831568323232
+    second: Bag_Button_2_19
+  - first:
+      213: 5887034932299910532
+    second: Bag_Button_2_20
+  - first:
+      213: 4377414817397073930
+    second: Bag_Button_2_21
+  - first:
+      213: -7157241835226161395
+    second: Bag_Button_2_22
+  - first:
+      213: 7293665133324674205
+    second: Bag_Button_2_23
+  - first:
+      213: -6198152977539044030
+    second: Bag_Button_2_24
+  - first:
+      213: -2687347189797726625
+    second: Bag_Button_2_25
+  - first:
+      213: 2792105615561556717
+    second: Bag_Button_2_26
+  - first:
+      213: 6554712219328141030
+    second: Bag_Button_2_27
+  - first:
+      213: 1232704788817982159
+    second: Bag_Button_2_28
+  - first:
+      213: 1963086152584066396
+    second: Bag_Button_2_29
+  - first:
+      213: 780515740517172223
+    second: Bag_Button_2_30
+  - first:
+      213: 1262980228325048705
+    second: Bag_Button_2_31
+  - first:
+      213: 4683858933094591790
+    second: Bag_Button_2_32
+  - first:
+      213: -903492191191514213
+    second: Bag_Button_2_33
+  - first:
+      213: -1265683777473452897
+    second: Bag_Button_2_34
+  - first:
+      213: -3737542339095403410
+    second: Bag_Button_2_35
+  - first:
+      213: -1723109538814099097
+    second: Bag_Button_2_36
+  - first:
+      213: 3722147817254877044
+    second: Bag_Button_2_37
+  - first:
+      213: -3002828898872628299
+    second: Bag_Button_2_38
+  - first:
+      213: 8300863137354690951
+    second: Bag_Button_2_39
+  - first:
+      213: 6135668007181925446
+    second: Bag_Button_2_40
+  - first:
+      213: 4025229358311096439
+    second: Bag_Button_2_41
+  - first:
+      213: -4791615016356901465
+    second: Bag_Button_2_42
+  - first:
+      213: 6004094434434526641
+    second: Bag_Button_2_43
+  - first:
+      213: -4388227951496375222
+    second: Bag_Button_2_44
+  - first:
+      213: -2412142313040406059
+    second: Bag_Button_2_45
+  - first:
+      213: 1293164615276679868
+    second: Bag_Button_2_46
+  - first:
+      213: 7427628825120173357
+    second: Bag_Button_2_47
+  - first:
+      213: -1765228705183310907
+    second: Bag_Button_2_48
+  - first:
+      213: 1493054616165612649
+    second: Bag_Button_2_49
+  - first:
+      213: -3560128359073190089
+    second: Bag_Button_2_50
+  - first:
+      213: -5926900244652683186
+    second: Bag_Button_2_51
+  - first:
+      213: -5507229468392193002
+    second: Bag_Button_2_52
+  - first:
+      213: 2996843340517986419
+    second: Bag_Button_2_53
+  - first:
+      213: 6967995720795371363
+    second: Bag_Button_2_54
+  - first:
+      213: 6242802831313076452
+    second: Bag_Button_2_55
+  - first:
+      213: 4288365737972534359
+    second: Bag_Button_2_56
+  - first:
+      213: 9148937211993278953
+    second: Bag_Button_2_57
+  - first:
+      213: 3370198224890131742
+    second: Bag_Button_2_58
+  - first:
+      213: -1379727966567006703
+    second: Bag_Button_2_59
+  - first:
+      213: 1112241531119983126
+    second: Bag_Button_2_60
+  - first:
+      213: 6089775022289441887
+    second: Bag_Button_2_61
+  - first:
+      213: -1517546382916366121
+    second: Bag_Button_2_62
+  - first:
+      213: -1138615601457980709
+    second: Bag_Button_2_63
+  - first:
+      213: -2630424075973869519
+    second: Bag_Button_2_64
+  - first:
+      213: 2898499151092771612
+    second: Bag_Button_2_65
+  - first:
+      213: 7611930933309777601
+    second: Bag_Button_2_66
+  - first:
+      213: 2351753846544507648
+    second: Bag_Button_2_67
+  - first:
+      213: 22587163005244408
+    second: Bag_Button_2_68
+  - first:
+      213: -2952889562937690265
+    second: Bag_Button_2_69
+  - first:
+      213: 1962094902519219872
+    second: Bag_Button_2_70
+  - first:
+      213: 8286049685234641065
+    second: Bag_Button_2_71
+  - first:
+      213: 3852531496303587627
+    second: Bag_Button_2_72
+  - first:
+      213: -3851004905693122364
+    second: Bag_Button_2_73
+  - first:
+      213: -6919025612263790229
+    second: Bag_Button_2_74
+  - first:
+      213: 5170408731304060162
+    second: Bag_Button_2_75
+  - first:
+      213: 7273323466785260660
+    second: Bag_Button_2_76
+  - first:
+      213: 3909087120792978056
+    second: Bag_Button_2_77
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bag_Button_2_0
+      rect:
+        serializedVersion: 2
+        x: 937
+        y: 1247
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8efd6439125f5250800000000000000
+      internalID: 5935553102104886922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_1
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 33
+        width: 1016
+        height: 1203
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12c4d5f76c11e2900800000000000000
+      internalID: 661485739508059169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_2
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 1187
+        width: 128
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56b9b87f94ab504c0800000000000000
+      internalID: -4321843440543622299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_3
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 1191
+        width: 23
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcd167c863afc1af0800000000000000
+      internalID: -424189152687940149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_4
+      rect:
+        serializedVersion: 2
+        x: 669
+        y: 1223
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a317ffd67807cc50800000000000000
+      internalID: 6685321478511465380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_5
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 1213
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b81277c878661b370800000000000000
+      internalID: 8336557117602734475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_6
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 1211
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb1eeab2ac409ab20800000000000000
+      internalID: 3146051081057788351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_7
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 1205
+        width: 19
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6676eec38faabad0800000000000000
+      internalID: -2685641247126292881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_8
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 1205
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14633f2838608ae80800000000000000
+      internalID: -8167270762328934847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_9
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 1205
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0a72538c635f3ef0800000000000000
+      internalID: -126290539018290676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_10
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 1209
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6535f1ecef58e6ff0800000000000000
+      internalID: -40948017173408938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_11
+      rect:
+        serializedVersion: 2
+        x: 812
+        y: 1208
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1743959299fe33440800000000000000
+      internalID: 4914535059494089841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_12
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 1197
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70d229dbe9fb73be0800000000000000
+      internalID: -1497517662571188985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_13
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1205
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36ab6ea63729f3280800000000000000
+      internalID: -9061362900833748381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_14
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 1203
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd40a06327ff349a0800000000000000
+      internalID: -6249870991862135589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_15
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 1197
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69962cc8cbd671a60800000000000000
+      internalID: 7644699549067536790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_16
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 1198
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 588c7cee77f95d9a0800000000000000
+      internalID: -6208881173804365691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_17
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 1140
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 309a8f901a131ccb0800000000000000
+      internalID: -4845537156347156221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_18
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 1142
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 513cb9f1e225363c0800000000000000
+      internalID: -4367556855566974187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_19
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 1082
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a253fa343d378f10800000000000000
+      internalID: 2271851831568323232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_20
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 1079
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48d4d008413f2b150800000000000000
+      internalID: 5887034932299910532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 953
+        width: 49
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a08eb797593bfbc30800000000000000
+      internalID: 4377414817397073930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_22
+      rect:
+        serializedVersion: 2
+        x: 1153
+        y: 974
+        width: 66
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0f97c7b87e5cac90800000000000000
+      internalID: -7157241835226161395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_23
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 922
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9428769bcd483560800000000000000
+      internalID: 7293665133324674205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_24
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 871
+        width: 44
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24d6146c4bcbbf9a0800000000000000
+      internalID: -6198152977539044030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 622
+        width: 81
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5656f318ff94bad0800000000000000
+      internalID: -2687347189797726625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_26
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 845
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de28bee934d8fb620800000000000000
+      internalID: 2792105615561556717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_27
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 857
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e657fdf80407fa50800000000000000
+      internalID: 6554712219328141030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_28
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 825
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc23b6a69727b1110800000000000000
+      internalID: 1232704788817982159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_29
+      rect:
+        serializedVersion: 2
+        x: 1159
+        y: 719
+        width: 60
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c55f24474784e3b10800000000000000
+      internalID: 1963086152584066396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_30
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 775
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff3802f3ee2f4da00800000000000000
+      internalID: 780515740517172223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_31
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 761
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18108ab73d1078110800000000000000
+      internalID: 1262980228325048705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_32
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 754
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2da42d22e8600140800000000000000
+      internalID: 4683858933094591790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_33
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 702
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b93c0b693a62673f0800000000000000
+      internalID: -903492191191514213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_34
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 592
+        width: 43
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9468bd6f436f6ee0800000000000000
+      internalID: -1265683777473452897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_35
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 584
+        width: 62
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e646c318b05912cc0800000000000000
+      internalID: -3737542339095403410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_36
+      rect:
+        serializedVersion: 2
+        x: 1188
+        y: 580
+        width: 25
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76106edf0094618e0800000000000000
+      internalID: -1723109538814099097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_37
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 397
+        width: 81
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 477f8f018b9b7a330800000000000000
+      internalID: 3722147817254877044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_38
+      rect:
+        serializedVersion: 2
+        x: 1154
+        y: 483
+        width: 55
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bb6b61b60fc356d0800000000000000
+      internalID: -3002828898872628299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_39
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 549
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78139272b07923370800000000000000
+      internalID: 8300863137354690951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_40
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 483
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64cbecb5b85462550800000000000000
+      internalID: 6135668007181925446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_41
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 499
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7704b9956cc7cd730800000000000000
+      internalID: 4025229358311096439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_42
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 499
+        width: 28
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ad8e999783c08db0800000000000000
+      internalID: -4791615016356901465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_43
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 499
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bdae5ab314d25350800000000000000
+      internalID: 6004094434434526641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_44
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 499
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a445e9d8de1e913c0800000000000000
+      internalID: -4388227951496375222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_45
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 467
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d9998ba859568ed0800000000000000
+      internalID: -2412142313040406059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_46
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 455
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb2dba9bd5e32f110800000000000000
+      internalID: 1293164615276679868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_47
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 447
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2d6dbc201d341760800000000000000
+      internalID: 7427628825120173357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_48
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 371
+        width: 60
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cbd93068d5a087e0800000000000000
+      internalID: -1765228705183310907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_49
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 439
+        width: 22
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96cfeca434568b410800000000000000
+      internalID: 1493054616165612649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_50
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 399
+        width: 19
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73fe5aaae12e79ec0800000000000000
+      internalID: -3560128359073190089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_51
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 353
+        width: 57
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e401d4a21ab6fbda0800000000000000
+      internalID: -5926900244652683186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_52
+      rect:
+        serializedVersion: 2
+        x: 1143
+        y: 389
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6148bef1af36293b0800000000000000
+      internalID: -5507229468392193002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_53
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 355
+        width: 13
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 370d117e32de69920800000000000000
+      internalID: 2996843340517986419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_54
+      rect:
+        serializedVersion: 2
+        x: 1143
+        y: 262
+        width: 76
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3673376a03b43b060800000000000000
+      internalID: 6967995720795371363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_55
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 244
+        width: 56
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e0083b6914e2a650800000000000000
+      internalID: 6242802831313076452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_56
+      rect:
+        serializedVersion: 2
+        x: 1165
+        y: 312
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75c0fcefae5538b30800000000000000
+      internalID: 4288365737972534359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_57
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 117
+        width: 22
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e94631dbed87fe70800000000000000
+      internalID: 9148937211993278953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_58
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 95
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e157a31fd6955ce20800000000000000
+      internalID: 3370198224890131742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_59
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 91
+        width: 51
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11ef91a79b83adce0800000000000000
+      internalID: -1379727966567006703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_60
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 93
+        width: 13
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61ad7d697c97f6f00800000000000000
+      internalID: 1112241531119983126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_61
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 95
+        width: 29
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f54db952e1a338450800000000000000
+      internalID: 6089775022289441887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_62
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 101
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d05714ea9790fae0800000000000000
+      internalID: -1517546382916366121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_63
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 95
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bda1163a423d230f0800000000000000
+      internalID: -1138615601457980709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_64
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 95
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13041fe4d3bde7bd0800000000000000
+      internalID: -2630424075973869519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_65
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 97
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1be7aafe99893820800000000000000
+      internalID: 2898499151092771612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_66
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 93
+        width: 21
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c6acb6aad203a960800000000000000
+      internalID: 7611930933309777601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_67
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 97
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 003a17ec9ab13a020800000000000000
+      internalID: 2351753846544507648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_68
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 99
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f35963b7ee305000800000000000000
+      internalID: 22587163005244408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_69
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 97
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 767f32c669a3507d0800000000000000
+      internalID: -2952889562937690265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_70
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 95
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a643401be2ca3b10800000000000000
+      internalID: 1962094902519219872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_71
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 95
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a8e5af8946fdf270800000000000000
+      internalID: 8286049685234641065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_72
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 99
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b21fd2bfbf0f67530800000000000000
+      internalID: 3852531496303587627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_73
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 98
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c0ffd7117b7e8ac0800000000000000
+      internalID: -3851004905693122364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_74
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 95
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b69ef2d3ddeaaff90800000000000000
+      internalID: -6919025612263790229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_75
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 95
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 205e4fcd85bf0c740800000000000000
+      internalID: 5170408731304060162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_76
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 95
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4748f36482900f460800000000000000
+      internalID: 7273323466785260660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bag_Button_2_77
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 93
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8828bee660edf3630800000000000000
+      internalID: 3909087120792978056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bag_Button_2_0: 5935553102104886922
+      Bag_Button_2_1: 661485739508059169
+      Bag_Button_2_10: -40948017173408938
+      Bag_Button_2_11: 4914535059494089841
+      Bag_Button_2_12: -1497517662571188985
+      Bag_Button_2_13: -9061362900833748381
+      Bag_Button_2_14: -6249870991862135589
+      Bag_Button_2_15: 7644699549067536790
+      Bag_Button_2_16: -6208881173804365691
+      Bag_Button_2_17: -4845537156347156221
+      Bag_Button_2_18: -4367556855566974187
+      Bag_Button_2_19: 2271851831568323232
+      Bag_Button_2_2: -4321843440543622299
+      Bag_Button_2_20: 5887034932299910532
+      Bag_Button_2_21: 4377414817397073930
+      Bag_Button_2_22: -7157241835226161395
+      Bag_Button_2_23: 7293665133324674205
+      Bag_Button_2_24: -6198152977539044030
+      Bag_Button_2_25: -2687347189797726625
+      Bag_Button_2_26: 2792105615561556717
+      Bag_Button_2_27: 6554712219328141030
+      Bag_Button_2_28: 1232704788817982159
+      Bag_Button_2_29: 1963086152584066396
+      Bag_Button_2_3: -424189152687940149
+      Bag_Button_2_30: 780515740517172223
+      Bag_Button_2_31: 1262980228325048705
+      Bag_Button_2_32: 4683858933094591790
+      Bag_Button_2_33: -903492191191514213
+      Bag_Button_2_34: -1265683777473452897
+      Bag_Button_2_35: -3737542339095403410
+      Bag_Button_2_36: -1723109538814099097
+      Bag_Button_2_37: 3722147817254877044
+      Bag_Button_2_38: -3002828898872628299
+      Bag_Button_2_39: 8300863137354690951
+      Bag_Button_2_4: 6685321478511465380
+      Bag_Button_2_40: 6135668007181925446
+      Bag_Button_2_41: 4025229358311096439
+      Bag_Button_2_42: -4791615016356901465
+      Bag_Button_2_43: 6004094434434526641
+      Bag_Button_2_44: -4388227951496375222
+      Bag_Button_2_45: -2412142313040406059
+      Bag_Button_2_46: 1293164615276679868
+      Bag_Button_2_47: 7427628825120173357
+      Bag_Button_2_48: -1765228705183310907
+      Bag_Button_2_49: 1493054616165612649
+      Bag_Button_2_5: 8336557117602734475
+      Bag_Button_2_50: -3560128359073190089
+      Bag_Button_2_51: -5926900244652683186
+      Bag_Button_2_52: -5507229468392193002
+      Bag_Button_2_53: 2996843340517986419
+      Bag_Button_2_54: 6967995720795371363
+      Bag_Button_2_55: 6242802831313076452
+      Bag_Button_2_56: 4288365737972534359
+      Bag_Button_2_57: 9148937211993278953
+      Bag_Button_2_58: 3370198224890131742
+      Bag_Button_2_59: -1379727966567006703
+      Bag_Button_2_6: 3146051081057788351
+      Bag_Button_2_60: 1112241531119983126
+      Bag_Button_2_61: 6089775022289441887
+      Bag_Button_2_62: -1517546382916366121
+      Bag_Button_2_63: -1138615601457980709
+      Bag_Button_2_64: -2630424075973869519
+      Bag_Button_2_65: 2898499151092771612
+      Bag_Button_2_66: 7611930933309777601
+      Bag_Button_2_67: 2351753846544507648
+      Bag_Button_2_68: 22587163005244408
+      Bag_Button_2_69: -2952889562937690265
+      Bag_Button_2_7: -2685641247126292881
+      Bag_Button_2_70: 1962094902519219872
+      Bag_Button_2_71: 8286049685234641065
+      Bag_Button_2_72: 3852531496303587627
+      Bag_Button_2_73: -3851004905693122364
+      Bag_Button_2_74: -6919025612263790229
+      Bag_Button_2_75: 5170408731304060162
+      Bag_Button_2_76: 7273323466785260660
+      Bag_Button_2_77: 3909087120792978056
+      Bag_Button_2_8: -8167270762328934847
+      Bag_Button_2_9: -126290539018290676
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

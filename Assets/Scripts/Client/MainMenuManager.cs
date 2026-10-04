@@ -25,6 +25,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private ProfileTabManager profileTab;
     [SerializeField] private MailboxManager mailboxManager;
     [SerializeField] private SettingsManager settingsManager;
+    [SerializeField] private InventoryManager inventoryManager;
 
     void Start()
     {
@@ -250,6 +251,16 @@ public class MainMenuManager : MonoBehaviour
     public void CloseSettingsTab()
     {
         settingsManager?.Close();
+    }
+
+    public void OpenInventoryTab()
+    {
+        inventoryManager?.Open();
+    }
+
+    public void CloseInventoryTab()
+    {
+        inventoryManager?.Close();
     }
 
     public void GoToUnitList()

@@ -9,14 +9,17 @@ public class TrinketDefinitionRegistry : ScriptableObject
     {
         public int trinketId;
         public Sprite icon;
+        public string name;
+        public int skillId;
+        public EquipmentStatModifiersDto statModifiers;
     }
 
     [SerializeField] private Entry[] entries;
-    private Dictionary<int, Sprite> _lookup;
+    private Dictionary<int, Entry> _lookup;
 
     public void Init()
     {
-        _lookup = new Dictionary<int, Sprite>();
+        _lookup = new Dictionary<int, Entry>();
         foreach (var e in entries)
         {
             if (_lookup.ContainsKey(e.trinketId))
@@ -24,7 +27,7 @@ public class TrinketDefinitionRegistry : ScriptableObject
                 Debug.LogWarning($"[TrinketDefinitionRegistry] Duplicate trinketId {e.trinketId}!");
                 continue;
             }
-            _lookup[e.trinketId] = e.icon;
+            _lookup[e.trinketId] = e;
         }
         Debug.Log($"[TrinketDefinitionRegistry] Loaded {_lookup.Count} entries.");
     }
@@ -32,7 +35,22 @@ public class TrinketDefinitionRegistry : ScriptableObject
     public Sprite GetIcon(int trinketId)
     {
         if (_lookup == null) { Debug.LogError("[TrinketDefinitionRegistry] Not initialized!"); return null; }
-        _lookup.TryGetValue(trinketId, out var sprite);
-        return sprite;
+        _lookup.TryGetValue(trinketId, out var entry);
+        return entry.icon;
+    }
+
+    public TrinketDefinitionDto GetDefinition(int trinketId)
+    {
+        if (_lookup == null) { Debug.LogError("[TrinketDefinitionRegistry] Not initialized!"); return null; }
+        _lookup.TryGetValue(trinketId, out var entry);
+        if (entry.trinketId == 0) return null;
+
+        return new TrinketDefinitionDto
+        {
+            trinketId = entry.trinketId,
+            name = entry.name,
+            skillId = entry.skillId,
+            statModifiers = entry.statModifiers
+        };
     }
 }
