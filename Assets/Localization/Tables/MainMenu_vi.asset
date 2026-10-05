@@ -17,7 +17,100 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: fa85cbc8f4a4a794d887b65af6337019, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 12923195392
+    m_Localized: "Ch\xE0o m\u1EEBng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15712407552
+    m_Localized: "Ch\xE0o m\u1EEBng, {0}!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18631643136
+    m_Localized: "H\u1ED3 s\u01A1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21118865408
+    m_Localized: "B\u1ED9 trang b\u1ECB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23710945280
+    m_Localized: "L\u1ECBch s\u1EED "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 241974136832
+    m_Localized: "H\u1EE7y"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 243798659072
+    m_Localized: "V\u1EDBi"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245249888256
+    m_Localized: "Hi\u1EC7n kh\xF4ng c\xF3 s\u1EF1 ki\u1EC7n n\xE0o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 351965564928
+    m_Localized: "H\u1ED3 s\u01A1: kh\xF4ng th\u1EC3 t\u1EA3i \u0111\u01B0\u1EE3c"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 353794281472
+    m_Localized: "C\u1EA5p {0} | EXP {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 361759264768
+    m_Localized: "Ch\u01B0a \u0111\u0103ng nh\u1EADp."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 493577850880
+    m_Localized: "\u0110ang tham gia h\xE0ng \u0111\u1EE3i..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 498380328960
+    m_Localized: "\u0110ang trong tr\u1EADn \u0111\u1EA5u r\u1ED3i."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 499772837888
+    m_Localized: "Kh\xF4ng th\u1EC3 tham gia h\xE0ng ch\u1EDD."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 642689552384
+    m_Localized: "\u0110ang t\xECm \u0111\u1ED1i th\u1EE7..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 644400828416
+    m_Localized: "\u0110\xE3 h\u1EE7y."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 722867867648
+    m_Localized: "\u0110\xE3 t\xECm th\u1EA5y k\u1EBFt qu\u1EA3 ph\xF9 h\u1EE3p!\\n\\n{0}\\n
+      {1} \\n{2}\\n\\n{3}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 724927270912
+    m_Localized: "\u0110ang t\u1EA3i tr\xF2 ch\u01A1i..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26745902747914240
+    m_Localized: "QUY\u1EBET CHI\u1EBEN"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746088257785856
+    m_Localized: "TRI\u1EC6U H\u1ED2I"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746319007420416
+    m_Localized: "C\u1EECA H\xC0NG"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746435231584256
+    m_Localized: "TH\xC0NH T\u1EF0U "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746565582163968
+    m_Localized: "\u0110\u01A0N V\u1ECA "
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

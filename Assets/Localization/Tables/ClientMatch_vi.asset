@@ -17,7 +17,69 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: cd0999a0f8eae634dadb7984e99b9793, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 251201605632
+    m_Localized: "H\u1EE6Y"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 253869182976
+    m_Localized: "\u0110\u1EE2I"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 255928586240
+    m_Localized: "L\u1ED1 gi\u1EDD"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 259284029440
+    m_Localized: "T\u1EDBi l\u01B0\u1EE3t c\u1EADu "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 261364404224
+    m_Localized: "L\u01B0\u1EE3t c\u1EADu - quy\u1EBFt \u0111\u1ECBnh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 435222499328
+    m_Localized: "T\u1EDBi l\u01B0\u1EE3t \u0111\u1ECBch "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 436900220928
+    m_Localized: "Th\u1EDDi gian \u0111ang tr\xF4i "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 438653440000
+    m_Localized: "Gi\u1EA3i quy\u1EBFt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 563547230208
+    m_Localized: "\u0110ang t\u1EA3i..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 565208174592
+    m_Localized: "Gi\u1EDBi h\u1EA1n m\u1ED7i l\u1EA7n: {0} | T\u1ED5ng gi\u1EDBi
+      h\u1EA1n: {1}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 681910489088
+    m_Localized: "Chi ph\xED SP: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 683688873984
+    m_Localized: "Chi ph\xED b\u01B0\u1EDBc: {0} (x{1})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 685316263936
+    m_Localized: "\u221E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 791625093120
+    m_Localized: "Th\u1EDDi gian c\xF2n l\u1EA1i: {0} gi\xE2y | Th\u1EDDi gian b\xF9
+      gi\u1EDD: {1} gi\xE2y"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 878082281472
+    m_Localized: '{0}/{1}'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

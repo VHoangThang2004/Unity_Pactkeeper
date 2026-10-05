@@ -17,7 +17,48 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 53b6fea500837bc4098e2cc7db95a21e, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 12365352960
+    m_Localized: "K\u1EBFt qu\u1EA3"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 54228701184
+    m_Localized: "\u0110\xF3ng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56392962048
+    m_Localized: "X\xE1c nh\u1EADn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58385256448
+    m_Localized: "Chi ti\u1EBFt t\u1EF7 l\u1EC7"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 60335607808
+    m_Localized: "T\u1EF6 L\u1EC6 BANNER"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62663446528
+    m_Localized: "K\u1EBET QU\u1EA2 NH\u1EACN "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 64307613696
+    m_Localized: "CH\xDA TH\xCDCH "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 263784517632
+    m_Localized: "L\u1ED7i: L\u1ED7i k\u1EBFt n\u1ED1i server. Ki\u1EC3m tra k\u1EBFt
+      n\u1ED1i  "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 265365770240
+    m_Localized: "L\u1ED7i: L\u1ED7i t\u1EA3i banner Gahca hi\u1EC7n t\u1EA1i"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 266569535488
+    m_Localized: "Hi\u1EC7n t\u1EA1i ch\u01B0a c\xF3 banner n\xE0o "
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -90,6 +90,26 @@ MonoBehaviour:
     m_Localized: Loading game...
     m_Metadata:
       m_Items: []
+  - m_Id: 26745902747914240
+    m_Localized: BATTLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746088257785856
+    m_Localized: GACHA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746319007420416
+    m_Localized: SHOP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746435231584256
+    m_Localized: ACHIEVEMENTS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746565582163968
+    m_Localized: UNITS
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -87,6 +87,26 @@ MonoBehaviour:
     m_Key: LoadingGame_key
     m_Metadata:
       m_Items: []
+  - m_Id: 26745902747914240
+    m_Key: Battle_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746088257785856
+    m_Key: Gacha_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746319007420416
+    m_Key: Shop_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746435231584256
+    m_Key: Achievements_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26746565582163968
+    m_Key: Units_key
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

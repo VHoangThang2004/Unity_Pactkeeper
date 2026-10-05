@@ -17,7 +17,79 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: f30fdfa5919738849b4dfd5c6723da94, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 24033906688
+    m_Localized: "\u0110\u1ED5i "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26311413760
+    m_Localized: "B\u1ECF trang b\u1ECB "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28932853760
+    m_Localized: "Ch\u1EC9nh s\u1EEDa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31365550080
+    m_Localized: "Ch\u1ECDn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33630474240
+    m_Localized: "B\u1ECF"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 199938822144
+    m_Localized: "-> Nh\u1EADp th\xE0nh ph\u1EA7n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 201616543744
+    m_Localized: "-> Danh s\xE1ch \u0111\u01A1n v\u1ECB"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 203013246976
+    m_Localized: "Tr\u1ED1ng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 204548362240
+    m_Localized: "\u0110\xE3 trang b\u1ECB "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 206314164224
+    m_Localized: "\u0110ang s\u1EED d\u1EE5ng "
+    m_Metadata:
+      m_Items: []
+  - m_Id: 408668360704
+    m_Localized: "M\u1EABu m\u1EE5c ti\xEAu ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 410245419008
+    m_Localized: "M\u1EABu AoE ({0})"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 411486932992
+    m_Localized: 'HP: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 412795555840
+    m_Localized: 'SP: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 414523609088
+    m_Localized: "T\u1ED1c \u0111\u1ED9: {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 601824448512
+    m_Localized: 'DMG%: {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 683261054976
+    m_Localized: "Gi\u1EA3m DMG%: {0}%"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 684984913920
+    m_Localized: "Kh\xF4ng th\u1EC3 t\u1EA3i c\xE1c \u0111\u01A1n v\u1ECB."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
