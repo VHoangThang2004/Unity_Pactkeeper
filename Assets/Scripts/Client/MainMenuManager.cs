@@ -26,6 +26,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private MailboxManager mailboxManager;
     [SerializeField] private SettingsManager settingsManager;
     [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private ShopTabManager shopTabManager;
+    [SerializeField] private TopUpManager topUpManager;
+    [SerializeField] private FriendTabManager friendTabManager;
 
     void Start()
     {
@@ -261,6 +264,36 @@ public class MainMenuManager : MonoBehaviour
     public void CloseInventoryTab()
     {
         inventoryManager?.Close();
+    }
+
+    public void OpenShopTab()
+    {
+        shopTabManager?.Open();
+    }
+
+    public void CloseShopTab()
+    {
+        shopTabManager?.Close();
+    }
+
+    public void OpenTopUpTab()
+    {
+        topUpManager?.Open();
+    }
+
+    public void CloseTopUpTab()
+    {
+        topUpManager?.Close();
+    }
+
+    public void OpenFriendTab()
+    {
+        friendTabManager?.Open();
+    }
+
+    public void CloseFriendTab()
+    {
+        friendTabManager?.Close();
     }
 
     public void GoToUnitList()
