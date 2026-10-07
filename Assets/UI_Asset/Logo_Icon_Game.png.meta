@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3d879e5c294356b49b40fd185188d96a
+guid: 3633594ab8befc340ac2d5d4fcfce6e3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6075128234040785835
-    second: Profile_Tab_Panel_Background_0
+      213: 6140341307752268217
+    second: Logo_Icon_Game_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Profile_Tab_Panel_Background_0
+      name: Logo_Icon_Game_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 765
+        width: 2048
+        height: 2048
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bab72f201f03f4450800000000000000
-      internalID: 6075128234040785835
+      spriteID: 9b14b30f2efd63550800000000000000
+      internalID: 6140341307752268217
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Profile_Tab_Panel_Background_0: 6075128234040785835
+      Logo_Icon_Game_0: 6140341307752268217
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
