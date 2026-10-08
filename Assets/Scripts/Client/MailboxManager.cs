@@ -137,7 +137,6 @@ public class MailboxManager : MonoBehaviour
         {
             StartCoroutine(MarkAsRead(notification.id));
             notification.isRead = true;
-            item.UpdateReadStatus(true);
         }
     }
 
@@ -213,13 +212,7 @@ public class MailboxManager : MonoBehaviour
             notification.isRead = true;
         }
 
-        // Update UI
-        foreach (Transform child in notificationListContainer)
-        {
-            var item = child.GetComponent<NotificationItem>();
-            if (item != null)
-                item.UpdateReadStatus(true);
-        }
+        // Note: Unread indicator removed from NotificationItem, so no UI update needed here
     }
 
     void HidePanel()

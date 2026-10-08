@@ -919,11 +919,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 789376328039079901, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 24.497
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 789376328039079901, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 312.29312
+      value: 370
       objectReference: {fileID: 0}
     - target: {fileID: 2288433356641048995, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1126,12 +1126,20 @@ PrefabInstance:
       value: SettingCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 7278755959174844978, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 182.893
+      objectReference: {fileID: 0}
+    - target: {fileID: 7278755959174844978, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 106.9032
+      objectReference: {fileID: 0}
+    - target: {fileID: 7278755959174844978, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 13
+      value: 16.4494
       objectReference: {fileID: 0}
     - target: {fileID: 7278755959174844978, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -333
+      value: -401.7247
       objectReference: {fileID: 0}
     - target: {fileID: 7283105164827688859, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1143,7 +1151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8202215491821631028, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8337880770205437322, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchoredPosition.x

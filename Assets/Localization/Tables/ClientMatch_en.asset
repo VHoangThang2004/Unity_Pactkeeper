@@ -78,6 +78,25 @@ MonoBehaviour:
     m_Localized: '{0}/{1}'
     m_Metadata:
       m_Items: []
+  - m_Id: 27855932138188800
+    m_Localized: Unit  <link="ID 1"><u>UnitName </u></link> used skill <link="UID
+      1 SID 1001"><u>link1</u></link> on a s11 target cell <link="Cell 0 -10"><u>Cell</u></link>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 789871874048
+    m_Localized: Skill name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27856371067908096
+    m_Localized: "Limit per instant: 0/1 | Total Limit: \u221E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27859826440441856
+    m_Localized: Skill description 1 2 23 23  32 3 2 32 432 4 334  3434 2 234 324
+      234 324 324 342 324 324  324 324 324 324 324 324 234 324  4 324 34 342 234
+      324 234 324 234 432 324  324 324 324 432 324 243
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

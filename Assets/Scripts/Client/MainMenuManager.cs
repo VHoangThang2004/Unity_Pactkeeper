@@ -29,6 +29,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private ShopTabManager shopTabManager;
     [SerializeField] private TopUpManager topUpManager;
     [SerializeField] private FriendTabManager friendTabManager;
+    [SerializeField] private QuestManager questManager;
 
     void Start()
     {
@@ -294,6 +295,16 @@ public class MainMenuManager : MonoBehaviour
     public void CloseFriendTab()
     {
         friendTabManager?.Close();
+    }
+
+    public void OpenQuestTab()
+    {
+        questManager?.Open();
+    }
+
+    public void CloseQuestTab()
+    {
+        questManager?.Close();
     }
 
     public void GoToUnitList()

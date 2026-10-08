@@ -68,7 +68,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 789871874048
-    m_Key: New Entry
+    m_Key: SkillName_key
     m_Metadata:
       m_Items: []
   - m_Id: 791625093120
@@ -77,6 +77,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 878082281472
     m_Key: InstantCounterFormat_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27855932138188800
+    m_Key: CommandLog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27856371067908096
+    m_Key: LimitPerInstant_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27859826440441856
+    m_Key: SkilDescr_key
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -80,6 +80,25 @@ MonoBehaviour:
     m_Localized: '{0}/{1}'
     m_Metadata:
       m_Items: []
+  - m_Id: 27855932138188800
+    m_Localized: "\u0110\u01A1n v\u1ECB <link=\"ID 1\"><u>T\xEAn \u0110\u01A1n v\u1ECB</u></link>
+      \u0111\xE3 s\u1EED d\u1EE5ng k\u1EF9 n\u0103ng <link=\"UID 1 SID 1001\"><u>link1</u></link>
+      l\xEAn \xF4 m\u1EE5c ti\xEAu s11 <link=\"Cell 0 -10\"><u>\xD4</u></link>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 789871874048
+    m_Localized: "T\xEAn k\u1EF9 n\u0103ng"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27856371067908096
+    m_Localized: "Gi\u1EDBi h\u1EA1n m\u1ED7i l\u1EA7n: 0/1 | T\u1ED5ng gi\u1EDBi
+      h\u1EA1n: \u221E"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27859826440441856
+    m_Localized: "M\xF4 t\u1EA3 k\u1EF9 n\u0103ng"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

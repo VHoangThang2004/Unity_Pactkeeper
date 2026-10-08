@@ -107,6 +107,46 @@ MonoBehaviour:
     m_Key: Units_key
     m_Metadata:
       m_Items: []
+  - m_Id: 27849975194710016
+    m_Key: AudioSettings_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850174591922176
+    m_Key: GraphicsSettings_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850408361455616
+    m_Key: AccountSettings_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850514364100608
+    m_Key: LanguageSettings_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850758787166208
+    m_Key: Settings_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851071883571200
+    m_Key: MasterVolume_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851263722647552
+    m_Key: SfxVolume_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851492882640896
+    m_Key: MusicVolume_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851832885506048
+    m_Key: Close_key
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27852721314590720
+    m_Key: AudioSetting_key
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

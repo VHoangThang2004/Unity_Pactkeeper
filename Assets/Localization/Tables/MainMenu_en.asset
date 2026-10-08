@@ -110,6 +110,46 @@ MonoBehaviour:
     m_Localized: UNITS
     m_Metadata:
       m_Items: []
+  - m_Id: 27849975194710016
+    m_Localized: 'AUDIO SETTINGS '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850174591922176
+    m_Localized: GRAPHICS SETTING
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850408361455616
+    m_Localized: 'ACCOUNT SETTINGS '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850514364100608
+    m_Localized: 'LANGUAGE SETTINGS '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27850758787166208
+    m_Localized: 'SETTINGS '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851071883571200
+    m_Localized: 'Master '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851263722647552
+    m_Localized: SFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851492882640896
+    m_Localized: 'Music '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27851832885506048
+    m_Localized: 'Close '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27852721314590720
+    m_Localized: AUDIO SETTINGS
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
