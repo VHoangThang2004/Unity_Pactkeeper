@@ -534,22 +534,27 @@ public class GachaManager : MonoBehaviour
             UnitContainer container = cardGo.GetComponent<UnitContainer>();
             if (container != null)
             {
-                string name = GetRewardName(result.reward);
-                if (result.isDuplicate)
-                {
-                    name += $"\n(Duplicate)\n+{result.compensationGems} Gems";
-                }
+                string displayText = result.isDuplicate 
+                    ? $"{result.compensationGems} Gems (Dup)" 
+                    : GetRewardName(result.reward);
+
                 Sprite portrait = GetRewardIcon(result.reward);
 
                 container.Setup(
                     $"rolled_{result.reward.definitionId}_{System.Guid.NewGuid().ToString().Substring(0,4)}",
                     result.reward.definitionId,
                     portrait,
-                    name,
+                    displayText,
                     null,
                     null,
                     false
                 );
+
+                if (result.isDuplicate)
+                {
+                    container.SetTint(new Color(0.55f, 0.75f, 1.0f, 1.0f));
+                }
+
                 container.ShowDefault();
             }
 
@@ -638,7 +643,7 @@ public class GachaManager : MonoBehaviour
     void SetupDetailsPanel()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null) return;
 
         GameObject detailPanelGo = new GameObject("GachaDetailsPanel", typeof(RectTransform));
@@ -750,7 +755,7 @@ public class GachaManager : MonoBehaviour
     void SetupRatesPopup()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null) return;
 
         ratesPanel = new GameObject("GachaRatesPanel", typeof(RectTransform));
@@ -858,7 +863,7 @@ public class GachaManager : MonoBehaviour
     void SetupResultsPopup()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null) return;
 
         resultsPanel = new GameObject("GachaResultsPanel", typeof(RectTransform));
@@ -933,7 +938,7 @@ public class GachaManager : MonoBehaviour
     void SetupErrorPopup()
     {
         Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null) canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null) return;
 
         errorPanel = new GameObject("GachaErrorPanel", typeof(RectTransform));

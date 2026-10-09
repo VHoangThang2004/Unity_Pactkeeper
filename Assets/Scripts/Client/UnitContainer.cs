@@ -36,24 +36,40 @@ public class UnitContainer : MonoBehaviour
         this.ownedUnitId = ownedUnitId;
         this.uId = uId;
         this.isFormationSlot = isFormationSlot;
-        if (unitImage != null) unitImage.sprite = portrait;
-        if (unitNameText != null) unitNameText.text = unitName;
-        if (fullFrame != null)
+        if (unitImage != null)
         {
-            fullFrameImg.sprite = fullFrame;
+            unitImage.sprite = portrait;
+            unitImage.color = Color.white;
+        }
+        if (unitNameText != null) unitNameText.text = unitName;
+        if (fullFrameImg != null)
+        {
+            fullFrameImg.color = Color.white;
+            if (fullFrame != null)
+            {
+                fullFrameImg.sprite = fullFrame;
+            }
         }
         if (halfFrame != null)
         {
             halfFrameImg.gameObject.SetActive(true);
             halfFrameImg.sprite = halfFrame;
+            halfFrameImg.color = Color.white;
         }
-        else
+        else if (halfFrameImg != null)
         {
             halfFrameImg.gameObject.SetActive(false);
         }
 
         ShowDefault();
         Debug.Log($"[UnitContainer] Setup called with ownedUnitId: {ownedUnitId}, uId: {uId}, unitName: {unitName}, FullFrame: {fullFrame}, HalfFrame: {halfFrame}, isFormationSlot: {isFormationSlot}");
+    }
+
+    public void SetTint(Color tintColor)
+    {
+        if (fullFrameImg != null) fullFrameImg.color = tintColor;
+        if (halfFrameImg != null) halfFrameImg.color = tintColor;
+        if (unitImage != null) unitImage.color = tintColor;
     }
 
     public void SetEmpty()
