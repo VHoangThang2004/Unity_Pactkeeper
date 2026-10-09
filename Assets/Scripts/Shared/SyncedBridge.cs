@@ -53,6 +53,12 @@ public class SyncedBridge : NetworkBehaviour
         server?.HandleDecision(rpcParams.Receive.SenderClientId, unitId, target, decisionType, skillCardId, clientToken);
     }
 
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void AdvanceTutorialPhaseServerRpc(int newSceneId)
+    {
+        server?.HandleAdvanceTutorialPhase(newSceneId);
+    }
+
     // -------------------------------------------------------
     // SERVER -> ALL CLIENTS
     // -------------------------------------------------------

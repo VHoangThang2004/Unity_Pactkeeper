@@ -16,45 +16,140 @@ MonoBehaviour:
   sceneId: 3
   nodes:
   - type: 0
-    text: Hello, it's me again
+    text: All units are ready. Time for the final blow!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Click to select Unit 1 (Assassin)
+    tutorialTargetId: C0S3_Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Inspect Class Skill - read and understand the plan
+    tutorialTargetId: C0S3_CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Here we will learn how to setup your team
+    text: Understood the plan? Limit Break will reset movement!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Use Class Skill on yourself (0,-1)
+    tutorialTargetId: 
+    targetCell: {x: 0, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: 
+    tutorialTargetId: C0S3_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select Unit 1 again (turn not over)
+    tutorialTargetId: C0S3_Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Move to the flank position (2,0)
+    tutorialTargetId: 
+    targetCell: {x: 2, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: 
+    tutorialTargetId: C0S3_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select Unit 1 once more
+    tutorialTargetId: C0S3_Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Click Weapon Skill
+    tutorialTargetId: C0S3_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Attack cell (1,0)
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: 
+    tutorialTargetId: C0S3_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 1
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select Unit 2 (Paladin)
+    tutorialTargetId: C0S3_Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Click Weapon Skill
+    tutorialTargetId: C0S3_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Attack cell (1,0)
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm
+    tutorialTargetId: C0S3_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2
     targetWaitTimeout: 10
   - type: 0
-    text: You can enter "unit configuation" by directly clicking on each unit in
-      this list.
-    tutorialTargetId: C0S3_0
+    text: AI Dumb has taken 2 attacks (Axe + Dagger) and has 1 HP left! FINISH IT!
+    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 8
     targetWaitTimeout: 10
   - type: 1
-    text: Click herer to add a unit into your team
-    tutorialTargetId: C0S3_1
+    text: Select Unit 1 one last time
+    tutorialTargetId: C0S3_Unit1
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Click Weapon Skill
+    tutorialTargetId: C0S3_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Attack cell (1,0) - Final Blow!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Click here to add this unit to your team
-    tutorialTargetId: C0S3_2
+    text: Confirm
+    tutorialTargetId: C0S3_ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 0.1
-    targetWaitTimeout: 10
-  - type: 1
-    text: Click here if you need to adjust your team.
-    tutorialTargetId: C0S3_4
-    targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 5
-    text: Now click here to config your unit.
-    tutorialTargetId: C0S3_5
+    text: This concludes the Battle tutorial, thank you!
+    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
     targetWaitTimeout: 10

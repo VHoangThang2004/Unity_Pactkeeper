@@ -1124,7 +1124,7 @@ GameObject:
   - component: {fileID: 1696925144}
   - component: {fileID: 1696925145}
   m_Layer: 0
-  m_Name: C0_S4_Manager
+  m_Name: C0_S6_Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b61928b5d5e96f418e5283df4f91c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::PlotSequencer
-  plot: {fileID: 11400000, guid: 5ef935a6f0491694e966da1deba49469, type: 2}
+  plot: {fileID: 11400000, guid: c83da6ab2e8411449858f14e2d1d756c, type: 2}
   textBoxPanel: {fileID: 1993208495}
   dialogueText: {fileID: 1480767196}
   nextButton: {fileID: 176868130}
@@ -1177,11 +1177,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1696925142}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ad4d4a1fb41a4442aef87c20684b967, type: 3}
+  m_Script: {fileID: 11500000, guid: 527ec59cf12f48544a2dbe8e12f7d71f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Client::StorySceneWithAdditiveManager
+  m_EditorClassIdentifier: Client::C0_S4_Manager
   config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
-  additiveSceneName: 3_MainMenu
   sequencer: {fileID: 1696925144}
 --- !u!1 &1898602587
 GameObject:

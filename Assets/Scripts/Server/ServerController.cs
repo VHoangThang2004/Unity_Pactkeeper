@@ -158,4 +158,11 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
     {
         timeline.HandleDecision(clientId, unitId, target, decisionType, skillCardId, clientToken);
     }
+    
+    public void HandleAdvanceTutorialPhase(int newSceneId)
+    {
+        session.AdvanceTutorialPhase(newSceneId, spawnManager);
+        timeline.PackFinal();
+        timeline.BroadcastSnapshot();
+    }
 }

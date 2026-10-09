@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Server::StoryEncounterRegistry
   encounters:
   - {fileID: 11400000, guid: 88be9b9c9167f1845997e54172b36bec, type: 2}
+  - {fileID: 11400000, guid: b8c81bc5b7fc4f8448aaf99b82f3ac1e, type: 2}
+  - {fileID: 11400000, guid: 49b4fd6d4b210bc43ae76add72d00483, type: 2}

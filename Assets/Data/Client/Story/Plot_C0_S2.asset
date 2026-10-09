@@ -16,20 +16,102 @@ MonoBehaviour:
   sceneId: 2
   nodes:
   - type: 0
-    text: Hello, welcome to the tutorial
-    tutorialTargetId: 
+    text: Welcome back. This time, I've just deployed another Tanker from your side
+      into the fray. Coordinate your actions.
+    tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now, call that big Tanker up here.
+    tutorialTargetId: C0S2_Unit2
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Move him to this position!
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: 
+    tutorialTargetId: C0S2_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: Click Paladin again!
+    tutorialTargetId: C0S2_Unit2
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Preparing to swing the heavy axe. Left click the Weapon Skill!
+    tutorialTargetId: C0S2_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Strike at the empty space behind the target! Trust me!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: 
+    tutorialTargetId: C0S2_ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: It's still me, your guide, click to continue
+    text: See the aura? But nothing happened yet. Let's inspect the skill to understand
+      why.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Click on the Tanker on the map to select him again.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Right-click the Weapon Skill to inspect it.
+    tutorialTargetId: C0S2_WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Look closely at the Skill Type. That slash was a 'Delayed' (Non-Instant)
+      attack.
+    tutorialTargetId: C0S2_STYPE
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: The heavy weapon is too massive. He is currently channeling his energy;
+      the blow will land later.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Close the inspect panel.
+    tutorialTargetId: C0S2_CancelButton
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Press "Wait" and watch the slash come down.
+    tutorialTargetId: C0S2_WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
-    text: Now click here to access Unit List
-    tutorialTargetId: C0S2_1
+    text: That concludes the second lesson.
+    tutorialTargetId: C0S2_END
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 0
     targetWaitTimeout: 10

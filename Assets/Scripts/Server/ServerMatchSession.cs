@@ -252,6 +252,79 @@ public class ServerMatchSession : MonoBehaviour
         };
     }
 
+    public void AdvanceTutorialPhase(int newSceneId, ServerSpawnManager spawnManager)
+    {
+        Debug.Log($"[MatchSession] Client requested tutorial advance to SceneId: {newSceneId}");
+        
+        backendClient.SceneId = newSceneId;
+        
+        var newEncounter = storyEncounterRegistry.Get(backendClient.ChapterId, newSceneId);
+        if (newEncounter == null) return;
+
+        int spawnPointer = 0; // We need to track how many player units we've spawned
+        foreach (var pUnit in newEncounter.playerUnits)
+        {
+            bool alreadyExists = units.Exists(u => u.UId == pUnit.uId && GetTeamIdByUnitId(u.Id) == 0);
+            if (!alreadyExists)
+            {
+                Debug.Log($"[MatchSession] Spawning new tutorial unit: UId {pUnit.uId}");
+                var loadout = new PlayerUnitLoadout { 
+                    UId = pUnit.uId, 
+                    MovementSkillId = pUnit.movementSkillId,
+                    WeaponSkillId = pUnit.weaponSkillId,
+                    ClassSkillId = pUnit.classSkillId,
+                    MaxHP = pUnit.maxHP,
+                    MaxSkillPoint = pUnit.maxSkillPoint,
+                    Speed = pUnit.speed,
+                    DamageMultiplier = pUnit.damageMultiplier
+                };
+                
+                // Find next available spawn point for team 0
+                // Skip the spawn points already occupied by existing units (naive assumption: 1 existing unit = skip 1)
+                Vector2Int spawnPoint = MapAsset.GetSpawn(0, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 0).Count + spawnPointer);
+                var newUnit = spawnManager.SpawnUnit(0, loadout, spawnPoint.x, spawnPoint.y);
+                if (newUnit != null)
+                {
+                    newUnit.CurrentStep = 0;
+                    if (!ReadyUnitIds.Contains(newUnit.Id))
+                        ReadyUnitIds.Add(newUnit.Id);
+                }
+                spawnPointer++;
+            }
+        }
+
+        int aiSpawnPointer = 0; // Track how many AI units we've spawned
+        foreach (var aiUnit in newEncounter.aiUnits)
+        {
+            bool alreadyExists = units.Exists(u => u.UId == aiUnit.uId && GetTeamIdByUnitId(u.Id) == 1);
+            if (!alreadyExists)
+            {
+                Debug.Log($"[MatchSession] Spawning new AI unit: UId {aiUnit.uId}");
+                var loadout = new PlayerUnitLoadout { 
+                    UId = aiUnit.uId, 
+                    MovementSkillId = aiUnit.movementSkillId,
+                    WeaponSkillId = aiUnit.weaponSkillId,
+                    ClassSkillId = aiUnit.classSkillId,
+                    MaxHP = aiUnit.maxHP,
+                    MaxSkillPoint = aiUnit.maxSkillPoint,
+                    Speed = aiUnit.speed,
+                    DamageMultiplier = aiUnit.damageMultiplier
+                };
+                
+                // Find next available spawn point for team 1
+                Vector2Int spawnPoint = MapAsset.GetSpawn(1, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 1).Count + aiSpawnPointer);
+                var newUnit = spawnManager.SpawnUnit(1, loadout, spawnPoint.x, spawnPoint.y);
+                if (newUnit != null)
+                {
+                    newUnit.CurrentStep = 0;
+                    if (!ReadyUnitIds.Contains(newUnit.Id))
+                        ReadyUnitIds.Add(newUnit.Id);
+                }
+                aiSpawnPointer++;
+            }
+        }
+    }
+
     // Sentinel — never matches a real connected NGO client.
     // AI decisions are made in-process (ServerAIController), never via RPC,
     // so this clientId is never used for an actual network lookup.

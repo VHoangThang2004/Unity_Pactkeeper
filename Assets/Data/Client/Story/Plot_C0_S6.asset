@@ -10,27 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
-  m_Name: Plot_C0_S4
+  m_Name: Plot_C0_S6
   m_EditorClassIdentifier: Client::PlotConfig
   chapterId: 0
-  sceneId: 4
+  sceneId: 6
   nodes:
   - type: 0
-    text: You did a great job out on the front lines. Now, I'll show you how to prepare
-      in the Main Menu.
+    text: This is the armory and the secret dossier of each unit.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0.1
     targetWaitTimeout: 10
   - type: 0
-    text: The first step is learning how to manage your unit.
-    tutorialTargetId: C0S2_1
+    text: Check the HP, Speed, and Step stats carefully. You can't put someone who
+      is completely drained of stamina on the front line.
+    tutorialTargetId: StatPanel
+    targetCell: {x: 0, y: 0}
+    delay: 0.1
+    targetWaitTimeout: 10
+  - type: 0
+    text: Heading into battle without equipping your skills is tantamount to throwing
+      your life away. Remember that well.
+    tutorialTargetId: SkillSlots
     targetCell: {x: 0, y: 0}
     delay: 0.1
     targetWaitTimeout: 10
   - type: 5
-    text: Click here to open the Unit List.
-    tutorialTargetId: C0S2_1
+    text: "I have nothing left to teach you. Return to the main hall\u2014the real
+      battle is only just beginning!"
+    tutorialTargetId: MainMenuButton
     targetCell: {x: 0, y: 0}
     delay: 0.1
     targetWaitTimeout: 10

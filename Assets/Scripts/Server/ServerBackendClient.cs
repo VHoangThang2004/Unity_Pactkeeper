@@ -90,7 +90,7 @@ public class ServerBackendClient : MonoBehaviour
     // Story mode only — read from CLI args, set by MatchmakingService.SpawnServer.
     // Always 0 for PvP matches (never set, never used by PvP code paths).
     public int ChapterId { get; private set; } = 0;
-    public int SceneId { get; private set; } = 0;
+    public int SceneId { get; set; } = 0;
 
     public bool IsReady { get; private set; } = false;
     public string ServerToken { get; private set; } = string.Empty;
@@ -119,6 +119,13 @@ public class ServerBackendClient : MonoBehaviour
         MatchId = GetMatchIdFromArgs();
         ChapterId = GetIntArg("-chapterId", 0);
         SceneId = GetIntArg("-sceneId", 0);
+        string modeFromArgs = GetStringArg("-mode", string.Empty);
+
+        // Fallback: if backend forgot -mode story, infer from -chapterId
+        if (string.IsNullOrEmpty(modeFromArgs) && HasArg("-chapterId"))
+        {
+            modeFromArgs = "story";
+        }
 
         if (string.IsNullOrEmpty(MatchId))
         {
@@ -131,6 +138,14 @@ public class ServerBackendClient : MonoBehaviour
 
         Debug.Log($"[ServerBackendClient] MatchId={MatchId} — fetching match info.");
         yield return StartCoroutine(FetchMatchInfo());
+
+        // CLI arg -mode overrides backend response (story servers pass -mode story,
+        // PvP servers don't pass -mode so they keep the backend value unchanged)
+        if (!string.IsNullOrEmpty(modeFromArgs))
+        {
+            Debug.Log($"[ServerBackendClient] Mode overridden by CLI arg: '{Mode}' → '{modeFromArgs}'");
+            Mode = modeFromArgs;
+        }
 
         if (Mode == "pvp")
             yield return StartCoroutine(FetchLoadouts());
@@ -316,5 +331,23 @@ public class ServerBackendClient : MonoBehaviour
             if (args[i] == flag && int.TryParse(args[i + 1], out int value))
                 return value;
         return defaultValue;
+    }
+
+    private string GetStringArg(string flag, string defaultValue)
+    {
+        string[] args = System.Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+            if (args[i] == flag)
+                return args[i + 1];
+        return defaultValue;
+    }
+
+    private bool HasArg(string flag)
+    {
+        string[] args = System.Environment.GetCommandLineArgs();
+        foreach (var arg in args)
+            if (arg == flag)
+                return true;
+        return false;
     }
 }

@@ -141,6 +141,7 @@ public class MainMenuManager : MonoBehaviour
 
         if (progress.sceneType == "Battle")
         {
+            PlayerSession.MatchId = null;
             if (!string.IsNullOrEmpty(PlayerSession.MatchId))
                 SceneManager.LoadScene(targetScene);
             else

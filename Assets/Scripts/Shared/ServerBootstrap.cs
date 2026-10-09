@@ -91,6 +91,14 @@ public class ServerBootstrap : MonoBehaviour
         for (int i = 0; i < args.Length - 1; i++)
             if (args[i] == "-mode")
                 return args[i + 1];
+
+        // Fallback: If backend failed to pass "-mode story", but passed "-chapterId", it must be a story match.
+        foreach (var arg in args)
+        {
+            if (arg == "-chapterId")
+                return "story";
+        }
+
         Debug.LogWarning("[Bootstrap] No -mode arg found — defaulting to 'pvp'.");
         return "pvp";
     }

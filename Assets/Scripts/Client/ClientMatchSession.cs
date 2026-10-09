@@ -344,16 +344,22 @@ public class ClientMatchSession : MonoBehaviour
 
     public TeamData GetTeamDataById(int teamId) =>
         teams.Find(t => t.teamId == teamId);
-    public TeamData GetOwnedTeamData() =>
-        teams.Find(t => t.clientId == NetworkManager.Singleton.LocalClientId);
+    public TeamData GetOwnedTeamData()
+    {
+        if (NetworkManager.Singleton == null) return null;
+        return teams?.Find(t => t.clientId == NetworkManager.Singleton.LocalClientId);
+    }
 
-
-    public TeamData GetEnemyTeamData() =>
-        teams.Find(t => t.clientId != NetworkManager.Singleton.LocalClientId);
+    public TeamData GetEnemyTeamData()
+    {
+        if (NetworkManager.Singleton == null) return null;
+        return teams?.Find(t => t.clientId != NetworkManager.Singleton.LocalClientId);
+    }
 
     public int GetMyTeam()
     {
         if (teams == null || teams.Count < 2) return -1;
+        if (NetworkManager.Singleton == null) return -1;
         return teams[0].clientId == NetworkManager.Singleton.LocalClientId ? 0 :
                teams[1].clientId == NetworkManager.Singleton.LocalClientId ? 1 : -1;
     }

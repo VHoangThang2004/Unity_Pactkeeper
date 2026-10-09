@@ -6,8 +6,8 @@ public interface ISyncedBridgeServer
 {
     void HandleAllInitialStateRequest(ulong senderClientId);
     void HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken);
+    void HandleAdvanceTutorialPhase(int newSceneId);
     void OnBridgeReady(SyncedBridge bridge);
-
 }
 
 public interface ISyncedBridgeClient

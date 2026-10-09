@@ -10258,6 +10258,7 @@ MonoBehaviour:
   session: {fileID: 2127351871}
   scene: {fileID: 2127351875}
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
+  battleBGM: {fileID: 0}
 --- !u!114 &2127351869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10485,6 +10486,7 @@ MonoBehaviour:
   eyeAnimDur: 1
   fadeStartAlpha: 0
   fadeEndAlpha: 1
+  eyeSfx: {fileID: 0}
 --- !u!114 &2127351879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10525,6 +10527,7 @@ MonoBehaviour:
   plots:
   - plot: {fileID: 11400000, guid: b8537512f91ba4946be8a8d24c47771f, type: 2}
     startTrigger: PlayerTurn
+  backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
 --- !u!114 &2127351881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14059,7 +14062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638ea96d35d4dbc4f80b81aae2fe2f3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialTarget
-  targetId: C0S1_2
+  targetId: OwnedReadyBar
 --- !u!222 &8424506382571538379
 CanvasRenderer:
   m_ObjectHideFlags: 0

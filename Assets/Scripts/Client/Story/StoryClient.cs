@@ -25,7 +25,8 @@ public static class StoryClient
 
         if (req.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogWarning($"[StoryClient] GetCurrent failed: {req.error}");
+            //Debug.LogWarning($"[StoryClient] GetCurrent failed: {req.error}");
+            Debug.LogWarning($"[StoryClient] CompleteCurrentScene failed: {req.error} - Lý do: {req.downloadHandler.text}");
             onFail?.Invoke();
             yield break;
         }
@@ -51,7 +52,7 @@ public static class StoryClient
 
         if (req.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogWarning($"[StoryClient] CompleteCurrentScene failed: {req.error}");
+            Debug.LogWarning($"[StoryClient] CompleteCurrentScene failed: {req.error} - Lý do: {req.downloadHandler.text}");
             onFail?.Invoke();
             yield break;
         }
@@ -135,7 +136,16 @@ public static class StoryClient
             StoryProgressData next = null;
             yield return runner.StartCoroutine(StartNextScene(config,
                 data => next = data, onFail));
-            if (next != null) onNext(next);
+            if (next != null)
+            {
+                if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsListening)
+                {
+                    Debug.Log("[StoryClient] Shutting down NetworkManager and waiting...");
+                    Unity.Netcode.NetworkManager.Singleton.Shutdown();
+                    yield return new WaitUntil(() => !Unity.Netcode.NetworkManager.Singleton.IsListening);
+                }
+                onNext(next);
+            }
         }
         else
         {

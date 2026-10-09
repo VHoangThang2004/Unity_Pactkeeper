@@ -77,8 +77,9 @@ public class PlotSequencer : MonoBehaviour
     private System.Collections.Generic.Queue<PlotEntry> _pendingPlots;
     private bool _plotRunning = false;
 
-    public void StartPlotWithTriggers(System.Collections.Generic.List<PlotEntry> plots)
+    public void StartPlotWithTriggers(System.Collections.Generic.List<PlotEntry> plots, System.Action onComplete = null)
     {
+        _onComplete = onComplete;
         _pendingPlots = new System.Collections.Generic.Queue<PlotEntry>(plots);
         PlotDirector.OnTrigger += HandleTrigger;
         StartCoroutine(ProcessPendingPlots());
@@ -505,39 +506,57 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
-
-        // Wait for target to register — reload scene if timeout exceeded
-        TutorialTarget target = null;
-        float waited = 0f;
-        while (target == null && waited < node.targetWaitTimeout)
+        if (string.IsNullOrEmpty(node.tutorialTargetId))
         {
-            target = TutorialTargetRegistry.Get(node.tutorialTargetId);
+            // Fallback to simple "Next" button if no target ID is specified
+            nextButton.gameObject.SetActive(true);
+            _waitingForInput = true;
+            
+            nextButton.onClick.RemoveAllListeners();
+            nextButton.onClick.AddListener(() =>
+            {
+                HideAll();
+                _waitingForInput = false;
+                _onComplete?.Invoke();
+            });
+
+            yield return new WaitUntil(() => !_waitingForInput);
+        }
+        else
+        {
+            // Wait for target to register — reload scene if timeout exceeded
+            TutorialTarget target = null;
+            float waited = 0f;
+            while (target == null && waited < node.targetWaitTimeout)
+            {
+                target = TutorialTargetRegistry.Get(node.tutorialTargetId);
+                if (target == null)
+                {
+                    waited += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
             if (target == null)
             {
-                waited += Time.deltaTime;
-                yield return null;
+                Debug.LogError($"[PlotSequencer] CompleteAndExit: target '{node.tutorialTargetId}' " +
+                               $"not found after {node.targetWaitTimeout}s — reloading scene.");
+                // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                yield break;
             }
+
+            PositionButtonHighlight(target);
+
+            var btn = tutorialButton.GetComponent<Button>();
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(() =>
+            {
+                HideAll();
+                _onComplete?.Invoke();
+            });
+
+            yield return new WaitUntil(() => !tutorialButton.activeSelf);
         }
-
-        if (target == null)
-        {
-            Debug.LogError($"[PlotSequencer] CompleteAndExit: target '{node.tutorialTargetId}' " +
-                           $"not found after {node.targetWaitTimeout}s — reloading scene.");
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            yield break;
-        }
-
-        PositionButtonHighlight(target);
-
-        var btn = tutorialButton.GetComponent<Button>();
-        btn.onClick.RemoveAllListeners();
-        btn.onClick.AddListener(() =>
-        {
-            HideAll();
-            _onComplete?.Invoke();
-        });
-
-        yield return new WaitUntil(() => !tutorialButton.activeSelf);
     }
 
     // -------------------------------------------------------

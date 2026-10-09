@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fdc7f8a15adfc504b8d9adedd4c5034a, type: 3}
-  m_Name: Encounter_C0_S1
+  m_Name: Encounter_C0_S2
   m_EditorClassIdentifier: Server::StoryEncounterConfig
   chapterId: 0
-  sceneId: 1
+  sceneId: 2
   playerUnits:
   - uId: 1
     passiveSkillId: -1
@@ -24,6 +24,17 @@ MonoBehaviour:
     maxHP: 3
     maxSkillPoint: 3
     speed: 130
+    damageMultiplier: 100
+    damageReduction: 0
+  - uId: 2
+    passiveSkillId: -1
+    movementSkillId: 1002
+    weaponSkillId: 2003
+    classSkillId: 3002
+    trinketSkillId: -1
+    maxHP: 3
+    maxSkillPoint: 3
+    speed: 100
     damageMultiplier: 100
     damageReduction: 0
   aiUnits:
