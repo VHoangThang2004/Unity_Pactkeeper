@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 8da25e2e02d2a174dbb8bc5a2af21fac
+guid: bfb7f057a926d8e45a5b14c75e2b6a84
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7549330312176801658
-    second: SettingTab_1-Photoroom_0
+      213: -7430133361237891561
+    second: BIg Button New_1_0
+  - first:
+      213: 4785182717561438051
+    second: BIg Button New_1_1
+  - first:
+      213: -1936621690057548557
+    second: BIg Button New_1_2
+  - first:
+      213: -6127196936771363493
+    second: BIg Button New_1_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +46,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +55,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,23 +109,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SettingTab_1-Photoroom_0
+      name: BIg Button New_1_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 5
-        width: 976
-        height: 546
+        x: 0
+        y: 397
+        width: 1179
+        height: 353
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 688ec9244146b3790800000000000000
-      internalID: -7549330312176801658
+      spriteID: 716e2a1131dd2e890800000000000000
+      internalID: -7430133361237891561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BIg Button New_1_1
+      rect:
+        serializedVersion: 2
+        x: 1236
+        y: 384
+        width: 1155
+        height: 334
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36f76912452686240800000000000000
+      internalID: 4785182717561438051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BIg Button New_1_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1183
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fc9dc365dcbf15e0800000000000000
+      internalID: -1936621690057548557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BIg Button New_1_3
+      rect:
+        serializedVersion: 2
+        x: 1236
+        y: 0
+        width: 1164
+        height: 359
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d91ea69d2d7faa0800000000000000
+      internalID: -6127196936771363493
       vertices: []
       indices: 
       edges: []
@@ -125,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 42c120c2f7da42843b68e3242b8ee519
     internalID: 0
     vertices: []
     indices: 
@@ -133,9 +208,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      SettingTab_1-Photoroom_0: -7549330312176801658
+      BIg Button New_1_0: -7430133361237891561
+      BIg Button New_1_1: 4785182717561438051
+      BIg Button New_1_2: -1936621690057548557
+      BIg Button New_1_3: -6127196936771363493
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

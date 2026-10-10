@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0e3d009d0fd174c4db053530b1e9b4c5
+guid: 89abc2870c2343243a8786d525fd481e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2940040887355594095
-    second: FriendTab_1_0
+      213: 8305222938841504106
+    second: victory_panel_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FriendTab_1_0
+      name: victory_panel_0
       rect:
         serializedVersion: 2
-        x: 23
-        y: 2
-        width: 981
-        height: 546
+        x: 0
+        y: 0
+        width: 512
+        height: 512
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f6554fb2c9f1dc820800000000000000
-      internalID: 2940040887355594095
+      spriteID: a69d21a8244124370800000000000000
+      internalID: 8305222938841504106
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      FriendTab_1_0: 2940040887355594095
+      victory_panel_0: 8305222938841504106
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

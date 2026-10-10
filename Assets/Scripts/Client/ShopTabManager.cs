@@ -114,9 +114,15 @@ public class ShopTabManager : MonoBehaviour
     [Header("Center — Item Grid")]
     [SerializeField] private Transform  itemGridContainer;
     [SerializeField] private GameObject shopItemPrefab;
-    [SerializeField] private GameObject itemEmptyState;     // "No items available"
+    [SerializeField] private GameObject itemEmptyState;
     [SerializeField] private TMP_Text   shopNameText;
     [SerializeField] private TMP_Text   shopDescriptionText;
+
+    [Header("Pagination — Item Grid")]
+    [SerializeField] private int      itemsPerPage   = 8;  // 2 rows × 4 cols
+    [SerializeField] private Button   itemPrevButton;
+    [SerializeField] private Button   itemNextButton;
+    [SerializeField] private TMP_Text itemPageLabel;
 
     [Header("Right — Item Detail")]
     [SerializeField] private GameObject detailPanel;
@@ -152,6 +158,7 @@ public class ShopTabManager : MonoBehaviour
     private PlayerShopItemDto   selectedItem;
     private ShopItemEntry       selectedEntry;
     private int                 localGems      = 0;
+    private int                 currentItemPage = 0;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -161,6 +168,8 @@ public class ShopTabManager : MonoBehaviour
         if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmYes);
         if (confirmNoButton  != null) confirmNoButton.onClick.AddListener(OnConfirmNo);
         if (resultOkButton   != null) resultOkButton.onClick.AddListener(OnResultOk);
+        if (itemPrevButton   != null) itemPrevButton.onClick.AddListener(ItemPrevPage);
+        if (itemNextButton   != null) itemNextButton.onClick.AddListener(ItemNextPage);
 
         HidePanel();
         HideDetailPanel();
@@ -173,6 +182,8 @@ public class ShopTabManager : MonoBehaviour
         if (confirmYesButton != null) confirmYesButton.onClick.RemoveAllListeners();
         if (confirmNoButton  != null) confirmNoButton.onClick.RemoveAllListeners();
         if (resultOkButton   != null) resultOkButton.onClick.RemoveAllListeners();
+        if (itemPrevButton   != null) itemPrevButton.onClick.RemoveListener(ItemPrevPage);
+        if (itemNextButton   != null) itemNextButton.onClick.RemoveListener(ItemNextPage);
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -286,6 +297,7 @@ public class ShopTabManager : MonoBehaviour
         if (resetPeriodText != null)
             resetPeriodText.text = BuildResetLabel(shop);
 
+        currentItemPage = 0;
         RenderItemGrid(shop);
     }
 
@@ -298,17 +310,59 @@ public class ShopTabManager : MonoBehaviour
         if (shop.items == null || shop.items.Length == 0)
         {
             if (itemEmptyState != null) itemEmptyState.SetActive(true);
+            UpdateItemPageLabel(0, 0);
             return;
         }
 
         if (itemEmptyState != null) itemEmptyState.SetActive(false);
 
-        foreach (var item in shop.items)
+        int total      = shop.items.Length;
+        int totalPages = Mathf.CeilToInt((float)total / itemsPerPage);
+        currentItemPage = Mathf.Clamp(currentItemPage, 0, Mathf.Max(0, totalPages - 1));
+
+        int startIndex = currentItemPage * itemsPerPage;
+        int endIndex   = Mathf.Min(startIndex + itemsPerPage, total);
+
+        for (int i = startIndex; i < endIndex; i++)
         {
             var obj   = Instantiate(shopItemPrefab, itemGridContainer);
             var entry = obj.GetComponent<ShopItemEntry>();
-            entry?.Setup(item, this);
+            entry?.Setup(shop.items[i], this);
         }
+
+        UpdateItemPageLabel(currentItemPage + 1, totalPages);
+    }
+
+    void ItemPrevPage()
+    {
+        if (selectedShop == null || currentItemPage <= 0) return;
+        currentItemPage--;
+        selectedItem  = null;
+        selectedEntry = null;
+        HideDetailPanel();
+        RenderItemGrid(selectedShop);
+    }
+
+    void ItemNextPage()
+    {
+        if (selectedShop == null) return;
+        int totalPages = Mathf.CeilToInt((float)selectedShop.items.Length / itemsPerPage);
+        if (currentItemPage >= totalPages - 1) return;
+        currentItemPage++;
+        selectedItem  = null;
+        selectedEntry = null;
+        HideDetailPanel();
+        RenderItemGrid(selectedShop);
+    }
+
+    void UpdateItemPageLabel(int current, int total)
+    {
+        if (itemPageLabel  != null)
+            itemPageLabel.text = total > 0 ? $"Page {current} / {total}" : string.Empty;
+        if (itemPrevButton != null)
+            itemPrevButton.interactable = current > 1;
+        if (itemNextButton != null)
+            itemNextButton.interactable = current < total;
     }
 
     // ── Item Detail (Right Panel) ─────────────────────────────────────────────

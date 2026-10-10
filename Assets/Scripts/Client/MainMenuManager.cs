@@ -30,6 +30,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TopUpManager topUpManager;
     [SerializeField] private FriendTabManager friendTabManager;
     [SerializeField] private QuestManager questManager;
+    [SerializeField] private NotificationDotManager notificationDotManager;
 
     void Start()
     {
@@ -71,6 +72,13 @@ public class MainMenuManager : MonoBehaviour
     IEnumerator FetchAllData()
     {
         yield return StartCoroutine(FetchProfile());
+
+        // Refresh notification dots after profile is loaded
+        if (notificationDotManager != null)
+        {
+            notificationDotManager.RefreshAll();
+            notificationDotManager.StartAutoRefresh();
+        }
 
         // ── 0. Skip all flow checks if loaded as additive subscene (e.g. under C0_S2)
         if (TutorialContext.IsActive)
@@ -241,6 +249,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenMailBoxTab()
     {
         mailboxManager?.Open();
+        notificationDotManager?.ClearMailboxDot();
     }
 
     public void CloseMailBoxTab()
@@ -271,6 +280,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenShopTab()
     {
         shopTabManager?.Open();
+        notificationDotManager?.ClearShopDot();
     }
 
     public void CloseShopTab()
@@ -301,6 +311,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenQuestTab()
     {
         questManager?.Open();
+        notificationDotManager?.ClearQuestDot();
     }
 
     public void CloseQuestTab()

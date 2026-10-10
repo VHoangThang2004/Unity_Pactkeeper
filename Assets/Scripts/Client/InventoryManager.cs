@@ -15,6 +15,12 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private GameObject inventoryItemPrefab;
     [SerializeField] private GameObject emptyStatePanel;
 
+    [Header("Pagination")]
+    [SerializeField] private int      itemsPerPage = 35; // 5 rows × 7 cols
+    [SerializeField] private Button   prevButton;
+    [SerializeField] private Button   nextButton;
+    [SerializeField] private TMP_Text pageLabel;
+
     [Header("Filter Buttons")]
     [SerializeField] private Button filterAllButton;
     [SerializeField] private Button filterWeaponsButton;
@@ -39,6 +45,7 @@ public class InventoryManager : MonoBehaviour
     private List<InventoryItemData> filteredItems = new List<InventoryItemData>();
     private InventoryItem selectedItem = null;
     private ItemFilter currentFilter = ItemFilter.All;
+    private int currentPage = 0;
 
     private enum ItemFilter
     {
@@ -74,6 +81,10 @@ public class InventoryManager : MonoBehaviour
             filterWeaponsButton.onClick.AddListener(() => SetFilter(ItemFilter.Weapon));
         if (filterTrinketsButton != null)
             filterTrinketsButton.onClick.AddListener(() => SetFilter(ItemFilter.Trinket));
+        if (prevButton != null)
+            prevButton.onClick.AddListener(PrevPage);
+        if (nextButton != null)
+            nextButton.onClick.AddListener(NextPage);
 
         HidePanel();
     }
@@ -89,6 +100,10 @@ public class InventoryManager : MonoBehaviour
             filterWeaponsButton.onClick.RemoveAllListeners();
         if (filterTrinketsButton != null)
             filterTrinketsButton.onClick.RemoveAllListeners();
+        if (prevButton != null)
+            prevButton.onClick.RemoveListener(PrevPage);
+        if (nextButton != null)
+            nextButton.onClick.RemoveListener(NextPage);
     }
 
     public void Open()
@@ -101,6 +116,7 @@ public class InventoryManager : MonoBehaviour
 
         if (panel != null)
             panel.SetActive(true);
+        currentPage = 0;
         LoadInventory();
     }
 
@@ -232,6 +248,7 @@ public class InventoryManager : MonoBehaviour
     void SetFilter(ItemFilter filter)
     {
         currentFilter = filter;
+        currentPage   = 0;
         ApplyFilter();
     }
 
@@ -242,20 +259,52 @@ public class InventoryManager : MonoBehaviour
         if (filteredItems.Count == 0)
         {
             ShowEmptyState();
+            UpdatePageLabel(0, 0);
             return;
         }
 
         HideEmptyState();
 
-        foreach (var item in filteredItems)
+        int totalPages = Mathf.CeilToInt((float)filteredItems.Count / itemsPerPage);
+        currentPage = Mathf.Clamp(currentPage, 0, Mathf.Max(0, totalPages - 1));
+
+        int startIndex = currentPage * itemsPerPage;
+        int endIndex   = Mathf.Min(startIndex + itemsPerPage, filteredItems.Count);
+
+        for (int i = startIndex; i < endIndex; i++)
         {
-            var itemObj = Instantiate(inventoryItemPrefab, itemListContainer);
+            var itemObj       = Instantiate(inventoryItemPrefab, itemListContainer);
             var itemComponent = itemObj.GetComponent<InventoryItem>();
             if (itemComponent != null)
-            {
-                itemComponent.Setup(item, this);
-            }
+                itemComponent.Setup(filteredItems[i], this);
         }
+
+        UpdatePageLabel(currentPage + 1, totalPages);
+    }
+
+    void PrevPage()
+    {
+        if (currentPage <= 0) return;
+        currentPage--;
+        RenderItemList();
+    }
+
+    void NextPage()
+    {
+        int totalPages = Mathf.CeilToInt((float)filteredItems.Count / itemsPerPage);
+        if (currentPage >= totalPages - 1) return;
+        currentPage++;
+        RenderItemList();
+    }
+
+    void UpdatePageLabel(int current, int total)
+    {
+        if (pageLabel  != null)
+            pageLabel.text = total > 0 ? $"Page {current} / {total}" : string.Empty;
+        if (prevButton != null)
+            prevButton.interactable = current > 1;
+        if (nextButton != null)
+            nextButton.interactable = current < total;
     }
 
     void ClearItemList()
