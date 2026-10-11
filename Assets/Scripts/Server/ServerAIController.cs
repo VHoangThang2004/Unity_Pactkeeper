@@ -51,7 +51,6 @@ public class ServerAIController : MonoBehaviour
     void SendWait()
     {
         Debug.Log("[ServerAI] Deciding: Wait.");
-        timeline.HandleAIDecision(AI_TEAM_ID, unitId: -1, default,
-            DecisionType.Wait, skillCardId: -1);
+        timeline.HandleDecision(ServerMatchSession.AI_CLIENT_ID, unitId: -1, default, DecisionType.Wait, skillcardId: -1, timeline.CurrentToken);
     }
 }

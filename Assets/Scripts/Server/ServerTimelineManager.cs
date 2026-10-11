@@ -49,6 +49,7 @@ public class ServerTimelineManager : MonoBehaviour
     private List<(int unitId, Vector3Int sourceCell, Vector3Int targetCell, int effectId, int skillCardId)> effectRecord;
     // Sync token — control concern, client/server handshake only
     private int Token = 0;
+    public int CurrentToken => Token;
     private float _matchStartTime = 0f;
     private const float MAX_MATCH_DURATION = 3600f; // 60 minutes
     private const float DISCONNECT_TIMEOUT = 60f;   // 60s after all clients disconnect
@@ -603,6 +604,12 @@ public class ServerTimelineManager : MonoBehaviour
                 SendSnapshotToClient(senderClientId);
                 return;
             }
+            if (!session.IsValidSkillTarget(unit, skillcardId, target))
+            {
+                Debug.LogWarning($"[Server] Invalid skill/target: unit={unitId} skill={skillcardId} target={target}");
+                SendSnapshotToClient(senderClientId);
+                return;
+            }
         }
 
         //Logs the decision
@@ -613,63 +620,6 @@ public class ServerTimelineManager : MonoBehaviour
         pendingDecision = (unitId, unit.CurrentCell, target, decisionType, skillcardId);
         waitingForDecision = false;
         Debug.Log($"[Server] Decision accepted: unit={unitId} target={target}");
-    }
-
-    // -------------------------------------------------------
-    // AI Decision Entry Point — story mode only.
-    // Called directly by ServerAIController (in-process, no RPC, no token check —
-    // the AI is server-trusted by definition). Still validates turn ownership and
-    // ready-queue membership to catch bugs in the AI controller itself.
-    // -------------------------------------------------------
-    public void HandleAIDecision(int aiTeamId, int unitId, Vector3Int target,
-        DecisionType decisionType, int skillCardId)
-    {
-        if (session.TimelineState != ServerSessionState.DecisionWaiting || !waitingForDecision)
-        {
-            Debug.LogWarning($"[Timeline] AI decision ignored — wrong state ({session.TimelineState}).");
-            return;
-        }
-
-        if (aiTeamId != session.CurrentTeamTurnId)
-        {
-            Debug.LogWarning($"[Timeline] AI decision ignored — not team {aiTeamId}'s turn " +
-                             $"(current={session.CurrentTeamTurnId}).");
-            return;
-        }
-
-        if (unitId == -1)
-        {
-            pendingDecision = null;
-            waitingForDecision = false;
-            Debug.Log($"[Timeline] AI team {aiTeamId} chose wait.");
-            return;
-        }
-
-        if (!session.ReadyUnitIds.Contains(unitId))
-        {
-            Debug.LogWarning($"[Timeline] AI decision ignored — unit {unitId} not ready.");
-            return;
-        }
-
-        var unit = session.GetUnitByUnitId(unitId);
-        if (unit == null || session.GetTeamIdByUnitId(unitId) != aiTeamId)
-        {
-            Debug.LogWarning($"[Timeline] AI decision ignored — unit {unitId} invalid or not owned by AI.");
-            return;
-        }
-
-        SkillDefinition skillDef = session.skillLibrary.Get(skillCardId);
-        if (skillDef != null && !session.CanUseSkill(unitId, skillCardId, skillDef))
-        {
-            Debug.LogWarning($"[Timeline] AI decision ignored — invalid skill usage.");
-            return;
-        }
-
-        LogTeamCommand(aiTeamId, unit, skillDef, target);
-
-        pendingDecision = (unitId, unit.CurrentCell, target, decisionType, skillCardId);
-        waitingForDecision = false;
-        Debug.Log($"[Timeline] AI decision accepted: team={aiTeamId} unit={unitId} target={target}");
     }
 
     // Read-only state ServerAIController polls to know when it's the AI's turn.
@@ -807,6 +757,7 @@ public class ServerTimelineManager : MonoBehaviour
 
     public void SendSnapshot(ulong clientId)
     {
+        if (clientId == ServerMatchSession.AI_CLIENT_ID) return; // AI has no network client
         int team = session.GetTeamNumberByClientId(clientId);
         SecretData secret = session.GetSecretData(team);
         ClientRpcParams rpcParams = new ClientRpcParams
@@ -979,7 +930,7 @@ public class ServerTimelineManager : MonoBehaviour
                 totalUnits = session.GetTeamLoadoutDataByTeamId(teams[1].teamId)?.Units?.Count ?? 0
             }
         };
-        
+
         NetworkManager.Singleton.Shutdown();
 
         // Notify backend before shutting down

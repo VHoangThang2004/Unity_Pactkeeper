@@ -15,7 +15,7 @@ MonoBehaviour:
   effectId: 20005
   resolveDuration: 1
   baseValue: 1
-  aoePattern: {fileID: 11400000, guid: c9991631c7114104d95f5d45dc0edfe7, type: 2}
+  aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
   isPermanent: 0
   durationInstants: 10

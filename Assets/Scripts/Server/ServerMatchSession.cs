@@ -255,9 +255,9 @@ public class ServerMatchSession : MonoBehaviour
     public void AdvanceTutorialPhase(int newSceneId, ServerSpawnManager spawnManager)
     {
         Debug.Log($"[MatchSession] Client requested tutorial advance to SceneId: {newSceneId}");
-        
+
         backendClient.SceneId = newSceneId;
-        
+
         var newEncounter = storyEncounterRegistry.Get(backendClient.ChapterId, newSceneId);
         if (newEncounter == null) return;
 
@@ -268,8 +268,9 @@ public class ServerMatchSession : MonoBehaviour
             if (!alreadyExists)
             {
                 Debug.Log($"[MatchSession] Spawning new tutorial unit: UId {pUnit.uId}");
-                var loadout = new PlayerUnitLoadout { 
-                    UId = pUnit.uId, 
+                var loadout = new PlayerUnitLoadout
+                {
+                    UId = pUnit.uId,
                     MovementSkillId = pUnit.movementSkillId,
                     WeaponSkillId = pUnit.weaponSkillId,
                     ClassSkillId = pUnit.classSkillId,
@@ -278,7 +279,7 @@ public class ServerMatchSession : MonoBehaviour
                     Speed = pUnit.speed,
                     DamageMultiplier = pUnit.damageMultiplier
                 };
-                
+
                 // Find next available spawn point for team 0
                 // Skip the spawn points already occupied by existing units (naive assumption: 1 existing unit = skip 1)
                 Vector2Int spawnPoint = MapAsset.GetSpawn(0, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 0).Count + spawnPointer);
@@ -300,8 +301,9 @@ public class ServerMatchSession : MonoBehaviour
             if (!alreadyExists)
             {
                 Debug.Log($"[MatchSession] Spawning new AI unit: UId {aiUnit.uId}");
-                var loadout = new PlayerUnitLoadout { 
-                    UId = aiUnit.uId, 
+                var loadout = new PlayerUnitLoadout
+                {
+                    UId = aiUnit.uId,
                     MovementSkillId = aiUnit.movementSkillId,
                     WeaponSkillId = aiUnit.weaponSkillId,
                     ClassSkillId = aiUnit.classSkillId,
@@ -310,7 +312,7 @@ public class ServerMatchSession : MonoBehaviour
                     Speed = aiUnit.speed,
                     DamageMultiplier = aiUnit.damageMultiplier
                 };
-                
+
                 // Find next available spawn point for team 1
                 Vector2Int spawnPoint = MapAsset.GetSpawn(1, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 1).Count + aiSpawnPointer);
                 var newUnit = spawnManager.SpawnUnit(1, loadout, spawnPoint.x, spawnPoint.y);
@@ -560,6 +562,18 @@ public class ServerMatchSession : MonoBehaviour
             return true;
         }
         return true; // no usage record = never used = allowed
+    }
+    public bool IsValidSkillTarget(UnitData unit, int skillId, Vector3Int target)
+    {
+        foreach (var p in unit.SkillPatterns)
+        {
+            if (p.SkillId != skillId) continue;
+            if (p.TargetCells == null) return false;
+            foreach (var c in p.TargetCells)
+                if (c.x == target.x && c.y == target.y) return c.z == 1;
+            return false; // cell not in pattern
+        }
+        return false; // skill not in unit's active slots
     }
 
     public void RecordSkillUsage(int unitId, int skillId)

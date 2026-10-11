@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class NoneState : IInteractionState
 {
@@ -48,6 +49,20 @@ public class NoneState : IInteractionState
 
     public void ApplyWait()
     {
-        scene.controller.bridge.SendDecisionServerRpc(-1, default, DecisionType.Wait, -1, session.CurrentToken);
+        scene.clientInteractionSystem.decisionSpamRoutine = session.StartCoroutine(SpamDecision());
+    }
+    private IEnumerator SpamDecision()
+    {
+        const float timeout = 2.5f;
+        const float interval = 0.1f; // set to 0 for true every-frame spam
+
+        float elapsed = 0f;
+
+        while (elapsed < timeout)
+        {
+            scene.controller.bridge.SendDecisionServerRpc(-1, default, DecisionType.Wait, -1, session.CurrentToken);
+            yield return new WaitForSeconds(interval);
+            elapsed += interval;
+        }
     }
 }
