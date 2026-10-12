@@ -330,4 +330,10 @@ public class MainMenuManager : MonoBehaviour
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.gachaScene);
     }
+
+    public void GoToStoryProgress()
+    {
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.storyProgressScene);
+    }
 }

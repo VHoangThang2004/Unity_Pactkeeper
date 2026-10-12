@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d578c787ff7033543a9eb3e7d0938d61
+guid: 385a9fa32f32dcf458f40a3688095716
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1526133863863184580
-    second: Shop_Tab_Standard-Photoroom_0
+      213: 6562069388967682934
+    second: StoryProgress_Background_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shop_Tab_Standard-Photoroom_0
+      name: StoryProgress_Background_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1004
-        height: 553
+        width: 192
+        height: 108
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c339dbc265512dae0800000000000000
-      internalID: -1526133863863184580
+      spriteID: 67322e88757211b50800000000000000
+      internalID: 6562069388967682934
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shop_Tab_Standard-Photoroom_0: -1526133863863184580
+      StoryProgress_Background_0: 6562069388967682934
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

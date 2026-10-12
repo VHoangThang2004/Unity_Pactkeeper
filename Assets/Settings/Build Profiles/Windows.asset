@@ -68,6 +68,9 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/StoryScenes/C0_S6.unity
     m_guid: c5c49c460faa667419d31034af0f924e
+  - m_enabled: 1
+    m_path: Assets/Scenes/10_StoryProgress.unity
+    m_guid: ecd3501d18311d44a9a2dbcfbcb45f01
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
