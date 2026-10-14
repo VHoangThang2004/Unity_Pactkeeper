@@ -114,9 +114,10 @@ public static class StoryClient
     }
 
     // -------------------------------------------------------
-    // Helper: Complete then advance, respecting autoNext.
+    // Helper: Complete the current scene. The backend auto-advances to the next
+    // scene if the completed scene has AutoAdvance (reported via advancedFromPrev).
     // Common pattern used by any scene that finishes a non-battle step.
-    // After completion, calls onNext with the new progress.
+    // After completion, calls onNext with the final progress returned by the server.
     // -------------------------------------------------------
 
     public static IEnumerator CompleteAndAdvance(
@@ -131,26 +132,15 @@ public static class StoryClient
 
         if (completed == null) yield break;
 
-        if (completed.autoNext)
+        if (completed.advancedFromPrev &&
+            Unity.Netcode.NetworkManager.Singleton != null &&
+            Unity.Netcode.NetworkManager.Singleton.IsListening)
         {
-            StoryProgressData next = null;
-            yield return runner.StartCoroutine(StartNextScene(config,
-                data => next = data, onFail));
-            if (next != null)
-            {
-                if (Unity.Netcode.NetworkManager.Singleton != null && Unity.Netcode.NetworkManager.Singleton.IsListening)
-                {
-                    Debug.Log("[StoryClient] Shutting down NetworkManager and waiting...");
-                    Unity.Netcode.NetworkManager.Singleton.Shutdown();
-                    yield return new WaitUntil(() => !Unity.Netcode.NetworkManager.Singleton.IsListening);
-                }
-                onNext(next);
-            }
+            Debug.Log("[StoryClient] Shutting down NetworkManager and waiting...");
+            Unity.Netcode.NetworkManager.Singleton.Shutdown();
+            yield return new WaitUntil(() => !Unity.Netcode.NetworkManager.Singleton.IsListening);
         }
-        else
-        {
-            onNext(completed);
-        }
+        onNext(completed);
     }
 
     // -------------------------------------------------------
@@ -160,9 +150,9 @@ public static class StoryClient
 
     public static void RouteToStoryScene(StoryProgressData progress)
     {
-        if (progress.isChapterCompleted)
+        if (progress.isChapterCompleted || progress.isCompleted)
         {
-            Debug.Log("[StoryClient] Chapter complete — returning to main menu.");
+            Debug.Log("[StoryClient] Chapter complete or scene awaiting manual advance — returning to main menu.");
             SceneManager.LoadScene("3_MainMenu");
             return;
         }
@@ -192,7 +182,8 @@ public class StoryProgressData
     public bool isCompleted;
     public bool isChapterCompleted;
     public string sceneType;
-    public bool autoNext;
+    public bool autoResume;
+    public bool advancedFromPrev;
 }
 
 [System.Serializable]

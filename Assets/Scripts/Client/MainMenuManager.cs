@@ -123,21 +123,21 @@ public class MainMenuManager : MonoBehaviour
     // -------------------------------------------------------
 
     // Returns true if the main menu should stay visible, false if transitioning away.
-    bool ResumeStory(StoryProgressData progress)
+    // force=true ignores autoResume (server just advanced us here, or player pressed continue).
+    bool ResumeStory(StoryProgressData progress, bool force = false)
     {
         Debug.Log($"[MainMenu] Resuming story: " +
                   $"ch={progress.chapterId} sc={progress.sceneId} " +
-                  $"type={progress.sceneType} completed={progress.isCompleted}");
+                  $"type={progress.sceneType} completed={progress.isCompleted} " +
+                  $"autoResume={progress.autoResume} force={force}");
 
+        // Scene already completed but not advanced: stay on menu, wait for player input (/next)
         if (progress.isCompleted)
-        {
-            if (progress.autoNext)
-            {
-                StartCoroutine(AdvanceStory());
-                return false;
-            }
-            return true; // show main menu, wait for player input
-        }
+            return true;
+
+        // Scene not completed, but config says don't auto-load it: stay on menu
+        if (!force && !progress.autoResume)
+            return true;
 
         var targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
 
@@ -193,7 +193,7 @@ public class MainMenuManager : MonoBehaviour
     {
         yield return StartCoroutine(StoryClient.CompleteAndAdvance(
             config, this,
-            next => ResumeStory(next),
+            next => ResumeStory(next, force: next.advancedFromPrev),
             () => Debug.LogWarning("[MainMenu] Story advance failed.")
         ));
     }
@@ -201,7 +201,7 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator AdvanceStory()
     {
         yield return StartCoroutine(StoryClient.StartNextScene(config,
-            next => ResumeStory(next),
+            next => ResumeStory(next, force: true),
             () => Debug.LogWarning("[MainMenu] AdvanceStory failed.")
         ));
     }
