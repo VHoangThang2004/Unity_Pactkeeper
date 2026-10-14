@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
@@ -8,6 +8,9 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Sources")]
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
+
+    [Header("Audio Mixer")]
+    [SerializeField] private UnityEngine.Audio.AudioMixer audioMixer;
 
     private void Awake()
     {
@@ -44,5 +47,17 @@ public class AudioManager : MonoBehaviour
 
         // Dùng PlayOneShot để nhiều tiếng có thể đè lên nhau mà không bị ngắt
         sfxSource.PlayOneShot(sfxClip);
+    }
+
+    // Hàm chuyển đổi giá trị Slider (0.0001 -> 1) sang Decibel (-80dB -> 0dB)
+    public void SetVolume(string parameterName, float sliderValue)
+    {
+        if (audioMixer == null) return;
+        
+        // Tránh lỗi Log10(0) bằng cách giới hạn giá trị tối thiểu
+        float clampedValue = Mathf.Clamp(sliderValue, 0.0001f, 1f);
+        float dbValue = Mathf.Log10(clampedValue) * 20f;
+        
+        audioMixer.SetFloat(parameterName, dbValue);
     }
 }

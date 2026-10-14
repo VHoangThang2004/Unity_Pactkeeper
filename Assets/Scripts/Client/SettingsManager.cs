@@ -238,16 +238,16 @@ public class SettingsManager : MonoBehaviour
 
         if (isMuted)
         {
-            AudioListener.volume = 0f;
+            AudioManager.Instance.SetVolume("MasterVolume", 0.0001f);
         }
         else
         {
-            AudioListener.volume = masterVolume;
+            AudioManager.Instance.SetVolume("MasterVolume", masterVolume);
         }
 
-        // Note: AudioManager doesn't have volume controls exposed
-        // You may need to add volume control to AudioManager
-        // For now, we use AudioListener.volume as master
+        // Apply music and sfx volumes
+        AudioManager.Instance.SetVolume("MusicVolume", musicVolume);
+        AudioManager.Instance.SetVolume("SfxVolume", sfxVolume);
     }
 
     // -------------------------------------------------------

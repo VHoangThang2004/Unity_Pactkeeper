@@ -25632,6 +25632,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 646586905489022233, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
+      objectReference: {fileID: 0}
     - target: {fileID: 789376328039079901, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_SizeDelta.x
       value: 313.348
@@ -25844,6 +25848,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3630880997954979579, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
+      objectReference: {fileID: 0}
     - target: {fileID: 4043429739741570854, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -25899,6 +25907,10 @@ PrefabInstance:
     - target: {fileID: 6450902644151589753, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6847511193021470633, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 7278755959174844978, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
       propertyPath: m_SizeDelta.x
