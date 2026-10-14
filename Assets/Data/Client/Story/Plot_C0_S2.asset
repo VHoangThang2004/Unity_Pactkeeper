@@ -16,14 +16,14 @@ MonoBehaviour:
   sceneId: 2
   nodes:
   - type: 0
-    text: Welcome back. This time, I've just deployed another Tanker from your side
+    text: Welcome back. This time, I've just deployed another Paladin from your side
       into the fray. Coordinate your actions.
     tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Now, call that big Tanker up here.
+    text: Now, call that big Paladin up here.
     tutorialTargetId: C0S2_Unit2
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -72,7 +72,7 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Click on the Tanker on the map to select him again.
+    text: Click on the Paladin on the map to select him again.
     tutorialTargetId: 
     targetCell: {x: 0, y: 1}
     delay: 0
@@ -88,14 +88,14 @@ MonoBehaviour:
       attack.
     tutorialTargetId: C0S2_STYPE
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 3
     targetWaitTimeout: 10
   - type: 0
     text: The heavy weapon is too massive. He is currently channeling his energy;
       the blow will land later.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 3
     targetWaitTimeout: 10
   - type: 1
     text: Close the inspect panel.
@@ -111,7 +111,7 @@ MonoBehaviour:
     targetWaitTimeout: 10
   - type: 5
     text: That concludes the second lesson.
-    tutorialTargetId: C0S2_END
+    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 5
     targetWaitTimeout: 10

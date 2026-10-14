@@ -17,6 +17,10 @@ public class StoryEncounterConfig : ScriptableObject
     [Header("Identity")]
     public int chapterId;
     public int sceneId;
+    
+    [Header("Map")]
+    [Tooltip("The mapId from MapRegistry to use for this encounter. If empty, falls back to default.")]
+    public string mapId;
 
     [Header("Player Team (optional)")]
     [Tooltip("If non-empty, the server uses this preset loadout for the player " +

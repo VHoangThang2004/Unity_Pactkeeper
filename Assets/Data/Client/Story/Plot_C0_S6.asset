@@ -19,26 +19,26 @@ MonoBehaviour:
     text: This is the armory and the secret dossier of each unit.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 0
     text: Check the HP, Speed, and Step stats carefully. You can't put someone who
       is completely drained of stamina on the front line.
     tutorialTargetId: StatPanel
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 0
     text: Heading into battle without equipping your skills is tantamount to throwing
       your life away. Remember that well.
     tutorialTargetId: SkillSlots
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 5
     text: "I have nothing left to teach you. Return to the main hall\u2014the real
       battle is only just beginning!"
     tutorialTargetId: MainMenuButton
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10

@@ -17,3 +17,7 @@ MonoBehaviour:
     asset: {fileID: 11400000, guid: 93ecc710580357043ab166c4c7c8f346, type: 2}
   - mapId: MD_PVE_000
     asset: {fileID: 11400000, guid: 10dfcb965e191ce4ebb58cdea409ee18, type: 2}
+  - mapId: MD_PVE_001
+    asset: {fileID: 11400000, guid: 128687a7e2bc5e748802747cdd1df512, type: 2}
+  - mapId: MD_PVE_002
+    asset: {fileID: 11400000, guid: 46b51074f795ed047809b740737a27ea, type: 2}

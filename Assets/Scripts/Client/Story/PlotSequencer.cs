@@ -236,7 +236,20 @@ public class PlotSequencer : MonoBehaviour
         nextButton.onClick.RemoveAllListeners();
         nextButton.onClick.AddListener(() => _waitingForInput = false);
 
-        yield return new WaitUntil(() => !_waitingForInput);
+        if (node.delay > 0)
+        {
+            float timer = 0f;
+            while (_waitingForInput && timer < node.delay)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            _waitingForInput = false; // Force advance if timer expires
+        }
+        else
+        {
+            yield return new WaitUntil(() => !_waitingForInput);
+        }
     }
 
     // -------------------------------------------------------
@@ -520,7 +533,25 @@ public class PlotSequencer : MonoBehaviour
                 _onComplete?.Invoke();
             });
 
-            yield return new WaitUntil(() => !_waitingForInput);
+            if (node.delay > 0)
+            {
+                float timer = 0f;
+                while (_waitingForInput && timer < node.delay)
+                {
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+                if (_waitingForInput) // Timer expired before click
+                {
+                    HideAll();
+                    _waitingForInput = false;
+                    _onComplete?.Invoke();
+                }
+            }
+            else
+            {
+                yield return new WaitUntil(() => !_waitingForInput);
+            }
         }
         else
         {
@@ -548,14 +579,33 @@ public class PlotSequencer : MonoBehaviour
             PositionButtonHighlight(target);
 
             var btn = tutorialButton.GetComponent<Button>();
+            bool buttonClicked = false;
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(() =>
             {
                 HideAll();
+                buttonClicked = true;
                 _onComplete?.Invoke();
             });
 
-            yield return new WaitUntil(() => !tutorialButton.activeSelf);
+            if (node.delay > 0)
+            {
+                float timer = 0f;
+                while (!buttonClicked && timer < node.delay)
+                {
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+                if (!buttonClicked) // Timer expired before click
+                {
+                    HideAll();
+                    _onComplete?.Invoke();
+                }
+            }
+            else
+            {
+                yield return new WaitUntil(() => buttonClicked);
+            }
         }
     }
 

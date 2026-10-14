@@ -19,41 +19,41 @@ MonoBehaviour:
     text: The battlefield is no place for the lone wolf.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 0
     text: You need to bring along people you can trust. Just look at this empty lineup.
     tutorialTargetId: C0S3_0
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 1
     text: Add another unit to the team.
     tutorialTargetId: C0S3_1
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 1
     text: Choose the person to whom you entrust your life.
     tutorialTargetId: C0S3_2
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 0
     text: A good lineup determines 50% of the victory before any blood is even shed.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 1
     text: Now, we need to inspect their equipment.
     tutorialTargetId: C0S3_4
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 5
     text: Equip the skill now.
     tutorialTargetId: C0S3_5
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 4
     targetWaitTimeout: 10

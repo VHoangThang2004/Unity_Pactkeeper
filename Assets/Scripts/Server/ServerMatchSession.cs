@@ -125,9 +125,20 @@ public class ServerMatchSession : MonoBehaviour
         }
 
         mapRegistry.Init();
-        string resolvedMapId = (backendClient != null && !string.IsNullOrEmpty(backendClient.MapId))
-              ? backendClient.MapId
-              : mapId; // fallback to inspector value for devmode
+        
+        string resolvedMapId = mapId; // fallback to inspector value for devmode
+        if (backendClient.Mode == "story")
+        {
+            var encounter = storyEncounterRegistry.Get(backendClient.ChapterId, backendClient.SceneId);
+            if (encounter != null && !string.IsNullOrEmpty(encounter.mapId))
+            {
+                resolvedMapId = encounter.mapId;
+            }
+        }
+        else if (backendClient != null && !string.IsNullOrEmpty(backendClient.MapId))
+        {
+            resolvedMapId = backendClient.MapId;
+        }
 
         MapAsset = mapRegistry.Get(resolvedMapId);
         if (MapAsset == null)

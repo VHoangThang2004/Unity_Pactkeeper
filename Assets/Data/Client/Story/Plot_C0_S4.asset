@@ -20,17 +20,17 @@ MonoBehaviour:
       in the Main Menu.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 0
     text: The first step is learning how to manage your unit.
     tutorialTargetId: C0S2_1
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10
   - type: 5
     text: Click here to open the Unit List.
     tutorialTargetId: C0S2_1
     targetCell: {x: 0, y: 0}
-    delay: 0.1
+    delay: 3
     targetWaitTimeout: 10

@@ -39,6 +39,12 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+  - type: 1
+    text: 
+    tutorialTargetId: C0S3_CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
   - type: 3
     text: Use Class Skill on yourself (0,-1)
     tutorialTargetId: 
@@ -117,39 +123,9 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 2
     targetWaitTimeout: 10
-  - type: 0
-    text: AI Dumb has taken 2 attacks (Axe + Dagger) and has 1 HP left! FINISH IT!
-    tutorialTargetId: 
-    targetCell: {x: 0, y: 0}
-    delay: 8
-    targetWaitTimeout: 10
-  - type: 1
-    text: Select Unit 1 one last time
-    tutorialTargetId: C0S3_Unit1
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 6
-    text: Click Weapon Skill
-    tutorialTargetId: C0S3_WSKILL
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 3
-    text: Attack cell (1,0) - Final Blow!
-    tutorialTargetId: 
-    targetCell: {x: 1, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 1
-    text: Confirm
-    tutorialTargetId: C0S3_ConfirmButton
-    targetCell: {x: 0, y: 0}
-    delay: 3
-    targetWaitTimeout: 10
   - type: 5
     text: This concludes the Battle tutorial, thank you!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 3
     targetWaitTimeout: 10

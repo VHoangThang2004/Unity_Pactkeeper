@@ -26,7 +26,7 @@ MonoBehaviour:
     text: Look at the queue at the top. The Assassin order is already available.
     tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 0
     targetWaitTimeout: 10
   - type: 1
     text: Choose him.
@@ -60,6 +60,12 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 8
+    targetWaitTimeout: 15
   - type: 0
     text: I just voluntarily skipped my turn. Only a fool would blindly rush in when
       the enemy is out of reach.
@@ -78,31 +84,31 @@ MonoBehaviour:
       do.
     tutorialTargetId: C0S1_WSKILL
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 1
     targetWaitTimeout: 10
   - type: 0
     text: Check the Inspect panel. Read the attack range and damage stats carefully.
       Never swing your weapon at thin air.
     tutorialTargetId: C0S1_InspectPanel
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 1
     targetWaitTimeout: 10
   - type: 1
     text: Close
     tutorialTargetId: C0S1_CancelButton
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 1
     targetWaitTimeout: 10
   - type: 0
     text: The distance between us is still too great. Charging in now would be suicide.
-    tutorialTargetId: C0S1_WaitButton
+    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 1
     targetWaitTimeout: 10
   - type: 5
     text: Keep waiting. Just take your time and wait for the prey to walk into the
       trap. Lesson 1 ends here.
     tutorialTargetId: C0S1_WaitButton
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 1
     targetWaitTimeout: 10
