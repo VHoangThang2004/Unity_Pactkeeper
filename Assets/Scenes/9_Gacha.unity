@@ -1508,6 +1508,7 @@ GameObject:
   - component: {fileID: 550713299}
   - component: {fileID: 550713298}
   - component: {fileID: 550713297}
+  - component: {fileID: 550713300}
   m_Layer: 5
   m_Name: Plus
   m_TagString: Untagged
@@ -1577,7 +1578,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 550713298}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 550713300}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &550713298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1616,6 +1629,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 550713295}
   m_CullTransparentMesh: 1
+--- !u!114 &550713300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550713295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &661263327
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,6 +3428,7 @@ GameObject:
   - component: {fileID: 1343489667}
   - component: {fileID: 1343489666}
   - component: {fileID: 1343489665}
+  - component: {fileID: 1343489668}
   m_Layer: 5
   m_Name: ConfirmButton
   m_TagString: Untagged
@@ -3472,7 +3499,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1343489666}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1343489668}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1343489666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3511,6 +3550,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1343489663}
   m_CullTransparentMesh: 1
+--- !u!114 &1343489668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343489663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1365888869
 GameObject:
   m_ObjectHideFlags: 0
@@ -3660,6 +3712,7 @@ GameObject:
   - component: {fileID: 1369215814}
   - component: {fileID: 1369215813}
   - component: {fileID: 1369215812}
+  - component: {fileID: 1369215815}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -3730,7 +3783,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1369215813}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1369215815}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1369215813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3769,6 +3834,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1369215810}
   m_CullTransparentMesh: 1
+--- !u!114 &1369215815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369215810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1469558650
 GameObject:
   m_ObjectHideFlags: 0
@@ -4086,6 +4164,7 @@ GameObject:
   - component: {fileID: 1541450430}
   - component: {fileID: 1541450429}
   - component: {fileID: 1541450428}
+  - component: {fileID: 1541450432}
   m_Layer: 5
   m_Name: ErrorCloseButton
   m_TagString: Untagged
@@ -4140,6 +4219,18 @@ MonoBehaviour:
       - m_Target: {fileID: 92357332}
         m_TargetAssemblyTypeName: GachaManager, Client
         m_MethodName: OnClickCloseError
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1541450432}
+        m_TargetAssemblyTypeName: UIButtonSound, Client
+        m_MethodName: PlayClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4207,6 +4298,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -177}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1541450432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541450427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c292d2fefeb1d0548972c1c4193a310e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::UIButtonSound
+  clickSfx: {fileID: 8300000, guid: 89a21b6dfbdfd8242bcab2f05224c40a, type: 3}
 --- !u!1 &1550649975
 GameObject:
   m_ObjectHideFlags: 0

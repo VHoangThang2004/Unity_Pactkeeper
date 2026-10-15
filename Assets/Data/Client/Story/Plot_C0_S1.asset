@@ -58,7 +58,7 @@ MonoBehaviour:
       who know how to bide their time are the ones who survive the longest.
     tutorialTargetId: C0S1_WaitButton
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 1
     targetWaitTimeout: 10
   - type: 4
     text: 
@@ -84,26 +84,26 @@ MonoBehaviour:
       do.
     tutorialTargetId: C0S1_WSKILL
     targetCell: {x: 0, y: 0}
-    delay: 1
+    delay: 0
     targetWaitTimeout: 10
   - type: 0
     text: Check the Inspect panel. Read the attack range and damage stats carefully.
       Never swing your weapon at thin air.
     tutorialTargetId: C0S1_InspectPanel
     targetCell: {x: 0, y: 0}
-    delay: 1
+    delay: 0
     targetWaitTimeout: 10
   - type: 1
     text: Close
     tutorialTargetId: C0S1_CancelButton
     targetCell: {x: 0, y: 0}
-    delay: 1
+    delay: 0
     targetWaitTimeout: 10
   - type: 0
     text: The distance between us is still too great. Charging in now would be suicide.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 1
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Keep waiting. Just take your time and wait for the prey to walk into the

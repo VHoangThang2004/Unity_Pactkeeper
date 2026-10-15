@@ -10258,7 +10258,8 @@ MonoBehaviour:
   session: {fileID: 2127351871}
   scene: {fileID: 2127351875}
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
-  battleBGM: {fileID: 0}
+  prep: {fileID: 0}
+  battleBGM: {fileID: 8300000, guid: 6a10f70662079684f89701ba9edf53c8, type: 3}
 --- !u!114 &2127351869
 MonoBehaviour:
   m_ObjectHideFlags: 0

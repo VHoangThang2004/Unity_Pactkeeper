@@ -18275,7 +18275,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1313765636}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIButtonSound, Client
         m_MethodName: PlayClick
         m_Mode: 1
