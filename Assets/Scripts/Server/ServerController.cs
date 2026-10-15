@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -93,6 +95,11 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         var bc = FindAnyObjectByType<ServerBackendClient>();
         if (bc != null)
             yield return new WaitUntil(() => bc.IsReady);
+
+        // 0b. Formation prep — players edit formation/equipment/spawn positions before anything spawns
+        if (session.IsLoadoutConfigurable())
+            yield return StartCoroutine(PrepPhase());
+
         // 1. Init session
         while (!session.Init())
         {
@@ -144,8 +151,57 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         }
     }
 
+    // -------------------------------------------------------
+    // Formation Prep
+    // -------------------------------------------------------
+
+    private bool inPrep = false;
+    private float prepDeadline;
+    private readonly HashSet<int> readyTeams = new();
+
+    IEnumerator PrepPhase()
+    {
+        // No IncrementErrors while waiting — players may take a while to load in
+        int humanTeams = session.matchConfig.requiredClients;
+        yield return new WaitUntil(() =>
+            NetworkManager.Singleton.ConnectedClientsIds.Count(id => id != NetworkManager.Singleton.LocalClientId) >= humanTeams);
+
+        prepDeadline = Time.time + session.matchConfig.prepDuration;
+        inPrep = true;
+        Debug.Log($"[ServerController] PrepPhase start — {session.matchConfig.prepDuration}s.");
+
+        yield return new WaitUntil(() => readyTeams.Count >= humanTeams || Time.time >= prepDeadline);
+
+        inPrep = false;
+        Debug.Log($"[ServerController] PrepPhase end — ready={readyTeams.Count}/{humanTeams} timeout={Time.time >= prepDeadline}");
+        bridge.PrepEndedClientRpc();
+
+        // Let in-flight formation/equipment saves land, then pull the edited loadouts
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(backendClient.FetchLoadouts());
+        Debug.Log("[ServerController] Loadouts re-fetched after prep.");
+    }
+
+    public void HandlePrepSubmit(ulong clientId, int[] uIds, int[] spawnIndices, bool ready)
+    {
+        if (!inPrep) return;
+        int teamId = session.TeamIdForPlayer(MatchIdentityRegistry.GetPlayerId(clientId));
+        if (teamId < 0) return;
+
+        session.SetPlacement(teamId, uIds, spawnIndices);
+        if (ready) readyTeams.Add(teamId);
+        Debug.Log($"[ServerController] Prep submit team={teamId} units={uIds.Length} ready={ready}");
+    }
+
     public void HandleAllInitialStateRequest(ulong clientId)
     {
+        if (inPrep)
+        {
+            int teamId = session.TeamIdForPlayer(MatchIdentityRegistry.GetPlayerId(clientId));
+            bridge.PrepInfoClientRpc(session.ResolveMapId(), teamId, prepDeadline - Time.time,
+                new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } } });
+            return;
+        }
         if (!serverReady) return; // ignore request if not ready
         if (clientId == NetworkManager.Singleton.LocalClientId) return;
 

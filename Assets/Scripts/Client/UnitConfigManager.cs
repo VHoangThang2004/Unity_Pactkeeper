@@ -60,6 +60,24 @@ public class UnitConfigManager : MonoBehaviour
 
 
 
+    // Overlay mode: 8_ loaded additively on top of the match during formation prep
+    public static bool IsOverlay { get; set; }
+    [Header("Overlay")]
+    [SerializeField] private GameObject mainMenuButton; // hidden in overlay mode
+
+    void Awake()
+    {
+        if (!IsOverlay) return;
+        // The match scene already owns camera, audio listener and event system
+        foreach (var root in gameObject.scene.GetRootGameObjects())
+        {
+            foreach (var c in root.GetComponentsInChildren<Camera>(true)) c.gameObject.SetActive(false);
+            foreach (var l in root.GetComponentsInChildren<AudioListener>(true)) l.enabled = false;
+            foreach (var e in root.GetComponentsInChildren<UnityEngine.EventSystems.EventSystem>(true)) e.gameObject.SetActive(false);
+        }
+        if (mainMenuButton != null) mainMenuButton.SetActive(false);
+    }
+
     void Start()
     {
         unitPrefabRegistry.Init();
@@ -378,13 +396,17 @@ public class UnitConfigManager : MonoBehaviour
 
     public void OnClickReturnMainMenu()
     {
+        if (IsOverlay) { CloseOverlay(); return; }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.mainMenuScene);
     }
 
     public void OnClickReturnUnitList()
     {
+        if (IsOverlay) { CloseOverlay(); return; }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.unitListScene);
     }
+
+    void CloseOverlay() => UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(gameObject.scene);
 
     // -------------------------------------------------------
     // DTOs

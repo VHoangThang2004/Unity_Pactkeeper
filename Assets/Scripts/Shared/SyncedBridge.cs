@@ -59,9 +59,27 @@ public class SyncedBridge : NetworkBehaviour
         server?.HandleAdvanceTutorialPhase(newSceneId);
     }
 
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void SubmitPrepServerRpc(int[] uIds, int[] spawnIndices, bool ready, RpcParams rpcParams = default)
+    {
+        server?.HandlePrepSubmit(rpcParams.Receive.SenderClientId, uIds, spawnIndices, ready);
+    }
+
     // -------------------------------------------------------
     // SERVER -> ALL CLIENTS
     // -------------------------------------------------------
+
+    [ClientRpc]
+    public void PrepInfoClientRpc(string mapId, int teamId, float secondsLeft, ClientRpcParams clientRpcParams = default)
+    {
+        client?.OnPrepInfo(mapId, teamId, secondsLeft);
+    }
+
+    [ClientRpc]
+    public void PrepEndedClientRpc()
+    {
+        client?.OnPrepEnded();
+    }
 
     [ClientRpc]
     public void SpawnUnitClientRpc(UnitData unitData, ClientRpcParams clientRpcParams = default)

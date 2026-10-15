@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using TMPro;
 
 public class UnitListManager : MonoBehaviour
@@ -58,35 +57,16 @@ public class UnitListManager : MonoBehaviour
 
     IEnumerator FetchOwnedUnits()
     {
-        using var request = UnityWebRequest.Get($"{clientBackendConfig.backendUrl}/api/PlayerProfile");
-        clientBackendConfig.SetHeaders(request, PlayerSession.Token);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
+        yield return FormationApi.GetOwnedUnits(clientBackendConfig, units =>
         {
-            loadingScreen?.Show("Failed to load units.");
-            Debug.LogError($"[UnitList] FetchOwnedUnits: {request.error}");
-            yield break;
-        }
-
-        var profile = JsonUtility.FromJson<PlayerProfileResponse>(request.downloadHandler.text);
-        ownedUnits = profile.ownedUnits != null ? new List<OwnedUnitDto>(profile.ownedUnits) : new List<OwnedUnitDto>();
+            if (units == null) loadingScreen?.Show("Failed to load units.");
+            else ownedUnits = units;
+        });
     }
 
     IEnumerator FetchFormation()
     {
-        using var request = UnityWebRequest.Get($"{clientBackendConfig.backendUrl}/api/TeamLoadout");
-        clientBackendConfig.SetHeaders(request, PlayerSession.Token);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError($"[UnitList] FetchFormation: {request.error}");
-            yield break;
-        }
-
-        var wrapper = JsonUtility.FromJson<IntArrayWrapper>("{\"items\":" + request.downloadHandler.text + "}");
-        formationUIds = wrapper.items != null ? new List<int>(wrapper.items) : new List<int>();
+        yield return FormationApi.GetFormation(clientBackendConfig, uIds => formationUIds = uIds);
     }
 
     // -------------------------------------------------------
@@ -174,30 +154,7 @@ public class UnitListManager : MonoBehaviour
     }
     public IEnumerator SaveFormationToBackend(List<int> uIds)
     {
-        string body = JsonUtility.ToJson(new SaveLoadoutDto { UIds = uIds });
-        using var request = UnityWebRequest.Put($"{clientBackendConfig.backendUrl}/api/TeamLoadout", body);
-        request.SetRequestHeader("Content-Type", "application/json");
-        clientBackendConfig.SetHeaders(request, PlayerSession.Token);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.LogError($"[UnitList] SaveFormation failed: {request.error}");
-            StartCoroutine(InitSequence()); // reload formation from backend to ensure UI consistency
-        }
-        else
-        {
-            Debug.Log("[UnitList] Formation saved.");
-            StartCoroutine(InitSequence()); // reload formation from backend to ensure UI consistency
-        }
+        yield return FormationApi.SaveFormation(clientBackendConfig, uIds);
+        StartCoroutine(InitSequence()); // reload formation from backend to ensure UI consistency
     }
-
-    [System.Serializable]
-    private class SaveLoadoutDto { public List<int> UIds; }
-
-    // -------------------------------------------------------
-    // Response Models
-    // -------------------------------------------------------
-
-    [System.Serializable] private class IntArrayWrapper { public int[] items; }
 }

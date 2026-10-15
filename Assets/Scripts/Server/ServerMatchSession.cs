@@ -125,21 +125,8 @@ public class ServerMatchSession : MonoBehaviour
         }
 
         mapRegistry.Init();
-        
-        string resolvedMapId = mapId; // fallback to inspector value for devmode
-        if (backendClient.Mode == "story")
-        {
-            var encounter = storyEncounterRegistry.Get(backendClient.ChapterId, backendClient.SceneId);
-            if (encounter != null && !string.IsNullOrEmpty(encounter.mapId))
-            {
-                resolvedMapId = encounter.mapId;
-            }
-        }
-        else if (backendClient != null && !string.IsNullOrEmpty(backendClient.MapId))
-        {
-            resolvedMapId = backendClient.MapId;
-        }
 
+        string resolvedMapId = ResolveMapId();
         MapAsset = mapRegistry.Get(resolvedMapId);
         if (MapAsset == null)
         {
@@ -156,6 +143,68 @@ public class ServerMatchSession : MonoBehaviour
         SetTeamFromLoadout();
         return true;
     }
+    public string ResolveMapId()
+    {
+        if (backendClient == null) backendClient = FindAnyObjectByType<ServerBackendClient>();
+
+        if (backendClient.Mode == "story")
+        {
+            var encounter = GetStoryEncounter();
+            return encounter != null && !string.IsNullOrEmpty(encounter.mapId) ? encounter.mapId : mapId;
+        }
+        return !string.IsNullOrEmpty(backendClient.MapId) ? backendClient.MapId : mapId; // inspector value = devmode fallback
+    }
+
+    StoryEncounterConfig GetStoryEncounter()
+    {
+        if (storyEncounterRegistry == null) return null;
+        storyEncounterRegistry.Init();
+        return storyEncounterRegistry.Get(backendClient.ChapterId, backendClient.SceneId);
+    }
+
+    // -------------------------------------------------------
+    // Formation prep (before Init) — only for matches using backend loadouts
+    // -------------------------------------------------------
+
+    // teamId -> (uId -> spawn index)
+    public readonly Dictionary<int, Dictionary<int, int>> PrepPlacements = new();
+
+    public bool IsLoadoutConfigurable()
+    {
+        if (backendClient == null) backendClient = FindAnyObjectByType<ServerBackendClient>();
+        if (backendClient.LoadoutResponse == null) return false;
+        if (backendClient.Mode == "pvp") return true;
+        if (backendClient.Mode != "story") return false;
+        var encounter = GetStoryEncounter();
+        return encounter != null && !encounter.HasPresetPlayerLoadout;
+    }
+
+    public int TeamIdForPlayer(string playerId)
+    {
+        var data = backendClient.LoadoutResponse;
+        if (data?.player1 != null && data.player1.playerId == playerId) return 0;
+        if (data?.player2 != null && data.player2.playerId == playerId) return 1;
+        return -1;
+    }
+
+    public void SetPlacement(int teamId, int[] uIds, int[] spawnIdx)
+    {
+        mapRegistry.Init();
+        var map = mapRegistry.Get(ResolveMapId());
+        int spawnCount = map?.teamSpawns != null && teamId < map.teamSpawns.Length
+            ? map.teamSpawns[teamId].positions?.Length ?? 0 : 0;
+
+        var placement = new Dictionary<int, int>();
+        var used = new HashSet<int>();
+        for (int i = 0; i < Mathf.Min(uIds.Length, spawnIdx.Length); i++)
+        {
+            int idx = spawnIdx[i];
+            if (idx < 0 || idx >= spawnCount || !used.Add(idx)) continue; // invalid or duplicate cell — falls back at spawn
+            placement[uIds[i]] = idx;
+        }
+        PrepPlacements[teamId] = placement;
+    }
+
     public void SetMatchData(string matchId, MatchLoadoutsResponse data)
     {
         Debug.Log($"[MatchSession] Real match — matchId={matchId}");

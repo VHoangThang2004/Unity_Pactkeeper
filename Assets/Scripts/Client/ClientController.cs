@@ -23,6 +23,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     [Header("Ref")]
     [SerializeField] private ClientScene scene;
     [SerializeField] private SceneConfig sceneConfig;
+    [SerializeField] private FormationPrepManager prep; // null in scenes without formation prep
 
     [Header("Audio")]
     public AudioClip battleBGM;
@@ -120,7 +121,8 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
         float elapsed = 0f;
         while (session.CurrentToken == -1 && elapsed < initTimeout)
         {
-            elapsed += Time.deltaTime;
+            if (prep == null || !prep.IsActive) // formation prep can legitimately take minutes
+                elapsed += Time.deltaTime;
             yield return null;
         }
 
@@ -238,6 +240,21 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     {
         session.ApplyTimelineTick(data);
         Debug.Log($"[Client] Tick {data.currentInstant}/{data.maxInstant}");
+    }
+
+    // Server answers RequestInitialState with this while formation prep runs (repeats every ~1s)
+    public void OnPrepInfo(string mapId, int teamId, float secondsLeft)
+    {
+        if (prep == null || teamId < 0) return;
+        if (prep.IsActive) prep.SyncTimer(secondsLeft);
+        else prep.Begin(mapId, teamId, secondsLeft);
+    }
+
+    public void OnPrepEnded()
+    {
+        if (prep == null || !prep.IsActive) return;
+        prep.End();
+        scene.loadingScreen.Show("Loading...");
     }
 
     public void OnUnitSpawned(UnitData unitData)

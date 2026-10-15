@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NormalAttackEffectServer
   effectId: 10002
   resolveDuration: 1
-  aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
-  isAoePatternFixed: 1
   baseValue: 1
+  aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
+  isAoePatternFixed: 0

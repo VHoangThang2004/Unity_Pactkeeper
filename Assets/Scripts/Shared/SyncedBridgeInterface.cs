@@ -7,6 +7,7 @@ public interface ISyncedBridgeServer
     void HandleAllInitialStateRequest(ulong senderClientId);
     void HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken);
     void HandleAdvanceTutorialPhase(int newSceneId);
+    void HandlePrepSubmit(ulong senderClientId, int[] uIds, int[] spawnIndices, bool ready);
     void OnBridgeReady(SyncedBridge bridge);
 }
 
@@ -15,5 +16,7 @@ public interface ISyncedBridgeClient
     void OnUnitSpawned(UnitData unitData);
     void OnTimelineTick(TimelineData timelineData);
     void OnSnapshotReceived(SessionSnapshotData before, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token);
+    void OnPrepInfo(string mapId, int teamId, float secondsLeft);
+    void OnPrepEnded();
     void OnBridgeReady(SyncedBridge bridge);
 }

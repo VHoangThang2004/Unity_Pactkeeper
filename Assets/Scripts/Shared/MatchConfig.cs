@@ -25,4 +25,7 @@ public class MatchConfig : ScriptableObject
     [Header("Session")]
     public int requiredClients = 2;
     public float postInitGracePeriod = 3f;
+
+    [Header("Formation Prep")]
+    public float prepDuration = 120f;
 }

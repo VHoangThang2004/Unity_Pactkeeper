@@ -211,7 +211,7 @@ public class ServerBackendClient : MonoBehaviour
         Debug.Log($"[ServerBackendClient] Mode={Mode}");
     }
 
-    IEnumerator FetchLoadouts()
+    public IEnumerator FetchLoadouts()
     {
         string url = $"{config.backendUrl}/api/match/{MatchId}/loadouts";
 

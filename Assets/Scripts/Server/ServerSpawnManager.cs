@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unity.VisualScripting;
 using System.Collections.Generic;
 public class ServerSpawnManager : MonoBehaviour
 {
@@ -30,17 +29,20 @@ public class ServerSpawnManager : MonoBehaviour
             return false;
         }
 
+        // Units placed during formation prep keep their chosen spawn index; the rest fill free indices in order
+        session.PrepPlacements.TryGetValue(teamId, out var placement);
+        var taken = placement != null ? new HashSet<int>(placement.Values) : new HashSet<int>();
+
         int spawnPointer = 0;
         foreach (var unitLoadout in loadout.Units)
         {
-            Vector2Int spawnPoint = session.MapAsset.GetSpawn(teamId, spawnPointer);
-            UnitData unit = SpawnUnit(teamId, unitLoadout, spawnPoint.x, spawnPoint.y);
-            // if (unit.IsUnityNull())
-            // {
-            //     Debug.LogError($"[SpawnManager] Failed to spawn unit for team {teamId} at ({spawnPoint.x},{spawnPoint.y})!");
-            //     return false;
-            // }
-            spawnPointer++;
+            if (placement == null || !placement.TryGetValue(unitLoadout.UId, out int spawnIndex))
+            {
+                while (taken.Contains(spawnPointer)) spawnPointer++;
+                spawnIndex = spawnPointer++;
+            }
+            Vector2Int spawnPoint = session.MapAsset.GetSpawn(teamId, spawnIndex);
+            SpawnUnit(teamId, unitLoadout, spawnPoint.x, spawnPoint.y);
         }
 
         return true;
