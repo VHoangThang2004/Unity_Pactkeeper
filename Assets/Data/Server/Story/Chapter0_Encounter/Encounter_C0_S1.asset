@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Server::StoryEncounterConfig
   chapterId: 0
   sceneId: 1
-  mapId: MD_PVE_000
+  mapId: MD_PVE_C0S1
   playerUnits:
   - uId: 1
     passiveSkillId: -1
