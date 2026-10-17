@@ -17,3 +17,6 @@ MonoBehaviour:
   baseValue: 10
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
+  statusIcon: {fileID: -3298626994855174906, guid: f0755046c4fe15c438ef6090218e0257, type: 3}
+  statusName: Focused Aim
+  isDebuff: 0

@@ -34,9 +34,9 @@ public class ApplyBuffEffectServer : ServerActiveEffectBase
             var existing = activeEffects.Find(e => e.effect.effectId == buffId);
             if (existing != null)
             {
-                // Overwrite duration if new one is longer
-                if (!existing.isPermanent && passive.durationInstants > existing.effect.durationInstants)
-                    existing.effect.durationInstants = passive.durationInstants;
+                // Refresh the instance's remaining time — never write to the shared SO
+                if (!existing.isPermanent)
+                    existing.remainingInstants = Math.Max(existing.remainingInstants, passive.durationInstants);
                 continue;
             }
             activeEffects.Add(new ActiveEffectInstance
@@ -47,8 +47,7 @@ public class ApplyBuffEffectServer : ServerActiveEffectBase
             });
         }
 
-        targetUnit.ActiveEffectIds = activeEffects.Select(e => e.effect.effectId).ToArray();
-        UnitRecalculator.RecalculateAll(session);
+        UnitRecalculator.RecalculateAll(session); // also refreshes targetUnit.ActiveEffects
 
         return new ResolveResult
         {

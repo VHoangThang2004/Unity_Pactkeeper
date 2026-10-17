@@ -17,3 +17,6 @@ MonoBehaviour:
   baseValue: 10
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
+  statusIcon: {fileID: 727647038802650903, guid: 3bdab203eeea55d48a2a19a03621d111, type: 3}
+  statusName: Horizontal reach
+  isDebuff: 0

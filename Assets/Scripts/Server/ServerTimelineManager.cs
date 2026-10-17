@@ -681,8 +681,7 @@ public class ServerTimelineManager : MonoBehaviour
 
             if (anyRemoved)
             {
-                unit.ActiveEffectIds = activeEffects.Select(e => e.effect.effectId).ToArray();
-                anyChanged = true;
+                anyChanged = true; // views refresh in PackFinal → RecalculateAll
             }
         }
 

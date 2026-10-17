@@ -40,6 +40,21 @@ public class ServerMatchSession : MonoBehaviour
         return list;
     }
 
+    // Client-facing copy of the unit's effects — ids + expiry only, no formulas.
+    // TickAllEffects decrements at each instant start, so remaining R now ⇒ removed at start of CurrentInstant + R.
+    public void SyncEffectViews(UnitData unit)
+    {
+        var list = GetUnitActiveEffects(unit.Id);
+        var views = new ActiveEffectView[list.Count];
+        for (int i = 0; i < list.Count; i++)
+            views[i] = new ActiveEffectView
+            {
+                EffectId = list[i].effect.effectId,
+                ExpiresAtInstant = list[i].isPermanent ? -1 : CurrentInstant + list[i].remainingInstants
+            };
+        unit.ActiveEffects = views;
+    }
+
     private List<TeamData> teams;
     public List<UnitData> units;
     // Testing phase — hardcoded loadouts

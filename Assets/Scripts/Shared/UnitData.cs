@@ -44,8 +44,8 @@ public class UnitData : INetworkSerializable
     // Skill patterns — translated + filtered by server, ready for client to read
     public CurrentPatterns[] SkillPatterns = new CurrentPatterns[0];
 
-    // Active effect IDs — client displays buff/debuff icons
-    public int[] ActiveEffectIds = new int[0];
+    // Active effects (id + remaining) — client displays buff/debuff icons
+    public ActiveEffectView[] ActiveEffects = new ActiveEffectView[0];
 
     public UnitData Clone()
     {
@@ -69,7 +69,7 @@ public class UnitData : INetworkSerializable
             PassiveSkillId = PassiveSkillId,
             SkillUsages = SkillUsages?.ToArray(),
             SkillPatterns = SkillPatterns?.ToArray(),
-            ActiveEffectIds = ActiveEffectIds?.ToArray(),
+            ActiveEffects = ActiveEffects?.ToArray(),
             ConsecutiveRegenInstants = ConsecutiveRegenInstants,
             NextStep = NextStep,
             CurrentStepBase = CurrentStepBase,
@@ -122,22 +122,22 @@ public class UnitData : INetworkSerializable
                     SkillPatterns[i].NetworkSerialize(serializer);
         }
 
-        // ActiveEffectIds
+        // ActiveEffects
         if (serializer.IsReader)
         {
             int count = 0;
             serializer.SerializeValue(ref count);
-            ActiveEffectIds = new int[count];
+            ActiveEffects = new ActiveEffectView[count];
             for (int i = 0; i < count; i++)
-                serializer.SerializeValue(ref ActiveEffectIds[i]);
+                ActiveEffects[i].NetworkSerialize(serializer);
         }
         else
         {
-            int count = ActiveEffectIds?.Length ?? 0;
+            int count = ActiveEffects?.Length ?? 0;
             serializer.SerializeValue(ref count);
-            if (ActiveEffectIds != null)
+            if (ActiveEffects != null)
                 for (int i = 0; i < count; i++)
-                    serializer.SerializeValue(ref ActiveEffectIds[i]);
+                    ActiveEffects[i].NetworkSerialize(serializer);
         }
 
         // SkillUsages

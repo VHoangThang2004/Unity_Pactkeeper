@@ -223,6 +223,20 @@ public class ClientVisualController : MonoBehaviour
         scene.hoverHighlight.transform.position = scene.movableTilemap.GetCellCenterWorld(cell);
     }
 
+    // Inspect panel — status effect variant (reuses the skill inspect fields)
+    public void ShowEffectInspect(ClientActiveEffectBase effect, ActiveEffectView view, UnitData unit)
+    {
+        int remaining = view.RemainingAt(session.Timeline.currentInstant);
+
+        scene.InspectPanel.SetActive(true);
+        scene.SkillName.text = string.IsNullOrEmpty(effect.statusName) ? effect.name : effect.statusName;
+        scene.EffectType.text = effect.isDebuff ? "Debuff" : "Buff";
+        scene.SkillDescription.text = effect.GetDescription(unit, scene.effectRegistry);
+        scene.SkillCost.text = view.IsPermanent ? "Permanent" : $"{remaining} instant{(remaining == 1 ? "" : "s")} left";
+        scene.StepMultiplier.text = "";
+        scene.SkillUsageText.text = "";
+    }
+
     // Inspect panel
     public void ShowInspectPanel(bool isShown, SkillDefinition skill = null)
     {

@@ -97,6 +97,7 @@ public static class UnitRecalculator
         {
             var activeEffects = session.GetUnitActiveEffects(unit.Id);
             Recalculate(unit, activeEffects, session);
+            session.SyncEffectViews(unit);
         }
         // Debug.Log($"[UnitRecalculator] All {session.units.Count} units recalculated.");
     }
