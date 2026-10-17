@@ -336,4 +336,10 @@ public class MainMenuManager : MonoBehaviour
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.storyProgressScene);
     }
+
+    public void GoToRanking()
+    {
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.rankingScene);
+    }
 }

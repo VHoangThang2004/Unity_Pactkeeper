@@ -1,0 +1,1001 @@
+fileFormatVersion: 2
+guid: 34e5309507c556646a52849f89e7382f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7447226273244667623
+    second: RankinngScore_Frame_0
+  - first:
+      213: -8984326271007621395
+    second: RankinngScore_Frame_1
+  - first:
+      213: -1511633507743788790
+    second: RankinngScore_Frame_2
+  - first:
+      213: -3320801985345893402
+    second: RankinngScore_Frame_3
+  - first:
+      213: -138468752134869576
+    second: RankinngScore_Frame_4
+  - first:
+      213: 1104073727530605460
+    second: RankinngScore_Frame_5
+  - first:
+      213: 409334484670757212
+    second: RankinngScore_Frame_6
+  - first:
+      213: 4512609960533257108
+    second: RankinngScore_Frame_7
+  - first:
+      213: -508081210330902143
+    second: RankinngScore_Frame_8
+  - first:
+      213: 5319712842274905833
+    second: RankinngScore_Frame_9
+  - first:
+      213: 2402108530919117589
+    second: RankinngScore_Frame_10
+  - first:
+      213: 3370845975020759402
+    second: RankinngScore_Frame_11
+  - first:
+      213: 8243378681396375767
+    second: RankinngScore_Frame_12
+  - first:
+      213: 730325325818190508
+    second: RankinngScore_Frame_13
+  - first:
+      213: -6100075317928965362
+    second: RankinngScore_Frame_14
+  - first:
+      213: -5643586060134405094
+    second: RankinngScore_Frame_15
+  - first:
+      213: -4090843649216771382
+    second: RankinngScore_Frame_16
+  - first:
+      213: 1753607074418610074
+    second: RankinngScore_Frame_17
+  - first:
+      213: -514601709817519483
+    second: RankinngScore_Frame_18
+  - first:
+      213: 3097020115403888938
+    second: RankinngScore_Frame_19
+  - first:
+      213: -5617380781706925993
+    second: RankinngScore_Frame_20
+  - first:
+      213: -1661192647110495114
+    second: RankinngScore_Frame_21
+  - first:
+      213: 5255545110711151236
+    second: RankinngScore_Frame_22
+  - first:
+      213: -3358374559607885168
+    second: RankinngScore_Frame_23
+  - first:
+      213: 3007041755513139582
+    second: RankinngScore_Frame_24
+  - first:
+      213: 4435849332746414096
+    second: RankinngScore_Frame_25
+  - first:
+      213: -3361913784414200084
+    second: RankinngScore_Frame_26
+  - first:
+      213: -3721412415773615376
+    second: RankinngScore_Frame_27
+  - first:
+      213: 7754765971924993034
+    second: RankinngScore_Frame_28
+  - first:
+      213: 6721404380211291908
+    second: RankinngScore_Frame_29
+  - first:
+      213: -7740266833520992928
+    second: RankinngScore_Frame_30
+  - first:
+      213: -8041985518782527913
+    second: RankinngScore_Frame_31
+  - first:
+      213: -2487903181172345412
+    second: RankinngScore_Frame_32
+  - first:
+      213: 9152367291091152823
+    second: RankinngScore_Frame_33
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: RankinngScore_Frame_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1774
+        height: 880
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ee54b2a6dcd95760800000000000000
+      internalID: 7447226273244667623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_1
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 872
+        width: 37
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dee71668bd2415380800000000000000
+      internalID: -8984326271007621395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_2
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 80
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a019a5c6559950be0800000000000000
+      internalID: -1511633507743788790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_3
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 82
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ebcb0e40342ae1d0800000000000000
+      internalID: -3320801985345893402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_4
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 80
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bd6280576f041ef0800000000000000
+      internalID: -138468752134869576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_5
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 49
+        width: 188
+        height: 86
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49b9d4f9435725f00800000000000000
+      internalID: 1104073727530605460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_6
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 49
+        width: 57
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c593e198b8f3ea500800000000000000
+      internalID: 409334484670757212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_7
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 71
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49b697ba9d200ae30800000000000000
+      internalID: 4512609960533257108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_8
+      rect:
+        serializedVersion: 2
+        x: 1040
+        y: 80
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1811d25c4dee2f8f0800000000000000
+      internalID: -508081210330902143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_9
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 80
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ee11ee15aa63d940800000000000000
+      internalID: 5319712842274905833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_10
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 47
+        width: 206
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5139e516bf0065120800000000000000
+      internalID: 2402108530919117589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_11
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 55
+        width: 29
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a69eaa50e86a7ce20800000000000000
+      internalID: 3370845975020759402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_12
+      rect:
+        serializedVersion: 2
+        x: 1627
+        y: 78
+        width: 13
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d0b8a54c3d566270800000000000000
+      internalID: 8243378681396375767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_13
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 67
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caa5ddfa303a22a00800000000000000
+      internalID: 730325325818190508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_14
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 63
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0b47b361dd285ba0800000000000000
+      internalID: -6100075317928965362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_15
+      rect:
+        serializedVersion: 2
+        x: 1449
+        y: 57
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1ca75a1164fda1b0800000000000000
+      internalID: -5643586060134405094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_16
+      rect:
+        serializedVersion: 2
+        x: 363
+        y: 55
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca85c010676a37c0800000000000000
+      internalID: -4090843649216771382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_17
+      rect:
+        serializedVersion: 2
+        x: 1040
+        y: 49
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9f455ad750165810800000000000000
+      internalID: 1753607074418610074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_18
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 53
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 582a48da874cbd8f0800000000000000
+      internalID: -514601709817519483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_19
+      rect:
+        serializedVersion: 2
+        x: 1318
+        y: 51
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2953e0e263dafa20800000000000000
+      internalID: 3097020115403888938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_20
+      rect:
+        serializedVersion: 2
+        x: 1328
+        y: 47
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 758a042f0fd0b02b0800000000000000
+      internalID: -5617380781706925993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_21
+      rect:
+        serializedVersion: 2
+        x: 1443
+        y: 55
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 674fc7db61242f8e0800000000000000
+      internalID: -1661192647110495114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_22
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 23
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48aaaf0ee627fe840800000000000000
+      internalID: 5255545110711151236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_23
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 22
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 092fcd7a128a461d0800000000000000
+      internalID: -3358374559607885168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_24
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 17
+        width: 15
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e71b02e6b882bb920800000000000000
+      internalID: 3007041755513139582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_25
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 33
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 018e08b477d4f8d30800000000000000
+      internalID: 4435849332746414096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_26
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 15
+        width: 28
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cee908aa9351851d0800000000000000
+      internalID: -3361913784414200084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_27
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 29
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fad51fef13ea5cc0800000000000000
+      internalID: -3721412415773615376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_28
+      rect:
+        serializedVersion: 2
+        x: 1353
+        y: 33
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0440e0a0967e9b60800000000000000
+      internalID: 7754765971924993034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_29
+      rect:
+        serializedVersion: 2
+        x: 1387
+        y: 31
+        width: 31
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 407af3a1ca9374d50800000000000000
+      internalID: 6721404380211291908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_30
+      rect:
+        serializedVersion: 2
+        x: 219
+        y: 9
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06d5e39135c059490800000000000000
+      internalID: -7740266833520992928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_31
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 18
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 756c12867c0256090800000000000000
+      internalID: -8041985518782527913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_32
+      rect:
+        serializedVersion: 2
+        x: 1570
+        y: 22
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb578aafc31397dd0800000000000000
+      internalID: -2487903181172345412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RankinngScore_Frame_33
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 0
+        width: 69
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bf64675f8db30f70800000000000000
+      internalID: 9152367291091152823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      RankinngScore_Frame_0: 7447226273244667623
+      RankinngScore_Frame_1: -8984326271007621395
+      RankinngScore_Frame_10: 2402108530919117589
+      RankinngScore_Frame_11: 3370845975020759402
+      RankinngScore_Frame_12: 8243378681396375767
+      RankinngScore_Frame_13: 730325325818190508
+      RankinngScore_Frame_14: -6100075317928965362
+      RankinngScore_Frame_15: -5643586060134405094
+      RankinngScore_Frame_16: -4090843649216771382
+      RankinngScore_Frame_17: 1753607074418610074
+      RankinngScore_Frame_18: -514601709817519483
+      RankinngScore_Frame_19: 3097020115403888938
+      RankinngScore_Frame_2: -1511633507743788790
+      RankinngScore_Frame_20: -5617380781706925993
+      RankinngScore_Frame_21: -1661192647110495114
+      RankinngScore_Frame_22: 5255545110711151236
+      RankinngScore_Frame_23: -3358374559607885168
+      RankinngScore_Frame_24: 3007041755513139582
+      RankinngScore_Frame_25: 4435849332746414096
+      RankinngScore_Frame_26: -3361913784414200084
+      RankinngScore_Frame_27: -3721412415773615376
+      RankinngScore_Frame_28: 7754765971924993034
+      RankinngScore_Frame_29: 6721404380211291908
+      RankinngScore_Frame_3: -3320801985345893402
+      RankinngScore_Frame_30: -7740266833520992928
+      RankinngScore_Frame_31: -8041985518782527913
+      RankinngScore_Frame_32: -2487903181172345412
+      RankinngScore_Frame_33: 9152367291091152823
+      RankinngScore_Frame_4: -138468752134869576
+      RankinngScore_Frame_5: 1104073727530605460
+      RankinngScore_Frame_6: 409334484670757212
+      RankinngScore_Frame_7: 4512609960533257108
+      RankinngScore_Frame_8: -508081210330902143
+      RankinngScore_Frame_9: 5319712842274905833
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

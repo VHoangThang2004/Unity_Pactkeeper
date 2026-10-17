@@ -71,6 +71,9 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/10_StoryProgress.unity
     m_guid: ecd3501d18311d44a9a2dbcfbcb45f01
+  - m_enabled: 1
+    m_path: Assets/Scenes/11_Ranking.unity
+    m_guid: a16cccba5621a1f4481f2e3675682548
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

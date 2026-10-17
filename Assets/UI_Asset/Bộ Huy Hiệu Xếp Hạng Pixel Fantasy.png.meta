@@ -1,0 +1,335 @@
+fileFormatVersion: 2
+guid: 609ed0a6a401d4745b01693fb58ff08f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4201005269614133337
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_0"
+  - first:
+      213: 2943398634944622249
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_1"
+  - first:
+      213: 1424166099589910870
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_2"
+  - first:
+      213: -8357097485873672598
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_3"
+  - first:
+      213: -6762963089202338620
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_4"
+  - first:
+      213: 5325242918690628928
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_5"
+  - first:
+      213: 168769934329311445
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_6"
+  - first:
+      213: -407330506756764556
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_7"
+  - first:
+      213: -8532087423774728351
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_8"
+  - first:
+      213: -3569194705360764892
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_9"
+  - first:
+      213: -4508364106197994564
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_10"
+  - first:
+      213: -2976574789063824475
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_11"
+  - first:
+      213: 699697366381558873
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_12"
+  - first:
+      213: -7229282948741030132
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_13"
+  - first:
+      213: -5050956933129047889
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_14"
+  - first:
+      213: 8370477715349618569
+    second: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_15"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_0"
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 510
+        width: 362
+        height: 418
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 18, w: 37}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7affa1517f703b5c0800000000000000
+      internalID: -4201005269614133337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_1"
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 503
+        width: 341
+        height: 393
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ae6e34b67d09d820800000000000000
+      internalID: 2943398634944622249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_2"
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 479
+        width: 404
+        height: 448
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 651d533a587a3c310800000000000000
+      internalID: 1424166099589910870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_3"
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 491
+        width: 460
+        height: 453
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6e80394d10a50c80800000000000000
+      internalID: -8357097485873672598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_6"
+      rect:
+        serializedVersion: 2
+        x: 1061
+        y: 0
+        width: 499
+        height: 488
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d0f6707c57975200800000000000000
+      internalID: 168769934329311445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_7"
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 25
+        width: 451
+        height: 449
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47c459eef0fd85af0800000000000000
+      internalID: -407330506756764556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_8"
+      rect:
+        serializedVersion: 2
+        x: 614
+        y: 0
+        width: 428
+        height: 486
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16f545961bfe79980800000000000000
+      internalID: -8532087423774728351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 38e035cf2e6637247838b28c2695586f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_0": -4201005269614133337
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_1": 2943398634944622249
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_10": -4508364106197994564
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_11": -2976574789063824475
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_12": 699697366381558873
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_13": -7229282948741030132
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_14": -5050956933129047889
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_15": 8370477715349618569
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_2": 1424166099589910870
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_3": -8357097485873672598
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_4": -6762963089202338620
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_5": 5325242918690628928
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_6": 168769934329311445
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_7": -407330506756764556
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_8": -8532087423774728351
+      "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_9": -3569194705360764892
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

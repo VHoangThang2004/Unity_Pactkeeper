@@ -15,6 +15,7 @@ public class SceneConfig : ScriptableObject
     public string gachaScene = "9_Gacha";
     public string storyScene = "5_ClientStory";
     public string storyProgressScene = "10_StoryProgress";
+    public string rankingScene = "11_Ranking";
 
 
     [Header("Server Scenes")]
