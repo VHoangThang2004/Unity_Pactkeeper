@@ -147,7 +147,7 @@ public class ServerBackendClient : MonoBehaviour
             Mode = modeFromArgs;
         }
 
-        if (Mode == "pvp")
+        if (Mode == "pvp" || Mode == "friendly")
             yield return StartCoroutine(FetchLoadouts());
         else if (Mode == "story")
         {

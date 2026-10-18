@@ -92,7 +92,7 @@ public class MainMenuManager : MonoBehaviour
         yield return StartCoroutine(matchmakingManager.FetchCurrentMatch(
             match =>
             {
-                if (match.mode == "pvp")
+                if (match.mode == "pvp" || match.mode == "friendly")
                 {
                     reconnectedToPvP = true;
                     StartCoroutine(matchmakingManager.ShowMatchLoadingScreenAndLoad(
