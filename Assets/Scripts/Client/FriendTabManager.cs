@@ -43,6 +43,8 @@ public class FriendTabManager : MonoBehaviour
     [SerializeField] private Button addFriendButton;
     [SerializeField] private TMP_Text addFriendStatusText;
 
+    public BackendConfig Config => config;
+
     // Cache of friends: playerId -> FriendProfile
     private readonly Dictionary<string, FriendProfile> friendsCache = new();
     private readonly Dictionary<string, GameObject> friendItemViews = new();
@@ -57,6 +59,8 @@ public class FriendTabManager : MonoBehaviour
         }
         Instance = this;
 
+        EnsureLobbyHubClient();
+
         if (openButton != null) openButton.onClick.AddListener(Open);
         if (closeButton != null) closeButton.onClick.AddListener(Close);
         if (addFriendButton != null) addFriendButton.onClick.AddListener(OnAddFriendClicked);
@@ -67,13 +71,42 @@ public class FriendTabManager : MonoBehaviour
         HidePanel();
     }
 
+    private void EnsureLobbyHubClient()
+    {
+        if (LobbyHubClient.Instance == null)
+        {
+            var existing = FindFirstObjectByType<LobbyHubClient>();
+            if (existing != null)
+            {
+                if (existing.Config == null && config != null)
+                    existing.SetConfig(config);
+            }
+            else
+            {
+                var go = new GameObject("LobbyHubClient");
+                var hub = go.AddComponent<LobbyHubClient>();
+                if (config != null) hub.SetConfig(config);
+                Debug.Log("[FriendTabManager] Auto-created LobbyHubClient GameObject.");
+            }
+        }
+        else if (LobbyHubClient.Instance.Config == null && config != null)
+        {
+            LobbyHubClient.Instance.SetConfig(config);
+        }
+    }
+
     void Start()
     {
+        EnsureLobbyHubClient();
+
         if (LobbyHubClient.Instance != null)
         {
             LobbyHubClient.Instance.Connect();
+            LobbyHubClient.Instance.OnConnected += HandleLobbyConnected;
             LobbyHubClient.Instance.OnFriendPresenceChanged += HandlePresenceChanged;
             LobbyHubClient.Instance.OnFriendRequestReceived += HandleNewFriendRequest;
+            LobbyHubClient.Instance.OnFriendRequestAccepted += HandleFriendRequestAccepted;
+            LobbyHubClient.Instance.OnFriendRemoved += HandleFriendRemoved;
         }
 
         SwitchToFriendsTab();
@@ -94,11 +127,21 @@ public class FriendTabManager : MonoBehaviour
 
         if (LobbyHubClient.Instance != null)
         {
+            LobbyHubClient.Instance.OnConnected -= HandleLobbyConnected;
             LobbyHubClient.Instance.OnFriendPresenceChanged -= HandlePresenceChanged;
             LobbyHubClient.Instance.OnFriendRequestReceived -= HandleNewFriendRequest;
+            LobbyHubClient.Instance.OnFriendRequestAccepted -= HandleFriendRequestAccepted;
+            LobbyHubClient.Instance.OnFriendRemoved -= HandleFriendRemoved;
         }
 
         if (Instance == this) Instance = null;
+    }
+
+    private void HandleLobbyConnected()
+    {
+        Debug.Log("[FriendTabManager] LobbyHub connected. Refreshing friends list with live presence!");
+        StartCoroutine(FetchFriendsList());
+        StartCoroutine(FetchPendingRequestsCount());
     }
 
     public void Open()
@@ -158,7 +201,10 @@ public class FriendTabManager : MonoBehaviour
             yield break;
         }
 
-        string json = $"{{\"friends\":{request.downloadHandler.text}}}";
+        string raw = request.downloadHandler.text;
+        Debug.Log($"[FriendTabManager] Fetched friends response: {raw}");
+
+        string json = $"{{\"friends\":{raw}}}";
         var wrapper = JsonUtility.FromJson<FriendsListWrapper>(json);
 
         friendsCache.Clear();
@@ -363,6 +409,8 @@ public class FriendTabManager : MonoBehaviour
 
     private void HandlePresenceChanged(LobbyHubClient.FriendPresenceData presence)
     {
+        Debug.Log($"[FriendTabManager] HandlePresenceChanged: playerId={presence.playerId}, isOnline={presence.isOnline}, status={presence.status}");
+
         if (friendsCache.TryGetValue(presence.playerId, out var friend))
         {
             friend.isOnline = presence.isOnline;
@@ -374,6 +422,11 @@ public class FriendTabManager : MonoBehaviour
             }
             UpdateOnlineCount();
         }
+        else if (presence.isOnline)
+        {
+            Debug.Log($"[FriendTabManager] Received online presence for friend {presence.playerId} not in local cache. Fetching updated friends list!");
+            StartCoroutine(FetchFriendsList());
+        }
     }
 
     private void HandleNewFriendRequest(string _)
@@ -383,6 +436,19 @@ public class FriendTabManager : MonoBehaviour
         {
             StartCoroutine(FetchPendingRequestsList());
         }
+    }
+
+    private void HandleFriendRequestAccepted(string _)
+    {
+        Debug.Log("[FriendTabManager] Friend request was accepted, refreshing friends list!");
+        StartCoroutine(FetchFriendsList());
+        StartCoroutine(FetchPendingRequestsCount());
+    }
+
+    private void HandleFriendRemoved(string _)
+    {
+        Debug.Log("[FriendTabManager] Friend was removed, refreshing friends list!");
+        StartCoroutine(FetchFriendsList());
     }
 
     // -------------------------------------------------------
@@ -414,6 +480,7 @@ public class FriendTabManager : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/requests/{requestId}/accept", "POST");
         req.uploadHandler = new UploadHandlerRaw(new byte[0]);
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
@@ -426,7 +493,7 @@ public class FriendTabManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[FriendTabManager] Accept failed: {req.error}");
+            Debug.LogError($"[FriendTabManager] Accept failed ({req.responseCode}): {req.downloadHandler?.text ?? req.error}");
         }
     }
 
@@ -435,6 +502,7 @@ public class FriendTabManager : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/requests/{requestId}/decline", "POST");
         req.uploadHandler = new UploadHandlerRaw(new byte[0]);
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
@@ -446,7 +514,7 @@ public class FriendTabManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"[FriendTabManager] Decline failed: {req.error}");
+            Debug.LogError($"[FriendTabManager] Decline failed ({req.responseCode}): {req.downloadHandler?.text ?? req.error}");
         }
     }
 
@@ -467,17 +535,21 @@ public class FriendTabManager : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/request", "POST");
         req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
 
         if (req.result != UnityWebRequest.Result.Success)
         {
+            string err = req.downloadHandler?.text;
+            Debug.LogError($"[FriendTabManager] Friend request failed ({req.responseCode}): {err ?? req.error}");
             if (addFriendStatusText != null)
-                addFriendStatusText.text = "Player not found or request failed.";
+                addFriendStatusText.text = !string.IsNullOrEmpty(err) ? $"Failed: {err}" : "Player not found or request failed.";
         }
         else
         {
+            Debug.Log($"[FriendTabManager] Friend request sent successfully: {req.downloadHandler?.text}");
             if (addFriendStatusText != null)
                 addFriendStatusText.text = "Friend request sent!";
             if (addFriendInput != null) addFriendInput.text = string.Empty;

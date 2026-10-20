@@ -11,19 +11,41 @@ using UnityEngine.Networking;
 
 public class LobbyHubClient : MonoBehaviour
 {
-    public static LobbyHubClient Instance { get; private set; }
+    private static LobbyHubClient _instance;
+    public static LobbyHubClient Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<LobbyHubClient>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     [SerializeField] private BackendConfig config;
+    public BackendConfig Config => config;
+
+    public void SetConfig(BackendConfig cfg)
+    {
+        if (config == null) config = cfg;
+    }
 
     public bool IsConnected => webSocket != null && webSocket.State == WebSocketState.Open;
 
     // Events dispatched on Unity Main Thread
+    public event Action OnConnected;
+    public event Action OnDisconnected;
     public event Action<MatchInviteData> OnMatchInviteReceived;
     public event Action<MatchReadyData> OnMatchReady;
     public event Action<FriendPresenceData> OnFriendPresenceChanged;
     public event Action<string> OnMatchInviteDeclined;
     public event Action<string> OnMatchInviteCancelled;
     public event Action<string> OnFriendRequestReceived;
+    public event Action<string> OnFriendRequestAccepted;
+    public event Action<string> OnFriendRemoved;
 
     private ClientWebSocket webSocket;
     private CancellationTokenSource cts;
@@ -33,12 +55,13 @@ public class LobbyHubClient : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (_instance != null && _instance != this)
         {
-            Destroy(gameObject);
+            // Destroy only the duplicate component, NEVER the GameObject it is attached to!
+            Destroy(this);
             return;
         }
-        Instance = this;
+        _instance = this;
     }
 
     void Update()
@@ -58,8 +81,11 @@ public class LobbyHubClient : MonoBehaviour
 
     void OnDestroy()
     {
-        Disconnect();
-        if (Instance == this) Instance = null;
+        if (_instance == this)
+        {
+            Disconnect();
+            _instance = null;
+        }
     }
 
     public void Connect()
@@ -95,12 +121,19 @@ public class LobbyHubClient : MonoBehaviour
             webSocket = null;
         }
         Debug.Log("[LobbyHubClient] Disconnected from lobby hub.");
+        mainThreadQueue.Enqueue(() => OnDisconnected?.Invoke());
     }
 
     private async Task ConnectAsync(CancellationToken token)
     {
         try
         {
+            if (config == null)
+            {
+                Debug.LogError("[LobbyHubClient] Cannot connect — BackendConfig is not assigned!");
+                return;
+            }
+
             string baseUrl = config.backendUrl.TrimEnd('/');
             string wsScheme = baseUrl.StartsWith("https", StringComparison.OrdinalIgnoreCase) ? "wss" : "ws";
             string rawHost = baseUrl.Substring(baseUrl.IndexOf("://", StringComparison.Ordinal) + 3);
@@ -177,8 +210,16 @@ public class LobbyHubClient : MonoBehaviour
 
     private void ProcessSignalRMessage(string json)
     {
+        // SignalR Handshake response acknowledgement
+        if (json == "{}")
+        {
+            Debug.Log("[LobbyHubClient] SignalR handshake acknowledged by server. Connected & Online!");
+            mainThreadQueue.Enqueue(() => OnConnected?.Invoke());
+            return;
+        }
+
         // Ping response
-        if (json.Contains("\"type\":6") || json == "{}") return;
+        if (json.Contains("\"type\":6")) return;
 
         try
         {
@@ -221,6 +262,7 @@ public class LobbyHubClient : MonoBehaviour
                         if (!string.IsNullOrEmpty(argObj))
                         {
                             var pres = JsonUtility.FromJson<FriendPresenceData>(argObj);
+                            Debug.Log($"[LobbyHubClient] Received OnFriendPresenceChanged: playerId={pres.playerId}, isOnline={pres.isOnline}, status={pres.status}");
                             mainThreadQueue.Enqueue(() => OnFriendPresenceChanged?.Invoke(pres));
                         }
                     }
@@ -236,6 +278,14 @@ public class LobbyHubClient : MonoBehaviour
 
                 case "ReceiveFriendRequest":
                     mainThreadQueue.Enqueue(() => OnFriendRequestReceived?.Invoke("new_request"));
+                    break;
+
+                case "FriendRequestAccepted":
+                    mainThreadQueue.Enqueue(() => OnFriendRequestAccepted?.Invoke("accepted"));
+                    break;
+
+                case "FriendRemoved":
+                    mainThreadQueue.Enqueue(() => OnFriendRemoved?.Invoke("removed"));
                     break;
             }
         }
@@ -273,6 +323,7 @@ public class LobbyHubClient : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/match/invite", "POST");
         req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
@@ -291,6 +342,7 @@ public class LobbyHubClient : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/match/invite/{inviteId}/accept", "POST");
         req.uploadHandler = new UploadHandlerRaw(new byte[0]);
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
@@ -309,6 +361,7 @@ public class LobbyHubClient : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/match/invite/{inviteId}/decline", "POST");
         req.uploadHandler = new UploadHandlerRaw(new byte[0]);
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
@@ -320,6 +373,7 @@ public class LobbyHubClient : MonoBehaviour
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/match/invite/{inviteId}/cancel", "POST");
         req.uploadHandler = new UploadHandlerRaw(new byte[0]);
         req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(req, PlayerSession.Token);
 
         yield return req.SendWebRequest();
