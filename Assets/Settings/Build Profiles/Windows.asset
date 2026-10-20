@@ -71,6 +71,15 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/10_StoryProgress.unity
     m_guid: ecd3501d18311d44a9a2dbcfbcb45f01
+  - m_enabled: 1
+    m_path: Assets/Scenes/11_Ranking.unity
+    m_guid: a16cccba5621a1f4481f2e3675682548
+  - m_enabled: 1
+    m_path: Assets/Scenes/12_Inventory.unity
+    m_guid: e1975658de75cb14285d582e2cc319b1
+  - m_enabled: 1
+    m_path: Assets/Scenes/13_Quest.unity
+    m_guid: 620f69c0ecfafa74d838a5d424e0e74e
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

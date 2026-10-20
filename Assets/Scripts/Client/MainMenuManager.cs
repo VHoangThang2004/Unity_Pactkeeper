@@ -22,14 +22,13 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Ref")]
     [SerializeField] private MatchmakingManager matchmakingManager;
+    [SerializeField] private MatchmodeMenuManager matchmodeMenuManager;
     [SerializeField] private ProfileTabManager profileTab;
     [SerializeField] private MailboxManager mailboxManager;
     [SerializeField] private SettingsManager settingsManager;
-    [SerializeField] private InventoryManager inventoryManager;
     [SerializeField] private ShopTabManager shopTabManager;
     [SerializeField] private TopUpManager topUpManager;
     [SerializeField] private FriendTabManager friendTabManager;
-    [SerializeField] private QuestManager questManager;
     [SerializeField] private NotificationDotManager notificationDotManager;
 
     void Start()
@@ -267,16 +266,6 @@ public class MainMenuManager : MonoBehaviour
         settingsManager?.Close();
     }
 
-    public void OpenInventoryTab()
-    {
-        inventoryManager?.Open();
-    }
-
-    public void CloseInventoryTab()
-    {
-        inventoryManager?.Close();
-    }
-
     public void OpenShopTab()
     {
         shopTabManager?.Open();
@@ -308,15 +297,13 @@ public class MainMenuManager : MonoBehaviour
         friendTabManager?.Close();
     }
 
-    public void OpenQuestTab()
-    {
-        questManager?.Open();
-        notificationDotManager?.ClearQuestDot();
-    }
+    // -------------------------------------------------------
+    // Match Mode Menu (BATTLE button popup)
+    // -------------------------------------------------------
 
-    public void CloseQuestTab()
+    public void OpenMatchmodeMenu()
     {
-        questManager?.Close();
+        matchmodeMenuManager?.Open();
     }
 
     public void GoToUnitList()
@@ -341,5 +328,17 @@ public class MainMenuManager : MonoBehaviour
     {
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.rankingScene);
+    }
+
+    public void GoToInventory()
+    {
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.inventoryScene);
+    }
+
+    public void GoToQuest()
+    {
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.questScene);
     }
 }

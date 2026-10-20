@@ -1,0 +1,217 @@
+fileFormatVersion: 2
+guid: 600f2b889700d5847b7e26005f23be3a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7467300022669354152
+    second: Report_Button_0
+  - first:
+      213: 1394808914303959639
+    second: Report_Button_1
+  - first:
+      213: -8045725434501044901
+    second: Report_Button_2
+  - first:
+      213: -3220771784385408488
+    second: Report_Button_3
+  - first:
+      213: -1656882107007195165
+    second: Report_Button_4
+  - first:
+      213: 950084197893833675
+    second: Report_Button_5
+  - first:
+      213: 7271359448184571881
+    second: Report_Button_6
+  - first:
+      213: 4649269557037444232
+    second: Report_Button_7
+  - first:
+      213: 4547079104300209519
+    second: Report_Button_8
+  - first:
+      213: -1808097976136158204
+    second: Report_Button_9
+  - first:
+      213: 5318717981367970797
+    second: Report_Button_10
+  - first:
+      213: 6246136233180992601
+    second: Report_Button_11
+  - first:
+      213: 4005049342279912124
+    second: Report_Button_12
+  - first:
+      213: 2513106475672943117
+    second: Report_Button_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Report_Button_2
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 405
+        width: 367
+        height: 380
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b556d3c6857d75090800000000000000
+      internalID: -8045725434501044901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Report_Button_4
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 407
+        width: 369
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e7a22190829109e0800000000000000
+      internalID: -1656882107007195165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: d4e386e9e6f50b940916737bb3eb4615
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Report_Button_0: -7467300022669354152
+      Report_Button_1: 1394808914303959639
+      Report_Button_10: 5318717981367970797
+      Report_Button_11: 6246136233180992601
+      Report_Button_12: 4005049342279912124
+      Report_Button_13: 2513106475672943117
+      Report_Button_2: -8045725434501044901
+      Report_Button_3: -3220771784385408488
+      Report_Button_4: -1656882107007195165
+      Report_Button_5: 950084197893833675
+      Report_Button_6: 7271359448184571881
+      Report_Button_7: 4649269557037444232
+      Report_Button_8: 4547079104300209519
+      Report_Button_9: -1808097976136158204
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

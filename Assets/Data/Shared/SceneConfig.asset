@@ -19,9 +19,12 @@ MonoBehaviour:
   matchResultScene: 6_MatchResult
   unitListScene: 7_UnitList
   unitConfigScene: 8_UnitConfig
-  inventoryScene: 10_Inventory
   gachaScene: 9_Gacha
   storyScene: 5_Story
+  storyProgressScene: 10_StoryProgress
+  rankingScene: 11_Ranking
+  inventoryScene: 12_Inventory
+  questScene: 13_Quest
   lobbyScene: 4_Lobby
   singleLobbyScene: 4_SingleStoryLobby
   serverMatch: 5_ServerMatch

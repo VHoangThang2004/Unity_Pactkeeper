@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
+/// Scene manager for 13_Quest.
+/// Can run as standalone scene or as tab in MainMenu.
 /// Quest panel manager — left list + right detail.
 /// API:
 ///   GET  /api/rewardrule/active          — active quest definitions
@@ -72,6 +75,10 @@ public class QuestManager : MonoBehaviour
 
     [Header("Config")]
     [SerializeField] private BackendConfig config;
+    [SerializeField] private SceneConfig sceneConfig;
+
+    [Header("Scene Mode")]
+    [SerializeField] private bool isStandaloneScene = false;  // Set true for scene 13_Quest
 
     [Header("Registries — for reward icons")]
     [SerializeField] private WeaponDefinitionRegistry  weaponRegistry;
@@ -85,6 +92,7 @@ public class QuestManager : MonoBehaviour
     [Header("Panel")]
     [SerializeField] private GameObject panel;
     [SerializeField] private Button     closeButton;
+    [SerializeField] private Button     backButton;  // Back to MainMenu (standalone mode)
 
     [Header("Left Panel — Quest List")]
     [SerializeField] private Transform  questListContainer;
@@ -130,16 +138,37 @@ public class QuestManager : MonoBehaviour
 
     void Awake()
     {
-        if (closeButton != null) closeButton.onClick.AddListener(Close);
-        if (claimButton  != null) claimButton.onClick.AddListener(OnClickClaim);
-        HidePanel();
-        HideDetailPanel();
+        if (closeButton != null) closeButton.onClick.AddListener(OnCloseClick);
+        if (backButton  != null) backButton.onClick.AddListener(OnBackClick);
+        if (claimButton != null) claimButton.onClick.AddListener(OnClickClaim);
+
+        // Standalone scene mode — auto-open on Start
+        if (isStandaloneScene)
+        {
+            if (!PlayerSession.IsLoggedIn)
+            {
+                Debug.LogWarning("[QuestManager] Not logged in, returning to MainMenu");
+                SceneManager.LoadScene(sceneConfig.mainMenuScene);
+                return;
+            }
+
+            if (panel != null) panel.SetActive(true);
+            HideDetailPanel();
+            StartCoroutine(LoadQuestsCoroutine());
+        }
+        else
+        {
+            // Tab mode — hide by default
+            HidePanel();
+            HideDetailPanel();
+        }
     }
 
     void OnDestroy()
     {
-        if (closeButton != null) closeButton.onClick.RemoveListener(Close);
-        if (claimButton  != null) claimButton.onClick.RemoveListener(OnClickClaim);
+        if (closeButton != null) closeButton.onClick.RemoveListener(OnCloseClick);
+        if (backButton  != null) backButton.onClick.RemoveListener(OnBackClick);
+        if (claimButton != null) claimButton.onClick.RemoveListener(OnClickClaim);
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -155,11 +184,31 @@ public class QuestManager : MonoBehaviour
 
     public void Close()
     {
-        HidePanel();
-        HideDetailPanel();
-        ClearList();
-        selectedItem = null;
-        selectedData = null;
+        if (isStandaloneScene)
+        {
+            // Standalone mode — return to MainMenu
+            SceneManager.LoadScene(sceneConfig.mainMenuScene);
+        }
+        else
+        {
+            // Tab mode — hide panel
+            HidePanel();
+            HideDetailPanel();
+            ClearList();
+            selectedItem = null;
+            selectedData = null;
+        }
+    }
+
+    void OnCloseClick()
+    {
+        Close();
+    }
+
+    void OnBackClick()
+    {
+        // Same as close for standalone mode
+        Close();
     }
 
     // ── Called by QuestItem ───────────────────────────────────────────────────

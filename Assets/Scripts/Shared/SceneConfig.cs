@@ -11,11 +11,12 @@ public class SceneConfig : ScriptableObject
     public string matchResultScene = "6_MatchResult";
     public string unitListScene = "7_UnitList";
     public string unitConfigScene = "8_UnitConfig";
-    public string inventoryScene = "10_Inventory";
     public string gachaScene = "9_Gacha";
     public string storyScene = "5_ClientStory";
     public string storyProgressScene = "10_StoryProgress";
     public string rankingScene = "11_Ranking";
+    public string inventoryScene = "12_Inventory";
+    public string questScene = "13_Quest";
 
 
     [Header("Server Scenes")]

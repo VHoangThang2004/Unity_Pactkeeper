@@ -1,14 +1,27 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections.Generic;
 
+/// <summary>
+/// Scene manager for 12_Inventory.
+/// Can run as standalone scene or as tab in MainMenu.
+/// </summary>
 public class InventoryManager : MonoBehaviour
 {
     [Header("Panel")]
     [SerializeField] private GameObject panel;
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button backButton;  // Back to MainMenu (standalone mode)
+
+    [Header("Config")]
+    [SerializeField] private BackendConfig config;
+    [SerializeField] private SceneConfig sceneConfig;
+
+    [Header("Scene Mode")]
+    [SerializeField] private bool isStandaloneScene = false;  // Set true for scene 12_Inventory
 
     [Header("Left Panel - Item List")]
     [SerializeField] private Transform itemListContainer;
@@ -33,9 +46,6 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private TMP_Text detailNameText;
     [SerializeField] private TMP_Text detailTypeText;
     [SerializeField] private TMP_Text detailStatText;
-
-    [Header("Config")]
-    [SerializeField] private BackendConfig config;
 
     [Header("Registries")]
     [SerializeField] private WeaponDefinitionRegistry weaponRegistry;
@@ -73,7 +83,10 @@ public class InventoryManager : MonoBehaviour
     void Awake()
     {
         if (closeButton != null)
-            closeButton.onClick.AddListener(Close);
+            closeButton.onClick.AddListener(OnCloseClick);
+
+        if (backButton != null)
+            backButton.onClick.AddListener(OnBackClick);
 
         if (filterAllButton != null)
             filterAllButton.onClick.AddListener(() => SetFilter(ItemFilter.All));
@@ -86,13 +99,33 @@ public class InventoryManager : MonoBehaviour
         if (nextButton != null)
             nextButton.onClick.AddListener(NextPage);
 
-        HidePanel();
+        // Standalone scene mode — auto-open on Start
+        if (isStandaloneScene)
+        {
+            if (!PlayerSession.IsLoggedIn)
+            {
+                Debug.LogWarning("[InventoryManager] Not logged in, returning to MainMenu");
+                SceneManager.LoadScene(sceneConfig.mainMenuScene);
+                return;
+            }
+            
+            if (panel != null) panel.SetActive(true);
+            LoadInventory();
+        }
+        else
+        {
+            // Tab mode — hide by default
+            HidePanel();
+        }
     }
 
     void OnDestroy()
     {
         if (closeButton != null)
-            closeButton.onClick.RemoveListener(Close);
+            closeButton.onClick.RemoveListener(OnCloseClick);
+
+        if (backButton != null)
+            backButton.onClick.RemoveListener(OnBackClick);
 
         if (filterAllButton != null)
             filterAllButton.onClick.RemoveAllListeners();
@@ -120,16 +153,34 @@ public class InventoryManager : MonoBehaviour
         LoadInventory();
     }
 
+    public void Close()
+    {
+        if (isStandaloneScene)
+        {
+            // Standalone mode — return to MainMenu
+            SceneManager.LoadScene(sceneConfig.mainMenuScene);
+        }
+        else
+        {
+            // Tab mode — hide panel
+            HidePanel();
+        }
+    }
+
+    void OnCloseClick()
+    {
+        Close();
+    }
+
+    void OnBackClick()
+    {
+        // Same as close for standalone mode
+        Close();
+    }
+
     void LoadInventory()
     {
         StartCoroutine(LoadInventoryCoroutine());
-    }
-
-    public void Close()
-    {
-        HidePanel();
-        ClearItemList();
-        HideDetailPanel();
     }
 
     void HidePanel()
