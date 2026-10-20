@@ -90,7 +90,8 @@ public static class ServerPatternResolver
 
                 if (effect.InstantType == InstantType.NonInstant)
                 {
-                    selectable = session.ReadyUnitIds.Contains(caster.Id);
+                    // Attacks aim at any cell (target may move in before end-of-instant resolve) — but only if affordable
+                    selectable = skillUsable && session.ReadyUnitIds.Contains(caster.Id);
                 }
             }
             result.Add(new Vector3Int(cell.x, cell.y, selectable ? 1 : 0));

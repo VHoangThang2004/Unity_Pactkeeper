@@ -448,6 +448,9 @@ public class ServerTimelineManager : MonoBehaviour
         // Capture before state FIRST
         var snapshotBefore = GetSnapshot();
 
+        // Comparer must be pure: read the flag once, flip it once after sorting if it decided a tie
+        int flaggedTeam = session.FlaggedTeamId;
+        bool flagUsed = false;
         effectRecord.Sort((a, b) =>
         {
             var unitA = session.GetUnitByUnitId(a.unitId);
@@ -458,12 +461,13 @@ public class ServerTimelineManager : MonoBehaviour
 
             int teamA = session.GetTeamIdByUnitId(a.unitId);
             int teamB = session.GetTeamIdByUnitId(b.unitId);
-            if (teamA == teamB) return 0;
+            if (teamA == teamB) return a.unitId.CompareTo(b.unitId); // deterministic within a team
 
-            bool aGoesFirst = teamA == session.FlaggedTeamId;
-            session.FlaggedTeamId = session.GetOtherTeamId(session.FlaggedTeamId);
-            return aGoesFirst ? -1 : 1;
+            flagUsed = true;
+            return teamA == flaggedTeam ? -1 : 1;
         });
+        if (flagUsed)
+            session.FlaggedTeamId = session.GetOtherTeamId(flaggedTeam);
 
         TransitionTo(ServerSessionState.Resolving);
 

@@ -54,22 +54,7 @@ public class StoryEncounterConfig : ScriptableObject
     {
         var result = new List<PlayerUnitLoadout>();
         foreach (var u in units)
-        {
-            result.Add(new PlayerUnitLoadout
-            {
-                UId = u.uId,
-                PassiveSkillId = u.passiveSkillId,
-                MovementSkillId = u.movementSkillId,
-                WeaponSkillId = u.weaponSkillId,
-                ClassSkillId = u.classSkillId,
-                TrinketSkillId = u.trinketSkillId,
-                MaxHP = u.maxHP,
-                MaxSkillPoint = u.maxSkillPoint,
-                Speed = u.speed,
-                DamageMultiplier = u.damageMultiplier,
-                DamageReduction = u.damageReduction,
-            });
-        }
+            result.Add(u.ToUnitLoadout());
 
         return new TeamLoadout
         {
@@ -95,4 +80,20 @@ public class StoryUnitEntry
     public int speed;
     public int damageMultiplier;
     public int damageReduction;
+
+    // Single conversion point — used by encounter loadouts and mid-match tutorial spawns
+    public PlayerUnitLoadout ToUnitLoadout() => new PlayerUnitLoadout
+    {
+        UId = uId,
+        PassiveSkillId = passiveSkillId,
+        MovementSkillId = movementSkillId,
+        WeaponSkillId = weaponSkillId,
+        ClassSkillId = classSkillId,
+        TrinketSkillId = trinketSkillId,
+        MaxHP = maxHP,
+        MaxSkillPoint = maxSkillPoint,
+        Speed = speed,
+        DamageMultiplier = damageMultiplier,
+        DamageReduction = damageReduction,
+    };
 }

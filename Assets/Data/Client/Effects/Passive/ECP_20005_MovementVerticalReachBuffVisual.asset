@@ -17,3 +17,6 @@ MonoBehaviour:
   baseValue: 10
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
+  statusIcon: {fileID: -5714942852996727713, guid: 35e61c67388eef94bb1afc8b3379667c, type: 3}
+  statusName: 
+  isDebuff: 0

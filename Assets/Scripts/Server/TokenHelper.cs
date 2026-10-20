@@ -7,7 +7,8 @@ public static class TokenHelper
             string[] parts = token.Split('.');
             if (parts.Length != 3) return string.Empty;
 
-            string payload = parts[1];
+            // JWT segments are base64url: '-'/'_' instead of '+'/'/', padding stripped
+            string payload = parts[1].Replace('-', '+').Replace('_', '/');
             int mod = payload.Length % 4;
             if (mod > 0) payload += new string('=', 4 - mod);
 

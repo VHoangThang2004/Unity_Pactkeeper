@@ -343,17 +343,7 @@ public class ServerMatchSession : MonoBehaviour
             if (!alreadyExists)
             {
                 Debug.Log($"[MatchSession] Spawning new tutorial unit: UId {pUnit.uId}");
-                var loadout = new PlayerUnitLoadout
-                {
-                    UId = pUnit.uId,
-                    MovementSkillId = pUnit.movementSkillId,
-                    WeaponSkillId = pUnit.weaponSkillId,
-                    ClassSkillId = pUnit.classSkillId,
-                    MaxHP = pUnit.maxHP,
-                    MaxSkillPoint = pUnit.maxSkillPoint,
-                    Speed = pUnit.speed,
-                    DamageMultiplier = pUnit.damageMultiplier
-                };
+                var loadout = pUnit.ToUnitLoadout();
 
                 // Find next available spawn point for team 0
                 // Skip the spawn points already occupied by existing units (naive assumption: 1 existing unit = skip 1)
@@ -376,17 +366,7 @@ public class ServerMatchSession : MonoBehaviour
             if (!alreadyExists)
             {
                 Debug.Log($"[MatchSession] Spawning new AI unit: UId {aiUnit.uId}");
-                var loadout = new PlayerUnitLoadout
-                {
-                    UId = aiUnit.uId,
-                    MovementSkillId = aiUnit.movementSkillId,
-                    WeaponSkillId = aiUnit.weaponSkillId,
-                    ClassSkillId = aiUnit.classSkillId,
-                    MaxHP = aiUnit.maxHP,
-                    MaxSkillPoint = aiUnit.maxSkillPoint,
-                    Speed = aiUnit.speed,
-                    DamageMultiplier = aiUnit.damageMultiplier
-                };
+                var loadout = aiUnit.ToUnitLoadout();
 
                 // Find next available spawn point for team 1
                 Vector2Int spawnPoint = MapAsset.GetSpawn(1, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 1).Count + aiSpawnPointer);
@@ -686,6 +666,7 @@ public class ServerMatchSession : MonoBehaviour
     {
         units.RemoveAll(u => u.Id == unitId);
         ReadyUnitIds.Remove(unitId);
+        unitActiveEffects.Remove(unitId); // unit ids are never reused, so this is the only cleanup point
 
         foreach (var team in teams)
             team.unitIds.Remove(unitId);

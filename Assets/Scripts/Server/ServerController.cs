@@ -128,11 +128,19 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         Debug.Log("[ServerController] Ready — waiting for clients to request init.");
 
         // 6. Wait for all clients to request init
+        // Waiting is not an error (slow loaders used to trip SessionGuard after ~10s) — explicit timeout instead
         serverReady = true;
+        const float clientInitTimeout = 60f;
+        float waitStart = Time.time;
         while (clientsReceivedInit < session.matchConfig.requiredClients)
         {
+            if (Time.time - waitStart > clientInitTimeout)
+            {
+                Debug.LogError($"[ServerController] Clients didn't initialize within {clientInitTimeout}s — shutting down.");
+                yield return StartCoroutine(Shutdown());
+                yield break;
+            }
             yield return new WaitForSeconds(1f);
-            IncrementErrors();
         }
 
         // 7. Grace period — let clients finish their own init
