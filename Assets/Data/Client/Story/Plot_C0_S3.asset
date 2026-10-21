@@ -15,6 +15,12 @@ MonoBehaviour:
   chapterId: 0
   sceneId: 3
   nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 2
+    targetWaitTimeout: 10
   - type: 0
     text: All units are ready. Time for the final blow!
     tutorialTargetId: 

@@ -336,48 +336,81 @@ public class ServerMatchSession : MonoBehaviour
         var newEncounter = storyEncounterRegistry.Get(backendClient.ChapterId, newSceneId);
         if (newEncounter == null) return;
 
+        HashSet<int> matchedUnitIds = new HashSet<int>();
         int spawnPointer = 0; // We need to track how many player units we've spawned
         foreach (var pUnit in newEncounter.playerUnits)
         {
-            bool alreadyExists = units.Exists(u => u.UId == pUnit.uId && GetTeamIdByUnitId(u.Id) == 0);
-            if (!alreadyExists)
+            var unit = units.Find(u => u.UId == pUnit.uId && GetTeamIdByUnitId(u.Id) == 0 && !matchedUnitIds.Contains(u.Id));
+            if (unit == null)
             {
                 Debug.Log($"[MatchSession] Spawning new tutorial unit: UId {pUnit.uId}");
                 var loadout = pUnit.ToUnitLoadout();
 
                 // Find next available spawn point for team 0
-                // Skip the spawn points already occupied by existing units (naive assumption: 1 existing unit = skip 1)
                 Vector2Int spawnPoint = MapAsset.GetSpawn(0, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 0).Count + spawnPointer);
-                var newUnit = spawnManager.SpawnUnit(0, loadout, spawnPoint.x, spawnPoint.y);
-                if (newUnit != null)
-                {
-                    newUnit.CurrentStep = 0;
-                    if (!ReadyUnitIds.Contains(newUnit.Id))
-                        ReadyUnitIds.Add(newUnit.Id);
-                }
+                var spawned = spawnManager.SpawnUnit(0, loadout, spawnPoint.x, spawnPoint.y);
+                if (spawned != null) matchedUnitIds.Add(spawned.Id);
                 spawnPointer++;
+            }
+            else
+            {
+                matchedUnitIds.Add(unit.Id);
+                // Reset existing unit's step to initial stepRange from its speed so it doesn't carry over step from prev scene
+                unit.Speed = pUnit.speed;
+                unit.BaseSpeed = pUnit.speed;
+                Vector2Int stepRange = spawnManager.SpeedConfig.GetStepRange(pUnit.speed);
+                unit.CurrentStep = stepRange.x;
+                unit.CurrentStepBase = stepRange.y;
+                unit.StepAlt = true;
             }
         }
 
         int aiSpawnPointer = 0; // Track how many AI units we've spawned
         foreach (var aiUnit in newEncounter.aiUnits)
         {
-            bool alreadyExists = units.Exists(u => u.UId == aiUnit.uId && GetTeamIdByUnitId(u.Id) == 1);
-            if (!alreadyExists)
+            var existingAi = units.Find(u => u.UId == aiUnit.uId && GetTeamIdByUnitId(u.Id) == 1 && !matchedUnitIds.Contains(u.Id));
+            if (existingAi == null)
             {
                 Debug.Log($"[MatchSession] Spawning new AI unit: UId {aiUnit.uId}");
                 var loadout = aiUnit.ToUnitLoadout();
 
                 // Find next available spawn point for team 1
                 Vector2Int spawnPoint = MapAsset.GetSpawn(1, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 1).Count + aiSpawnPointer);
-                var newUnit = spawnManager.SpawnUnit(1, loadout, spawnPoint.x, spawnPoint.y);
-                if (newUnit != null)
-                {
-                    newUnit.CurrentStep = 0;
-                    if (!ReadyUnitIds.Contains(newUnit.Id))
-                        ReadyUnitIds.Add(newUnit.Id);
-                }
+                var spawned = spawnManager.SpawnUnit(1, loadout, spawnPoint.x, spawnPoint.y);
+                if (spawned != null) matchedUnitIds.Add(spawned.Id);
                 aiSpawnPointer++;
+            }
+            else
+            {
+                matchedUnitIds.Add(existingAi.Id);
+                existingAi.Speed = aiUnit.speed;
+                existingAi.BaseSpeed = aiUnit.speed;
+                Vector2Int stepRange = spawnManager.SpeedConfig.GetStepRange(aiUnit.speed);
+                existingAi.CurrentStep = stepRange.x;
+                existingAi.CurrentStepBase = stepRange.y;
+                existingAi.StepAlt = true;
+            }
+        }
+
+        // Ensure any unit on board not explicitly listed in encounter has its step reset as well
+        foreach (var unit in units)
+        {
+            if (!matchedUnitIds.Contains(unit.Id))
+            {
+                Vector2Int stepRange = spawnManager.SpeedConfig.GetStepRange(unit.Speed);
+                unit.CurrentStep = stepRange.x;
+                unit.CurrentStepBase = stepRange.y;
+                unit.StepAlt = true;
+            }
+        }
+
+        // Requirement 1: Any unit with CurrentStep == 0 MUST be in ReadyUnitIds
+        ReadyUnitIds.Clear();
+        foreach (var unit in units)
+        {
+            if (unit.CurrentStep == 0 && !ReadyUnitIds.Contains(unit.Id))
+            {
+                ReadyUnitIds.Add(unit.Id);
             }
         }
     }
@@ -518,6 +551,7 @@ public class ServerMatchSession : MonoBehaviour
     }
 
     public string[] GetTimelineLog() => timelineLog.ToArray();
+    public void ClearLogs() => timelineLog.Clear();
     // -------------------------------------------------------
     // Lookup
     // -------------------------------------------------------

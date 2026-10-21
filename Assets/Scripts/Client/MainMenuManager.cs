@@ -148,11 +148,7 @@ public class MainMenuManager : MonoBehaviour
 
         if (progress.sceneType == "Battle")
         {
-            PlayerSession.MatchId = null;
-            if (!string.IsNullOrEmpty(PlayerSession.MatchId))
-                SceneManager.LoadScene(targetScene);
-            else
-                StartCoroutine(RequestAndStartStoryBattle(targetScene));
+            StartCoroutine(RequestAndStartStoryBattle(targetScene));
             return false;
         }
 

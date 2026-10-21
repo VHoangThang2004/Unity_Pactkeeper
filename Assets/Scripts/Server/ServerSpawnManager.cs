@@ -6,6 +6,7 @@ public class ServerSpawnManager : MonoBehaviour
     [SerializeField] private ServerController controller;
     [SerializeField] private ServerMatchSession session;
     [SerializeField] private SpeedConfig speedConfig;
+    public SpeedConfig SpeedConfig => speedConfig;
 
     private bool suppressSpawnRpcs = true;
     private int nextUnitId = 1;

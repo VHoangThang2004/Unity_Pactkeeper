@@ -82,6 +82,7 @@ public class ClientScene : MonoBehaviour
     {
         if (spawnedUnits.Contains(unit)) return;
         spawnedUnits.Add(unit);
+        visualController?.UpdateReadyUnitBar();
     }
 
     public void UnregisterUnit(ClientUnit unit)

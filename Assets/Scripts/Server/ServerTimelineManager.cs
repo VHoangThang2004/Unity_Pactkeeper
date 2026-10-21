@@ -40,6 +40,8 @@ public class ServerTimelineManager : MonoBehaviour
 
 
     // Internal coroutine control — not observable, not session data
+    private Coroutine timelineLoopCoroutine;
+    private int timelineGenerationId = 0;
     private bool waitingForDecision = false;
     private bool lastDecisionResolved = false;
     private (int unitId, Vector3Int sourceCell, Vector3Int targetCell, DecisionType decisionType, int skillCardId)? pendingDecision = null;
@@ -105,6 +107,9 @@ public class ServerTimelineManager : MonoBehaviour
         foreach (var team in teams)
             team.Overtime = (int)session.matchConfig.overtimePerTeam;
 
+        if (session.backendClient != null && session.backendClient.Mode == "story")
+            isPvE = true;
+
         session.FlaggedTeamId = session.GetOtherTeamId(0);
 
         TransitionTo(ServerSessionState.Flowing);
@@ -115,10 +120,12 @@ public class ServerTimelineManager : MonoBehaviour
     public void RunTimeline()
     {
         _matchStartTime = Time.time;
-        StartCoroutine(TimelineLoop());
+        StopAllCoroutines();
+        int gen = ++timelineGenerationId;
         StartCoroutine(WaitingTimeProcess());
         StartCoroutine(DisconnectWatchdog());
         StartCoroutine(MatchTimeoutWatchdog());
+        timelineLoopCoroutine = StartCoroutine(TimelineLoop(gen));
         Debug.Log("[Timeline] Running.");
     }
 
@@ -145,12 +152,13 @@ public class ServerTimelineManager : MonoBehaviour
     // Main Loop
     // -------------------------------------------------------
 
-    IEnumerator TimelineLoop()
+    IEnumerator TimelineLoop(int gen)
     {
         List<TeamData> teams = session.GetAllTeamData();
 
         while (session.CurrentInstant <= session.matchConfig.maxInstant)
         {
+            if (gen != timelineGenerationId) yield break;
             TransitionTo(ServerSessionState.Flowing);
             session.CurrentTeamTurnId = -1;
 
@@ -178,6 +186,8 @@ public class ServerTimelineManager : MonoBehaviour
             {
                 BroadcastTick();
             }
+
+            if (gen != timelineGenerationId) yield break;
 
             bool allReady = session.units.Count > 0 && session.ReadyUnitIds.Count >= session.units.Count;
             if (!newUnitsReady && !allReady)
@@ -213,7 +223,9 @@ public class ServerTimelineManager : MonoBehaviour
             }
             TransitionTo(ServerSessionState.InstantPaused);
             LogInstantPaused(session.CurrentInstant);
-            yield return RunDecisionLoop();
+            yield return RunDecisionLoop(gen);
+
+            if (gen != timelineGenerationId) yield break;
 
             // Always broadcast after decision loop — even if no decisions made
             PackFinal();
@@ -246,7 +258,7 @@ public class ServerTimelineManager : MonoBehaviour
     // -------------------------------------------------------
     // Decision Loop
     // -------------------------------------------------------
-    IEnumerator RunDecisionLoop()
+    IEnumerator RunDecisionLoop(int gen)
     {
         List<TeamData> teams = session.GetAllTeamData();
         session.ReloadInstant();
@@ -254,13 +266,15 @@ public class ServerTimelineManager : MonoBehaviour
 
         while (true)
         {
+            if (gen != timelineGenerationId) yield break;
             if (!TeamHasReady(0) && !TeamHasReady(1)) yield break;
             if (teams[0].isInstantEnded && teams[1].isInstantEnded) yield break;
-            yield return HandleTeamTurn(session.CurrentTeamTurnId);
+            yield return HandleTeamTurn(session.CurrentTeamTurnId, gen);
         }
     }
-    IEnumerator HandleTeamTurn(int currentTeamId)
+    IEnumerator HandleTeamTurn(int currentTeamId, int gen)
     {
+        if (gen != timelineGenerationId) yield break;
         TeamData currentTeam = session.GetTeamDataByTeamId(currentTeamId);
         if (currentTeam.isInstantEnded || !TeamHasReady(currentTeamId))
         {
@@ -274,8 +288,9 @@ public class ServerTimelineManager : MonoBehaviour
 
         while (true)
         {
+            if (gen != timelineGenerationId) yield break;
             TransitionTo(ServerSessionState.DecisionWaiting);
-            yield return WaitForDecision(currentTeamId);
+            yield return WaitForDecision(currentTeamId, gen);
 
             if (pendingDecision == null)
             {
@@ -304,18 +319,23 @@ public class ServerTimelineManager : MonoBehaviour
     // Wait For Decision
     // -------------------------------------------------------
 
-    IEnumerator WaitForDecision(int team)
+    IEnumerator WaitForDecision(int team, int gen)
     {
         yield return new WaitForSeconds(2f);
+        if (gen != timelineGenerationId) yield break;
         List<TeamData> teams = session.GetAllTeamData();
         pendingDecision = null;
         waitingForDecision = true;
         session.CurrentTeamTurnId = team;
 
         while (waitingForDecision && (teams[team].WaitDuration > 0 || teams[team].Overtime > 0))
+        {
+            if (gen != timelineGenerationId) yield break;
             yield return null;
+        }
 
         waitingForDecision = false;
+        if (gen != timelineGenerationId) yield break;
 
         if (pendingDecision == null)
         {
@@ -788,23 +808,80 @@ public class ServerTimelineManager : MonoBehaviour
         }
     }
 
+    public void RestartTimelineForTutorialPhase()
+    {
+        Debug.Log($"[Timeline] Restarting timeline for tutorial phase from Instant 0 (was at Instant {session.CurrentInstant})...");
+
+        StopAllCoroutines();
+        int gen = ++timelineGenerationId;
+        timelineLoopCoroutine = null;
+
+        waitingForDecision = false;
+        pendingDecision = null;
+        lastDecisionResolved = false;
+
+        actionRecord?.Clear();
+        effectRecord?.Clear();
+        session.ClearLogs();
+        session.ResetInstantSkillUsage();
+
+        session.CurrentInstant = 0;
+        session.ConsecutivePassInstants = 0;
+        session.CurrentTeamTurnId = -1;
+
+        List<TeamData> teams = session.GetAllTeamData();
+        foreach (var team in teams)
+        {
+            team.isInstantEnded = false;
+            team.WaitDuration = 0;
+        }
+
+        // Re-check ready units in case any unit has CurrentStep == 0
+        session.ReadyUnitIds.Clear();
+        foreach (var unit in session.GetAllUnits())
+        {
+            if (unit.CurrentStep == 0 && !session.ReadyUnitIds.Contains(unit.Id))
+            {
+                session.ReadyUnitIds.Add(unit.Id);
+            }
+        }
+
+        TransitionTo(ServerSessionState.Flowing);
+        LogInstantFlowing(session.CurrentInstant);
+
+        PackFinal();
+        BroadcastSnapshot();
+
+        StartCoroutine(WaitingTimeProcess());
+        StartCoroutine(DisconnectWatchdog());
+        StartCoroutine(MatchTimeoutWatchdog());
+        timelineLoopCoroutine = StartCoroutine(TimelineLoop(gen));
+    }
+
     DecisionRequestData BuildDecision()
     {
         if (session.CurrentTeamTurnId == -1) return default;
 
         List<TeamData> teams = session.GetAllTeamData();
-        Debug.Log($"Wait dur{teams[session.CurrentTeamTurnId].WaitDuration} - max wd {session.matchConfig.actWaitWindowPerInstantPerReadyUnit * 5}");
-        return// session.CurrentTeamTurnId == -1 ? default :
-         new DecisionRequestData
-         {
-             Instant = session.CurrentInstant,
-             DecisionTeam = session.CurrentTeamTurnId,
-             RemainingWaitDuration = teams[session.CurrentTeamTurnId].WaitDuration,
-             MaxWaitDuration = (int)session.matchConfig.actWaitWindowPerInstantPerReadyUnit * 5,
-             RemainingOvertime = teams[session.CurrentTeamTurnId].Overtime,
-             MaxOvertime = (int)session.matchConfig.overtimePerTeam,
-             ReadyUnitIds = session.ReadyUnitIds.ToArray()
-         };
+        int teamId = session.CurrentTeamTurnId;
+        int waitDur = 0;
+        int overtime = 0;
+        if (teamId >= 0 && teamId < teams.Count)
+        {
+            waitDur = teams[teamId].WaitDuration;
+            overtime = teams[teamId].Overtime;
+        }
+
+        return new DecisionRequestData
+        {
+            Instant = session.CurrentInstant,
+            DecisionTeam = teamId,
+            RemainingWaitDuration = waitDur,
+            MaxWaitDuration = (int)session.matchConfig.actWaitWindowPerInstantPerReadyUnit * 5,
+            RemainingOvertime = overtime,
+            MaxOvertime = (int)session.matchConfig.overtimePerTeam,
+            ReadyUnitIds = session.ReadyUnitIds.ToArray()
+        };
     }
 
     public int GetSetNewToken() => Token++;
@@ -853,11 +930,12 @@ public class ServerTimelineManager : MonoBehaviour
 
             if (realClients == 0)
             {
+                float timeout = isPvE ? 3f : DISCONNECT_TIMEOUT;
                 if (disconnectedSince < 0)
                     disconnectedSince = Time.time;
-                else if (Time.time - disconnectedSince >= DISCONNECT_TIMEOUT)
+                else if (Time.time - disconnectedSince >= timeout)
                 {
-                    Debug.Log("[Timeline] All clients disconnected for 60s — cancelling match.");
+                    Debug.Log($"[Timeline] All clients disconnected for {timeout}s — cancelling match.");
                     yield return StartCoroutine(EndMatch());
                     yield break;
                 }
@@ -867,7 +945,7 @@ public class ServerTimelineManager : MonoBehaviour
                 disconnectedSince = -1f; // reset if someone reconnects
             }
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -961,6 +1039,9 @@ public class ServerTimelineManager : MonoBehaviour
                     winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
             }
         }
+
+        if (isPvE)
+            Application.Quit();
     }
 
 }

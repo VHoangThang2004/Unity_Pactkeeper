@@ -15,6 +15,12 @@ MonoBehaviour:
   chapterId: 0
   sceneId: 1
   nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 2
+    targetWaitTimeout: 10
   - type: 0
     text: Welcome to boot camp, rookie. I am Commander Reinhardt. Use "W, A, S, D"and
       the "mouse wheel" to survey the arena.
@@ -64,14 +70,14 @@ MonoBehaviour:
     text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 8
+    delay: 7
     targetWaitTimeout: 15
   - type: 0
     text: I just voluntarily skipped my turn. Only a fool would blindly rush in when
       the enemy is out of reach.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 0
     targetWaitTimeout: 10
   - type: 1
     text: 

@@ -35,7 +35,7 @@ MonoBehaviour:
     trinketSkillId: -1
     maxHP: 3
     maxSkillPoint: 3
-    speed: 100
+    speed: 130
     damageMultiplier: 100
     damageReduction: 0
   aiUnits:

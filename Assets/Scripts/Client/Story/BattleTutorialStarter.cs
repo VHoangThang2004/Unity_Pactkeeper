@@ -32,7 +32,7 @@ public class BattleTutorialStarter : MonoBehaviour
 
     void StartTutorial()
     {
-        Debug.Log("[BattleTutorialStarter] Match ready — starting trigger-based tutorial.");
+        Debug.Log("[BattleTutorialStarter] Match ready — preparing tutorial.");
 
         // Tell the server which phase we are on so it can spawn any missing units
         string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -43,12 +43,39 @@ public class BattleTutorialStarter : MonoBehaviour
                 controller.bridge.AdvanceTutorialPhaseServerRpc(sceneId);
             }
         }
+
+        StartCoroutine(WaitForCountingInstantThenStart());
+    }
+
+    private System.Collections.IEnumerator WaitForCountingInstantThenStart()
+    {
+        // Wait until timeline finishes counting instant (timeline is paused, player turn, and ready units exist)
+        // Exactly like C0S1
+        yield return new WaitUntil(() =>
+            controller != null &&
+            controller.session != null &&
+            controller.session.Timeline.isPaused &&
+            controller.session.IsMyTurn() &&
+            controller.session.ownedReadyUnitIds != null &&
+            controller.session.ownedReadyUnitIds.Count > 0);
+
+        Debug.Log("[BattleTutorialStarter] Counting instant finished — starting plot sequencer.");
+
+        if (plots != null)
+        {
+            foreach (var entry in plots)
+            {
+                if (entry.startTrigger == "PlayerTurn")
+                    entry.startTrigger = string.Empty;
+            }
+        }
+
         sequencer.StartPlotWithTriggers(plots, () =>
         {
             Debug.Log("[BattleTutorialStarter] Tutorial plot complete - advancing to the next scene.");
             StartCoroutine(StoryClient.CompleteAndAdvance(backendConfig, this,
-            nextProgress => StoryClient.RouteToStoryScene(nextProgress),
-            () => Debug.LogError("[BattleTutorialStarter] Failed to advance story")));
+                nextProgress => StoryClient.RouteToStoryScene(nextProgress),
+                () => Debug.LogError("[BattleTutorialStarter] Failed to advance story")));
         });
     }
 }

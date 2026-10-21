@@ -274,6 +274,8 @@ public class ClientMatchSession : MonoBehaviour
 
         // if (ownedReadyUnitIds.Count == 0) GetOwnedTeamData().isInstantEnded = true;
         // if (enemyReadyUnitIds.Count == 0) GetOwnedTeamData().isInstantEnded = true;
+
+        scene?.visualController?.UpdateReadyUnitBar();
     }
 
     public void LoadMapData(string mapId)

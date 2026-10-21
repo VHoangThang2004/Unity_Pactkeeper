@@ -157,6 +157,13 @@ public static class StoryClient
             return;
         }
 
+        if (progress.sceneType == "Battle")
+        {
+            Debug.Log($"[StoryClient] Next scene is Battle ({progress.chapterId}_{progress.sceneId}) — routing to main menu to request fresh battle match.");
+            SceneManager.LoadScene("3_MainMenu");
+            return;
+        }
+
         var targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
 
         if (targetScene == SceneManager.GetActiveScene().name)

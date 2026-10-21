@@ -225,8 +225,14 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
     
     public void HandleAdvanceTutorialPhase(int newSceneId)
     {
+        if (session.backendClient != null && session.backendClient.SceneId == newSceneId)
+        {
+            Debug.Log($"[ServerController] AdvanceTutorialPhase ignored — server is already on SceneId {newSceneId}.");
+            return;
+        }
+
         session.AdvanceTutorialPhase(newSceneId, spawnManager);
-        timeline.PackFinal();
-        timeline.BroadcastSnapshot();
+        UnitRecalculator.RecalculateAll(session);
+        timeline.RestartTimelineForTutorialPhase();
     }
 }

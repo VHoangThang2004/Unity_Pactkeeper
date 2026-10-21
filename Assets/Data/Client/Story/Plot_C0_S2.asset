@@ -15,6 +15,12 @@ MonoBehaviour:
   chapterId: 0
   sceneId: 2
   nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 2
+    targetWaitTimeout: 10
   - type: 0
     text: Welcome back. This time, I've just deployed another Paladin from your side
       into the fray. Coordinate your actions.
@@ -88,14 +94,14 @@ MonoBehaviour:
       attack.
     tutorialTargetId: C0S2_STYPE
     targetCell: {x: 0, y: 0}
-    delay: 3
+    delay: 0
     targetWaitTimeout: 10
   - type: 0
     text: The heavy weapon is too massive. He is currently channeling his energy;
       the blow will land later.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 3
+    delay: 0
     targetWaitTimeout: 10
   - type: 1
     text: Close the inspect panel.
