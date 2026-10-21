@@ -43,12 +43,22 @@ public class FriendTabManager : MonoBehaviour
     [SerializeField] private Button addFriendButton;
     [SerializeField] private TMP_Text addFriendStatusText;
 
+    [Header("Confirm Remove Friend Panel")]
+    [SerializeField] private GameObject confirmPanel;
+    [SerializeField] private TMP_Text   confirmMessageText;  // "Remove [username]?"
+    [SerializeField] private Button     confirmYesButton;
+    [SerializeField] private Button     confirmNoButton;
+
     public BackendConfig Config => config;
 
     // Cache of friends: playerId -> FriendProfile
     private readonly Dictionary<string, FriendProfile> friendsCache = new();
     private readonly Dictionary<string, GameObject> friendItemViews = new();
     private readonly List<GameObject> requestItemViews = new();
+
+    // Pending removal — stored while waiting for player to confirm
+    private string pendingRemovePlayerId;
+    private string pendingRemoveUsername;
 
     void Awake()
     {
@@ -67,6 +77,9 @@ public class FriendTabManager : MonoBehaviour
 
         if (friendsTabButton != null) friendsTabButton.onClick.AddListener(SwitchToFriendsTab);
         if (requestsTabButton != null) requestsTabButton.onClick.AddListener(SwitchToRequestsTab);
+
+        if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmYes);
+        if (confirmNoButton  != null) confirmNoButton.onClick.AddListener(OnConfirmNo);
 
         HidePanel();
     }
@@ -124,6 +137,9 @@ public class FriendTabManager : MonoBehaviour
 
         if (friendsTabButton != null) friendsTabButton.onClick.RemoveListener(SwitchToFriendsTab);
         if (requestsTabButton != null) requestsTabButton.onClick.RemoveListener(SwitchToRequestsTab);
+
+        if (confirmYesButton != null) confirmYesButton.onClick.RemoveListener(OnConfirmYes);
+        if (confirmNoButton  != null) confirmNoButton.onClick.RemoveListener(OnConfirmNo);
 
         if (LobbyHubClient.Instance != null)
         {
@@ -237,7 +253,7 @@ public class FriendTabManager : MonoBehaviour
             if (requestsBadge != null)
                 requestsBadge.SetActive(count > 0);
             if (requestsBadgeCountText != null)
-                requestsBadgeCountText.text = count.ToString();
+                requestsBadgeCountText.text = count > 0 ? count.ToString() : string.Empty;
         }
     }
 
@@ -261,7 +277,7 @@ public class FriendTabManager : MonoBehaviour
         // Update badge
         int count = wrapper?.requests?.Length ?? 0;
         if (requestsBadge != null) requestsBadge.SetActive(count > 0);
-        if (requestsBadgeCountText != null) requestsBadgeCountText.text = count.ToString();
+        if (requestsBadgeCountText != null) requestsBadgeCountText.text = count > 0 ? count.ToString() : string.Empty;
 
         RebuildRequestsListView(wrapper?.requests ?? new FriendRequestItem[0]);
     }
@@ -302,6 +318,14 @@ public class FriendTabManager : MonoBehaviour
         friendItemViews[friend.playerId] = itemObj;
 
         UpdateFriendItemView(itemObj, friend);
+
+        // Remove friend button — opens confirm panel first
+        var removeBtn = itemObj.transform.Find("RemoveButton")?.GetComponent<Button>();
+        if (removeBtn != null)
+        {
+            removeBtn.onClick.RemoveAllListeners();
+            removeBtn.onClick.AddListener(() => ShowConfirmPanel(friend.playerId, friend.username));
+        }
     }
 
     private void UpdateFriendItemView(GameObject itemObj, FriendProfile friend)
@@ -347,7 +371,7 @@ public class FriendTabManager : MonoBehaviour
         }
 
         if (onlineCountText != null)
-            onlineCountText.text = $"Friends ({onlineCount}/{friendsCache.Count})";
+            onlineCountText.text = $"Online ({onlineCount}/{friendsCache.Count})";
     }
 
     // -------------------------------------------------------
@@ -518,6 +542,78 @@ public class FriendTabManager : MonoBehaviour
         }
     }
 
+    // -------------------------------------------------------
+    // Confirm Remove Friend Panel
+    // -------------------------------------------------------
+
+    private void ShowConfirmPanel(string targetPlayerId, string username)
+    {
+        pendingRemovePlayerId = targetPlayerId;
+        pendingRemoveUsername = username;
+
+        if (confirmMessageText != null)
+            confirmMessageText.text = $"Remove {username} from friends?";
+
+        if (confirmPanel != null) confirmPanel.SetActive(true);
+    }
+
+    private void OnConfirmYes()
+    {
+        if (confirmPanel != null) confirmPanel.SetActive(false);
+
+        if (!string.IsNullOrEmpty(pendingRemovePlayerId))
+            StartCoroutine(RemoveFriend(pendingRemovePlayerId, pendingRemoveUsername));
+
+        pendingRemovePlayerId = null;
+        pendingRemoveUsername = null;
+    }
+
+    private void OnConfirmNo()
+    {
+        if (confirmPanel != null) confirmPanel.SetActive(false);
+
+        pendingRemovePlayerId = null;
+        pendingRemoveUsername = null;
+    }
+
+    private IEnumerator RemoveFriend(string targetPlayerId, string username)
+    {
+        Debug.Log($"[FriendTabManager] Removing friend: {username} ({targetPlayerId})");
+
+        // DELETE /api/Friends/{targetPlayerId}
+        using var req = new UnityWebRequest($"{config.backendUrl}/api/Friends/{targetPlayerId}", "DELETE");
+        req.uploadHandler   = new UploadHandlerRaw(new byte[0]);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        config.SetHeaders(req, PlayerSession.Token);
+
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log($"[FriendTabManager] Friend {username} removed successfully.");
+
+            // Remove from local cache and destroy UI immediately (don't wait for SignalR)
+            friendsCache.Remove(targetPlayerId);
+            if (friendItemViews.TryGetValue(targetPlayerId, out var itemObj))
+            {
+                if (itemObj != null) Destroy(itemObj);
+                friendItemViews.Remove(targetPlayerId);
+            }
+
+            UpdateOnlineCount();
+
+            // Show empty state if no friends left
+            if (friendsCache.Count == 0 && emptyStateText != null)
+                emptyStateText.gameObject.SetActive(true);
+        }
+        else
+        {
+            string err = req.downloadHandler?.text ?? req.error;
+            Debug.LogError($"[FriendTabManager] Remove friend failed ({req.responseCode}): {err}");
+        }
+    }
+
     private void OnAddFriendClicked()
     {
         if (addFriendInput == null || string.IsNullOrWhiteSpace(addFriendInput.text)) return;
@@ -529,7 +625,10 @@ public class FriendTabManager : MonoBehaviour
     private IEnumerator SendFriendRequest(string targetUsernameOrId)
     {
         if (addFriendStatusText != null)
+        {
             addFriendStatusText.text = "Sending request...";
+            addFriendStatusText.color = Color.white;
+        }
 
         string json = $"{{\"targetUsernameOrId\":\"{targetUsernameOrId}\"}}";
         using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/request", "POST");
@@ -542,18 +641,66 @@ public class FriendTabManager : MonoBehaviour
 
         if (req.result != UnityWebRequest.Result.Success)
         {
-            string err = req.downloadHandler?.text;
-            Debug.LogError($"[FriendTabManager] Friend request failed ({req.responseCode}): {err ?? req.error}");
+            string rawErr = req.downloadHandler?.text;
+            Debug.LogError($"[FriendTabManager] Friend request failed ({req.responseCode}): {rawErr ?? req.error}");
             if (addFriendStatusText != null)
-                addFriendStatusText.text = !string.IsNullOrEmpty(err) ? $"Failed: {err}" : "Player not found or request failed.";
+            {
+                addFriendStatusText.text  = ParseFriendErrorMessage(rawErr);
+                addFriendStatusText.color = Color.red;
+            }
         }
         else
         {
             Debug.Log($"[FriendTabManager] Friend request sent successfully: {req.downloadHandler?.text}");
             if (addFriendStatusText != null)
+            {
                 addFriendStatusText.text = "Friend request sent!";
+                addFriendStatusText.color = new Color(0.18f, 0.72f, 0.35f); // green
+            }
             if (addFriendInput != null) addFriendInput.text = string.Empty;
         }
+    }
+
+    // -------------------------------------------------------
+    // Error message helpers
+    // -------------------------------------------------------
+
+    /// <summary>
+    /// Parse raw JSON error from backend (e.g. {"message":"request_already_sent"})
+    /// and return a human-readable string to show in UI.
+    /// </summary>
+    private string ParseFriendErrorMessage(string rawJson)
+    {
+        if (string.IsNullOrEmpty(rawJson))
+            return "Something went wrong. Please try again.";
+
+        // Parse {"message":"..."} from backend
+        string code = string.Empty;
+        try
+        {
+            var wrapper = JsonUtility.FromJson<BackendErrorDto>(rawJson);
+            if (!string.IsNullOrEmpty(wrapper?.message))
+                code = wrapper.message;
+        }
+        catch { /* rawJson is not valid JSON — fall through */ }
+
+        // Map error codes → friendly messages
+        return code switch
+        {
+            "request_already_sent"   => "Friend request already sent.",
+            "already_friends"        => "You are already friends with this player.",
+            "player_not_found"       => "Player not found.",
+            "cannot_add_self"        => "You cannot add yourself as a friend.",
+            "request_already_exists" => "A pending request already exists.",
+            _ when !string.IsNullOrEmpty(code) => code.Replace("_", " "), // fallback: humanize code
+            _                        => "Failed to send request. Please try again."
+        };
+    }
+
+    [Serializable]
+    private class BackendErrorDto
+    {
+        public string message;
     }
 
     // -------------------------------------------------------
