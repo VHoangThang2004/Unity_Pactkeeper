@@ -60,15 +60,10 @@ public class ProfileTabManager : MonoBehaviour
     public void Open()
     {
         Debug.Log("[ProfileTab] Open called");
-        if (panel != null)
+        this.OpenPanel(panel, () =>
         {
-            panel.SetActive(true);
-            Debug.Log("[ProfileTab] Panel set active");
-        }
-        else
-        {
-            Debug.LogError("[ProfileTab] Panel is null!");
-        }
+            Debug.Log("[ProfileTab] Panel opened");
+        });
 
         ClearStatus();
         StartCoroutine(LoadProfileTab());
@@ -76,7 +71,7 @@ public class ProfileTabManager : MonoBehaviour
 
     public void Close()
     {
-        HidePanel();
+        this.ClosePanel(panel);
     }
 
     IEnumerator LoadProfileTab()
@@ -330,8 +325,7 @@ public class ProfileTabManager : MonoBehaviour
 
     void HidePanel()
     {
-        if (panel != null)
-            panel.SetActive(false);
+        this.HidePanelImmediate(panel);
     }
 
     void SetStatus(string message)

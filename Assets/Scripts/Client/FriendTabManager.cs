@@ -162,13 +162,13 @@ public class FriendTabManager : MonoBehaviour
 
     public void Open()
     {
-        if (panel != null) panel.SetActive(true);
+        this.OpenPanel(panel);
         SwitchToFriendsTab();
     }
 
     public void Close()
     {
-        HidePanel();
+        this.ClosePanel(panel);
     }
 
     public void Toggle()
@@ -179,7 +179,7 @@ public class FriendTabManager : MonoBehaviour
 
     private void HidePanel()
     {
-        if (panel != null) panel.SetActive(false);
+        this.HidePanelImmediate(panel);
     }
 
     // -------------------------------------------------------

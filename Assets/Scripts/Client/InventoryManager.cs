@@ -108,7 +108,11 @@ public class InventoryManager : MonoBehaviour
                 SceneManager.LoadScene(sceneConfig.mainMenuScene);
                 return;
             }
-            
+
+            // Init registries trước khi load data
+            if (weaponRegistry  != null) weaponRegistry.Init();
+            if (trinketRegistry != null) trinketRegistry.Init();
+
             if (panel != null) panel.SetActive(true);
             LoadInventory();
         }

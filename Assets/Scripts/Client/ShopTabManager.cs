@@ -201,13 +201,13 @@ public class ShopTabManager : MonoBehaviour
         selectedItem  = null;
         selectedEntry = null;
 
-        if (panel != null) panel.SetActive(true);
+        this.OpenPanel(panel);
         StartCoroutine(LoadShopsCoroutine());
     }
 
     public void Close()
     {
-        HidePanel();
+        this.ClosePanel(panel);
         HidePopups();
         ClearShopList();
         ClearItemGrid();
@@ -659,7 +659,7 @@ public class ShopTabManager : MonoBehaviour
 
     // ── UI helpers ────────────────────────────────────────────────────────────
 
-    void HidePanel()        { if (panel != null) panel.SetActive(false); }
+    void HidePanel()        { this.HidePanelImmediate(panel); }
     void HideDetailPanel()
     {
         if (detailPanel      != null) detailPanel.SetActive(false);

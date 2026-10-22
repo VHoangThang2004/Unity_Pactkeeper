@@ -148,28 +148,24 @@ public class SettingsManager : MonoBehaviour
 
     public void Open()
     {
-        if (panel != null)
-            panel.SetActive(true);
+        this.OpenPanel(panel);
         LoadSettings();
-        ShowPanel(audioPanel); // Default to audio panel
+        ShowPanel(audioPanel);
     }
 
     public void Close()
     {
         if (settingsChanged)
         {
-            // Optional: Ask user to save before closing
-            // For now, auto-save
             SaveSettings();
         }
-        HidePanel();
+        this.ClosePanel(panel);
         HideAllContentPanels();
     }
 
     void HidePanel()
     {
-        if (panel != null)
-            panel.SetActive(false);
+        this.HidePanelImmediate(panel);
     }
 
     void ShowPanel(GameObject targetPanel)

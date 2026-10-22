@@ -58,9 +58,7 @@ public class MailboxManager : MonoBehaviour
 
     public void Open()
     {
-        if (panel != null)
-            panel.SetActive(true);
-
+        this.OpenPanel(panel);
         HideDetailPanel();
         selectedItem = null;
         StartCoroutine(LoadNotifications());
@@ -68,7 +66,7 @@ public class MailboxManager : MonoBehaviour
 
     public void Close()
     {
-        HidePanel();
+        this.ClosePanel(panel);
         HideDetailPanel();
         selectedItem = null;
     }
@@ -217,8 +215,7 @@ public class MailboxManager : MonoBehaviour
 
     void HidePanel()
     {
-        if (panel != null)
-            panel.SetActive(false);
+        this.HidePanelImmediate(panel);
     }
 
     void HideDetailPanel()

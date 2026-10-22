@@ -70,14 +70,12 @@ public class TopUpManager : MonoBehaviour
     public void Open()
     {
         RefreshGemBalance();
-
-        if (panel != null)
-            panel.SetActive(true);
+        this.OpenPanel(panel);
     }
 
     public void Close()
     {
-        HidePanel();
+        this.ClosePanel(panel);
     }
 
     // ── Web Portal ───────────────────────────────────────────────────────────
@@ -168,8 +166,7 @@ public class TopUpManager : MonoBehaviour
 
     void HidePanel()
     {
-        if (panel != null)
-            panel.SetActive(false);
+        this.HidePanelImmediate(panel);
     }
 
     static void OpenUrl(string url)
