@@ -41,6 +41,17 @@ public class UnitData : INetworkSerializable
     public int PassiveSkillId = -1;
     public SkillUsageData[] SkillUsages = new SkillUsageData[0];
 
+    public SkillSlot GetSlot(int skillId)
+    {
+        if (skillId == -1) return SkillSlot.None;
+        if (skillId == MovementSkillId) return SkillSlot.Movement;
+        if (skillId == WeaponSkillId) return SkillSlot.Weapon;
+        if (skillId == ClassSkillId) return SkillSlot.Class;
+        if (skillId == TrinketSkillId) return SkillSlot.Trinket;
+        if (skillId == PassiveSkillId) return SkillSlot.Passive;
+        return SkillSlot.None;
+    }
+
     // Skill patterns — translated + filtered by server, ready for client to read
     public CurrentPatterns[] SkillPatterns = new CurrentPatterns[0];
 

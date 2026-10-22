@@ -95,6 +95,7 @@ public class ServerSpawnManager : MonoBehaviour
 
         team.unitIds.Add(unit.Id);
         session.units.Add(unit);
+        session.ApplyUniquePassive(unit); // covers match start and mid-match tutorial spawns
 
         if (!suppressSpawnRpcs)
             controller.bridge.SpawnUnitClientRpc(unit);

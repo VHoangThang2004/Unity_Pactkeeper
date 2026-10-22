@@ -170,6 +170,7 @@ public class ServerTimelineManager : MonoBehaviour
             // Tick
             TickAllUnits();
             bool effectsChanged = TickAllEffects();
+            PassiveHooks.InstantStart(session); // after the tick, so 1-instant buffs have already expired
             bool newUnitsReady = UpdateReadyQueue();
             // Reset per-instant tracking
             foreach (var team in teams)
@@ -443,6 +444,17 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
         // Post command timing
+        if (actingUnit != null)
+        {
+            PassiveHooks.Command(session, actingUnit, new CommandContext
+            {
+                Skill = skillDef,
+                Slot = actingUnit.GetSlot(skillCardId),
+                IsAttack = System.Array.Exists(skillDef.effectIds, id => session.effectRegistry.Get(id) is DamageEffectServerBase),
+                SourceCell = sourceCell,
+                TargetCell = targetCell,
+            });
+        }
 
         // Atomic full pack write
         PackResolve(snapshotBefore, new ResolveData
@@ -757,24 +769,7 @@ public class ServerTimelineManager : MonoBehaviour
         });
     }
 
-    SessionSnapshotData GetSnapshot()
-    {
-        return SessionSnapshotData.Full(
-            session.MapId ?? string.Empty,
-            session.CurrentTeamTurnId,
-            session.GetAllCopyTeamData(),
-            session.GetAllCopyUnits(),
-            new TimelineData
-            {
-                currentInstant = session.CurrentInstant,
-                maxInstant = session.matchConfig.maxInstant,
-                flag = session.FlaggedTeamId,
-                isPaused = session.TimelineState != ServerSessionState.Flowing,
-                consecutivePassInstants = session.ConsecutivePassInstants,
-                timelinelog = session.GetTimelineLog()
-            }
-        );
-    }
+    SessionSnapshotData GetSnapshot() => session.FullSnapshot();
 
     public void SendSnapshotToClient(ulong clientId) => SendSnapshot(clientId);
 

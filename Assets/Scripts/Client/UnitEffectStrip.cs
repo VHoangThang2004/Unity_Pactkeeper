@@ -52,7 +52,7 @@ public class UnitEffectStrip : MonoBehaviour
 
                 var v = view; // capture
                 int unitId = unit.Id;
-                icon.Set(effect.statusIcon, v.RemainingAt(shownInstant), () =>
+                icon.Set(effect.statusIcon, v.RemainingAt(shownInstant), v.Stacks, () =>
                 {
                     var current = session.GetUnitDataById(unitId);
                     if (current != null) scene.visualController.ShowEffectInspect(effect, v, current);

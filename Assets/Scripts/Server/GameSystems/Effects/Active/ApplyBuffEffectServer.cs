@@ -24,28 +24,9 @@ public class ApplyBuffEffectServer : ServerActiveEffectBase
             Debug.LogError($"[ApplyBuffEffect] Any unit missing!");
             return new ResolveResult { EffectId = -1 };
         }
-        List<ActiveEffectInstance> activeEffects = session.GetUnitActiveEffects(targetUnit.Id);
         foreach (var buffId in buffEffectIds)
-        {
-            var buff = session.effectRegistry.Get(buffId);
-            if (buff == null) continue;
-            if (buff is not ServerPassiveEffectBase passive) continue;
-
-            var existing = activeEffects.Find(e => e.effect.effectId == buffId);
-            if (existing != null)
-            {
-                // Refresh the instance's remaining time — never write to the shared SO
-                if (!existing.isPermanent)
-                    existing.remainingInstants = Math.Max(existing.remainingInstants, passive.durationInstants);
-                continue;
-            }
-            activeEffects.Add(new ActiveEffectInstance
-            {
-                effect = passive,
-                isPermanent = passive.isPermanent,
-                remainingInstants = passive.durationInstants
-            });
-        }
+            if (session.effectRegistry.Get(buffId) is ServerPassiveEffectBase passive)
+                session.AddEffect(targetUnit.Id, passive); // refreshes duration if already present
 
         UnitRecalculator.RecalculateAll(session); // also refreshes targetUnit.ActiveEffects
 

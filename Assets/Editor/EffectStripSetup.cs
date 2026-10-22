@@ -122,9 +122,53 @@ public static class EffectStripSetup
         so.FindProperty("remainingText").objectReferenceValue = text;
         so.FindProperty("button").objectReferenceValue = go.GetComponent<Button>();
         so.ApplyModifiedPropertiesWithoutUndo();
+        AddStacksText(ui);
 
         var prefab = PrefabUtility.SaveAsPrefabAsset(go, IconPrefabPath);
         Object.DestroyImmediate(go);
         return prefab.GetComponent<EffectIconUI>();
+    }
+
+    // Adds the stack count to an icon prefab created before stacks existed
+    [MenuItem("Tools/Status Effects/Add Stack Count To Effect Icon Prefab")]
+    static void UpgradeIconPrefab()
+    {
+        if (AssetDatabase.LoadAssetAtPath<EffectIconUI>(IconPrefabPath) == null)
+        {
+            EditorUtility.DisplayDialog("Effect Icon", $"No prefab at {IconPrefabPath}. Run the strip setup first.", "OK");
+            return;
+        }
+
+        var root = PrefabUtility.LoadPrefabContents(IconPrefabPath);
+        var ui = root.GetComponent<EffectIconUI>();
+        bool added = new SerializedObject(ui).FindProperty("stacksText").objectReferenceValue == null;
+        if (added) AddStacksText(ui);
+        PrefabUtility.SaveAsPrefabAsset(root, IconPrefabPath);
+        PrefabUtility.UnloadPrefabContents(root);
+
+        Debug.Log(added ? "[EffectStripSetup] Stack count added to EffectIcon prefab." : "[EffectStripSetup] EffectIcon prefab already has a stack count.");
+    }
+
+    // Big centred number over the icon; EffectIconUI leaves it empty when stacks <= 1
+    static void AddStacksText(EffectIconUI ui)
+    {
+        var go = new GameObject("Stacks", typeof(RectTransform), typeof(TextMeshProUGUI));
+        var rect = (RectTransform)go.transform;
+        rect.SetParent(ui.transform, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+
+        var text = go.GetComponent<TextMeshProUGUI>();
+        text.text = "";
+        text.fontSize = 28;
+        text.fontStyle = FontStyles.Bold;
+        text.alignment = TextAlignmentOptions.Center;
+        text.outlineWidth = 0.3f;
+        text.raycastTarget = false;
+
+        var so = new SerializedObject(ui);
+        so.FindProperty("stacksText").objectReferenceValue = text;
+        so.ApplyModifiedPropertiesWithoutUndo();
     }
 }

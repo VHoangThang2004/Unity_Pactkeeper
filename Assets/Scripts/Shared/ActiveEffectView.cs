@@ -10,6 +10,7 @@ public struct ActiveEffectView : INetworkSerializable
     // Instant at whose start the effect is removed, -1 = permanent.
     // Absolute (not "remaining") so it stays correct between full snapshots — only cheap ticks arrive then.
     public int ExpiresAtInstant;
+    public int Stacks; // >= 1
 
     public bool IsPermanent => ExpiresAtInstant < 0;
     public int RemainingAt(int currentInstant) => IsPermanent ? -1 : System.Math.Max(0, ExpiresAtInstant - currentInstant);
@@ -18,5 +19,6 @@ public struct ActiveEffectView : INetworkSerializable
     {
         serializer.SerializeValue(ref EffectId);
         serializer.SerializeValue(ref ExpiresAtInstant);
+        serializer.SerializeValue(ref Stacks);
     }
 }

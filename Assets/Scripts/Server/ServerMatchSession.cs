@@ -4,9 +4,14 @@ using Unity.Netcode;
 using UnityEngine;
 public class ActiveEffectInstance
 {
-    public ServerPassiveEffectBase effect;
+    public ServerPassiveEffectBase effect; // shared SO — read-only config, never mutated
     public bool isPermanent;
     public int remainingInstants;
+
+    // Per-unit runtime state (passives/buffs keep their state here, never on the SO)
+    public int stacks = 1;
+    public int counter;
+    public bool primed;
 }
 public class ServerMatchSession : MonoBehaviour
 {
@@ -40,6 +45,46 @@ public class ServerMatchSession : MonoBehaviour
         return list;
     }
 
+    // The one way to put an effect on a unit. Re-adding refreshes duration and adds a stack (up to maxStacks).
+    public ActiveEffectInstance AddEffect(int unitId, ServerPassiveEffectBase effect, bool permanent = false)
+    {
+        var list = GetUnitActiveEffects(unitId);
+        var existing = list.Find(e => e.effect.effectId == effect.effectId);
+        if (existing != null)
+        {
+            if (!existing.isPermanent)
+                existing.remainingInstants = System.Math.Max(existing.remainingInstants, effect.durationInstants);
+            existing.stacks = System.Math.Min(existing.stacks + 1, effect.maxStacks);
+            return existing;
+        }
+
+        var instance = new ActiveEffectInstance
+        {
+            effect = effect,
+            isPermanent = permanent || effect.isPermanent,
+            remainingInstants = effect.durationInstants,
+        };
+        list.Add(instance);
+        return instance;
+    }
+
+    // A unit's unique passive: every passive effect of its PassiveSkillId, attached permanently
+    public void ApplyUniquePassive(UnitData unit)
+    {
+        if (unit.PassiveSkillId <= 0) return; // -1 = no passive (all current loadouts)
+
+        var skill = skillLibrary.Get(unit.PassiveSkillId);
+        if (skill?.effectIds == null) return;
+
+        foreach (int id in skill.effectIds)
+        {
+            if (effectRegistry.Get(id) is ServerPassiveEffectBase passive)
+                AddEffect(unit.Id, passive, permanent: true);
+            else
+                Debug.LogWarning($"[MatchSession] Passive skill {skill.skillId} effect {id} is not a passive effect — skipped.");
+        }
+    }
+
     // Client-facing copy of the unit's effects — ids + expiry only, no formulas.
     // TickAllEffects decrements at each instant start, so remaining R now ⇒ removed at start of CurrentInstant + R.
     public void SyncEffectViews(UnitData unit)
@@ -50,7 +95,8 @@ public class ServerMatchSession : MonoBehaviour
             views[i] = new ActiveEffectView
             {
                 EffectId = list[i].effect.effectId,
-                ExpiresAtInstant = list[i].isPermanent ? -1 : CurrentInstant + list[i].remainingInstants
+                ExpiresAtInstant = list[i].isPermanent ? -1 : CurrentInstant + list[i].remainingInstants,
+                Stacks = list[i].stacks,
             };
         unit.ActiveEffects = views;
     }
@@ -714,5 +760,24 @@ public class ServerMatchSession : MonoBehaviour
         UnitRecalculator.RecalculateAll(this);
         Debug.Log($"[Timeline] Unit {unitId} killed.");
 
+    }
+
+    // The one full-state builder: broadcasts (ServerTimelineManager.GetSnapshot) and kill results both use it
+    public SessionSnapshotData FullSnapshot()
+    {
+        return SessionSnapshotData.Full(
+            MapId ?? string.Empty,
+            CurrentTeamTurnId,
+            GetAllCopyTeamData(),
+            GetAllCopyUnits(),
+            new TimelineData
+            {
+                currentInstant = CurrentInstant,
+                maxInstant = matchConfig.maxInstant,
+                flag = FlaggedTeamId,
+                isPaused = TimelineState != ServerSessionState.Flowing,
+                consecutivePassInstants = ConsecutivePassInstants,
+                timelinelog = GetTimelineLog()
+            });
     }
 }

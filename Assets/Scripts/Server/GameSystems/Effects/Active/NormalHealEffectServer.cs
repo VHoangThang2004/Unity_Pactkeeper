@@ -53,7 +53,8 @@ public class NormalHealEffectServer : ServerActiveEffectBase
             };
         }
 
-        targetUnit.CurrentHP = Mathf.Min(targetUnit.CurrentHP + Mathf.RoundToInt(unit.DamageMultiplier * baseValue/100), targetUnit.MaxHP);
+        var heal = HealPipeline.Compute(unit, targetUnit, baseValue);
+        HealPipeline.Apply(session, ref heal);
 
         return new ResolveResult
         {
