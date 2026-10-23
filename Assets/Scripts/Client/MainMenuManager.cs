@@ -30,6 +30,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private TopUpManager topUpManager;
     [SerializeField] private FriendTabManager friendTabManager;
     [SerializeField] private NotificationDotManager notificationDotManager;
+    [SerializeField] private ReportTabManager reportTabManager;
 
     void Start()
     {
@@ -336,5 +337,21 @@ public class MainMenuManager : MonoBehaviour
     {
         matchmakingManager.OnClickCancel();
         SceneManager.LoadScene(sceneConfig.questScene);
+    }
+
+    public void GoToChat()
+    {
+        matchmakingManager.OnClickCancel();
+        SceneManager.LoadScene(sceneConfig.chatScene);
+    }
+
+    public void OpenReportTab()
+    {
+        reportTabManager?.Open();
+    }
+
+    public void CloseReportTab()
+    {
+        reportTabManager?.Close();
     }
 }

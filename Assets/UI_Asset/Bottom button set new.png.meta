@@ -1,0 +1,831 @@
+fileFormatVersion: 2
+guid: 6c2feddc1380f544e9195a0d38ddef62
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6086739429042565454
+    second: Bottom button set new_0
+  - first:
+      213: -4911954484305492311
+    second: Bottom button set new_1
+  - first:
+      213: -4023379414304459816
+    second: Bottom button set new_2
+  - first:
+      213: 2980162504146892537
+    second: Bottom button set new_3
+  - first:
+      213: 4733522075280413954
+    second: Bottom button set new_4
+  - first:
+      213: 6892887037175977610
+    second: Bottom button set new_5
+  - first:
+      213: 6665116910247570361
+    second: Bottom button set new_6
+  - first:
+      213: -5333029650735679217
+    second: Bottom button set new_7
+  - first:
+      213: -4596224524097481119
+    second: Bottom button set new_8
+  - first:
+      213: 7001839656180436493
+    second: Bottom button set new_9
+  - first:
+      213: -6804580520292938568
+    second: Bottom button set new_10
+  - first:
+      213: -7986029060981006624
+    second: Bottom button set new_11
+  - first:
+      213: 4787737079628673569
+    second: Bottom button set new_12
+  - first:
+      213: -6550166052700330028
+    second: Bottom button set new_13
+  - first:
+      213: 2875882761142539744
+    second: Bottom button set new_14
+  - first:
+      213: -7610312046761687087
+    second: Bottom button set new_15
+  - first:
+      213: 6959932924610474025
+    second: Bottom button set new_16
+  - first:
+      213: 3790094580954405616
+    second: Bottom button set new_17
+  - first:
+      213: -1817085740709445807
+    second: Bottom button set new_18
+  - first:
+      213: -7888071194788923044
+    second: Bottom button set new_19
+  - first:
+      213: 292117707719474997
+    second: Bottom button set new_20
+  - first:
+      213: -3130793009555819348
+    second: Bottom button set new_21
+  - first:
+      213: 5895758944262840173
+    second: Bottom button set new_22
+  - first:
+      213: 6416492803449285709
+    second: Bottom button set new_23
+  - first:
+      213: 9112933906626348495
+    second: Bottom button set new_24
+  - first:
+      213: -8554156316301962950
+    second: Bottom button set new_25
+  - first:
+      213: -205324408925452508
+    second: Bottom button set new_26
+  - first:
+      213: 4528455440885145923
+    second: Bottom button set new_27
+  - first:
+      213: 5475417723017544963
+    second: Bottom button set new_28
+  - first:
+      213: 1892626074446391249
+    second: Bottom button set new_29
+  - first:
+      213: -8117237324808925595
+    second: Bottom button set new_30
+  - first:
+      213: -8947644056900410040
+    second: Bottom button set new_31
+  - first:
+      213: 5539114307006145550
+    second: Bottom button set new_32
+  - first:
+      213: -4894181872311813760
+    second: Bottom button set new_33
+  - first:
+      213: 9077782339989089573
+    second: Bottom button set new_34
+  - first:
+      213: 3176241442808976869
+    second: Bottom button set new_35
+  - first:
+      213: 2615496568798385494
+    second: Bottom button set new_36
+  - first:
+      213: 1108297778061280668
+    second: Bottom button set new_37
+  - first:
+      213: 7095978282296600858
+    second: Bottom button set new_38
+  - first:
+      213: 6319835800804510082
+    second: Bottom button set new_39
+  - first:
+      213: 7020287531721345605
+    second: Bottom button set new_40
+  - first:
+      213: -9049322297416575609
+    second: Bottom button set new_41
+  - first:
+      213: -5463290420927101227
+    second: Bottom button set new_42
+  - first:
+      213: 8477376170478812195
+    second: Bottom button set new_43
+  - first:
+      213: -4582929093295188807
+    second: Bottom button set new_44
+  - first:
+      213: 2411125706787829286
+    second: Bottom button set new_45
+  - first:
+      213: -5287126348503256890
+    second: Bottom button set new_46
+  - first:
+      213: 2038326262075711847
+    second: Bottom button set new_47
+  - first:
+      213: 3632055660936235291
+    second: Bottom button set new_48
+  - first:
+      213: 187080776472833271
+    second: Bottom button set new_49
+  - first:
+      213: 1843030878765767653
+    second: Bottom button set new_50
+  - first:
+      213: 5695540794236107561
+    second: Bottom button set new_51
+  - first:
+      213: 2934437002562515713
+    second: Bottom button set new_52
+  - first:
+      213: 5776079558777820661
+    second: Bottom button set new_53
+  - first:
+      213: 322635634087098036
+    second: Bottom button set new_54
+  - first:
+      213: 7384569366981632467
+    second: Bottom button set new_55
+  - first:
+      213: -1667272291958067050
+    second: Bottom button set new_56
+  - first:
+      213: -7106534265806433187
+    second: Bottom button set new_57
+  - first:
+      213: 6217849995701626562
+    second: Bottom button set new_58
+  - first:
+      213: -8356952573231611381
+    second: Bottom button set new_59
+  - first:
+      213: -339191708108689213
+    second: Bottom button set new_60
+  - first:
+      213: 1586055338003757943
+    second: Bottom button set new_61
+  - first:
+      213: 980886039165426055
+    second: Bottom button set new_62
+  - first:
+      213: -5529624782127594452
+    second: Bottom button set new_63
+  - first:
+      213: -4734773011623737167
+    second: Bottom button set new_64
+  - first:
+      213: -6591399927602735428
+    second: Bottom button set new_65
+  - first:
+      213: 6326021703336492697
+    second: Bottom button set new_66
+  - first:
+      213: -6837431067016037486
+    second: Bottom button set new_67
+  - first:
+      213: -2720706866421701055
+    second: Bottom button set new_68
+  - first:
+      213: 6216151379483927158
+    second: Bottom button set new_69
+  - first:
+      213: -3962503926201470113
+    second: Bottom button set new_70
+  - first:
+      213: 2446285846552953419
+    second: Bottom button set new_71
+  - first:
+      213: 2330663941927476376
+    second: Bottom button set new_72
+  - first:
+      213: -1337312716136346946
+    second: Bottom button set new_73
+  - first:
+      213: 4857728091795139799
+    second: Bottom button set new_74
+  - first:
+      213: -490210691612559172
+    second: Bottom button set new_75
+  - first:
+      213: 128072120400616170
+    second: Bottom button set new_76
+  - first:
+      213: -5958640846278995282
+    second: Bottom button set new_77
+  - first:
+      213: 8230039161726181488
+    second: Bottom button set new_78
+  - first:
+      213: 1190998758945905658
+    second: Bottom button set new_79
+  - first:
+      213: 6591389590257758507
+    second: Bottom button set new_80
+  - first:
+      213: 776313870438371296
+    second: Bottom button set new_81
+  - first:
+      213: -6406110421584535286
+    second: Bottom button set new_82
+  - first:
+      213: -1626876494417720305
+    second: Bottom button set new_83
+  - first:
+      213: 4970257573256951918
+    second: Bottom button set new_84
+  - first:
+      213: 3372384951572729430
+    second: Bottom button set new_85
+  - first:
+      213: -337251334410572487
+    second: Bottom button set new_86
+  - first:
+      213: -665068865437846605
+    second: Bottom button set new_87
+  - first:
+      213: 2063279321729451184
+    second: Bottom button set new_88
+  - first:
+      213: -2666968211713766125
+    second: Bottom button set new_89
+  - first:
+      213: 5738556868625445019
+    second: Bottom button set new_90
+  - first:
+      213: -8677235122538326541
+    second: Bottom button set new_91
+  - first:
+      213: 1741355978901754474
+    second: Bottom button set new_92
+  - first:
+      213: 4487741041974461556
+    second: Bottom button set new_93
+  - first:
+      213: -5217798923137587929
+    second: Bottom button set new_94
+  - first:
+      213: -4881205547598392363
+    second: Bottom button set new_95
+  - first:
+      213: 1810300456907548782
+    second: Bottom button set new_96
+  - first:
+      213: -3975620737275480908
+    second: Bottom button set new_97
+  - first:
+      213: -1646952635561496449
+    second: Bottom button set new_98
+  - first:
+      213: 9070261516030925120
+    second: Bottom button set new_99
+  - first:
+      213: -3895300890604311992
+    second: Bottom button set new_100
+  - first:
+      213: -4208281821842304296
+    second: Bottom button set new_101
+  - first:
+      213: 4671229837533351292
+    second: Bottom button set new_102
+  - first:
+      213: -494433433037656117
+    second: Bottom button set new_103
+  - first:
+      213: -1244561928760532164
+    second: Bottom button set new_104
+  - first:
+      213: 7719980884941166598
+    second: Bottom button set new_105
+  - first:
+      213: -7658507006678929694
+    second: Bottom button set new_106
+  - first:
+      213: -6988633655122728162
+    second: Bottom button set new_107
+  - first:
+      213: 5985840409529671154
+    second: Bottom button set new_108
+  - first:
+      213: 8734085920883526375
+    second: Bottom button set new_109
+  - first:
+      213: -6464610434400507881
+    second: Bottom button set new_110
+  - first:
+      213: -849204875606677343
+    second: Bottom button set new_111
+  - first:
+      213: 1885011749620773865
+    second: Bottom button set new_112
+  - first:
+      213: -2049565266092423180
+    second: Bottom button set new_113
+  - first:
+      213: 7334826074538287354
+    second: Bottom button set new_114
+  - first:
+      213: 8777553147986917
+    second: Bottom button set new_115
+  - first:
+      213: 7588477396236448211
+    second: Bottom button set new_116
+  - first:
+      213: -178955482541985006
+    second: Bottom button set new_117
+  - first:
+      213: 2366784582538919415
+    second: Bottom button set new_118
+  - first:
+      213: -5427224736507071396
+    second: Bottom button set new_119
+  - first:
+      213: -4897826468782987829
+    second: Bottom button set new_120
+  - first:
+      213: 1988384636983672092
+    second: Bottom button set new_121
+  - first:
+      213: 5981880520210408374
+    second: Bottom button set new_122
+  - first:
+      213: -5339284027701507124
+    second: Bottom button set new_123
+  - first:
+      213: 7301024040978683082
+    second: Bottom button set new_124
+  - first:
+      213: 8755013164056240166
+    second: Bottom button set new_125
+  - first:
+      213: -2085989263586318041
+    second: Bottom button set new_126
+  - first:
+      213: 3672194559034813691
+    second: Bottom button set new_127
+  - first:
+      213: 1032621088257647925
+    second: Bottom button set new_128
+  - first:
+      213: 4439092766862991707
+    second: Bottom button set new_129
+  - first:
+      213: -4647748179417995412
+    second: Bottom button set new_130
+  - first:
+      213: -8184705090197357458
+    second: Bottom button set new_131
+  - first:
+      213: -2440220619604023046
+    second: Bottom button set new_132
+  - first:
+      213: -7974561851203978011
+    second: Bottom button set new_133
+  - first:
+      213: -2694543638133842746
+    second: Bottom button set new_134
+  - first:
+      213: 418520340725107778
+    second: Bottom button set new_135
+  - first:
+      213: -8291249295791079856
+    second: Bottom button set new_136
+  - first:
+      213: -1887036858134518623
+    second: Bottom button set new_137
+  - first:
+      213: -299774554347282261
+    second: Bottom button set new_138
+  - first:
+      213: -4692441913526026282
+    second: Bottom button set new_139
+  - first:
+      213: 5293152567015415448
+    second: Bottom button set new_140
+  - first:
+      213: 4906589825883702195
+    second: Bottom button set new_141
+  - first:
+      213: 5015038235739795851
+    second: Bottom button set new_142
+  - first:
+      213: -8710813087394938421
+    second: Bottom button set new_143
+  - first:
+      213: 1872355062331689264
+    second: Bottom button set new_144
+  - first:
+      213: -2074681486157508338
+    second: Bottom button set new_145
+  - first:
+      213: -4802716004551354122
+    second: Bottom button set new_146
+  - first:
+      213: -1584408664705470351
+    second: Bottom button set new_147
+  - first:
+      213: 2141575795616032064
+    second: Bottom button set new_148
+  - first:
+      213: 4158438349920893108
+    second: Bottom button set new_149
+  - first:
+      213: -4763917124756987375
+    second: Bottom button set new_150
+  - first:
+      213: 8129024413243657713
+    second: Bottom button set new_151
+  - first:
+      213: 144621673845729191
+    second: Bottom button set new_152
+  - first:
+      213: -7631245095551355345
+    second: Bottom button set new_153
+  - first:
+      213: -6594890615931441420
+    second: Bottom button set new_154
+  - first:
+      213: 4521847286873739923
+    second: Bottom button set new_155
+  - first:
+      213: -6722025185909416254
+    second: Bottom button set new_156
+  - first:
+      213: 6937977423856271312
+    second: Bottom button set new_157
+  - first:
+      213: -2666365049046127019
+    second: Bottom button set new_158
+  - first:
+      213: 4846814594321737483
+    second: Bottom button set new_159
+  - first:
+      213: -7949642402365716829
+    second: Bottom button set new_160
+  - first:
+      213: 7351022018423640931
+    second: Bottom button set new_161
+  - first:
+      213: 8543031942053303331
+    second: Bottom button set new_162
+  - first:
+      213: 1415564479463444794
+    second: Bottom button set new_163
+  - first:
+      213: 5062728062400663479
+    second: Bottom button set new_164
+  - first:
+      213: 5233568290310558017
+    second: Bottom button set new_165
+  - first:
+      213: 5186970256410755971
+    second: Bottom button set new_166
+  - first:
+      213: -4768833589452505411
+    second: Bottom button set new_167
+  - first:
+      213: 1512799787270435863
+    second: Bottom button set new_168
+  - first:
+      213: -3578038216554684947
+    second: Bottom button set new_169
+  - first:
+      213: 1458183099024182145
+    second: Bottom button set new_170
+  - first:
+      213: 977686828199744479
+    second: Bottom button set new_171
+  - first:
+      213: 5723275417703643731
+    second: Bottom button set new_172
+  - first:
+      213: 3139375342174585081
+    second: Bottom button set new_173
+  - first:
+      213: -8557400977982536328
+    second: Bottom button set new_174
+  - first:
+      213: 8707769102023983171
+    second: Bottom button set new_175
+  - first:
+      213: -7106052413779886656
+    second: Bottom button set new_176
+  - first:
+      213: -3689066117384163785
+    second: Bottom button set new_177
+  - first:
+      213: -5419301240044589341
+    second: Bottom button set new_178
+  - first:
+      213: 3117238462658762666
+    second: Bottom button set new_179
+  - first:
+      213: -625293581508049651
+    second: Bottom button set new_180
+  - first:
+      213: -9104890112936017074
+    second: Bottom button set new_181
+  - first:
+      213: -5937222740572257073
+    second: Bottom button set new_182
+  - first:
+      213: 8875604827248376264
+    second: Bottom button set new_183
+  - first:
+      213: 728872998162794230
+    second: Bottom button set new_184
+  - first:
+      213: -1168654804900262708
+    second: Bottom button set new_185
+  - first:
+      213: 2694865251742836688
+    second: Bottom button set new_186
+  - first:
+      213: 6273342071954195130
+    second: Bottom button set new_187
+  - first:
+      213: -9097655456055119144
+    second: Bottom button set new_188
+  - first:
+      213: 1095350688701476635
+    second: Bottom button set new_189
+  - first:
+      213: -1427775937075655566
+    second: Bottom button set new_190
+  - first:
+      213: 4388366933799803503
+    second: Bottom button set new_191
+  - first:
+      213: -6815435769211928503
+    second: Bottom button set new_192
+  - first:
+      213: -3009988056673472041
+    second: Bottom button set new_193
+  - first:
+      213: -656025490444922803
+    second: Bottom button set new_194
+  - first:
+      213: 2428033831182245022
+    second: Bottom button set new_195
+  - first:
+      213: -4626445481552878801
+    second: Bottom button set new_196
+  - first:
+      213: -4323113653232496891
+    second: Bottom button set new_197
+  - first:
+      213: -5818977062413357030
+    second: Bottom button set new_198
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bottom button set new_0
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 232
+        width: 346
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2becd8bfcbe878ba0800000000000000
+      internalID: -6086739429042565454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bottom button set new_1
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 231
+        width: 351
+        height: 341
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a68512db6b35dbb0800000000000000
+      internalID: -4911954484305492311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bottom button set new_2
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 231
+        width: 342
+        height: 342
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d373cd4db51a28c0800000000000000
+      internalID: -4023379414304459816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bottom button set new_3
+      rect:
+        serializedVersion: 2
+        x: 1203
+        y: 231
+        width: 350
+        height: 341
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f63d98020aab5920800000000000000
+      internalID: 2980162504146892537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bottom button set new_4
+      rect:
+        serializedVersion: 2
+        x: 1595
+        y: 231
+        width: 346
+        height: 342
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2051f898f39d0b140800000000000000
+      internalID: 4733522075280413954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 92f328698b022b740aae9c7fc8455df1
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":5.0,"y":1.0},"gridSpriteSize":{"x":396.0,"y":793.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":1.0,"y":1.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Bottom button set new_0: -6086739429042565454
+      Bottom button set new_1: -4911954484305492311
+      Bottom button set new_2: -4023379414304459816
+      Bottom button set new_3: 2980162504146892537
+      Bottom button set new_4: 4733522075280413954
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

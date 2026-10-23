@@ -17,6 +17,7 @@ public class SceneConfig : ScriptableObject
     public string rankingScene = "11_Ranking";
     public string inventoryScene = "12_Inventory";
     public string questScene = "13_Quest";
+    public string chatScene = "14_Chat";
 
 
     [Header("Server Scenes")]

@@ -80,6 +80,9 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/13_Quest.unity
     m_guid: 620f69c0ecfafa74d838a5d424e0e74e
+  - m_enabled: 1
+    m_path: Assets/Scenes/14_Chat.unity
+    m_guid: 115fc5a529ef0034e9f6356065a550c1
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

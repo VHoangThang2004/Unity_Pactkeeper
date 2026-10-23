@@ -66,9 +66,10 @@ public class DevLoginManager : MonoBehaviour
             yield break;
         }
 
-        PlayerSession.Token = response.token;
+        PlayerSession.Token    = response.token;
         PlayerSession.Username = response.username;
         PlayerSession.PlayerId = response.playerId;
+        PlayerSession.Role     = response.role;
 
         Debug.Log($"[DevLogin] Logged in as {response.username}");
         SceneManager.LoadScene(sceneConfig.mainMenuScene);
