@@ -10403,6 +10403,8 @@ GameObject:
   - component: {fileID: 942847456}
   - component: {fileID: 942847455}
   - component: {fileID: 942847457}
+  - component: {fileID: 942847459}
+  - component: {fileID: 942847458}
   m_Layer: 5
   m_Name: MatchPanel
   m_TagString: Untagged
@@ -10482,13 +10484,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: accefb08756d82b48bb51724c9189bd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::MatchmodeMenuManager
-  rootPanel: {fileID: 0}
+  rootPanel: {fileID: 942847452}
   innerPanel: {fileID: 1046042988}
   randomButton: {fileID: 506632184}
   challengeButton: {fileID: 311829601}
   inviteButton: {fileID: 629202432}
   matchmakingManager: {fileID: 0}
   friendTabManager: {fileID: 2764102688699444071}
+--- !u!114 &942847458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942847452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c7e4dec20a8492478256a3ed5d166a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::PanelAnimator
+  openAnimation: 1
+  closeAnimation: 0
+  panDirection: 3
+  openDuration: 0.25
+  closeDuration: 0.18
+  slideDistance: 40
+--- !u!225 &942847459
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942847452}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &953460163
 GameObject:
   m_ObjectHideFlags: 0

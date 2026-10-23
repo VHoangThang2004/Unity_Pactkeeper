@@ -2,39 +2,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Manages the match mode selection panel that appears when the player
-/// presses the BATTLE button.
+/// Match mode selection popup — hiện khi player bấm BATTLE.
+/// Đóng khi click backdrop (vùng ngoài innerPanel).
 ///
-/// Layout:
-///   ┌─────────────────────────────────────────┐
-///   │  [Random]   Random Matching Opponent    │
-///   │  [Challenge] Choose an Opponent         │
-///   │  [Invite]   Invite a Friend to play     │
-///   └─────────────────────────────────────────┘
+/// Setup Inspector:
+///   rootPanel  — full-screen backdrop (Image, Raycast Target ON, PanelAnimator attached)
+///   innerPanel — decorated card (Image, Raycast Target ON)
+///   3 buttons  — Random / Challenge / Invite bên trong innerPanel
 ///
-/// Close behaviour: clicking anywhere on the dark backdrop (outside the
-/// inner panel) dismisses the popup — same UX as mobile bottom-sheets.
-///
-/// Setup (Inspector):
-///   rootPanel         — the full-screen semi-transparent backdrop
-///                        (Image with alpha ~0.4, Raycast Target ON)
-///   innerPanel        — the decorated card in the centre
-///   randomButton      — calls MatchmakingManager.OnClickFindMatch()
-///   challengeButton   — opens Friend Tab (Challenge tab)
-///   inviteButton      — opens Friend Tab (Invite / Friend list)
+/// MatchmakingManager để trống → tự GetComponent trên cùng GO.
+/// FriendTabManager   để trống → tự FindFirstObjectByType trong scene.
 /// </summary>
 public class MatchmodeMenuManager : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject rootPanel;   // full-screen backdrop, click to close
-    [SerializeField] private GameObject innerPanel;  // the decorated menu card
+    [SerializeField] private GameObject rootPanel;
+    [SerializeField] private GameObject innerPanel;
 
     [Header("Mode Buttons")]
-    [SerializeField] private Button randomButton;    // Random matchmaking
-    [SerializeField] private Button challengeButton; // Challenge a specific opponent
-    [SerializeField] private Button inviteButton;    // Invite a friend
+    [SerializeField] private Button randomButton;
+    [SerializeField] private Button challengeButton;
+    [SerializeField] private Button inviteButton;
 
-    [Header("References")]
+    [Header("References (để trống nếu cùng GameObject)")]
     [SerializeField] private MatchmakingManager matchmakingManager;
     [SerializeField] private FriendTabManager   friendTabManager;
 
@@ -42,27 +32,29 @@ public class MatchmodeMenuManager : MonoBehaviour
 
     void Awake()
     {
-        // Mode buttons
+        // Resolve references
+        if (matchmakingManager == null)
+            matchmakingManager = GetComponent<MatchmakingManager>();
+
+        if (friendTabManager == null)
+            friendTabManager = FindFirstObjectByType<FriendTabManager>();
+
+        // Buttons
         if (randomButton    != null) randomButton.onClick.AddListener(OnRandomClicked);
         if (challengeButton != null) challengeButton.onClick.AddListener(OnChallengeClicked);
         if (inviteButton    != null) inviteButton.onClick.AddListener(OnInviteClicked);
 
-        // Backdrop click-to-close
-        // We attach a Button to the rootPanel itself so any click that
-        // does NOT hit innerPanel (which blocks raycasts) will bubble up
-        // to the backdrop and close the panel.
+        // Backdrop — add Button vào rootPanel, click ngoài innerPanel → Close
         if (rootPanel != null)
         {
-            var backdropBtn = rootPanel.GetComponent<Button>();
-            if (backdropBtn == null) backdropBtn = rootPanel.AddComponent<Button>();
-
-            // Make the button invisible — no transition, no sprite changes
-            backdropBtn.transition = Selectable.Transition.None;
-            backdropBtn.onClick.AddListener(Close);
+            var btn = rootPanel.GetComponent<Button>() ?? rootPanel.AddComponent<Button>();
+            btn.transition = Selectable.Transition.None;
+            btn.onClick.AddListener(Close);
         }
 
-        // Start hidden
-        if (rootPanel != null) rootPanel.SetActive(false);
+        // Ẩn ngay lập tức — dùng HidePanelImmediate để GO vẫn active
+        // (cần GO active để PanelAnimator.Open() gọi StartCoroutine được)
+        HidePanel();
     }
 
     void OnDestroy()
@@ -73,23 +65,26 @@ public class MatchmodeMenuManager : MonoBehaviour
 
         if (rootPanel != null)
         {
-            var backdropBtn = rootPanel.GetComponent<Button>();
-            if (backdropBtn != null) backdropBtn.onClick.RemoveListener(Close);
+            var btn = rootPanel.GetComponent<Button>();
+            if (btn != null) btn.onClick.RemoveListener(Close);
         }
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
 
-    /// <summary>Called by the BATTLE button in MainMenu.</summary>
     public void Open()
     {
-        if (rootPanel != null) rootPanel.SetActive(true);
+        this.OpenPanel(rootPanel);
     }
 
-    /// <summary>Hide the panel without triggering any mode.</summary>
     public void Close()
     {
-        if (rootPanel != null) rootPanel.SetActive(false);
+        this.ClosePanel(rootPanel);
+    }
+
+    void HidePanel()
+    {
+        this.HidePanelImmediate(rootPanel);
     }
 
     // ── Button handlers ───────────────────────────────────────────────────────
@@ -102,14 +97,12 @@ public class MatchmodeMenuManager : MonoBehaviour
 
     void OnChallengeClicked()
     {
-        // Open Friend Tab — player picks a friend to challenge from there
         Close();
         friendTabManager?.Open();
     }
 
     void OnInviteClicked()
     {
-        // Open Friend Tab to the invite / friend list view
         Close();
         friendTabManager?.Open();
     }
