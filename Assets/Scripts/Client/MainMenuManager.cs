@@ -76,6 +76,7 @@ public class MainMenuManager : MonoBehaviour
         // Refresh notification dots after profile is loaded
         if (notificationDotManager != null)
         {
+            notificationDotManager.SetRunner(this);
             notificationDotManager.RefreshAll();
             notificationDotManager.StartAutoRefresh();
         }
@@ -252,7 +253,6 @@ public class MainMenuManager : MonoBehaviour
     {
         mailboxManager?.Close();
     }
-
     public void OpenSettingsTab()
     {
         settingsManager?.Open();
@@ -287,6 +287,7 @@ public class MainMenuManager : MonoBehaviour
     public void OpenFriendTab()
     {
         friendTabManager?.Open();
+        notificationDotManager?.ClearFriendDot();
     }
 
     public void CloseFriendTab()
@@ -342,6 +343,7 @@ public class MainMenuManager : MonoBehaviour
     public void GoToChat()
     {
         matchmakingManager.OnClickCancel();
+        notificationDotManager?.ClearChatDot();
         SceneManager.LoadScene(sceneConfig.chatScene);
     }
 

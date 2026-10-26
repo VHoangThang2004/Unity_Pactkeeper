@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3964062432173211289}
   - component: {fileID: 6653294720484980809}
   - component: {fileID: 2179256874153664700}
-  - component: {fileID: 4963109281840121405}
   m_Layer: 5
   m_Name: NotificationDot
   m_TagString: Untagged
@@ -76,20 +75,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4963109281840121405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6891144745645111224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccb1bc69ba2993a46bb4abbc2708d644, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Client::NotificationDotManager
-  config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
-  refreshIntervalSeconds: 60
-  mailboxDot: {fileID: 6891144745645111224}
-  questDot: {fileID: 0}
-  shopDot: {fileID: 0}

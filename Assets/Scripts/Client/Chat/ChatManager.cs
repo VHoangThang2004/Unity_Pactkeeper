@@ -315,13 +315,21 @@ public class ChatManager : MonoBehaviour
             yield break;
         }
 
-        // Luôn spawn bubble từ response — không phụ thuộc SignalR
-        // SignalR sẽ echo cho phía bên kia (admin/player), không echo lại cho sender
-        var dto = JsonUtility.FromJson<SupportMessageDto>(req.downloadHandler.text);
-        if (dto != null)
+        // Bình thường: bubble hiện qua SignalR echo (server push về group {playerId})
+        // Fallback: nếu SignalR không kết nối thì spawn local từ REST response
+        if (_ws == null || _ws.State != WebSocketState.Open)
         {
-            SpawnMessageBubble(dto);
-            ScrollToBottom();
+            Debug.LogWarning("[Chat] SignalR not connected — spawning bubble from REST response.");
+            var dto = JsonUtility.FromJson<SupportMessageDto>(req.downloadHandler.text);
+            if (dto != null)
+            {
+                SpawnMessageBubble(dto);
+                ScrollToBottom();
+            }
+        }
+        else
+        {
+            Debug.Log("[Chat] Message sent — SignalR echo will render bubble.");
         }
     }
 
@@ -478,6 +486,7 @@ public class ChatManager : MonoBehaviour
             foreach (var frame in raw.Split(RS))
             {
                 if (string.IsNullOrWhiteSpace(frame)) continue;
+                Debug.Log($"[Chat] SignalR frame received: {frame.Trim()}");
                 ProcessSignalRFrame(frame.Trim());
             }
         }
@@ -485,34 +494,45 @@ public class ChatManager : MonoBehaviour
 
     void ProcessSignalRFrame(string json)
     {
-        if (json == "{}") return;           // handshake ack
-        if (json.Contains("\"type\":6")) return; // ping
+        if (json == "{}") return;
+        if (json.Contains("\"type\":6")) return;
 
         try
         {
-            // Parse "target" field
             var hub = JsonUtility.FromJson<SignalRFrame>(json);
             if (hub == null || hub.target != "ReceiveMessage") return;
 
-            // Extract arguments[1] — the SupportMessageDto object
+            // Frame format: {"type":1,"target":"ReceiveMessage","arguments":["playerId", {...dto...}]}
+            // Tìm arguments array
             int argStart = json.IndexOf("\"arguments\":[", StringComparison.Ordinal);
-            if (argStart < 0) return;
+            if (argStart < 0)
+            {
+                Debug.LogWarning($"[Chat] No arguments found in frame: {json}");
+                return;
+            }
 
-            // Skip playerId string argument, find the second object {}
-            int firstObj = json.IndexOf('{', argStart + 12);
-            if (firstObj < 0) return;
-            int secondObj = json.IndexOf('{', firstObj + 1);
-            if (secondObj < 0) return;
+            // Tìm object { đầu tiên bên trong arguments — đây chính là SupportMessageDto
+            // (argument[0] là string playerId, argument[1] là object dto)
+            // Tìm { đầu tiên sau dấu [
+            int bracketOpen = json.IndexOf('[', argStart + 12);
+            if (bracketOpen < 0) return;
 
-            string msgJson = ExtractObject(json, secondObj);
-            if (string.IsNullOrEmpty(msgJson)) return;
+            int objStart = json.IndexOf('{', bracketOpen);
+            if (objStart < 0) return;
+
+            string msgJson = ExtractObject(json, objStart);
+            if (string.IsNullOrEmpty(msgJson))
+            {
+                Debug.LogWarning($"[Chat] Could not extract message object from: {json}");
+                return;
+            }
+
+            Debug.Log($"[Chat] SignalR received message JSON: {msgJson}");
 
             var dto = JsonUtility.FromJson<SupportMessageDto>(msgJson);
             if (dto == null) return;
 
-            // Capture for closure
             var captured = dto;
-
             _mainThread.Enqueue(() => OnMessageReceived(captured));
         }
         catch (Exception ex)
