@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f3b346cee96f614caf2c3d9cd2284d9, type: 3}
-  m_Name: ECP_20006_PhysicianPassive_StatusEffectVisual
+  m_Name: ECP_20008_IronBody_BuffVisual
   m_EditorClassIdentifier: Client::StatusEffectVisual
-  effectId: 20006
-  resolveDuration: 1
+  effectId: 20008
+  resolveDuration: 0
   baseValue: 1
   aoePattern: {fileID: 0}
   isAoePatternFixed: 0
-  statusIcon: {fileID: -1207004838, guid: 49b1b783c06f85b4fa783e1e42cb9d01, type: 3}
-  statusName: Bedside Manner
+  statusIcon: {fileID: -5150301510645063342, guid: 097e72f1e2a7c11428a4c6da392f3c16, type: 3}
+  statusName: Iron Body
   isDebuff: 0
-  description: After successfully healing an ally, recover 1 SP.
+  description: 'First Damage received is capped at {baseValue} '

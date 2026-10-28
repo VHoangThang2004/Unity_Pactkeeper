@@ -52,6 +52,7 @@ public abstract class DamageEffectServerBase : ServerActiveEffectBase
         }
 
         PassiveHooks.AttackResolved(session, unit, this); // fires on hit, whiff and all-ally alike
+        foreach (var u in touched) session.SyncEffectViews(u); // hooks may have changed stacks — send fresh icons with this result
 
         // Only allies in the hit area: same as before — the attack is dropped entirely
         if (!anyEnemy && anyAlly)

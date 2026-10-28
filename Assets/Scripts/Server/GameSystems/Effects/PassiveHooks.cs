@@ -26,6 +26,13 @@ public static class PassiveHooks
                 inst.effect.OnInstantStart(s, unit, inst);
     }
 
+    public static void InstantEnd(ServerMatchSession s)
+    {
+        foreach (var unit in s.units.ToArray())
+            foreach (var inst in On(s, unit))
+                inst.effect.OnInstantEnd(s, unit, inst);
+    }
+
     public static void Command(ServerMatchSession s, UnitData unit, in CommandContext cmd)
     {
         foreach (var inst in On(s, unit))

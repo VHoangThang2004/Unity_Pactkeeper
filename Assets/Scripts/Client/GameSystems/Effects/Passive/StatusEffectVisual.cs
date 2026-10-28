@@ -11,8 +11,8 @@ public class StatusEffectVisual : ClientActiveEffectBase
     [TextArea(2, 5)] public string description;
 
     public override InstantType InstantType => InstantType.PassiveBuff;
-    public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry) => description;
-
+    public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
+    => description.Replace("{baseValue}", baseValue.ToString());
     public override IEnumerator Replay(ResolveResult result, ClientScene scene, ClientMatchSession session)
     {
         yield break;

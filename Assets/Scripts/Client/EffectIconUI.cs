@@ -19,8 +19,7 @@ public class EffectIconUI : MonoBehaviour
     public void Set(Sprite sprite, int remaining, int stacks, System.Action onClick)
     {
         icon.sprite = sprite;
-        icon.enabled = sprite != null;
-        remainingText.text = remaining < 0 ? "" : remaining.ToString();
+        icon.enabled = sprite != null;        remainingText.text = remaining < 0 ? "" : remaining.ToString();
         if (stacksText != null) stacksText.text = stacks > 1 ? stacks.ToString() : "";
         this.onClick = onClick;
     }

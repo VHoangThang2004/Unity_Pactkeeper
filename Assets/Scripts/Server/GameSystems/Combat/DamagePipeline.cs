@@ -1,7 +1,7 @@
 // Server/GameSystems/Combat/DamagePipeline.cs
 // The one place damage is computed and applied. Server only — formulas never reach the client.
-// Integer percent math, one division at the end: Final = max(1, floor(base × mult% × (100 − reduction%) / 10000)).
-// Caps and passive hooks are added in later steps.
+// Integer percent math, one division at the end:
+// Final = max(1, min(Cap, floor(base × mult% × (100 − reduction%) / 10000))).
 
 public struct DamageContext
 {
@@ -9,6 +9,7 @@ public struct DamageContext
     public UnitData Target;
     public int Base;              // effect baseValue
     public int ReductionPercent;  // target's DamageReduction, clamped to 0..MaxReductionPercent
+    public int Cap;               // max damage this hit; int.MaxValue = no cap. Lowest cap wins (use Min when setting)
     public int Final;             // HP actually removed
 }
 
@@ -25,11 +26,13 @@ public static class DamagePipeline
             Target = target,
             Base = baseValue,
             ReductionPercent = System.Math.Clamp(target.DamageReduction, 0, MaxReductionPercent),
+            Cap = int.MaxValue,
         };
 
         PassiveHooks.PreDamage(session, ref ctx); // passives adjust the inputs before the single final division
 
         long raw = (long)ctx.Base * source.DamageMultiplier * (100 - ctx.ReductionPercent) / 10000;
+        raw = System.Math.Min(raw, ctx.Cap);
         ctx.Final = (int)System.Math.Max(1, raw); // no hit ever deals 0 (a future full block/immunity must bypass this)
         return ctx;
     }

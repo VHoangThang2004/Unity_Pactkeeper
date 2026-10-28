@@ -27,6 +27,9 @@ public abstract class ServerPassiveEffectBase : EffectBase
     // Start of every instant, after durations tick
     public virtual void OnInstantStart(ServerMatchSession session, UnitData owner, ActiveEffectInstance inst) { }
 
+    // End of a paused instant: after all commands, the NonInstant resolve batch and step costs
+    public virtual void OnInstantEnd(ServerMatchSession session, UnitData owner, ActiveEffectInstance inst) { }
+
     // Owner's command was accepted (Post command timing). NonInstant damage from it resolves later.
     public virtual void OnCommand(ServerMatchSession session, UnitData owner, ActiveEffectInstance inst, in CommandContext cmd) { }
 

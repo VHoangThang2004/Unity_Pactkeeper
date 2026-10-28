@@ -1,43 +1,10 @@
 fileFormatVersion: 2
-guid: e9a8a76c5d3d4444da49fd9da3f34db2
+guid: 097e72f1e2a7c11428a4c6da392f3c16
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4075204821263037474
-    second: FrameGachaTier1-Photoroom_0
-  - first:
-      213: 7967900182128773161
-    second: FrameGachaTier1-Photoroom_1
-  - first:
-      213: -5128312813219054352
-    second: FrameGachaTier1-Photoroom_2
-  - first:
-      213: -6443000485840093678
-    second: FrameGachaTier1-Photoroom_3
-  - first:
-      213: 2237656003893895720
-    second: FrameGachaTier1-Photoroom_4
-  - first:
-      213: 8916029150207383329
-    second: FrameGachaTier1-Photoroom_5
-  - first:
-      213: -4771425632343029060
-    second: FrameGachaTier1-Photoroom_6
-  - first:
-      213: 7751826915043640812
-    second: FrameGachaTier1-Photoroom_7
-  - first:
-      213: -6720126779346728204
-    second: FrameGachaTier1-Photoroom_8
-  - first:
-      213: -4991301960147312471
-    second: FrameGachaTier1-Photoroom_9
-  - first:
-      213: 5459020058904243293
-    second: FrameGachaTier1-Photoroom_10
-  - first:
-      213: 7998866197294295243
-    second: FrameGachaTier1-Photoroom_11
+      213: -5150301510645063342
+    second: IronBody_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -108,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -133,45 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FrameGachaTier1-Photoroom_10
+      name: IronBody_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 4
-        width: 418
-        height: 518
+        x: 0
+        y: 27
+        width: 512
+        height: 459
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d5c28b802d552cb40800000000000000
-      internalID: 5459020058904243293
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: FrameGachaTier1-Photoroom_11
-      rect:
-        serializedVersion: 2
-        x: 641
-        y: 4
-        width: 372
-        height: 505
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bc82b973d6ea10f60800000000000000
-      internalID: 7998866197294295243
+      spriteID: 251e7d340147688b0800000000000000
+      internalID: -5150301510645063342
       vertices: []
       indices: 
       edges: []
@@ -180,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e1eedd7b3c444ed43910c5557c9f7fc2
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -190,18 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      FrameGachaTier1-Photoroom_0: -4075204821263037474
-      FrameGachaTier1-Photoroom_1: 7967900182128773161
-      FrameGachaTier1-Photoroom_10: 5459020058904243293
-      FrameGachaTier1-Photoroom_11: 7998866197294295243
-      FrameGachaTier1-Photoroom_2: -5128312813219054352
-      FrameGachaTier1-Photoroom_3: -6443000485840093678
-      FrameGachaTier1-Photoroom_4: 2237656003893895720
-      FrameGachaTier1-Photoroom_5: 8916029150207383329
-      FrameGachaTier1-Photoroom_6: -4771425632343029060
-      FrameGachaTier1-Photoroom_7: 7751826915043640812
-      FrameGachaTier1-Photoroom_8: -6720126779346728204
-      FrameGachaTier1-Photoroom_9: -4991301960147312471
+      IronBody_0: -5150301510645063342
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

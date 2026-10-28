@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: P5005_Physician_Passive
   m_EditorClassIdentifier: Shared::SkillDefinition
   skillId: 5005
-  skillName: Bedside Manner
+  skillName: The physician
   targetPattern: {fileID: 0}
   isTargetPatternFixed: 0
   targeting: 0
@@ -22,5 +22,5 @@ MonoBehaviour:
   useLimitPerInstant: -1
   useLimitTotal: -1
   effectIds: 264e0000
-  icon: {fileID: -1442136926, guid: 49b1b783c06f85b4fa783e1e42cb9d01, type: 3}
-  description: Receive "Bedside Manner" effect
+  icon: {fileID: 51280703014869614, guid: 75fee81a2679d044980ecb68f875f440, type: 3}
+  description: Passive

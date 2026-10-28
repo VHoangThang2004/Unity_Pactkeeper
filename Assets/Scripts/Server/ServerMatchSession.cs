@@ -68,6 +68,9 @@ public class ServerMatchSession : MonoBehaviour
         return instance;
     }
 
+    // Removes one effect instance (e.g. a consumed status). Safe inside hooks — PassiveHooks iterates a copy.
+    public void RemoveEffect(int unitId, ActiveEffectInstance inst) => GetUnitActiveEffects(unitId).Remove(inst);
+
     // A unit's unique passive: every passive effect of its PassiveSkillId, attached permanently
     public void ApplyUniquePassive(UnitData unit)
     {

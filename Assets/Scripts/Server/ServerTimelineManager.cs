@@ -241,6 +241,7 @@ public class ServerTimelineManager : MonoBehaviour
 
             // Apply step costs + final broadcast
             ApplyStepCosts();
+            PassiveHooks.InstantEnd(session); // last stage of a paused instant — after all resolves
             PackFinal();
             BroadcastSnapshot();
 
