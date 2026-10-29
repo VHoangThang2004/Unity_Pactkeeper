@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class UnitConfigManager : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class UnitConfigManager : MonoBehaviour
     [SerializeField] public TextMeshProUGUI unitSpeed;
     [SerializeField] public TextMeshProUGUI unitDamageMultiplier;
     [SerializeField] public TextMeshProUGUI unitDamageReduction;
+
+    [Header("Unique Passive (PassivePanel, below the stats) — one per unit, display only")]
+    [SerializeField] private Image passiveIcon;
+    [SerializeField] private TextMeshProUGUI passiveName;
+    [SerializeField] private TextMeshProUGUI passiveDescription;
 
     [Header("Slots")]
     [SerializeField] public SlotConfig movementSkillSlot;
@@ -335,8 +341,38 @@ public class UnitConfigManager : MonoBehaviour
         classSkillSlot?.Init(this, SlotConfig.SlotType.ClassSkill);
         weaponSlot?.Init(this, SlotConfig.SlotType.Weapon);
         trinketSlot?.Init(this, SlotConfig.SlotType.Trinket);
+        ShowUniquePassive();
 
         OnClickCloseAll();
+    }
+
+    // Fills PassivePanel: icon, name, skill description + each effect's description
+    void ShowUniquePassive()
+    {
+        int id = CurrentUnit.passiveSkillId;
+        SkillDefinition skill = id > 0 ? skillLibrary.Get(id) : null;
+
+        if (passiveIcon != null)
+        {
+            passiveIcon.sprite = skill?.icon;
+            passiveIcon.enabled = skill?.icon != null;
+        }
+        if (passiveName != null)
+            passiveName.text = skill != null ? skill.skillName : Loc.Get(LocTables.UnitConfig, LocKeys.UnitConfig.Empty);
+        if (passiveDescription != null)
+        {
+            var unit = new UnitData
+            {
+                MaxHP = CurrentStats?.maxHP ?? 0,
+                MaxSkillPoint = CurrentStats?.maxSkillPoint ?? 0,
+                Speed = CurrentStats?.speed ?? 0,
+                DamageMultiplier = CurrentStats?.damageMultiplier ?? 100,
+                DamageReduction = CurrentStats?.damageReduction ?? 0,
+            };
+            // Skill text, then every effect it carries or grants (each once — see ClientEffectRegistry.Describe)
+            string effects = skill != null ? effectRegistry.Describe(skill.effectIds, unit) : "";
+            passiveDescription.text = ((skill?.description ?? "") + "\n" + effects).Trim();
+        }
     }
 
     // -------------------------------------------------------

@@ -12,6 +12,9 @@ public abstract class ServerPassiveEffectBase : EffectBase
 
     [Header("Stacking")]
     [Min(1)] public int maxStacks = 1;
+    [Tooltip("Stacks lost at every instant start (same clock as duration). 0 = never, X = lose X, -1 = lose all. " +
+             "The status is removed when its stacks reach 0 or its duration runs out, whichever comes first.")]
+    [Min(-1)] public int stacksLostPerInstant = 0;
 
     // Modifies unit derived stats — called by UnitRecalculator
     public virtual void ApplyStatModifier(UnitData unit) { }

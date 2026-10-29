@@ -20,4 +20,5 @@ MonoBehaviour:
   statusIcon: {fileID: -6717884257390833292, guid: bd90b0bdda825634493785a5ab19aaca, type: 3}
   statusName: The protector
   isDebuff: 0
+  relatedEffectIds: 284e0000
   description: At the end of instant, if self was commanded, receive "Iron Body"

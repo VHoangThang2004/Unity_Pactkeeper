@@ -9,6 +9,11 @@ public abstract class ClientActiveEffectBase : EffectBase
     public string statusName;
     public bool isDebuff;
 
+    // Effects this one grants or applies (e.g. Tanker passive → Iron Body, ApplyBuff → its buffs).
+    // Client-only mirror of the server link, used to describe the full chain once (ClientEffectRegistry.Describe).
+    [UnityEngine.Tooltip("Effects this effect grants/applies — their descriptions are shown after this one")]
+    public int[] relatedEffectIds = new int[0];
+
     // Replays the visual for this effect on the client
     // Called once per ResolveResult in order
     // If resolveDuration == 0f — skip animation, apply partial immediately

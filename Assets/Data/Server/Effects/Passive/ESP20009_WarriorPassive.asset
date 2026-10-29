@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91164a388c1bdc549a97282f26d62075, type: 3}
+  m_Name: ESP20009_WarriorPassive
+  m_EditorClassIdentifier: Server::WarriorPassive
+  effectId: 20009
+  resolveDuration: 0
+  baseValue: 1
+  aoePattern: {fileID: 0}
+  isAoePatternFixed: 0
+  isPermanent: 1
+  durationInstants: 1
+  maxStacks: 1
+  afterMoveBuffEffectId: 20010

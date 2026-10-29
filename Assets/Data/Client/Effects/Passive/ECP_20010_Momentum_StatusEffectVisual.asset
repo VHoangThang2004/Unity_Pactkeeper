@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f3b346cee96f614caf2c3d9cd2284d9, type: 3}
+  m_Name: ECP_20010_Momentum_StatusEffectVisual
+  m_EditorClassIdentifier: Client::StatusEffectVisual
+  effectId: 20010
+  resolveDuration: 0
+  baseValue: 200
+  aoePattern: {fileID: 0}
+  isAoePatternFixed: 0
+  statusIcon: {fileID: 5395825728034878220, guid: 3d6104bc4fb494449b25a64f20f4ff9f, type: 3}
+  statusName: Momentum
+  isDebuff: 0
+  relatedEffectIds: 
+  description: Doubles next attack's damage per stack.

@@ -707,9 +707,24 @@ public class ServerTimelineManager : MonoBehaviour
             for (int i = activeEffects.Count - 1; i >= 0; i--)
             {
                 if (activeEffects[i] is not ActiveEffectInstance instance) continue;
-                if (instance.isPermanent) continue;
-                instance.remainingInstants--;
-                if (instance.remainingInstants <= 0)
+                bool expired = false;
+
+                // Stack loss — applies to permanent statuses too (0 = none, -1 = all)
+                int loss = instance.effect.stacksLostPerInstant;
+                if (loss != 0)
+                {
+                    instance.stacks = loss < 0 ? 0 : instance.stacks - loss;
+                    expired |= instance.stacks <= 0;
+                }
+
+                // Duration
+                if (!instance.isPermanent)
+                {
+                    instance.remainingInstants--;
+                    expired |= instance.remainingInstants <= 0;
+                }
+
+                if (expired)
                 {
                     activeEffects.RemoveAt(i);
                     anyRemoved = true;

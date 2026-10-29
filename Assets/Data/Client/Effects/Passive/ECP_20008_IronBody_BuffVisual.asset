@@ -20,4 +20,5 @@ MonoBehaviour:
   statusIcon: {fileID: -5150301510645063342, guid: 097e72f1e2a7c11428a4c6da392f3c16, type: 3}
   statusName: Iron Body
   isDebuff: 0
-  description: 'First Damage received is capped at {baseValue} '
+  relatedEffectIds: 
+  description: 'Next Damage received is capped at {baseValue} '
