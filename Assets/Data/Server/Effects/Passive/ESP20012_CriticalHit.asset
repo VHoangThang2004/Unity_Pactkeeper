@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 437d8d78e067b1b40a3aa9365220e040, type: 3}
+  m_Name: ESP20012_CriticalHit
+  m_EditorClassIdentifier: Server::DamageMultiplierBuff
+  effectId: 20012
+  resolveDuration: 1
+  baseValue: 1
+  aoePattern: {fileID: 0}
+  isAoePatternFixed: 0
+  isPermanent: 0
+  durationInstants: 1
+  maxStacks: 1
+  stacksLostPerInstant: 0
+  multiplierPercent: 200

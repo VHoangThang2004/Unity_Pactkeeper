@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5812e631f28bdd4ab04db4730903363, type: 3}
+  m_Name: ESP20011_AssassinPassive
+  m_EditorClassIdentifier: Server::AssassinPassive
+  effectId: 20011
+  resolveDuration: 0
+  baseValue: 1
+  aoePattern: {fileID: 0}
+  isAoePatternFixed: 0
+  isPermanent: 1
+  durationInstants: 1
+  maxStacks: 1
+  stacksLostPerInstant: 0
+  attackBelowBuffEffectId: 20012
