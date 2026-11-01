@@ -22,7 +22,7 @@ public class VerticalReachBuff : ServerPassiveEffectBase
             var newCells = new List<Vector3Int>(unit.SkillPatterns[i].TargetCells);
             foreach (var cell in unit.SkillPatterns[i].TargetCells)
                 if (Mathf.Abs(cell.y) == maxAbsY)
-                    newCells.Add(new Vector3Int(cell.x, cell.y + (int)Mathf.Sign(cell.y), 0));
+                    foreach (int step in PatternReach.OutwardSteps(cell.y)) newCells.Add(new Vector3Int(cell.x, cell.y + step, 0));
 
             unit.SkillPatterns[i].TargetCells = newCells.ToArray();
         }

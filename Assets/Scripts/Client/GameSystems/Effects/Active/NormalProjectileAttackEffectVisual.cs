@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NormalProjectileAttackEffectVisual", menuName = "SRPG/Effects/Client/NormalProjectileAttack")]
@@ -10,6 +11,8 @@ public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
     public string targetVFXname;
     public AudioClip shootSfx;
     public AudioClip impactSfx;
+    [UnityEngine.Tooltip("Art is drawn left→right: mirror the VFX when the target is to the attacker's left")]
+    public bool flipTowardTarget = true;
 
     public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
     {
@@ -28,40 +31,33 @@ public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
 
         if (result.TargetCells == null || result.TargetCells.Count == 0)
             yield break;
+        if (scene.vfx == null)
+        {
+            Debug.LogWarning("[ProjectileVisual] ClientScene.vfx not assigned — skipping VFX.");
+            yield break;
+        }
 
-        Vector3 startPos = sceneUnit.VFXSprite.transform.position;
-        Vector3 targetPos = scene.movableTilemap.GetCellCenterWorld(result.TargetCells[0]);
+        // VFX are spawned by VfxPlayer — the unit's own sprite is never moved, and every hit cell gets an impact
+        Vector3 startPos = sceneUnit.transform.position;
+        var targetPositions = new List<Vector3>();
+        foreach (var cell in result.TargetCells)
+            targetPositions.Add(scene.movableTilemap.GetCellCenterWorld(cell));
 
-        Vector3 midPoint = (startPos + targetPos) / 2f;
-        scene.cameraController.CenterOn(midPoint);
-
-
-        sceneUnit.VFXSprite.transform.position = startPos;
-        sceneUnit.VFXAnimator.SetBool("IsIdling", false);
-        sceneUnit.VFXAnimator.Play(sourceVFXname, 0, 0f);
+        scene.cameraController.CenterOn((startPos + targetPositions[0]) / 2f);
 
         if (AudioManager.Instance != null && shootSfx != null)
             AudioManager.Instance.PlaySFX(shootSfx);
 
-        yield return null;
-        float animLength = sceneUnit.VFXAnimator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(animLength);
-
-        yield return new WaitForSeconds(MathF.Max(resolveDuration - animLength * 2, 0));
-
-        sceneUnit.VFXSprite.transform.position = targetPos;
-        sceneUnit.VFXAnimator.SetBool("IsIdling", false);
-        sceneUnit.VFXAnimator.Play(targetVFXname, 0, 0f);
+        // Source faces the aimed (first) target; each impact faces away from the attacker
+        bool sourceFlip = flipTowardTarget && targetPositions[0].x < startPos.x;
+        float shotStart = Time.time;
+        yield return scene.vfx.Play(sourceVFXname, startPos, sourceFlip);
+        float animLength = Time.time - shotStart;
+        yield return new WaitForSeconds(MathF.Max(resolveDuration - animLength * 2, 0)); // same pacing as before
 
         if (AudioManager.Instance != null && impactSfx != null)
             AudioManager.Instance.PlaySFX(impactSfx);
 
-        yield return null;
-        float targetAnimLength = sceneUnit.VFXAnimator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(targetAnimLength);
-
-        sceneUnit.VFXAnimator.SetBool("IsIdling", true);
-        sceneUnit.VFXAnimator.Play("NoEffect", 0, 0f);
-        sceneUnit.VFXSprite.transform.position = startPos;
+        yield return scene.vfx.PlayAll(targetVFXname, targetPositions, flipTowardTarget ? startPos.x : (float?)null);
     }
 }

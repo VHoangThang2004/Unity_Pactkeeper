@@ -15,6 +15,17 @@ public abstract class ServerPassiveEffectBase : EffectBase
     [Tooltip("Stacks lost at every instant start (same clock as duration). 0 = never, X = lose X, -1 = lose all. " +
              "The status is removed when its stacks reach 0 or its duration runs out, whichever comes first.")]
     [Min(-1)] public int stacksLostPerInstant = 0;
+    [Tooltip("Stacks lost each time this status takes effect (what counts as 'taking effect' is defined by the status). " +
+             "0 = never, X = lose X, -1 = lose all. At 0 stacks the status is removed.")]
+    [Min(-1)] public int stacksLostOnTrigger = 0;
+
+    // Call when this status has just taken effect: applies stacksLostOnTrigger, removes the status at 0 stacks
+    protected void ConsumeOnTrigger(ServerMatchSession session, UnitData owner, ActiveEffectInstance inst)
+    {
+        if (stacksLostOnTrigger == 0) return;
+        inst.stacks = stacksLostOnTrigger < 0 ? 0 : inst.stacks - stacksLostOnTrigger;
+        if (inst.stacks <= 0) session.RemoveEffect(owner.Id, inst);
+    }
 
     // Modifies unit derived stats — called by UnitRecalculator
     public virtual void ApplyStatModifier(UnitData unit) { }

@@ -30,6 +30,7 @@ public class ClientScene : MonoBehaviour
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
     [SerializeField] public ClientEffectRegistry effectRegistry;
     [SerializeField] public RopeLine ropeLine;
+    [SerializeField] public VfxPlayer vfx; // spawns effect VFX from code (pooled)
     //UI
     [SerializeField] public LoadingScreen loadingScreen;
     [SerializeField] public SkillSlotUI mainWeaponSkillSlot;

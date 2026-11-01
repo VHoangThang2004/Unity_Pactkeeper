@@ -4053,6 +4053,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 701487547}
   m_CullTransparentMesh: 1
+--- !u!1 &721211870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 721211872}
+  - component: {fileID: 721211871}
+  m_Layer: 0
+  m_Name: VfxPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &721211871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721211870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4b87e5986446b45b6aa025d48bad71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::VfxPlayer
+  vfxPrefab: {fileID: 814765973135721486, guid: 430d7e0e35308a1469246c942c7fa1b5, type: 3}
+--- !u!4 &721211872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721211870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &731273712
 GameObject:
   m_ObjectHideFlags: 0
@@ -10408,6 +10453,7 @@ MonoBehaviour:
   unitPrefabRegistry: {fileID: 11400000, guid: b6bb6ae67ad733f46a5602e8a1626e3f, type: 2}
   effectRegistry: {fileID: 11400000, guid: e7603e45c3a17d841a68b2c28a553a53, type: 2}
   ropeLine: {fileID: 6654212513088338729}
+  vfx: {fileID: 721211871}
   loadingScreen: {fileID: 4564791245353423333}
   mainWeaponSkillSlot: {fileID: 5664125004785306430}
   classSkillSlot: {fileID: 731273714}
@@ -14471,3 +14517,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 163181513}
+  - {fileID: 721211872}

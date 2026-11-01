@@ -30,9 +30,9 @@ public class FocusedAimBuff : ServerPassiveEffectBase
             foreach (var cell in unit.SkillPatterns[i].TargetCells)
             {
                 if (Mathf.Abs(cell.y) == maxAbsY)
-                    newCells.Add(new Vector3Int(cell.x, cell.y + (int)Mathf.Sign(cell.y), 0));
+                    foreach (int step in PatternReach.OutwardSteps(cell.y)) newCells.Add(new Vector3Int(cell.x, cell.y + step, 0));
                 if (Mathf.Abs(cell.x) == maxAbsX)
-                    newCells.Add(new Vector3Int(cell.x + (int)Mathf.Sign(cell.x), cell.y, 0));
+                    foreach (int step in PatternReach.OutwardSteps(cell.x)) newCells.Add(new Vector3Int(cell.x + step, cell.y, 0));
             }
 
             unit.SkillPatterns[i].TargetCells = newCells.ToArray();
