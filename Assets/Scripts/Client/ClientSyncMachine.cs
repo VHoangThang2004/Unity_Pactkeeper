@@ -42,8 +42,8 @@ public class ClientSyncMachine : MonoBehaviour
     private IEnumerator SyncProcess()
     {
 
-        // Load map if needed
-        if (session.MapAsset != null && scene.movableTilemap == null)
+        // Load map if needed (ClientMapLoader skips if loadedMapId == session.MapId, or swaps map if MapId changed)
+        if (session.MapAsset != null)
         {
             TransitionTo(SyncState.LoadingMap);
 

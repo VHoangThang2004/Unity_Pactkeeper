@@ -18,9 +18,21 @@ public class TutorialTrigger : MonoBehaviour
     private bool _firedUnitSelected = false;
     private bool _firedSkillSelected = false;
 
+    public void BindBattleReferences(ClientMatchSession matchSession, ClientInteractionSystem interaction)
+    {
+        if (matchSession != null) session = matchSession;
+        if (interaction != null) interactionSystem = interaction;
+    }
+
     void Update()
     {
-        if (session == null) return;
+        if (session == null)
+        {
+            session = FindAnyObjectByType<ClientMatchSession>();
+            if (session == null) return;
+        }
+        if (interactionSystem == null)
+            interactionSystem = FindAnyObjectByType<ClientInteractionSystem>();
 
         // Only check when game is stable (not syncing/resolving)
         if (session.SyncState != SyncStateValue.Idle) return;

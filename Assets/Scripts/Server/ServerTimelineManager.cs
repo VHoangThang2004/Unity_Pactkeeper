@@ -250,11 +250,10 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
         // Match end
-        TransitionTo(ServerSessionState.Finished);
         PackFinal();
         BroadcastSnapshot();
         Debug.Log("[Timeline] Match ended — max instant reached.");
-        // TODO: trigger match end flow
+        yield return StartCoroutine(EndMatch());
     }
 
     // -------------------------------------------------------

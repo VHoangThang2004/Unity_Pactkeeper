@@ -38,6 +38,9 @@ public class StoryProgressManager : MonoBehaviour
         public int    sceneId;
         public string type;          // "Cutscene" | "Dialogue" | "Battle"
         public string description;
+        public string mapId;
+        public bool   autoResume;
+        public bool   autoAdvance;
         public bool   autoNext;
     }
 

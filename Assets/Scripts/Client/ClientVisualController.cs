@@ -42,6 +42,12 @@ public class ClientVisualController : MonoBehaviour
     [SerializeField] private CanvasGroup[] EnemyReadyUnitCanvasGroup;
     [SerializeField] private Image[] EnemyReadyUnitIcon;
 
+    public TextMeshProUGUI InstantCounterText => instantCounterText;
+    public CanvasGroup ConfirmButtonCanvasGroup => confirmButtonCanvasGroup;
+    public Animator LeftCommandLogAnimator => leftCommandLogAnimator;
+    public CanvasGroup[] OwnedReadyUnitCanvasGroups => OwnedReadyUnitCanvasGroup;
+    public CanvasGroup[] EnemyReadyUnitCanvasGroups => EnemyReadyUnitCanvasGroup;
+
 
 
 
@@ -99,7 +105,16 @@ public class ClientVisualController : MonoBehaviour
             }
         }
 
-
+        if (OwnedReadyUnitCanvasGroup != null && OwnedReadyUnitCanvasGroup.Length > 0 &&
+            OwnedReadyUnitCanvasGroup[0] != null && OwnedReadyUnitCanvasGroup[0].transform.parent is RectTransform ownedParent)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(ownedParent);
+        }
+        if (EnemyReadyUnitCanvasGroup != null && EnemyReadyUnitCanvasGroup.Length > 0 &&
+            EnemyReadyUnitCanvasGroup[0] != null && EnemyReadyUnitCanvasGroup[0].transform.parent is RectTransform enemyParent)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(enemyParent);
+        }
     }
 
     public void UpdateVisualOnStateChange()
@@ -121,6 +136,10 @@ public class ClientVisualController : MonoBehaviour
             {
                 Vector3Int x = session.CurrentTargetableCells.Find(cell => cell.x == session.currentPreviewCell.x && cell.y == session.currentPreviewCell.y);
                 ShowConfirmButton(x.z == 1 && session.isUnitReady(session.selectedUnitId));
+            }
+            else
+            {
+                ShowConfirmButton(false);
             }
         }
         else if (state is NoneState)

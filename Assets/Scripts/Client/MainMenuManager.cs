@@ -173,7 +173,17 @@ public class MainMenuManager : MonoBehaviour
             () => Debug.LogError("[MainMenu] Failed to start story battle match.")));
 
         if (!string.IsNullOrEmpty(PlayerSession.MatchId))
+        {
+            if (!Application.CanStreamedLevelBeLoaded(targetScene))
+            {
+                string fallback = sceneConfig != null && !string.IsNullOrEmpty(sceneConfig.clientMatch)
+                    ? sceneConfig.clientMatch
+                    : "5_ClientMatch";
+                Debug.Log($"[MainMenu] Overlay scene '{targetScene}' not found — loading shared battle scene '{fallback}' directly.");
+                targetScene = fallback;
+            }
             SceneManager.LoadScene(targetScene);
+        }
     }
 
     void HandleInlineStory(StoryProgressData progress)

@@ -19,7 +19,9 @@ public class PlayerUnitLoadout
     public int ClassSkillId;
     public int TrinketSkillId;
     public int MaxHP;
+    public int CurrentHP;
     public int MaxSkillPoint;
+    public int CurrentSkillPoint;
     public int Speed;
     public int DamageMultiplier;
     public int DamageReduction;

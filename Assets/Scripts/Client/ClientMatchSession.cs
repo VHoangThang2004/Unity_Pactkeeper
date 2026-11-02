@@ -123,22 +123,19 @@ public class ClientMatchSession : MonoBehaviour
 
         if (before.HasMapId) LoadMapData(before.MapId);
         ApplyFullSnapshot(before);
-        scene.visualController.UpdateReadyUnitBar();
-
 
         LastResolve = resolve;
         LastSecret = secret;
-        ApplyDecisionRequest(decision);
 
         StartCoroutine(scene.syncMachine.RequestSync());
+        yield return WaitForSceneSyncWithTimeout(SCENE_SYNC_TIMEOUT);
+        Debug.Log($"[ClientMatchSession] Initial sync completed for snapshot token {token}");
+
+        ApplyDecisionRequest(decision);
+        scene.visualController.UpdateReadyUnitBar();
 
         yield return scene.visualController.ApplyLogs(before.Timeline);
         Debug.Log($"[ClientMatchSession] Logs applied for snapshot token {token}");
-
-
-
-        yield return WaitForSceneSyncWithTimeout(SCENE_SYNC_TIMEOUT);
-        Debug.Log($"[ClientMatchSession] Initial sync completed for snapshot token {token}");
 
         if (resolve.HasResolve)
         {
@@ -149,6 +146,9 @@ public class ClientMatchSession : MonoBehaviour
         LastResolve = default;
         CurrentToken = PendingToken;
         SyncState = SyncStateValue.Idle;
+        scene.clientInteractionSystem?.ForceNoneState();
+        scene.visualController?.UpdateReadyUnitBar();
+        scene.visualController?.UpdateVisualOnStateChange();
         scene.loadingScreen.Hide();
     }
 
@@ -226,7 +226,7 @@ public class ClientMatchSession : MonoBehaviour
             yield return scene.syncMachine.RequestSync();
             SyncState = SyncStateValue.Resolving;
         }
-        yield return new WaitForSeconds(0.5f); // small buffer to ensure all visuals are done before allowing interaction/syncing new packs
+        yield return new WaitForSeconds(0.15f); // small buffer to ensure all visuals are done before allowing interaction/syncing new packs
     }
 
     void ApplyPartialSnapshot(SessionSnapshotData partial)

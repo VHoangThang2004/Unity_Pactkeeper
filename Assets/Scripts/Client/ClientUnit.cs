@@ -61,6 +61,8 @@ public class ClientUnit : MonoBehaviour
             hpBar.Init(unitData.MaxHP, BarType.EnemyHP);
         }
         spBar.Init(unitData.MaxSkillPoint, BarType.SkillPoint);
+        UpdateStepUI();
+        UpdateBars();
 
         SyncPositionToCurrentSession();
 

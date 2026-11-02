@@ -33,10 +33,196 @@ public class PlotSequencer : MonoBehaviour
     [SerializeField] private Camera gameCamera;
     [SerializeField] private ClientInteractionSystem interactionSystem; // C0_S1 only (guided cell click)
     [SerializeField] private InputReader inputReader; // C0_S1 only (guided right click)
+    [SerializeField] private bool allowSkip = true;
+
+    private ClientMatchSession matchSession;
+
+    public GameObject TextBoxPanel => textBoxPanel;
 
     private int _currentIndex = 0;
     private bool _waitingForInput = false;
     private System.Action _onComplete;
+
+    void Awake()
+    {
+        HideAll();
+    }
+
+    void OnDestroy()
+    {
+        PlotDirector.OnTrigger -= HandleTrigger;
+    }
+
+    public void SetAllowSkip(bool allow)
+    {
+        allowSkip = allow;
+        if (!allow && skipButton != null)
+            skipButton.gameObject.SetActive(false);
+    }
+
+    public void SetBlockerOnly(bool active)
+    {
+        HideAll();
+        if (blockerPanel != null)
+            blockerPanel.SetActive(active);
+    }
+
+    public void BindBattleReferences(Camera cam, ClientInteractionSystem interaction, InputReader input)
+    {
+        if (cam != null) gameCamera = cam;
+        if (interaction != null) interactionSystem = interaction;
+        if (input != null) inputReader = input;
+        if (matchSession == null) matchSession = FindAnyObjectByType<ClientMatchSession>();
+    }
+
+    private void EnsureBattleReferences()
+    {
+        if (gameCamera != null && interactionSystem != null && inputReader != null && matchSession != null)
+            return;
+
+        var clientScene = FindAnyObjectByType<ClientScene>();
+        if (clientScene != null)
+        {
+            if (gameCamera == null) gameCamera = clientScene.cam;
+            if (interactionSystem == null) interactionSystem = clientScene.clientInteractionSystem;
+            if (inputReader == null) inputReader = clientScene.input;
+        }
+        if (gameCamera == null) gameCamera = Camera.main;
+        if (interactionSystem == null) interactionSystem = FindAnyObjectByType<ClientInteractionSystem>();
+        if (inputReader == null) inputReader = FindAnyObjectByType<InputReader>();
+        if (matchSession == null) matchSession = FindAnyObjectByType<ClientMatchSession>();
+    }
+
+    /// <summary>
+    /// Waits until any pending Server RPC decision (Confirm / Wait), Snapshot Sync, ResolveReplay,
+    /// and LockedInputState have completely finished and Battle UI is refreshed.
+    /// </summary>
+    private IEnumerator WaitForBattleUIStable()
+    {
+        EnsureBattleReferences();
+        if (matchSession == null || interactionSystem == null)
+            yield break;
+
+        // 1. If the previous tutorial step just triggered a server decision (e.g., ConfirmButton or WaitButton),
+        // wait until the server responds with a snapshot (which stops decisionSpamRoutine and enters Syncing).
+        if (interactionSystem.decisionSpamRoutine != null)
+        {
+            float rpcWait = 0f;
+            while (interactionSystem.decisionSpamRoutine != null &&
+                   matchSession.SyncState == SyncStateValue.Idle &&
+                   rpcWait < 3.5f)
+            {
+                rpcWait += Time.deltaTime;
+                yield return null;
+            }
+            yield return null;
+        }
+
+        // 2. Wait until snapshot sync, eye animation, effect resolve replay, and LockedInputState are all finished.
+        float syncWait = 0f;
+        while ((matchSession.SyncState != SyncStateValue.Idle ||
+                matchSession.IsSceneSyncing ||
+                interactionSystem.decisionSpamRoutine != null ||
+                (interactionSystem.stateMachine?.currentState is LockedInputState)) &&
+               syncWait < 12f)
+        {
+            syncWait += Time.deltaTime;
+            yield return null;
+        }
+
+        // 3. Wait one frame and force canvas update so all layout groups and buttons settle.
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private bool IsTargetVisibleAndReady(TutorialTarget target, string targetId)
+    {
+        if (target == null || target.RectTransform == null)
+            return false;
+
+        // "END" is attached to TextBoxPanel which PlotSequencer activates itself.
+        if (targetId == "END")
+            return true;
+
+        if (!target.gameObject.activeInHierarchy)
+            return false;
+
+        // Ensure no parent CanvasGroup is hiding the element (e.g., Unit1/Unit2 queue slot or ConfirmButton with alpha=0)
+        var canvasGroups = target.GetComponentsInParent<CanvasGroup>(true);
+        if (canvasGroups != null)
+        {
+            for (int i = 0; i < canvasGroups.Length; i++)
+            {
+                if (canvasGroups[i] != null && canvasGroups[i].alpha <= 0.01f)
+                    return false;
+            }
+        }
+
+        // For ready unit queue slots, ensure the unit icon sprite has been assigned
+        if (targetId == "Unit1" || targetId == "Unit2")
+        {
+            var img = target.GetComponent<Image>();
+            if (img != null && img.sprite == null)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void RebuildTargetLayout(TutorialTarget target)
+    {
+        if (target == null || target.RectTransform == null) return;
+        Canvas.ForceUpdateCanvases();
+        if (target.RectTransform.parent is RectTransform parentRect)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(target.RectTransform);
+    }
+
+    private IEnumerator WaitForReadyTarget(string targetId, float timeout, Action<TutorialTarget> onFound)
+    {
+        if (string.IsNullOrEmpty(targetId))
+        {
+            onFound?.Invoke(null);
+            yield break;
+        }
+
+        float maxWait = Mathf.Max(timeout, 5f);
+        float waited = 0f;
+        TutorialTarget target = null;
+
+        while (waited < maxWait)
+        {
+            target = TutorialTargetRegistry.Get(targetId);
+            if (IsTargetVisibleAndReady(target, targetId))
+            {
+                RebuildTargetLayout(target);
+                onFound?.Invoke(target);
+                yield break;
+            }
+
+            waited += Time.deltaTime;
+            yield return null;
+        }
+
+        // Fallback if timeout expires: return registered target if any and rebuild layout
+        target = TutorialTargetRegistry.Get(targetId);
+        if (target != null)
+            RebuildTargetLayout(target);
+        onFound?.Invoke(target);
+    }
+
+    private static bool ContainsInteractiveBattleNodes(PlotConfig cfg)
+    {
+        if (cfg == null || cfg.nodes == null) return false;
+        foreach (var n in cfg.nodes)
+        {
+            if (n.type == PlotNodeType.GuidedCellClick ||
+                n.type == PlotNodeType.GuidedRightClick ||
+                n.type == PlotNodeType.GuidedLeftClick)
+                return true;
+        }
+        return false;
+    }
 
     public void StartPlot(System.Action onComplete)
     {
@@ -54,6 +240,7 @@ public class PlotSequencer : MonoBehaviour
 
     void SkipPlot()
     {
+        if (!allowSkip || ContainsInteractiveBattleNodes(plot)) return;
         StopAllCoroutines();
         HideAll();
         _waitingForInput = false;
@@ -81,6 +268,7 @@ public class PlotSequencer : MonoBehaviour
     {
         _onComplete = onComplete;
         _pendingPlots = new System.Collections.Generic.Queue<PlotEntry>(plots);
+        PlotDirector.OnTrigger -= HandleTrigger;
         PlotDirector.OnTrigger += HandleTrigger;
         StartCoroutine(ProcessPendingPlots());
     }
@@ -153,6 +341,11 @@ public class PlotSequencer : MonoBehaviour
 
     IEnumerator RunNode(PlotNode node)
     {
+        if (ContainsInteractiveBattleNodes(plot) || matchSession != null || FindAnyObjectByType<ClientMatchSession>() != null)
+        {
+            yield return StartCoroutine(WaitForBattleUIStable());
+        }
+
         switch (node.type)
         {
             case PlotNodeType.TextBox:
@@ -192,8 +385,9 @@ public class PlotSequencer : MonoBehaviour
     IEnumerator RunTextBox(PlotNode node)
     {
         HideAll();
-        nextButton.gameObject.SetActive(true);
-        skipButton.gameObject.SetActive(true);
+        if (nextButton != null) nextButton.gameObject.SetActive(true);
+        if (skipButton != null)
+            skipButton.gameObject.SetActive(allowSkip && !ContainsInteractiveBattleNodes(plot));
 
         textBoxPanel.SetActive(true);
         dialogueText.text = node.text;
@@ -204,27 +398,15 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
-        // Wait for target to register — reload scene if timeout exceeded
         TutorialTarget target = null;
         if (!string.IsNullOrEmpty(node.tutorialTargetId))
         {
-            float waited = 0f;
-            while (target == null && waited < node.targetWaitTimeout)
-            {
-                target = TutorialTargetRegistry.Get(node.tutorialTargetId);
-                if (target == null)
-                {
-                    waited += Time.deltaTime;
-                    yield return null;
-                }
-            }
+            yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
             if (target == null)
             {
                 Debug.LogError($"[PlotSequencer] TextNode: target '{node.tutorialTargetId}' " +
-                               $"not found after {node.targetWaitTimeout}s — reloading scene.");
-                // SceneManager.LoadScene("3_MainMenu");
-                // yield break;
+                               $"not found after {node.targetWaitTimeout}s.");
             }
             else
             {
@@ -241,6 +423,7 @@ public class PlotSequencer : MonoBehaviour
             float timer = 0f;
             while (_waitingForInput && timer < node.delay)
             {
+                if (target != null) PositionTargetHighlight(target);
                 timer += Time.deltaTime;
                 yield return null;
             }
@@ -248,7 +431,11 @@ public class PlotSequencer : MonoBehaviour
         }
         else
         {
-            yield return new WaitUntil(() => !_waitingForInput);
+            while (_waitingForInput)
+            {
+                if (target != null) PositionTargetHighlight(target);
+                yield return null;
+            }
         }
     }
 
@@ -268,35 +455,19 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
-        // Wait for target to register — reload scene if timeout exceeded
         TutorialTarget target = null;
-        float waited = 0f;
-        while (target == null && waited < node.targetWaitTimeout)
-        {
-            target = TutorialTargetRegistry.Get(node.tutorialTargetId);
-            if (target == null)
-            {
-                waited += Time.deltaTime;
-                yield return null;
-            }
-        }
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
         if (target == null)
         {
             Debug.LogError($"[PlotSequencer] GuidedClick: target '{node.tutorialTargetId}' " +
-                           $"not found after {node.targetWaitTimeout}s — reloading scene.");
-            // SceneManager.LoadScene("3_MainMenu");
+                           $"not found after {node.targetWaitTimeout}s.");
             yield break;
         }
 
         PositionButtonHighlight(target);
 
         if (!string.IsNullOrEmpty(node.text))
-        {
-            textBoxPanel.SetActive(true);
-            dialogueText.text = node.text;
-        }
-        else if (!string.IsNullOrEmpty(node.text))
         {
             textBoxPanel.SetActive(true);
             dialogueText.text = node.text;
@@ -314,7 +485,11 @@ public class PlotSequencer : MonoBehaviour
         _waitingForInput = true;
         btn.onClick.AddListener(() => _waitingForInput = false);
 
-        yield return new WaitUntil(() => !_waitingForInput);
+        while (_waitingForInput)
+        {
+            if (target != null) PositionButtonHighlight(target);
+            yield return null;
+        }
 
         HideAll();
     }
@@ -323,6 +498,7 @@ public class PlotSequencer : MonoBehaviour
 
     IEnumerator RunGuidedRightClickExtendedButton(PlotNode node)
     {
+        EnsureBattleReferences();
         HideAll();
         blockerPanel.SetActive(true);
 
@@ -332,18 +508,8 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
-        // Wait for target to register
         TutorialTarget target = null;
-        float waited = 0f;
-        while (target == null && waited < node.targetWaitTimeout)
-        {
-            target = TutorialTargetRegistry.Get(node.tutorialTargetId);
-            if (target == null)
-            {
-                waited += Time.deltaTime;
-                yield return null;
-            }
-        }
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
         if (target == null || inputReader == null)
         {
@@ -371,13 +537,18 @@ public class PlotSequencer : MonoBehaviour
         };
 
         inputReader.OnRightClick += onRightClick;
-        yield return new WaitUntil(() => !_waitingForInput);
+        while (_waitingForInput)
+        {
+            if (target != null) PositionButtonHighlight(target);
+            yield return null;
+        }
         inputReader.OnRightClick -= onRightClick;
         HideAll();
     }
 
     IEnumerator RunGuidedLeftClickExtendedButton(PlotNode node)
     {
+        EnsureBattleReferences();
         HideAll();
         blockerPanel.SetActive(true);
 
@@ -387,18 +558,8 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
-        // Wait for target to register
         TutorialTarget target = null;
-        float waited = 0f;
-        while (target == null && waited < node.targetWaitTimeout)
-        {
-            target = TutorialTargetRegistry.Get(node.tutorialTargetId);
-            if (target == null)
-            {
-                waited += Time.deltaTime;
-                yield return null;
-            }
-        }
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
         if (target == null || inputReader == null)
         {
@@ -426,7 +587,11 @@ public class PlotSequencer : MonoBehaviour
         };
 
         inputReader.OnLeftClick += onLeftClick;
-        yield return new WaitUntil(() => !_waitingForInput);
+        while (_waitingForInput)
+        {
+            if (target != null) PositionButtonHighlight(target);
+            yield return null;
+        }
         inputReader.OnLeftClick -= onLeftClick;
         HideAll();
     }
@@ -436,6 +601,7 @@ public class PlotSequencer : MonoBehaviour
 
     IEnumerator RunGuidedCellClick(PlotNode node)
     {
+        EnsureBattleReferences();
         HideAll();
         blockerPanel.SetActive(true);
 
@@ -445,7 +611,6 @@ public class PlotSequencer : MonoBehaviour
             dialogueText.text = node.text;
         }
 
-        yield return null;
         yield return null;
 
         // Convert cell (x,y) to world position then to screen position
@@ -481,11 +646,10 @@ public class PlotSequencer : MonoBehaviour
             // Fire the actual cell click in the game
             if (interactionSystem != null)
             {
-                interactionSystem.stateMachine.OnTileHover(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
-                Task.Delay(1);
-                interactionSystem.HandleTileClick(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
-                Task.Delay(1);
-                interactionSystem.stateMachine.OnTileHover(new Vector3Int(node.targetCell.x, node.targetCell.y, 0));
+                var targetCell = new Vector3Int(node.targetCell.x, node.targetCell.y, 0);
+                interactionSystem.stateMachine.OnTileHover(targetCell);
+                interactionSystem.HandleTileClick(targetCell);
+                interactionSystem.stateMachine.OnTileHover(targetCell);
             }
             _waitingForInput = false;
         });
@@ -555,24 +719,13 @@ public class PlotSequencer : MonoBehaviour
         }
         else
         {
-            // Wait for target to register — reload scene if timeout exceeded
             TutorialTarget target = null;
-            float waited = 0f;
-            while (target == null && waited < node.targetWaitTimeout)
-            {
-                target = TutorialTargetRegistry.Get(node.tutorialTargetId);
-                if (target == null)
-                {
-                    waited += Time.deltaTime;
-                    yield return null;
-                }
-            }
+            yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
             if (target == null)
             {
                 Debug.LogError($"[PlotSequencer] CompleteAndExit: target '{node.tutorialTargetId}' " +
-                               $"not found after {node.targetWaitTimeout}s — reloading scene.");
-                // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                               $"not found after {node.targetWaitTimeout}s.");
                 yield break;
             }
 
@@ -593,6 +746,7 @@ public class PlotSequencer : MonoBehaviour
                 float timer = 0f;
                 while (!buttonClicked && timer < node.delay)
                 {
+                    if (target != null) PositionButtonHighlight(target);
                     timer += Time.deltaTime;
                     yield return null;
                 }
@@ -604,7 +758,11 @@ public class PlotSequencer : MonoBehaviour
             }
             else
             {
-                yield return new WaitUntil(() => buttonClicked);
+                while (!buttonClicked)
+                {
+                    if (target != null) PositionButtonHighlight(target);
+                    yield return null;
+                }
             }
         }
     }
@@ -625,6 +783,9 @@ public class PlotSequencer : MonoBehaviour
 
     void PositionButtonHighlight(TutorialTarget target)
     {
+        if (target == null || target.RectTransform == null) return;
+        RebuildTargetLayout(target);
+
         var buttonRect = tutorialButton.GetComponent<RectTransform>();
         var targetRect = target.RectTransform;
         var highlighterRect = highlighter.GetComponent<RectTransform>();
@@ -646,12 +807,14 @@ public class PlotSequencer : MonoBehaviour
 
     void PositionTargetHighlight(TutorialTarget target)
     {
+        if (target == null) return;
         var targetRect = target.RectTransform;
         if (targetRect == null)
         {
             Debug.LogError($"[PlotSequencer] PositionTargetHighlight: target has no RectTransform.");
             return;
         }
+        RebuildTargetLayout(target);
         var highlighterRect = highlighter.GetComponent<RectTransform>();
         highlighterRect.position = targetRect.position;
         highlighterRect.sizeDelta = targetRect.rect.size * 1.2f;

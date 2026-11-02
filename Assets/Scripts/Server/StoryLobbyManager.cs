@@ -63,8 +63,13 @@ public class StoryLobbyManager : MonoBehaviour
             matchStarted = true;
             Debug.Log("[StoryLobby] Starting story battle");
 
-            // Convention: C{chapterId}_S{sceneId}_Server
+            // Convention: C{chapterId}_S{sceneId}_Server (fallback to shared C0_S1_Server if no dedicated server scene exists)
             string targetScene = $"C{backendClient.ChapterId}_S{backendClient.SceneId}_Server";
+            if (!Application.CanStreamedLevelBeLoaded(targetScene))
+            {
+                Debug.Log($"[StoryLobby] Scene '{targetScene}' not found in Build Settings — falling back to shared 'C0_S1_Server'.");
+                targetScene = "C0_S1_Server";
+            }
             UnityEngine.SceneManagement.SceneManager.LoadScene(targetScene);
             return;
         }

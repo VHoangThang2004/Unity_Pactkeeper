@@ -219,7 +219,7 @@ public class ServerMatchSession : MonoBehaviour
         return !string.IsNullOrEmpty(backendClient.MapId) ? backendClient.MapId : mapId; // inspector value = devmode fallback
     }
 
-    StoryEncounterConfig GetStoryEncounter()
+    public StoryEncounterConfig GetStoryEncounter()
     {
         if (storyEncounterRegistry == null) return null;
         storyEncounterRegistry.Init();
@@ -376,84 +376,110 @@ public class ServerMatchSession : MonoBehaviour
         };
     }
 
-    public void AdvanceTutorialPhase(int newSceneId, ServerSpawnManager spawnManager)
+    public void RebindPlayerClientIfNeeded(ulong clientId)
     {
-        Debug.Log($"[MatchSession] Client requested tutorial advance to SceneId: {newSceneId}");
+        if (clientId == NetworkManager.Singleton.LocalClientId) return;
+        if (teams == null || teams.Count == 0) return;
 
-        backendClient.SceneId = newSceneId;
-
-        var newEncounter = storyEncounterRegistry.Get(backendClient.ChapterId, newSceneId);
-        if (newEncounter == null) return;
-
-        HashSet<int> matchedUnitIds = new HashSet<int>();
-        int spawnPointer = 0; // We need to track how many player units we've spawned
-        foreach (var pUnit in newEncounter.playerUnits)
+        // In story mode (or single-player dev mode), ensure team 0 is bound to the active connected client
+        if (backendClient != null && backendClient.Mode == "story")
         {
-            var unit = units.Find(u => u.UId == pUnit.uId && GetTeamIdByUnitId(u.Id) == 0 && !matchedUnitIds.Contains(u.Id));
-            if (unit == null)
+            if (teams[0].clientId != clientId)
             {
-                Debug.Log($"[MatchSession] Spawning new tutorial unit: UId {pUnit.uId}");
-                var loadout = pUnit.ToUnitLoadout();
-
-                // Find next available spawn point for team 0
-                Vector2Int spawnPoint = MapAsset.GetSpawn(0, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 0).Count + spawnPointer);
-                var spawned = spawnManager.SpawnUnit(0, loadout, spawnPoint.x, spawnPoint.y);
-                if (spawned != null) matchedUnitIds.Add(spawned.Id);
-                spawnPointer++;
-            }
-            else
-            {
-                matchedUnitIds.Add(unit.Id);
-                // Reset existing unit's step to initial stepRange from its speed so it doesn't carry over step from prev scene
-                unit.Speed = pUnit.speed;
-                unit.BaseSpeed = pUnit.speed;
-                Vector2Int stepRange = spawnManager.SpeedConfig.GetStepRange(pUnit.speed);
-                unit.CurrentStep = stepRange.x;
-                unit.CurrentStepBase = stepRange.y;
-                unit.StepAlt = true;
+                Debug.Log($"[MatchSession] Rebinding story Team 0 clientId from {teams[0].clientId} to {clientId}");
+                teams[0].clientId = clientId;
+                if (loadouts != null && loadouts.Count > 0)
+                    loadouts[0].ClientId = clientId;
             }
         }
+    }
 
-        int aiSpawnPointer = 0; // Track how many AI units we've spawned
-        foreach (var aiUnit in newEncounter.aiUnits)
+    private bool IsEncounterAtCleanStart(int targetSceneId, StoryEncounterConfig encounter, ServerSpawnManager spawnManager)
+    {
+        if (backendClient == null || backendClient.SceneId != targetSceneId) return false;
+        if (CurrentInstant != 0) return false;
+        if (!string.IsNullOrEmpty(encounter.mapId) && MapId != encounter.mapId) return false;
+        if (MapAsset == null || teams == null || teams.Count < 2 || units == null) return false;
+
+        if (teams[0].unitIds.Count != encounter.playerUnits.Count) return false;
+        if (teams[1].unitIds.Count != encounter.aiUnits.Count) return false;
+        if (units.Count != encounter.playerUnits.Count + encounter.aiUnits.Count) return false;
+
+        for (int i = 0; i < encounter.playerUnits.Count; i++)
         {
-            var existingAi = units.Find(u => u.UId == aiUnit.uId && GetTeamIdByUnitId(u.Id) == 1 && !matchedUnitIds.Contains(u.Id));
-            if (existingAi == null)
-            {
-                Debug.Log($"[MatchSession] Spawning new AI unit: UId {aiUnit.uId}");
-                var loadout = aiUnit.ToUnitLoadout();
-
-                // Find next available spawn point for team 1
-                Vector2Int spawnPoint = MapAsset.GetSpawn(1, units.FindAll(u => GetTeamIdByUnitId(u.Id) == 1).Count + aiSpawnPointer);
-                var spawned = spawnManager.SpawnUnit(1, loadout, spawnPoint.x, spawnPoint.y);
-                if (spawned != null) matchedUnitIds.Add(spawned.Id);
-                aiSpawnPointer++;
-            }
-            else
-            {
-                matchedUnitIds.Add(existingAi.Id);
-                existingAi.Speed = aiUnit.speed;
-                existingAi.BaseSpeed = aiUnit.speed;
-                Vector2Int stepRange = spawnManager.SpeedConfig.GetStepRange(aiUnit.speed);
-                existingAi.CurrentStep = stepRange.x;
-                existingAi.CurrentStepBase = stepRange.y;
-                existingAi.StepAlt = true;
-            }
+            var expected = encounter.playerUnits[i];
+            int targetId = teams[0].unitIds[i];
+            var unit = units.Find(u => u.Id == targetId);
+            if (unit == null || unit.UId != expected.uId) return false;
+            if (unit.CurrentHP != expected.GetStartingHP() || unit.CurrentSkillPoint != expected.GetStartingSP()) return false;
+            Vector2Int spawnPt = MapAsset.GetSpawn(0, i);
+            if (unit.CurrentCell.x != spawnPt.x || unit.CurrentCell.y != spawnPt.y) return false;
         }
 
-        // Ensure any unit on board not explicitly listed in encounter has its step reset as well
-        foreach (var unit in units)
+        for (int i = 0; i < encounter.aiUnits.Count; i++)
         {
-            if (!matchedUnitIds.Contains(unit.Id))
-            {
-                Vector2Int stepRange = spawnManager.SpeedConfig.GetStepRange(unit.Speed);
-                unit.CurrentStep = stepRange.x;
-                unit.CurrentStepBase = stepRange.y;
-                unit.StepAlt = true;
-            }
+            var expected = encounter.aiUnits[i];
+            int targetId = teams[1].unitIds[i];
+            var unit = units.Find(u => u.Id == targetId);
+            if (unit == null || unit.UId != expected.uId) return false;
+            if (unit.CurrentHP != expected.GetStartingHP() || unit.CurrentSkillPoint != expected.GetStartingSP()) return false;
+            Vector2Int spawnPt = MapAsset.GetSpawn(1, i);
+            if (unit.CurrentCell.x != spawnPt.x || unit.CurrentCell.y != spawnPt.y) return false;
         }
 
-        // Requirement 1: Any unit with CurrentStep == 0 MUST be in ReadyUnitIds
+        return true;
+    }
+
+    public bool AdvanceTutorialPhase(int newSceneId, ServerSpawnManager spawnManager)
+    {
+        if (backendClient == null)
+            backendClient = FindAnyObjectByType<ServerBackendClient>();
+
+        if (storyEncounterRegistry == null) return false;
+        storyEncounterRegistry.Init();
+
+        int chapterId = backendClient != null ? backendClient.ChapterId : 0;
+        var newEncounter = storyEncounterRegistry.Get(chapterId, newSceneId);
+        if (newEncounter == null)
+        {
+            Debug.LogWarning($"[MatchSession] No StoryEncounterConfig found for Chapter {chapterId} Scene {newSceneId}.");
+            return false;
+        }
+
+        if (IsEncounterAtCleanStart(newSceneId, newEncounter, spawnManager))
+        {
+            Debug.Log($"[MatchSession] SceneId {newSceneId} is already at a clean initial state — skipping reset.");
+            return false;
+        }
+
+        Debug.Log($"[MatchSession] Resetting story battle board to Chapter {chapterId} SceneId {newSceneId} (clean state).");
+
+        if (backendClient != null)
+            backendClient.SceneId = newSceneId;
+
+        // 1. Rebuild loadouts from the target scene's StoryEncounterConfig (removes any units from other scenes like Paladin in C0_S1)
+        if (!InitStoryLoadouts())
+            return false;
+
+        // 2. Reload map if the scene uses a different mapId
+        mapRegistry.Init();
+        string resolvedMapId = ResolveMapId();
+        var targetMapAsset = mapRegistry.Get(resolvedMapId);
+        if (targetMapAsset != null)
+        {
+            MapId = resolvedMapId;
+            MapAsset = targetMapAsset;
+            Map = new GridMap();
+            Map.Init(MapAsset);
+        }
+
+        // 3. Clear old units & teams and rebind to currently connected client
+        SetTeamFromLoadout();
+
+        // 4. Spawn fresh units at initial spawn positions with 100% MaxHP, 0 SP, and initial step
+        spawnManager.SpawnAllForTutorialReset();
+
+        // 5. Populate ReadyUnitIds for all units starting with CurrentStep == 0
         ReadyUnitIds.Clear();
         foreach (var unit in units)
         {
@@ -462,6 +488,8 @@ public class ServerMatchSession : MonoBehaviour
                 ReadyUnitIds.Add(unit.Id);
             }
         }
+
+        return true;
     }
 
     // Sentinel — never matches a real connected NGO client.
