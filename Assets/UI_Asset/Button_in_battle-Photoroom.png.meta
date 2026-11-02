@@ -1,0 +1,485 @@
+fileFormatVersion: 2
+guid: 80c9a19490435c644813bd26e4cc2642
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3215067689607280120
+    second: Button_in_battle-Photoroom_0
+  - first:
+      213: -1871041391164256537
+    second: Button_in_battle-Photoroom_1
+  - first:
+      213: -8536153717326282662
+    second: Button_in_battle-Photoroom_2
+  - first:
+      213: -5771807730956035320
+    second: Button_in_battle-Photoroom_3
+  - first:
+      213: 5746243319242132689
+    second: Button_in_battle-Photoroom_4
+  - first:
+      213: 3288488167928876222
+    second: Button_in_battle-Photoroom_5
+  - first:
+      213: -3663314190763533263
+    second: Button_in_battle-Photoroom_6
+  - first:
+      213: -5235048233931477107
+    second: Button_in_battle-Photoroom_7
+  - first:
+      213: 5309385423113333690
+    second: Button_in_battle-Photoroom_8
+  - first:
+      213: 1378717602548313538
+    second: Button_in_battle-Photoroom_9
+  - first:
+      213: -2552188605214772448
+    second: Button_in_battle-Photoroom_10
+  - first:
+      213: -6328445588358386326
+    second: Button_in_battle-Photoroom_11
+  - first:
+      213: 1552081936770404656
+    second: Button_in_battle-Photoroom_12
+  - first:
+      213: 8348515255509486865
+    second: Button_in_battle-Photoroom_13
+  - first:
+      213: 6446158833829754140
+    second: Button_in_battle-Photoroom_14
+  - first:
+      213: 1473800979704580097
+    second: Button_in_battle-Photoroom_15
+  - first:
+      213: -353635686965796519
+    second: Button_in_battle-Photoroom_16
+  - first:
+      213: -4789862961175031567
+    second: Button_in_battle-Photoroom_17
+  - first:
+      213: -4266070895143062182
+    second: Button_in_battle-Photoroom_18
+  - first:
+      213: -4777500158044209877
+    second: Button_in_battle-Photoroom_19
+  - first:
+      213: 5837585975752910170
+    second: Button_in_battle-Photoroom_20
+  - first:
+      213: -8383129016205627039
+    second: Button_in_battle-Photoroom_21
+  - first:
+      213: 1571895783709742964
+    second: Button_in_battle-Photoroom_22
+  - first:
+      213: 8907679048160250867
+    second: Button_in_battle-Photoroom_23
+  - first:
+      213: 7780234691072636162
+    second: Button_in_battle-Photoroom_24
+  - first:
+      213: 1301504066501529257
+    second: Button_in_battle-Photoroom_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_12
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 377
+        width: 227
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03110875c4a1a8510800000000000000
+      internalID: 1552081936770404656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_13
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 376
+        width: 228
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11d829e7462ebd370800000000000000
+      internalID: 8348515255509486865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_14
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 375
+        width: 230
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c153b206e4b557950800000000000000
+      internalID: 6446158833829754140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_15
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 372
+        width: 140
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1080ae8be2ef37410800000000000000
+      internalID: 1473800979704580097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_17
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 194
+        width: 226
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f09c5cb30df68db0800000000000000
+      internalID: -4789862961175031567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_18
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 198
+        width: 228
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a557d5c9f1fdbc4c0800000000000000
+      internalID: -4266070895143062182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_19
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 198
+        width: 224
+        height: 147
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2df6652be8e2bdb0800000000000000
+      internalID: -4777500158044209877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_20
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 192
+        width: 145
+        height: 155
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a55ed8e1485430150800000000000000
+      internalID: 5837585975752910170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_22
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 14
+        width: 226
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47714f313ee70d510800000000000000
+      internalID: 1571895783709742964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_23
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 14
+        width: 228
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fb08ce36ee6e9b70800000000000000
+      internalID: 8907679048160250867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_24
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 14
+        width: 225
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2053e86ea32f8fb60800000000000000
+      internalID: 7780234691072636162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Button_in_battle-Photoroom_25
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 10
+        width: 152
+        height: 159
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aecc858d0fdf0210800000000000000
+      internalID: 1301504066501529257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 248aab984769acf40b738b2e11bf04c0
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Button_in_battle-Photoroom_0: 3215067689607280120
+      Button_in_battle-Photoroom_1: -1871041391164256537
+      Button_in_battle-Photoroom_10: -2552188605214772448
+      Button_in_battle-Photoroom_11: -6328445588358386326
+      Button_in_battle-Photoroom_12: 1552081936770404656
+      Button_in_battle-Photoroom_13: 8348515255509486865
+      Button_in_battle-Photoroom_14: 6446158833829754140
+      Button_in_battle-Photoroom_15: 1473800979704580097
+      Button_in_battle-Photoroom_16: -353635686965796519
+      Button_in_battle-Photoroom_17: -4789862961175031567
+      Button_in_battle-Photoroom_18: -4266070895143062182
+      Button_in_battle-Photoroom_19: -4777500158044209877
+      Button_in_battle-Photoroom_2: -8536153717326282662
+      Button_in_battle-Photoroom_20: 5837585975752910170
+      Button_in_battle-Photoroom_21: -8383129016205627039
+      Button_in_battle-Photoroom_22: 1571895783709742964
+      Button_in_battle-Photoroom_23: 8907679048160250867
+      Button_in_battle-Photoroom_24: 7780234691072636162
+      Button_in_battle-Photoroom_25: 1301504066501529257
+      Button_in_battle-Photoroom_3: -5771807730956035320
+      Button_in_battle-Photoroom_4: 5746243319242132689
+      Button_in_battle-Photoroom_5: 3288488167928876222
+      Button_in_battle-Photoroom_6: -3663314190763533263
+      Button_in_battle-Photoroom_7: -5235048233931477107
+      Button_in_battle-Photoroom_8: 5309385423113333690
+      Button_in_battle-Photoroom_9: 1378717602548313538
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
