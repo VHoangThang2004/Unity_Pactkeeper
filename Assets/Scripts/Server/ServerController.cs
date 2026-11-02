@@ -213,6 +213,7 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         if (!serverReady) return; // ignore request if not ready
         if (clientId == NetworkManager.Singleton.LocalClientId) return;
 
+        session.RebindPlayerClientIfNeeded(clientId);
         timeline.SendSnapshotToClient(clientId);
         clientsReceivedInit++;
 
@@ -225,13 +226,9 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
     
     public void HandleAdvanceTutorialPhase(int newSceneId)
     {
-        if (session.backendClient != null && session.backendClient.SceneId == newSceneId)
-        {
-            Debug.Log($"[ServerController] AdvanceTutorialPhase ignored — server is already on SceneId {newSceneId}.");
+        if (!session.AdvanceTutorialPhase(newSceneId, spawnManager))
             return;
-        }
 
-        session.AdvanceTutorialPhase(newSceneId, spawnManager);
         UnitRecalculator.RecalculateAll(session);
         timeline.RestartTimelineForTutorialPhase();
     }

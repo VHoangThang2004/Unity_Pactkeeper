@@ -25,8 +25,7 @@ public static class StoryClient
 
         if (req.result != UnityWebRequest.Result.Success)
         {
-            //Debug.LogWarning($"[StoryClient] GetCurrent failed: {req.error}");
-            Debug.LogWarning($"[StoryClient] CompleteCurrentScene failed: {req.error} - Lý do: {req.downloadHandler.text}");
+            Debug.LogWarning($"[StoryClient] GetCurrent failed: {req.error} - Lý do: {req.downloadHandler.text}");
             onFail?.Invoke();
             yield break;
         }
@@ -111,6 +110,33 @@ public static class StoryClient
 
         var data = JsonUtility.FromJson<StoryMatchData>(req.downloadHandler.text);
         onSuccess(data);
+    }
+
+    // -------------------------------------------------------
+    // POST /api/story/match/abandon
+    // Abandons an active story battle match so the player can retry cleanly.
+    // -------------------------------------------------------
+
+    public static IEnumerator AbandonStoryMatch(
+        BackendConfig config,
+        System.Action onSuccess = null,
+        System.Action onFail = null)
+    {
+        using var req = UnityWebRequest.PostWwwForm(
+            $"{config.backendUrl}/api/story/match/abandon", "");
+        config.SetHeaders(req, PlayerSession.Token);
+        yield return req.SendWebRequest();
+
+        if (req.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogWarning($"[StoryClient] AbandonStoryMatch failed: {req.error}");
+            onFail?.Invoke();
+            yield break;
+        }
+
+        PlayerSession.MatchId = string.Empty;
+        PlayerSession.ServerIp = string.Empty;
+        onSuccess?.Invoke();
     }
 
     // -------------------------------------------------------

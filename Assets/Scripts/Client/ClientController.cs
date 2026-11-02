@@ -14,6 +14,7 @@ using UnityEngine;
 public class ClientController : MonoBehaviour, ISyncedBridgeClient
 {
     public event System.Action OnMatchReady;
+    public bool IsMatchReady { get; private set; }
 
     public SyncedBridge bridge;
 
@@ -24,6 +25,8 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     [SerializeField] private ClientScene scene;
     [SerializeField] private SceneConfig sceneConfig;
     [SerializeField] private FormationPrepManager prep; // null in scenes without formation prep
+
+    public ClientScene Scene => scene;
 
     [Header("Audio")]
     public AudioClip battleBGM;
@@ -140,6 +143,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
 
         //Start the statemachines that requires data from now on
         scene.visualController.StartUILoop();
+        IsMatchReady = true;
         OnMatchReady?.Invoke();
     }
 

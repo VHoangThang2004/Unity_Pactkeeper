@@ -20,6 +20,15 @@ public class ServerSpawnManager : MonoBehaviour
         return true;
     }
 
+    public bool SpawnAllForTutorialReset()
+    {
+        bool prevSuppress = suppressSpawnRpcs;
+        suppressSpawnRpcs = true;
+        bool ok = SpawnTeam(0) && SpawnTeam(1);
+        suppressSpawnRpcs = prevSuppress;
+        return ok;
+    }
+
 
     public bool SpawnTeam(int teamId)
     {
@@ -65,20 +74,22 @@ public class ServerSpawnManager : MonoBehaviour
         }
 
         Vector2Int stepRange = speedConfig.GetStepRange(loadout.Speed);
+        int startingHP = loadout.CurrentHP > 0 ? Mathf.Min(loadout.CurrentHP, loadout.MaxHP) : loadout.MaxHP;
+        int startingSP = Mathf.Clamp(loadout.CurrentSkillPoint, 0, loadout.MaxSkillPoint);
 
         var unit = new UnitData
         {
             Id = nextUnitId++,
             UId = loadout.UId,
             CurrentCell = new Vector3Int(worldX, worldY, 0),
-            CurrentHP = loadout.MaxHP,
+            CurrentHP = startingHP,
             CurrentStep = stepRange.x,
             StepAlt = true,
             CurrentStepBase = stepRange.y,
             Speed = loadout.Speed,
             MaxHP = loadout.MaxHP,
             MaxSkillPoint = loadout.MaxSkillPoint,
-            CurrentSkillPoint = 0,
+            CurrentSkillPoint = startingSP,
             DamageMultiplier = loadout.DamageMultiplier,
             DamageReduction = loadout.DamageReduction,
             BaseSpeed = loadout.Speed,

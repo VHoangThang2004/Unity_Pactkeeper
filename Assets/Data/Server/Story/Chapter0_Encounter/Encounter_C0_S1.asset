@@ -23,7 +23,9 @@ MonoBehaviour:
     classSkillId: 3001
     trinketSkillId: -1
     maxHP: 3
+    currentHP: 3
     maxSkillPoint: 3
+    currentSkillPoint: 0
     speed: 130
     damageMultiplier: 100
     damageReduction: 0
@@ -35,7 +37,9 @@ MonoBehaviour:
     classSkillId: -1
     trinketSkillId: -1
     maxHP: 3
+    currentHP: 3
     maxSkillPoint: 3
+    currentSkillPoint: 0
     speed: 100
     damageMultiplier: 100
     damageReduction: 0

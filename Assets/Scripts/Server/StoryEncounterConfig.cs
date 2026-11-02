@@ -76,10 +76,17 @@ public class StoryUnitEntry
     public int classSkillId;
     public int trinketSkillId;
     public int maxHP;
+    [Tooltip("Starting HP when this encounter begins. If <= 0, defaults to maxHP.")]
+    public int currentHP;
     public int maxSkillPoint;
+    [Tooltip("Starting Skill Point when this encounter begins.")]
+    public int currentSkillPoint;
     public int speed;
     public int damageMultiplier;
     public int damageReduction;
+
+    public int GetStartingHP() => currentHP > 0 ? Mathf.Min(currentHP, maxHP) : maxHP;
+    public int GetStartingSP() => Mathf.Clamp(currentSkillPoint, 0, maxSkillPoint);
 
     // Single conversion point — used by encounter loadouts and mid-match tutorial spawns
     public PlayerUnitLoadout ToUnitLoadout() => new PlayerUnitLoadout
@@ -91,7 +98,9 @@ public class StoryUnitEntry
         ClassSkillId = classSkillId,
         TrinketSkillId = trinketSkillId,
         MaxHP = maxHP,
+        CurrentHP = GetStartingHP(),
         MaxSkillPoint = maxSkillPoint,
+        CurrentSkillPoint = GetStartingSP(),
         Speed = speed,
         DamageMultiplier = damageMultiplier,
         DamageReduction = damageReduction,

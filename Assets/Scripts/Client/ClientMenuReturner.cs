@@ -18,8 +18,13 @@ public class ClientMenuReturner : MonoBehaviour
 
     private void OnDisconnected(ulong clientId)
     {
-        if (clientId != NetworkManager.Singleton.LocalClientId) return;
-        Debug.Log("[Client] Disconnected — returning to main menu.");
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[Client] Disconnected during active tutorial — tutorial overlay handles scene transition.");
+            return;
+        }
+        if (NetworkManager.Singleton != null && clientId != NetworkManager.Singleton.LocalClientId) return;
+        Debug.Log("[Client] Disconnected — returning to match result.");
         SceneManager.LoadScene(sceneConfig.matchResultScene);
     }
 }

@@ -47,7 +47,9 @@ public class ClientInteractionSystem : MonoBehaviour
         {
             if (session.SyncState == SyncStateValue.Idle)
             {
-                stateMachine.GoToNone();
+                unlockCoroutine = null;
+                if (stateMachine?.currentState is LockedInputState)
+                    stateMachine.GoToNone();
                 yield break;
             }
             yield return null;
@@ -151,6 +153,11 @@ public class ClientInteractionSystem : MonoBehaviour
 
     public void ForceNoneState()
     {
+        if (unlockCoroutine != null)
+        {
+            StopCoroutine(unlockCoroutine);
+            unlockCoroutine = null;
+        }
         stateMachine?.GoToNone();
     }
     public void HandleTileClick(Vector3Int cell)

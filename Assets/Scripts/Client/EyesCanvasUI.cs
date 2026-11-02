@@ -124,11 +124,11 @@ public class EyesCanvasUI : MonoBehaviour
         rightEyeImage.sprite = rightEye ? openSprite : closeSprite;
         Debug.Log($"[EyesCanvasUI] Updated eye sprites to final state: leftEye={leftEye}, rightEye={rightEye}");
 
-        yield return new WaitForSeconds(eyeAnimDur + 0.5f);
+        yield return new WaitForSeconds(eyeAnimDur + 0.25f);
 
         // Step 4: Fade out
         yield return StartCoroutine(BackgroundFades(false));
-        yield return new WaitForSeconds(1f); //buffer
+        yield return new WaitForSeconds(0.1f); // minimal buffer after fade-out completes
 
 
 
