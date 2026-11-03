@@ -21,14 +21,19 @@ public class MatchmakingManager : MonoBehaviour
     private bool isInQueue = false;
     private Coroutine pollingCoroutine;
 
-    public void OnClickFindMatch()
+    public void OnClickFindMatch(string mode = "pvp")
     {
         if (!PlayerSession.IsLoggedIn)
         {
             statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.NotLoggedIn);
             return;
         }
-        StartCoroutine(JoinQueue());
+        StartCoroutine(JoinQueue(mode));
+    }
+
+    public void OnClickFindRankedMatch()
+    {
+        OnClickFindMatch("ranked");
     }
 
     public void OnClickCancel()
@@ -36,13 +41,17 @@ public class MatchmakingManager : MonoBehaviour
         StartCoroutine(LeaveQueue());
     }
 
-    IEnumerator JoinQueue()
+    IEnumerator JoinQueue(string mode = "pvp")
     {
         statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.JoiningQueue);
 
+        string bodyJson = $"{{\"mode\":\"{mode}\"}}";
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(bodyJson);
+
         using var request = new UnityWebRequest($"{config.backendUrl}/api/match/queue/join", "POST");
-        request.uploadHandler = new UploadHandlerRaw(new byte[0]);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(request, PlayerSession.Token);
 
         yield return request.SendWebRequest();

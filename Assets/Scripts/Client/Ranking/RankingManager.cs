@@ -76,17 +76,17 @@ public class RankingManager : MonoBehaviour
         "Unified the entire Thiên Nhãn Giới into one — fulfilling the divine pact."                            // 6 - Union
     };
 
-    // ── Rank tier score thresholds ────────────────────────────────────────────
+    // ── Rank tier score thresholds (100 LP per tier) ─────────────────────────
 
     private static readonly int[] RankTierMinScores = new int[]
     {
-        0,      // Beginner
-        1000,   // Master
-        2000,   // Captain
-        3000,   // Pactkeeper
-        4000,   // Warlord
-        5000,   // Grand Commander
-        6000    // Union
+        0,      // 0 - Beginner
+        100,    // 1 - Master
+        200,    // 2 - Captain
+        300,    // 3 - Pactkeeper
+        400,    // 4 - Warlord
+        500,    // 5 - Grand Commander
+        600     // 6 - Union
     };
 
     // ── Inspector ─────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ public class RankingManager : MonoBehaviour
 
     private List<LeaderboardEntryData> leaderboardEntries = new();
     private PlayerProfileResponse currentPlayerProfile;
-    private PlayerProfileResponse[] allPlayerProfiles;  // All players for leaderboard
+    private LeaderboardResponse leaderboardResponse;
     private LeaderboardEntryData selectedEntry;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -189,18 +189,11 @@ public class RankingManager : MonoBehaviour
             yield break;
         }
 
-        // Fetch all players for leaderboard
-        yield return FetchAllPlayers();
+        // Fetch leaderboard from backend (snapshot on entering scene)
+        yield return FetchLeaderboard();
 
-        if (allPlayerProfiles == null || allPlayerProfiles.Length == 0)
-        {
-            Debug.LogWarning("[RankingManager] No players data available for leaderboard");
-            // Fallback: show only current player
-            allPlayerProfiles = new PlayerProfileResponse[] { currentPlayerProfile };
-        }
-
-        // Build leaderboard from all players
-        BuildLeaderboardFromPlayers();
+        // Build leaderboard from response
+        BuildLeaderboardFromResponse();
 
         if (loadingIndicator != null) loadingIndicator.SetActive(false);
 
@@ -215,7 +208,29 @@ public class RankingManager : MonoBehaviour
         // Auto-select current player entry in right panel
         var currentEntry = leaderboardEntries.Find(e => e.isCurrentPlayer);
         if (currentEntry != null)
+        {
             ShowPlayerDetail(currentEntry);
+        }
+        else if (leaderboardResponse?.currentPlayer != null)
+        {
+            var cp = leaderboardResponse.currentPlayer;
+            ShowPlayerDetail(new LeaderboardEntryData
+            {
+                position        = cp.position,
+                playerId        = cp.playerId,
+                username        = cp.username,
+                level           = cp.level,
+                score           = cp.rating,
+                rankTier        = cp.rankTier,
+                rankName        = GetRankTierName(cp.rankTier),
+                rankBadgeSprite = GetRankBadgeSprite(cp.rankTier),
+                isCurrentPlayer = true
+            });
+        }
+        else if (leaderboardEntries.Count > 0)
+        {
+            ShowPlayerDetail(leaderboardEntries[0]);
+        }
     }
 
     IEnumerator FetchPlayerProfile()
@@ -234,85 +249,68 @@ public class RankingManager : MonoBehaviour
         currentPlayerProfile = JsonUtility.FromJson<PlayerProfileResponse>(req.downloadHandler.text);
     }
 
-    IEnumerator FetchAllPlayers()
+    IEnumerator FetchLeaderboard()
     {
-        // TODO: Replace with actual backend endpoint when implemented
-        // Endpoint suggestion: GET /api/players/all or GET /api/leaderboard/players
-        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/players/all");
+        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/ranking/leaderboard?limit=100");
         config.SetHeaders(req, PlayerSession.Token);
         yield return req.SendWebRequest();
 
         if (req.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogWarning($"[RankingManager] Failed to load all players: {req.error}");
-            Debug.LogWarning("[RankingManager] Backend may not have implemented /api/players/all yet");
-            allPlayerProfiles = null;
+            Debug.LogWarning($"[RankingManager] Failed to load leaderboard: {req.error}");
+            leaderboardResponse = null;
             yield break;
         }
 
-        // Expected JSON: { "items": [ {...}, {...} ] }
         string json = req.downloadHandler.text;
-        
-        // Wrap in array if backend returns plain array
-        if (!json.TrimStart().StartsWith("{"))
-            json = "{\"items\":" + json + "}";
-
-        var wrapper = JsonUtility.FromJson<PlayersWrapper>(json);
-        allPlayerProfiles = wrapper?.items;
+        leaderboardResponse = JsonUtility.FromJson<LeaderboardResponse>(json);
     }
 
-    [System.Serializable]
-    private class PlayersWrapper
-    {
-        public PlayerProfileResponse[] items;
-    }
+    // ── Build leaderboard from response ───────────────────────────────────────
 
-    // ── Build leaderboard from all players ────────────────────────────────────
-
-    void BuildLeaderboardFromPlayers()
+    void BuildLeaderboardFromResponse()
     {
         leaderboardEntries.Clear();
 
-        if (allPlayerProfiles == null || allPlayerProfiles.Length == 0)
-            return;
-
-        // Convert each player profile to leaderboard entry
-        foreach (var profile in allPlayerProfiles)
+        if (leaderboardResponse?.items == null || leaderboardResponse.items.Length == 0)
         {
-            // Use gems as score (temporary until backend implements rating system)
-            int score = profile.gems;
-            int tier  = CalculateRankTier(score);
-            
+            // Fallback: show current player as single entry
+            if (currentPlayerProfile != null)
+            {
+                int tier = CalculateRankTier(currentPlayerProfile.rating);
+                leaderboardEntries.Add(new LeaderboardEntryData
+                {
+                    position        = 1,
+                    playerId        = currentPlayerProfile.playerId,
+                    username        = currentPlayerProfile.username,
+                    level           = currentPlayerProfile.level,
+                    score           = currentPlayerProfile.rating,
+                    rankTier        = tier,
+                    rankName        = GetRankTierName(tier),
+                    rankBadgeSprite = GetRankBadgeSprite(tier),
+                    isCurrentPlayer = true
+                });
+            }
+            return;
+        }
+
+        foreach (var item in leaderboardResponse.items)
+        {
+            int tier = item.rankTier;
             var entry = new LeaderboardEntryData
             {
-                position        = 0,  // Will assign after sorting
-                playerId        = profile.playerId,
-                username        = profile.username,
-                level           = profile.level,
-                score           = score,
+                position        = item.position,
+                playerId        = item.playerId,
+                username        = item.username,
+                level           = item.level,
+                score           = item.rating,
                 rankTier        = tier,
-                rankName        = GetRankTierName(tier),
+                rankName        = !string.IsNullOrEmpty(item.rankName) ? item.rankName : GetRankTierName(tier),
                 rankBadgeSprite = GetRankBadgeSprite(tier),
-                isCurrentPlayer = (profile.playerId == currentPlayerProfile.playerId)
+                isCurrentPlayer = item.isCurrentPlayer || (currentPlayerProfile != null && item.playerId == currentPlayerProfile.playerId)
             };
 
             leaderboardEntries.Add(entry);
-        }
-
-        // Sort by score descending, then by username alphabetically (for ties)
-        leaderboardEntries.Sort((a, b) => {
-            int scoreCompare = b.score.CompareTo(a.score);  // Higher score first
-            if (scoreCompare != 0)
-                return scoreCompare;
-            
-            // Same score → sort alphabetically by username
-            return string.Compare(a.username, b.username, System.StringComparison.OrdinalIgnoreCase);
-        });
-
-        // Assign positions after sorting
-        for (int i = 0; i < leaderboardEntries.Count; i++)
-        {
-            leaderboardEntries[i].position = i + 1;
         }
     }
 
@@ -320,13 +318,13 @@ public class RankingManager : MonoBehaviour
 
     int CalculateRankTier(int score)
     {
-        if (score >= 6000) return 6; // Thống Nhất Thiên Hạ
-        if (score >= 5000) return 5; // Thống Lĩnh Kiệt Xuất
-        if (score >= 4000) return 4; // Thủ Lĩnh Tài Ba
-        if (score >= 3000) return 3; // Người giữ giao kèo
-        if (score >= 2000) return 2; // Thủ Lĩnh
-        if (score >= 1000) return 1; // Lão Luyện
-        return 0;                     // Tập Sự
+        if (score >= 600) return 6; // Union
+        if (score >= 500) return 5; // Grand Commander
+        if (score >= 400) return 4; // Warlord
+        if (score >= 300) return 3; // Pactkeeper
+        if (score >= 200) return 2; // Captain
+        if (score >= 100) return 1; // Master
+        return 0;                   // Beginner
     }
 
     Sprite GetRankBadgeSprite(int tier)

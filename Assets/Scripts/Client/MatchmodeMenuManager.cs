@@ -21,6 +21,7 @@ public class MatchmodeMenuManager : MonoBehaviour
 
     [Header("Mode Buttons")]
     [SerializeField] private Button randomButton;
+    [SerializeField] private Button rankedButton;
     [SerializeField] private Button challengeButton;
     [SerializeField] private Button inviteButton;
 
@@ -41,6 +42,7 @@ public class MatchmodeMenuManager : MonoBehaviour
 
         // Buttons
         if (randomButton    != null) randomButton.onClick.AddListener(OnRandomClicked);
+        if (rankedButton    != null) rankedButton.onClick.AddListener(OnRankedClicked);
         if (challengeButton != null) challengeButton.onClick.AddListener(OnChallengeClicked);
         if (inviteButton    != null) inviteButton.onClick.AddListener(OnInviteClicked);
 
@@ -60,6 +62,7 @@ public class MatchmodeMenuManager : MonoBehaviour
     void OnDestroy()
     {
         if (randomButton    != null) randomButton.onClick.RemoveListener(OnRandomClicked);
+        if (rankedButton    != null) rankedButton.onClick.RemoveListener(OnRankedClicked);
         if (challengeButton != null) challengeButton.onClick.RemoveListener(OnChallengeClicked);
         if (inviteButton    != null) inviteButton.onClick.RemoveListener(OnInviteClicked);
 
@@ -93,6 +96,12 @@ public class MatchmodeMenuManager : MonoBehaviour
     {
         Close();
         matchmakingManager?.OnClickFindMatch();
+    }
+
+    void OnRankedClicked()
+    {
+        Close();
+        matchmakingManager?.OnClickFindRankedMatch();
     }
 
     void OnChallengeClicked()
