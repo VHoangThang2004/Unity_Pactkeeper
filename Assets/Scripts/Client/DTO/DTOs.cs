@@ -14,6 +14,10 @@ public class PlayerProfileResponse
     public int level;
     public int experience;
     public int gems;
+    public int rating;
+    public int rankTier;
+    public int rankWins;
+    public int rankLosses;
     public OwnedUnitDto[] ownedUnits;
     public OwnedWeaponDto[] ownedWeapons;
     public OwnedTrinketDto[] ownedTrinkets;
@@ -283,4 +287,30 @@ public class NotificationDataDto
     // System
     public string actionType; // "Maintenance", "Event", "LoginReward"
     public string actionUrl;
+}
+
+// -------------------------------------------------------
+// Ranking & Leaderboard
+// -------------------------------------------------------
+
+[System.Serializable]
+public class LeaderboardEntryDto
+{
+    public int position;
+    public string playerId;
+    public string username;
+    public int level;
+    public int rating;
+    public int rankTier;
+    public string rankName;
+    public int rankWins;
+    public int rankLosses;
+    public bool isCurrentPlayer;
+}
+
+[System.Serializable]
+public class LeaderboardResponse
+{
+    public LeaderboardEntryDto[] items;
+    public LeaderboardEntryDto currentPlayer;
 }
