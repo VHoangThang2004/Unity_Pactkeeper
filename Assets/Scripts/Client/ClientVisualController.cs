@@ -606,12 +606,11 @@ public class ClientVisualController : MonoBehaviour
             {
                 float waitDur = session.waitDur > 0 ? session.waitDur : session.overtimeDur;
                 float maxDur = session.waitDur > 0 ? session.maxWaitDur : session.maxOvertimeDur;
-                timerBar.color = session.waitDur > 0 ? Color.green : Color.red;
                 timerBar.fillAmount = maxDur > 0 ? waitDur / maxDur : 0f;
             }
             if (otherBar != null)
             {
-                otherBar.fillAmount = 0;
+                otherBar.fillAmount = 0f;
             }
 
             if (turnFlip != isMyTurn)
