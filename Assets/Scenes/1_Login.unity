@@ -1181,47 +1181,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -312.02032
       objectReference: {fileID: 0}
-    - target: {fileID: 8576438886892845542, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8da25e2e02d2a174dbb8bc5a2af21fac, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8202215491821631028, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 589386254}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
---- !u!1 &589386252 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8202215491821631028, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
+--- !u!114 &589386254 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5966671701803743416, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
   m_PrefabInstance: {fileID: 589386251}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &589386253 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7857443350068411502, guid: db7235ccc6f8bff448212b31b550c786, type: 3}
-  m_PrefabInstance: {fileID: 589386251}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 589386252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2289d51ad1f051648ae1799b05904ecf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Client::SettingsManager
---- !u!114 &589386254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 589386252}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07a9d64400e4a314b9510491be87b306, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::SettingsCanvasManager
-  settingsManager: {fileID: 589386253}
 --- !u!1 &744946928
 GameObject:
   m_ObjectHideFlags: 0

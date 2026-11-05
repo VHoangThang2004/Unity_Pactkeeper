@@ -8719,6 +8719,7 @@ GameObject:
   - component: {fileID: 190420188349877777}
   - component: {fileID: 8576438886892845542}
   - component: {fileID: 7857443350068411502}
+  - component: {fileID: 5966671701803743416}
   m_Layer: 5
   m_Name: SettingPanel
   m_TagString: Untagged
@@ -8825,6 +8826,19 @@ MonoBehaviour:
   languageDropdown: {fileID: 7924836757317013458}
   fpsCounterPanel: {fileID: 0}
   fpsText: {fileID: 0}
+--- !u!114 &5966671701803743416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8202215491821631028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07a9d64400e4a314b9510491be87b306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Client::SettingsCanvasManager
+  settingsManager: {fileID: 7857443350068411502}
 --- !u!1 &8321050084982292152
 GameObject:
   m_ObjectHideFlags: 0

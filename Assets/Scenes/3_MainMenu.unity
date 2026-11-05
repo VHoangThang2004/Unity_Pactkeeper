@@ -6130,7 +6130,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1683680690}
         m_TargetAssemblyTypeName: MatchmakingManager, Client
         m_MethodName: OnClickFindMatch
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -10795,7 +10795,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &942847453
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11201,10 +11201,10 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: -568445989, guid: ae7b7defd63b75c448da077d311668e5, type: 3}
-    m_PressedSprite: {fileID: -1900661815, guid: ae7b7defd63b75c448da077d311668e5, type: 3}
-    m_SelectedSprite: {fileID: -1900661815, guid: ae7b7defd63b75c448da077d311668e5, type: 3}
-    m_DisabledSprite: {fileID: -1799142098, guid: ae7b7defd63b75c448da077d311668e5, type: 3}
+    m_HighlightedSprite: {fileID: -2758097002206042627, guid: e2c947c151959d44ea821d0992112017, type: 3}
+    m_PressedSprite: {fileID: -1413540937410428362, guid: e2c947c151959d44ea821d0992112017, type: 3}
+    m_SelectedSprite: {fileID: -1413540937410428362, guid: e2c947c151959d44ea821d0992112017, type: 3}
+    m_DisabledSprite: {fileID: 7016439274524857470, guid: e2c947c151959d44ea821d0992112017, type: 3}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
@@ -11218,7 +11218,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1683680690}
         m_TargetAssemblyTypeName: MatchmakingManager, Client
-        m_MethodName: OnClickFindMatch
+        m_MethodName: OnClickFindRankedMatch
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11241,14 +11241,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.735849, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.9803922, b: 0.9803922, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6198891033597879594, guid: ae7b7defd63b75c448da077d311668e5, type: 3}
+  m_Sprite: {fileID: 1086356840290083101, guid: e2c947c151959d44ea821d0992112017, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

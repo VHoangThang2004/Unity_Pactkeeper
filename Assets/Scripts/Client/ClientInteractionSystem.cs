@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ClientInteractionSystem : MonoBehaviour
 {
@@ -29,9 +31,28 @@ public class ClientInteractionSystem : MonoBehaviour
     void HandleClick()
     {
         if (scene.movableTilemap == null) return;
-        // if (!session.isOnCell) return;
-        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (IsPointerOverUI()) return;
         HandleTileClick(session.currentCellMouseOn);
+    }
+
+    /// <summary>
+    /// New Input System compatible UI hit-test.
+    /// IsPointerOverGameObject() from Old Input System always returns false
+    /// when using UnityEngine.InputSystem — so we raycast manually instead.
+    /// </summary>
+    private bool IsPointerOverUI()
+    {
+        var eventSystem = EventSystem.current;
+        if (eventSystem == null) return false;
+
+        var pointerData = new PointerEventData(eventSystem)
+        {
+            position = scene.input.MouseScreenPosition
+        };
+
+        var results = new List<RaycastResult>();
+        eventSystem.RaycastAll(pointerData, results);
+        return results.Count > 0;
     }
 
     private Coroutine unlockCoroutine = null;
