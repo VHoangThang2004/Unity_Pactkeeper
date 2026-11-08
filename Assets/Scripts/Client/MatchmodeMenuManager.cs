@@ -38,7 +38,7 @@ public class MatchmodeMenuManager : MonoBehaviour
             matchmakingManager = GetComponent<MatchmakingManager>();
 
         if (friendTabManager == null)
-            friendTabManager = FindFirstObjectByType<FriendTabManager>();
+            friendTabManager = FindAnyObjectByType<FriendTabManager>();
 
         // Buttons
         if (randomButton    != null) randomButton.onClick.AddListener(OnRandomClicked);

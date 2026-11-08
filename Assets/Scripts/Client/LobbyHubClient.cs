@@ -18,7 +18,7 @@ public class LobbyHubClient : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindFirstObjectByType<LobbyHubClient>();
+                _instance = FindAnyObjectByType<LobbyHubClient>();
             }
             return _instance;
         }
@@ -57,11 +57,25 @@ public class LobbyHubClient : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            // Destroy only the duplicate component, NEVER the GameObject it is attached to!
-            Destroy(this);
+            // Destroy duplicate gameObject since it is on dedicated PresenceManager
+            Destroy(transform.root.gameObject);
             return;
         }
         _instance = this;
+        DontDestroyOnLoad(transform.root.gameObject);
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        // When returning to login or logged out, disconnect and clean up persistent manager
+        if (scene.name == "1_Login" || !PlayerSession.IsLoggedIn)
+        {
+            Disconnect();
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+            if (_instance == this) _instance = null;
+            Destroy(transform.root.gameObject);
+        }
     }
 
     void Update()
@@ -81,6 +95,7 @@ public class LobbyHubClient : MonoBehaviour
 
     void OnDestroy()
     {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
         if (_instance == this)
         {
             Disconnect();

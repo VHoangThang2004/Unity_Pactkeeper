@@ -88,7 +88,7 @@ public class FriendTabManager : MonoBehaviour
     {
         if (LobbyHubClient.Instance == null)
         {
-            var existing = FindFirstObjectByType<LobbyHubClient>();
+            var existing = FindAnyObjectByType<LobbyHubClient>();
             if (existing != null)
             {
                 if (existing.Config == null && config != null)
