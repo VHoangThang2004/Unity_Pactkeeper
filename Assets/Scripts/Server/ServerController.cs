@@ -223,10 +223,10 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
     {
         timeline.HandleDecision(clientId, unitId, target, decisionType, skillCardId, clientToken);
     }
-    
-    public void HandleAdvanceTutorialPhase(int newSceneId)
+
+    public void HandleAdvanceTutorialPhase(int newSceneId, bool forceCleanReset = false)
     {
-        if (!session.AdvanceTutorialPhase(newSceneId, spawnManager))
+        if (!session.AdvanceTutorialPhase(newSceneId, spawnManager, forceCleanReset))
             return;
 
         UnitRecalculator.RecalculateAll(session);

@@ -430,7 +430,7 @@ public class ServerMatchSession : MonoBehaviour
         return true;
     }
 
-    public bool AdvanceTutorialPhase(int newSceneId, ServerSpawnManager spawnManager)
+    public bool AdvanceTutorialPhase(int newSceneId, ServerSpawnManager spawnManager, bool forceCleanReset = false)
     {
         if (backendClient == null)
             backendClient = FindAnyObjectByType<ServerBackendClient>();
@@ -446,7 +446,7 @@ public class ServerMatchSession : MonoBehaviour
             return false;
         }
 
-        if (IsEncounterAtCleanStart(newSceneId, newEncounter, spawnManager))
+        if (!forceCleanReset && IsEncounterAtCleanStart(newSceneId, newEncounter, spawnManager))
         {
             Debug.Log($"[MatchSession] SceneId {newSceneId} is already at a clean initial state — skipping reset.");
             return false;

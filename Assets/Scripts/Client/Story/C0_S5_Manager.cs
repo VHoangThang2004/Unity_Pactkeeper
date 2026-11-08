@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Chapter 0 Scene 5 — Unit List tutorial (Dialogue type).
+/// Chapter 0 Scene 5 - Unit List tutorial (Dialogue type).
 /// Loads 7_UnitList additively underneath, runs the plot sequence,
 /// then completes story progress and advances to C0_S6.
 ///
@@ -29,7 +29,13 @@ public class C0_S5_Manager : MonoBehaviour
         // Signal to UnitListManager: skip normal flow, you're a subscene
         TutorialContext.IsActive = true;
 
-        // Load 7_UnitList additively — player sees the real unit list underneath
+        var replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
+        if (replayUI == null)
+            replayUI = gameObject.AddComponent<TutorialReplayUIController>();
+        replayUI.ConfigureDependencies(config, sequencer);
+        replayUI.InitializeUI();
+
+        // Load 7_UnitList additively - player sees the real unit list underneath
         yield return SceneManager.LoadSceneAsync(additiveSceneName, LoadSceneMode.Additive);
 
         // Wait a frame for all Awake/Start/OnEnable calls in 7_UnitList to complete
@@ -41,7 +47,10 @@ public class C0_S5_Manager : MonoBehaviour
         sequencer.StartPlot(() => done = true);
         yield return new WaitUntil(() => done);
 
-        // Plot complete — mark scene done on backend then advance.
+        // Plot complete - mark scene done on backend then advance.
+        int chapter = sequencer != null && sequencer.Plot != null ? sequencer.Plot.chapterId : 0;
+        int scene = sequencer != null && sequencer.Plot != null ? sequencer.Plot.sceneId : 5;
+
         yield return StartCoroutine(StoryClient.CompleteAndAdvance(
             config, this,
             next =>
@@ -51,10 +60,12 @@ public class C0_S5_Manager : MonoBehaviour
             },
             () =>
             {
-                Debug.LogWarning("[C0_S5] Failed to complete story progress — returning to main menu.");
+                Debug.LogWarning($"[C0_S5] Failed to complete story progress for C{chapter}_S{scene} - returning to main menu.");
                 TutorialContext.Reset();
                 SceneManager.LoadScene("3_MainMenu");
-            }
+            },
+            chapterId: chapter,
+            sceneId: scene
         ));
     }
 }

@@ -36,8 +36,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 5
-    text: "I have nothing left to teach you. Return to the main hall\u2014the real
-      battle is only just beginning!"
+    text: I have nothing left to teach you. Return to the main hall - the real battle
+      is only just beginning!
     tutorialTargetId: MainMenuButton
     targetCell: {x: 0, y: 0}
     delay: 3

@@ -41,6 +41,27 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/StoryScenes/C0_S3_Server.unity
     m_guid: 875d82637b0cbd94a9aad44c551ac63f
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C1_S1_Server.unity
+    m_guid: e2000000b1514b51cd5d660000000101
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C1_S2_Server.unity
+    m_guid: e2000000b1524b51cd5d660000000102
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C1_S3_Server.unity
+    m_guid: e2000000b1534b51cd5d660000000103
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C2_S1_Server.unity
+    m_guid: e2000000b2514b51cd5d660000000201
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C2_S2_Server.unity
+    m_guid: e2000000b2524b51cd5d660000000202
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C3_S1_Server.unity
+    m_guid: e2000000b3514b51cd5d660000000301
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C3_S2_Server.unity
+    m_guid: e2000000b3524b51cd5d660000000302
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:

@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Chapter 0 Scene 4 — Unit config tutorial.
+/// Chapter 0 Scene 4 - Unit config tutorial.
 /// Fetches the first unit in the player's team loadout, sets it in PlayerSession,
 /// then loads 8_UnitConfig additively so the tutorial can guide the player.
 /// </summary>
@@ -22,6 +22,12 @@ public class C0_S4_Manager : MonoBehaviour
     {
         TutorialContext.IsActive = true;
 
+        var replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
+        if (replayUI == null)
+            replayUI = gameObject.AddComponent<TutorialReplayUIController>();
+        replayUI.ConfigureDependencies(config, sequencer);
+        replayUI.InitializeUI();
+
         // Fetch first unit in team loadout
         bool fetchDone = false;
         yield return StartCoroutine(FetchFirstUnitId(unitId =>
@@ -29,7 +35,7 @@ public class C0_S4_Manager : MonoBehaviour
             if (!string.IsNullOrEmpty(unitId))
                 PlayerSession.SelectedOwnedUnitId = unitId;
             else
-                Debug.LogWarning("[C0_S4] No unit found in team loadout — tutorial may not display correctly.");
+                Debug.LogWarning("[C0_S4] No unit found in team loadout - tutorial may not display correctly.");
             fetchDone = true;
         }));
 
@@ -41,9 +47,14 @@ public class C0_S4_Manager : MonoBehaviour
         sequencer.StartPlot(() => done = true);
         yield return new WaitUntil(() => done);
 
+        int chapter = sequencer != null && sequencer.Plot != null ? sequencer.Plot.chapterId : 0;
+        int scene = sequencer != null && sequencer.Plot != null ? sequencer.Plot.sceneId : 6;
+
         yield return StartCoroutine(StoryClient.CompleteAndAdvance(config, this,
-            next => { TutorialContext.Reset(); SceneManager.LoadScene("3_MainMenu"); },
-            () => { TutorialContext.Reset(); SceneManager.LoadScene("3_MainMenu"); }
+            next => { TutorialContext.Reset(); StoryClient.RouteToStoryScene(next); },
+            () => { TutorialContext.Reset(); SceneManager.LoadScene("3_MainMenu"); },
+            chapterId: chapter,
+            sceneId: scene
         ));
     }
 

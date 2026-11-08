@@ -21,3 +21,17 @@ MonoBehaviour:
     asset: {fileID: 11400000, guid: 128687a7e2bc5e748802747cdd1df512, type: 2}
   - mapId: MD_PVE_C0S3
     asset: {fileID: 11400000, guid: 46b51074f795ed047809b740737a27ea, type: 2}
+  - mapId: MD_PVE_C1S1
+    asset: {fileID: 11400000, guid: b1000000c1514d218a7f220000000101, type: 2}
+  - mapId: MD_PVE_C1S2
+    asset: {fileID: 11400000, guid: b1000000c1524d218a7f220000000102, type: 2}
+  - mapId: MD_PVE_C1S3
+    asset: {fileID: 11400000, guid: b1000000c1534d218a7f220000000103, type: 2}
+  - mapId: MD_PVE_C2S1
+    asset: {fileID: 11400000, guid: b1000000c2514d218a7f220000000201, type: 2}
+  - mapId: MD_PVE_C2S2
+    asset: {fileID: 11400000, guid: b1000000c2524d218a7f220000000202, type: 2}
+  - mapId: MD_PVE_C3S1
+    asset: {fileID: 11400000, guid: b1000000c3514d218a7f220000000301, type: 2}
+  - mapId: MD_PVE_C3S2
+    asset: {fileID: 11400000, guid: b1000000c3524d218a7f220000000302, type: 2}

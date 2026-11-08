@@ -22,102 +22,102 @@ MonoBehaviour:
     delay: 2
     targetWaitTimeout: 10
   - type: 0
-    text: Welcome back. This time, I've just deployed another Paladin from your side
-      into the fray. Coordinate your actions.
+    text: Welcome back. I have deployed a heavy vanguard alongside your Assassin.
+      True commanders fight as a unit.
     tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Now, call that big Paladin up here.
-    tutorialTargetId: C0S2_Unit2
+    text: Select your Paladin from the Ready Bar.
+    tutorialTargetId: Unit2
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Move him to this position!
+    text: March him forward into striking position at (0, 1).
     tutorialTargetId: 
     targetCell: {x: 0, y: 1}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: 
-    tutorialTargetId: C0S2_ConfirmButton
+    text: Confirm movement.
+    tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 3
+    delay: 2.5
     targetWaitTimeout: 10
   - type: 1
-    text: Click Paladin again!
-    tutorialTargetId: C0S2_Unit2
+    text: Movement is Instant - he can still act. Select the Paladin again.
+    tutorialTargetId: Unit2
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 6
-    text: Preparing to swing the heavy axe. Left click the Weapon Skill!
-    tutorialTargetId: C0S2_WSKILL
+    text: Prepare to heave that heavy axe. Left-click his Weapon Skill.
+    tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Strike at the empty space behind the target! Trust me!
+    text: Aim directly at the enemy tile (1, 0).
     tutorialTargetId: 
     targetCell: {x: 1, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: 
-    tutorialTargetId: C0S2_ConfirmButton
+    text: Commit the strike.
+    tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: See the aura? But nothing happened yet. Let's inspect the skill to understand
+    text: Notice that? The command is locked in, yet no blow has fallen. Let us inspect
       why.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Click on the Paladin on the map to select him again.
+    text: Click the Paladin on the board at (0, 1) to view his loadout.
     tutorialTargetId: 
     targetCell: {x: 0, y: 1}
     delay: 0
     targetWaitTimeout: 10
   - type: 2
-    text: Right-click the Weapon Skill to inspect it.
-    tutorialTargetId: C0S2_WSKILL
+    text: Right-click his Weapon Skill to inspect its timing.
+    tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Look closely at the Skill Type. That slash was a 'Delayed' (Non-Instant)
-      attack.
-    tutorialTargetId: C0S2_STYPE
+    text: Look closely at the Skill Type - every weapon strike is Non-Instant (Delayed).
+    tutorialTargetId: STYPE
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: The heavy weapon is too massive. He is currently channeling his energy;
-      the blow will land later.
+    text: Heavy steel takes momentum. All Non-Instant strikes unleash together at
+      the end of the Paused Instant, ordered by Speed.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Close the inspect panel.
-    tutorialTargetId: C0S2_CancelButton
+    text: Close the Inspect panel.
+    tutorialTargetId: CancelButton
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Press "Wait" and watch the slash come down.
-    tutorialTargetId: C0S2_WaitButton
+    text: Press Wait to close the Instant and watch the delayed cleave crash down!
+    tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
-    delay: 0
+    delay: 3.5
     targetWaitTimeout: 10
   - type: 5
-    text: That concludes the second lesson.
+    text: Well struck. Master the delay between intention and impact, and no foe
+      can evade you.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 5
+    delay: 0
     targetWaitTimeout: 10

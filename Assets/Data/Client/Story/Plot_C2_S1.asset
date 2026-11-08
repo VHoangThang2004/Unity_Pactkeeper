@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C2_S1
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 2
+  sceneId: 1
+  nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "A commander who masters only Instant and Non-Instant steel knows half the art of war. Watch how a Physician bends the Timeline with Half-Instant arts!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Physician at (0, -1).
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 15
+  - type: 2
+    text: Right-click the Physician's Unique Passive (The Physician).
+    tutorialTargetId: PSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Whenever your Physician restores missing HP to a wounded ally, she immediately recovers 1 SP!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Right-click her Tome (Heal!) to inspect its execution timing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Heal! is a Half-Instant skill - unlike delayed weapon strikes, it resolves right now during the Paused Instant while concluding the Physician's turn!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Heal! to mend your wounded Warrior.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your bleeding Warrior at (-1, 0) to restore 1 HP and trigger +1 SP!
+    tutorialTargetId: 
+    targetCell: {x: -1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Heal!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: "Wounds mended, and your Physician now holds a full 3 SP! Select your Warrior - now at the front of the Ready Bar."
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Step forward onto (0, 0) to trigger Momentum!
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Warrior's stride.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior at (0, 0) to strike the executioner.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the enemy executioner at (1, 0) for 2 damage.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm! Watch how your swifter Physician recovers ahead of your exhausted Warrior!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: "Your Physician is ready again with 3 SP, while your Warrior is still recovering steps! Select your Physician."
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 25
+  - type: 2
+    text: Right-click her Class Skill (Triage!) to behold her ultimate support art.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "For 3 SP, Triage! is a Half-Instant miracle - it transfers an adjacent ally's remaining cooldown steps onto the Physician, waking that ally to act immediately!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Triage! to awaken your Warrior.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your recovering Warrior at (0, 0).
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Triage!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: "Your Warrior surges straight onto the Ready Bar! Select him now to finish the executioner!"
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the enemy at (1, 0).
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm the final cleave!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4
+    targetWaitTimeout: 10
+  - type: 5
+    text: "Time itself bends to a true healer's pulse. Press on - ancient relics await inspection."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

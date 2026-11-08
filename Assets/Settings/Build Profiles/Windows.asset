@@ -69,6 +69,27 @@ MonoBehaviour:
     m_path: Assets/Scenes/StoryScenes/C0_S6.unity
     m_guid: c5c49c460faa667419d31034af0f924e
   - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C1_S1.unity
+    m_guid: e1000000a1514a51bd4c550000000101
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C1_S2.unity
+    m_guid: e1000000a1524a51bd4c550000000102
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C1_S3.unity
+    m_guid: e1000000a1534a51bd4c550000000103
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C2_S1.unity
+    m_guid: e1000000a2514a51bd4c550000000201
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C2_S2.unity
+    m_guid: e1000000a2524a51bd4c550000000202
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C3_S1.unity
+    m_guid: e1000000a3514a51bd4c550000000301
+  - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C3_S2.unity
+    m_guid: e1000000a3524a51bd4c550000000302
+  - m_enabled: 1
     m_path: Assets/Scenes/10_StoryProgress.unity
     m_guid: ecd3501d18311d44a9a2dbcfbcb45f01
   - m_enabled: 1

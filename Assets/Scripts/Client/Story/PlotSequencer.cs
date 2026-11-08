@@ -16,6 +16,7 @@ public class PlotSequencer : MonoBehaviour
 {
     [Header("Plot")]
     [SerializeField] private PlotConfig plot;
+    public PlotConfig Plot => plot;
 
     [Header("TextBox UI")]
     [SerializeField] private GameObject textBoxPanel;
@@ -45,7 +46,71 @@ public class PlotSequencer : MonoBehaviour
 
     void Awake()
     {
+        EnsureTransparentPanels();
+        EnsureHighlightSorting();
         HideAll();
+    }
+
+    private void EnsureTransparentPanels()
+    {
+        if (blockerPanel != null)
+        {
+            var img = blockerPanel.GetComponent<Image>();
+            if (img != null)
+                img.color = new Color(0f, 0f, 0f, 0f);
+        }
+        if (nextButton != null)
+        {
+            var img = nextButton.GetComponent<Image>();
+            if (img != null)
+                img.color = new Color(0f, 0f, 0f, 0f);
+        }
+        if (tutorialButton != null)
+        {
+            var img = tutorialButton.GetComponent<Image>();
+            if (img != null)
+                img.color = new Color(0f, 0f, 0f, 0f);
+        }
+    }
+
+    private void EnsureHighlightSorting()
+    {
+        if (highlighter != null)
+        {
+            var hCanvas = highlighter.GetComponent<Canvas>();
+            if (hCanvas != null)
+            {
+                hCanvas.overrideSorting = true;
+                hCanvas.sortingOrder = 1001;
+            }
+        }
+        if (tutorialButton != null)
+        {
+            var bCanvas = tutorialButton.GetComponent<Canvas>();
+            if (bCanvas != null)
+            {
+                bCanvas.overrideSorting = true;
+                bCanvas.sortingOrder = 1002;
+            }
+        }
+        if (textBoxPanel != null)
+        {
+            var tbCanvas = textBoxPanel.GetComponent<Canvas>();
+            if (tbCanvas != null)
+            {
+                tbCanvas.overrideSorting = true;
+                tbCanvas.sortingOrder = 1005;
+            }
+        }
+        if (nextButton != null)
+        {
+            var nbCanvas = nextButton.GetComponent<Canvas>();
+            if (nbCanvas != null)
+            {
+                nbCanvas.overrideSorting = true;
+                nbCanvas.sortingOrder = 1002;
+            }
+        }
     }
 
     void OnDestroy()
@@ -141,7 +206,7 @@ public class PlotSequencer : MonoBehaviour
             return false;
 
         // "END" is attached to TextBoxPanel which PlotSequencer activates itself.
-        if (targetId == "END")
+        if (targetId == "END" || targetId.EndsWith("_END"))
             return true;
 
         if (!target.gameObject.activeInHierarchy)
@@ -158,11 +223,59 @@ public class PlotSequencer : MonoBehaviour
             }
         }
 
-        // For ready unit queue slots, ensure the unit icon sprite has been assigned
-        if (targetId == "Unit1" || targetId == "Unit2")
+        // For ready unit queue slots, ensure the timeline is paused on player's turn, sync is idle, and unit icon sprite is assigned
+        if (targetId == "Unit1" || targetId.EndsWith("_Unit1"))
         {
-            var img = target.GetComponent<Image>();
-            if (img != null && img.sprite == null)
+            EnsureBattleReferences();
+            if (matchSession != null &&
+                (!matchSession.Timeline.isPaused ||
+                 !matchSession.IsMyTurn() ||
+                 matchSession.SyncState != SyncStateValue.Idle ||
+                 matchSession.ownedReadyUnitIds == null ||
+                 matchSession.ownedReadyUnitIds.Count < 1))
+                return false;
+
+            var imgs = target.GetComponentsInChildren<Image>(true);
+            bool hasSprite = false;
+            if (imgs != null)
+            {
+                for (int i = 0; i < imgs.Length; i++)
+                {
+                    if (imgs[i] != null && imgs[i].sprite != null)
+                    {
+                        hasSprite = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasSprite)
+                return false;
+        }
+        else if (targetId == "Unit2" || targetId.EndsWith("_Unit2"))
+        {
+            EnsureBattleReferences();
+            if (matchSession != null &&
+                (!matchSession.Timeline.isPaused ||
+                 !matchSession.IsMyTurn() ||
+                 matchSession.SyncState != SyncStateValue.Idle ||
+                 matchSession.ownedReadyUnitIds == null ||
+                 matchSession.ownedReadyUnitIds.Count < 2))
+                return false;
+
+            var imgs = target.GetComponentsInChildren<Image>(true);
+            bool hasSprite = false;
+            if (imgs != null)
+            {
+                for (int i = 0; i < imgs.Length; i++)
+                {
+                    if (imgs[i] != null && imgs[i].sprite != null)
+                    {
+                        hasSprite = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasSprite)
                 return false;
         }
 
@@ -248,9 +361,9 @@ public class PlotSequencer : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // Multi-plot entry point — for scenes like C0_S1 where
+    // Multi-plot entry point - for scenes like C0_S1 where
     // different plots start on different game triggers.
-    // C0_S2/C0_S3 use StartPlot() directly — this is additive only.
+    // C0_S2/C0_S3 use StartPlot() directly - this is additive only.
     // -------------------------------------------------------
 
     [System.Serializable]
@@ -379,13 +492,18 @@ public class PlotSequencer : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // TextBox — show text, wait for Next click
+    // TextBox - show text, wait for Next click
     // -------------------------------------------------------
 
     IEnumerator RunTextBox(PlotNode node)
     {
         HideAll();
-        if (nextButton != null) nextButton.gameObject.SetActive(true);
+        if (nextButton != null)
+        {
+            var nbImg = nextButton.GetComponent<Image>();
+            if (nbImg != null) nbImg.color = new Color(0f, 0f, 0f, 0f);
+            nextButton.gameObject.SetActive(true);
+        }
         if (skipButton != null)
             skipButton.gameObject.SetActive(allowSkip && !ContainsInteractiveBattleNodes(plot));
 
@@ -440,7 +558,7 @@ public class PlotSequencer : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // GuidedClick — block everything, highlight target UI button
+    // GuidedClick - block everything, highlight target UI button
     // -------------------------------------------------------
 
     IEnumerator RunGuidedClick(PlotNode node)
@@ -480,6 +598,10 @@ public class PlotSequencer : MonoBehaviour
         {
             var persistent = target.Button.onClick;
             btn.onClick.AddListener(() => persistent.Invoke());
+        }
+        else if (target.ExtendedButton != null)
+        {
+            btn.onClick.AddListener(() => target.ExtendedButton.onLeftClick?.Invoke());
         }
 
         _waitingForInput = true;
@@ -527,8 +649,10 @@ public class PlotSequencer : MonoBehaviour
         Action onRightClick = () =>
         {
             if (!_waitingForInput) return;
-            if (RectTransformUtility.RectangleContainsScreenPoint(
-                target.RectTransform, Mouse.current.position.ReadValue()))
+            var buttonRect = tutorialButton.GetComponent<RectTransform>();
+            Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
+            if ((buttonRect != null && RectTransformUtility.RectangleContainsScreenPoint(buttonRect, mousePos)) ||
+                (target.RectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(target.RectTransform, mousePos)))
             {
                 Debug.Log($"[PlotSequencer] GuidedRightClick: right-click detected on target '{node.tutorialTargetId}'");
                 target.ExtendedButton?.onRightClick?.Invoke();
@@ -574,11 +698,47 @@ public class PlotSequencer : MonoBehaviour
 
         _waitingForInput = true;
 
+        btn.onClick.AddListener(() =>
+        {
+            // Fire the actual cell click in the game
+            if (interactionSystem != null && interactionSystem.stateMachine != null)
+            {
+                // Guard: If state machine is not in UnitSelectedState, do not advance
+                if (interactionSystem.stateMachine.currentState is not UnitSelectedState)
+                {
+                    Debug.LogWarning($"[PlotSequencer] GuidedCellClick on {node.targetCell} ignored - StateMachine is in {interactionSystem.stateMachine.currentState?.GetType().Name}, not UnitSelectedState.");
+                    if (matchSession != null && matchSession.ownedReadyUnitIds != null && matchSession.ownedReadyUnitIds.Count > 0)
+                    {
+                        int uId = matchSession.selectedUnitId != -1 ? matchSession.selectedUnitId : matchSession.ownedReadyUnitIds[0];
+                        interactionSystem.stateMachine.GoToUnitSelected(uId);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                var targetCell = new Vector3Int(node.targetCell.x, node.targetCell.y, 0);
+                interactionSystem.stateMachine.OnTileHover(targetCell);
+                interactionSystem.HandleTileClick(targetCell);
+                interactionSystem.stateMachine.OnTileHover(targetCell);
+
+                if (matchSession != null && (!matchSession.isTargetLocked || matchSession.currentPreviewCell.x != node.targetCell.x || matchSession.currentPreviewCell.y != node.targetCell.y))
+                {
+                    Debug.LogWarning($"[PlotSequencer] GuidedCellClick on {targetCell} failed to lock target - remaining on current step.");
+                    return;
+                }
+            }
+            _waitingForInput = false;
+        });
+
         Action onLeftClick = () =>
         {
             if (!_waitingForInput) return;
-            if (RectTransformUtility.RectangleContainsScreenPoint(
-                target.RectTransform, Mouse.current.position.ReadValue()))
+            var buttonRect = tutorialButton.GetComponent<RectTransform>();
+            Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
+            if ((buttonRect != null && RectTransformUtility.RectangleContainsScreenPoint(buttonRect, mousePos)) ||
+                (target.RectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(target.RectTransform, mousePos)))
             {
                 Debug.Log($"[PlotSequencer] GuidedLeftClick: left-click detected on target '{node.tutorialTargetId}'");
                 target.ExtendedButton?.onLeftClick?.Invoke();
@@ -596,7 +756,7 @@ public class PlotSequencer : MonoBehaviour
         HideAll();
     }
     // -------------------------------------------------------
-    // GuidedCellClick — highlight a world-space grid cell
+    // GuidedCellClick - highlight a world-space grid cell
     // -------------------------------------------------------
 
     IEnumerator RunGuidedCellClick(PlotNode node)
@@ -614,7 +774,7 @@ public class PlotSequencer : MonoBehaviour
         yield return null;
 
         // Convert cell (x,y) to world position then to screen position
-        // Assumes cell center is at (x + 0.5, y + 0.5, 0) — adjust if your grid differs
+        // Assumes cell center is at (x + 0.5, y + 0.5, 0) - adjust if your grid differs
         var cam = gameCamera != null ? gameCamera : Camera.main;
         Vector3 worldPos = new Vector3(node.targetCell.x + 0.5f, node.targetCell.y + 0.5f, 0f);
         Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
@@ -644,12 +804,33 @@ public class PlotSequencer : MonoBehaviour
         btn.onClick.AddListener(() =>
         {
             // Fire the actual cell click in the game
-            if (interactionSystem != null)
+            if (interactionSystem != null && interactionSystem.stateMachine != null)
             {
+                // Guard: If state machine is not in UnitSelectedState, do not advance
+                if (interactionSystem.stateMachine.currentState is not UnitSelectedState)
+                {
+                    Debug.LogWarning($"[PlotSequencer] GuidedCellClick on {node.targetCell} ignored - StateMachine is in {interactionSystem.stateMachine.currentState?.GetType().Name}, not UnitSelectedState.");
+                    if (matchSession != null && matchSession.ownedReadyUnitIds != null && matchSession.ownedReadyUnitIds.Count > 0)
+                    {
+                        int uId = matchSession.selectedUnitId != -1 ? matchSession.selectedUnitId : matchSession.ownedReadyUnitIds[0];
+                        interactionSystem.stateMachine.GoToUnitSelected(uId);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
                 var targetCell = new Vector3Int(node.targetCell.x, node.targetCell.y, 0);
                 interactionSystem.stateMachine.OnTileHover(targetCell);
                 interactionSystem.HandleTileClick(targetCell);
                 interactionSystem.stateMachine.OnTileHover(targetCell);
+
+                if (matchSession != null && (!matchSession.isTargetLocked || matchSession.currentPreviewCell.x != node.targetCell.x || matchSession.currentPreviewCell.y != node.targetCell.y))
+                {
+                    Debug.LogWarning($"[PlotSequencer] GuidedCellClick on {targetCell} failed to lock target - remaining on current step.");
+                    return;
+                }
             }
             _waitingForInput = false;
         });
@@ -668,7 +849,7 @@ public class PlotSequencer : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // CompleteAndExit — final button, no real button onClick copied
+    // CompleteAndExit - final button, no real button onClick copied
     // -------------------------------------------------------
 
     IEnumerator RunCompleteAndExit(PlotNode node)
@@ -685,36 +866,75 @@ public class PlotSequencer : MonoBehaviour
 
         if (string.IsNullOrEmpty(node.tutorialTargetId))
         {
-            // Fallback to simple "Next" button if no target ID is specified
-            nextButton.gameObject.SetActive(true);
-            _waitingForInput = true;
-            
-            nextButton.onClick.RemoveAllListeners();
-            nextButton.onClick.AddListener(() =>
+            // Case 1: node.text has content -> player must actively click Next (elevated above blocker) to confirm!
+            if (!string.IsNullOrEmpty(node.text))
             {
-                HideAll();
-                _waitingForInput = false;
-                _onComplete?.Invoke();
-            });
+                if (nextButton != null)
+                {
+                    var nbImg = nextButton.GetComponent<Image>();
+                    if (nbImg != null)
+                        nbImg.color = new Color(0f, 0f, 0f, 0f);
 
-            if (node.delay > 0)
-            {
-                float timer = 0f;
-                while (_waitingForInput && timer < node.delay)
-                {
-                    timer += Time.deltaTime;
-                    yield return null;
+                    nextButton.gameObject.SetActive(true);
+
+                    // Ensure nextButton CanvasGroup is interactive and click-blocking (transparent)
+                    var nbCanvasGroup = nextButton.GetComponent<CanvasGroup>();
+                    if (nbCanvasGroup != null)
+                    {
+                        nbCanvasGroup.interactable = true;
+                        nbCanvasGroup.blocksRaycasts = true;
+                    }
+
+                    // Ensure nextButton Canvas is elevated above blockerPanel (sortingOrder 1000)
+                    var nbCanvas = nextButton.GetComponent<Canvas>();
+                    if (nbCanvas != null)
+                    {
+                        nbCanvas.overrideSorting = true;
+                        nbCanvas.sortingOrder = 1002;
+                    }
+
+                    _waitingForInput = true;
+                    nextButton.onClick.RemoveAllListeners();
+                    nextButton.onClick.AddListener(() =>
+                    {
+                        HideAll();
+                        _waitingForInput = false;
+                        _onComplete?.Invoke();
+                    });
+
+                    // Wait for player to actively click (NO auto-timeout cutoff!)
+                    while (_waitingForInput)
+                    {
+                        yield return null;
+                    }
                 }
-                if (_waitingForInput) // Timer expired before click
+                else
                 {
-                    HideAll();
-                    _waitingForInput = false;
-                    _onComplete?.Invoke();
+                    // Fallback to tutorialButton if nextButton reference is missing
+                    tutorialButton.SetActive(true);
+                    var btn = tutorialButton.GetComponent<Button>();
+                    btn.onClick.RemoveAllListeners();
+                    _waitingForInput = true;
+                    btn.onClick.AddListener(() =>
+                    {
+                        HideAll();
+                        _waitingForInput = false;
+                        _onComplete?.Invoke();
+                    });
+
+                    while (_waitingForInput)
+                    {
+                        yield return null;
+                    }
                 }
             }
             else
             {
-                yield return new WaitUntil(() => !_waitingForInput);
+                // Case 2: No text and no tutorialTargetId -> auto-advance after delay
+                float delayTime = node.delay > 0 ? node.delay : 1.0f;
+                yield return new WaitForSeconds(delayTime);
+                HideAll();
+                _onComplete?.Invoke();
             }
         }
         else
@@ -741,28 +961,10 @@ public class PlotSequencer : MonoBehaviour
                 _onComplete?.Invoke();
             });
 
-            if (node.delay > 0)
+            while (!buttonClicked)
             {
-                float timer = 0f;
-                while (!buttonClicked && timer < node.delay)
-                {
-                    if (target != null) PositionButtonHighlight(target);
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
-                if (!buttonClicked) // Timer expired before click
-                {
-                    HideAll();
-                    _onComplete?.Invoke();
-                }
-            }
-            else
-            {
-                while (!buttonClicked)
-                {
-                    if (target != null) PositionButtonHighlight(target);
-                    yield return null;
-                }
+                if (target != null) PositionButtonHighlight(target);
+                yield return null;
             }
         }
     }
@@ -781,49 +983,104 @@ public class PlotSequencer : MonoBehaviour
     // Helpers
     // -------------------------------------------------------
 
+    private readonly Vector3[] _corners = new Vector3[4];
+
+    private void CalculateScreenRect(TutorialTarget target, out Vector2 centerScreen, out Vector2 sizeScreen)
+    {
+        var targetRect = target.RectTransform;
+        targetRect.GetWorldCorners(_corners);
+
+        Canvas targetCanvas = target.GetComponentInParent<Canvas>();
+        Camera targetCam = (targetCanvas != null && targetCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            ? (targetCanvas.worldCamera != null ? targetCanvas.worldCamera : (gameCamera != null ? gameCamera : Camera.main))
+            : null;
+
+        Vector2 minScreen = RectTransformUtility.WorldToScreenPoint(targetCam, _corners[0]);
+        Vector2 maxScreen = minScreen;
+        for (int i = 1; i < 4; i++)
+        {
+            Vector2 sp = RectTransformUtility.WorldToScreenPoint(targetCam, _corners[i]);
+            minScreen = Vector2.Min(minScreen, sp);
+            maxScreen = Vector2.Max(maxScreen, sp);
+        }
+
+        centerScreen = (minScreen + maxScreen) * 0.5f;
+        sizeScreen = new Vector2(Mathf.Abs(maxScreen.x - minScreen.x), Mathf.Abs(maxScreen.y - minScreen.y));
+    }
+
     void PositionButtonHighlight(TutorialTarget target)
     {
         if (target == null || target.RectTransform == null) return;
         RebuildTargetLayout(target);
 
         var buttonRect = tutorialButton.GetComponent<RectTransform>();
-        var targetRect = target.RectTransform;
         var highlighterRect = highlighter.GetComponent<RectTransform>();
+        var parentRect = buttonRect.parent as RectTransform;
 
-        buttonRect.position = targetRect.position;
-        buttonRect.sizeDelta = targetRect.rect.size;
-        highlighterRect.position = targetRect.position;
-        highlighterRect.sizeDelta = targetRect.rect.size * 1.2f;
-        buttonRect.pivot = targetRect.pivot;
-        highlighterRect.pivot = targetRect.pivot;
+        CalculateScreenRect(target, out Vector2 centerScreen, out Vector2 sizeScreen);
+
+        if (parentRect != null && RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, centerScreen, null, out Vector2 localPoint))
+        {
+            buttonRect.anchoredPosition = localPoint;
+            highlighterRect.anchoredPosition = localPoint;
+
+            float scaleX = parentRect.lossyScale.x > 0 ? parentRect.lossyScale.x : 1f;
+            float scaleY = parentRect.lossyScale.y > 0 ? parentRect.lossyScale.y : 1f;
+            Vector2 canvasSize = new Vector2(sizeScreen.x / scaleX, sizeScreen.y / scaleY);
+
+            buttonRect.sizeDelta = canvasSize;
+            highlighterRect.sizeDelta = canvasSize * 1.2f;
+        }
+        else
+        {
+            buttonRect.position = target.RectTransform.position;
+            buttonRect.sizeDelta = target.RectTransform.rect.size;
+            highlighterRect.position = target.RectTransform.position;
+            highlighterRect.sizeDelta = target.RectTransform.rect.size * 1.2f;
+        }
+
+        buttonRect.pivot = new Vector2(0.5f, 0.5f);
+        highlighterRect.pivot = new Vector2(0.5f, 0.5f);
 
         tutorialButton.SetActive(true);
         highlighter.SetActive(true);
 
         // Move textbox away from target if it's visible
         if (textBoxPanel.activeSelf)
-            PositionTextBoxAwayFrom(targetRect);
+            PositionTextBoxAwayFrom(centerScreen.y);
     }
 
     void PositionTargetHighlight(TutorialTarget target)
     {
-        if (target == null) return;
-        var targetRect = target.RectTransform;
-        if (targetRect == null)
-        {
-            Debug.LogError($"[PlotSequencer] PositionTargetHighlight: target has no RectTransform.");
-            return;
-        }
+        if (target == null || target.RectTransform == null) return;
         RebuildTargetLayout(target);
-        var highlighterRect = highlighter.GetComponent<RectTransform>();
-        highlighterRect.position = targetRect.position;
-        highlighterRect.sizeDelta = targetRect.rect.size * 1.2f;
-        highlighterRect.pivot = targetRect.pivot;
 
+        var highlighterRect = highlighter.GetComponent<RectTransform>();
+        var parentRect = highlighterRect.parent as RectTransform;
+
+        CalculateScreenRect(target, out Vector2 centerScreen, out Vector2 sizeScreen);
+
+        if (parentRect != null && RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, centerScreen, null, out Vector2 localPoint))
+        {
+            highlighterRect.anchoredPosition = localPoint;
+
+            float scaleX = parentRect.lossyScale.x > 0 ? parentRect.lossyScale.x : 1f;
+            float scaleY = parentRect.lossyScale.y > 0 ? parentRect.lossyScale.y : 1f;
+            Vector2 canvasSize = new Vector2(sizeScreen.x / scaleX, sizeScreen.y / scaleY);
+
+            highlighterRect.sizeDelta = canvasSize * 1.2f;
+        }
+        else
+        {
+            highlighterRect.position = target.RectTransform.position;
+            highlighterRect.sizeDelta = target.RectTransform.rect.size * 1.2f;
+        }
+
+        highlighterRect.pivot = new Vector2(0.5f, 0.5f);
         highlighter.SetActive(true);
 
         if (textBoxPanel.activeSelf)
-            PositionTextBoxAwayFrom(targetRect);
+            PositionTextBoxAwayFrom(centerScreen.y);
     }
 
     void PositionTextBoxAwayFrom(RectTransform targetRect)

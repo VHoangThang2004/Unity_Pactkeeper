@@ -67,10 +67,74 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     private void Start()
     {
         scene.loadingScreen.Show("Connecting to server...");
-        ConnectToServer();
+        StartCoroutine(ConnectWithRetry());
     }
 
-    void ConnectToServer()
+    [Header("Connection Retry")]
+    [Tooltip("Total StartClient attempts before giving up (the dedicated server needs 1-3s to boot and open its UDP port).")]
+    [SerializeField] private int connectMaxAttempts = 4;
+    [Tooltip("Seconds to wait for the SyncedBridge to spawn after each StartClient attempt.")]
+    [SerializeField] private float connectAttemptTimeout = 6f;
+    [SerializeField] private float connectRetryDelay = 1.5f;
+
+    /// <summary>
+    /// Previously a single StartClient() call: if the freshly spawned server was not listening yet
+    /// (or crashed), ClientMenuReturner swallowed the disconnect during tutorials and the screen stayed on
+    /// "Connecting to server..." forever. Now we retry a few times, then leave cleanly.
+    /// </summary>
+    IEnumerator ConnectWithRetry()
+    {
+        for (int attempt = 1; attempt <= connectMaxAttempts; attempt++)
+        {
+            if (attempt > 1)
+            {
+                scene.loadingScreen.Show($"Connecting to server... (retry {attempt - 1}/{connectMaxAttempts - 1})");
+
+                var nm = NetworkManager.Singleton;
+                if (nm != null && nm.IsListening)
+                {
+                    nm.Shutdown();
+                    float shutdownWait = 0f;
+                    while (nm != null && nm.IsListening && shutdownWait < 2f)
+                    {
+                        shutdownWait += Time.unscaledDeltaTime;
+                        yield return null;
+                    }
+                }
+                yield return new WaitForSecondsRealtime(connectRetryDelay);
+            }
+
+            ConnectToServer();
+
+            float waited = 0f;
+            while (bridge == null && waited < connectAttemptTimeout)
+            {
+                // StartClient failed or the server refused/closed the connection -> retry right away
+                if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening) break;
+                waited += Time.unscaledDeltaTime;
+                yield return null;
+            }
+
+            if (bridge != null) yield break; // OnBridgeReady took over
+            Debug.LogWarning($"[ClientController] Connect attempt {attempt}/{connectMaxAttempts} failed.");
+        }
+
+        Debug.LogError("[ClientController] Could not reach the battle server - leaving the match.");
+        scene.loadingScreen.Show("Cannot reach the battle server. Returning...");
+        yield return new WaitForSecondsRealtime(2f);
+
+        bool wasTutorial = TutorialContext.IsActive;
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            NetworkManager.Singleton.Shutdown();
+        TutorialContext.Reset();
+
+        string dest = wasTutorial && sceneConfig != null && Application.CanStreamedLevelBeLoaded(sceneConfig.storyProgressScene)
+            ? sceneConfig.storyProgressScene
+            : (sceneConfig != null ? sceneConfig.mainMenuScene : "3_MainMenu");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(dest);
+    }
+
+    bool ConnectToServer()
     {
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
@@ -81,7 +145,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
         NetworkManager.Singleton.NetworkConfig.ConnectionData =
             Encoding.UTF8.GetBytes(PlayerSession.Token);
 
-        NetworkManager.Singleton.StartClient();
+        return NetworkManager.Singleton.StartClient();
     }
 
     

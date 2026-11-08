@@ -54,9 +54,9 @@ public class SyncedBridge : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    public void AdvanceTutorialPhaseServerRpc(int newSceneId)
+    public void AdvanceTutorialPhaseServerRpc(int newSceneId, bool forceCleanReset = false)
     {
-        server?.HandleAdvanceTutorialPhase(newSceneId);
+        server?.HandleAdvanceTutorialPhase(newSceneId, forceCleanReset);
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]

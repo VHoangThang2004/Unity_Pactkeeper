@@ -158,8 +158,15 @@ public class UnitSelectedState : IInteractionState
 
     public void OnInspectSkill(int skillId)
     {
-        OnDecision(skillId);
-        scene.visualController.ShowInspectPanel(true, scene.skillLibrary.Get(skillId));
+        SkillDefinition skill = scene.skillLibrary.Get(skillId);
+        // Only active skills with a target pattern can be switched to for range preview.
+        // Passive skills (e.g. Steady Aim 5004) do not have target patterns and must NOT
+        // overwrite session.currentSkillId or clear the unit's active movement/skill targeting.
+        if (skill != null && skill.targetPattern != null)
+        {
+            OnDecision(skillId);
+        }
+        scene.visualController.ShowInspectPanel(true, skill);
     }
 
 

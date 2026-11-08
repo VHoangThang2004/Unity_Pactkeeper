@@ -140,6 +140,8 @@ public class MainMenuManager : MonoBehaviour
         if (!force && !progress.autoResume)
             return true;
 
+        PlayerSession.IsAutoResumed = true;
+
         var targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
 
         if (targetScene == SceneManager.GetActiveScene().name)
@@ -317,30 +319,55 @@ public class MainMenuManager : MonoBehaviour
     public void GoToUnitList()
     {
         matchmakingManager.OnClickCancel();
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[MainMenu] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.unitListScene);
     }
 
     public void GoToGacha()
     {
         matchmakingManager.OnClickCancel();
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[MainMenu] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.gachaScene);
     }
 
     public void GoToStoryProgress()
     {
         matchmakingManager.OnClickCancel();
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[MainMenu] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.storyProgressScene);
     }
 
     public void GoToRanking()
     {
         matchmakingManager.OnClickCancel();
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[MainMenu] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.rankingScene);
     }
 
     public void GoToInventory()
     {
         matchmakingManager.OnClickCancel();
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[MainMenu] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.inventoryScene);
     }
 

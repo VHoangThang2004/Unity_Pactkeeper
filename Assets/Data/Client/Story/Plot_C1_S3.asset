@@ -1,0 +1,167 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C1_S3
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 1
+  sceneId: 3
+  nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "An Iron Warlord anchors the center at (0, 0) with 4 HP. Right now, neither your Archer at (1, -2) nor your Tank at (2, 0) can reach him."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "If you cannot bring your squad to the enemy, drive the enemy into your squad's kill zone!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior at (-1, 0).
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 15
+  - type: 2
+    text: Right-click the Warrior's Class Skill (Push!) to inspect it.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Push! is an Instant skill - for 1 SP, it shoves an adjacent unit 1 tile away, straight into your allies' sights!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Push! to arm it.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the Warlord at (0, 0) to drive him east onto (1, 0).
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Push!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: The Warlord stumbles onto (1, 0)! Select your Warrior again to press the assault.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Advance onto (0, 0) to close in and ignite Momentum!
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Warrior's advance.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior at (0, 0) to queue a Momentum-charged cleave.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the Warlord at (1, 0) for 2 damage.
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm to queue your Warrior's strike.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now select your Archer - she has a clean 2-tile vertical shot from (1, -2) to (1, 0)!
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Bow.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the Warlord at (1, 0).
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm to queue your Archer's arrow.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Finally, select your Tank at (2, 0) to deliver the finishing blow!
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Sword & Shield.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the Warlord at (1, 0).
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm! Watch all three blades and arrows converge in a single Instant!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4.5
+    targetWaitTimeout: 10
+  - type: 5
+    text: "One shove turned an untouchable warlord into ashes. Chapter 1 is yours, Pactkeeper!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

@@ -150,6 +150,11 @@ public class UnitListManager : MonoBehaviour
 
     public void OnClickReturnMainMenu()
     {
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[UnitList] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.mainMenuScene);
     }
     public IEnumerator SaveFormationToBackend(List<int> uIds)

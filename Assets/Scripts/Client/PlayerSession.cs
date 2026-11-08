@@ -16,6 +16,22 @@ public static class PlayerSession
     public static bool IsAdmin    => Role.Equals("Admin", System.StringComparison.OrdinalIgnoreCase);
     public static string SelectedOwnedUnitId { get; set; } = string.Empty;
 
+    // ── Story Mode & Replay Session Flags ────────────────────────────────────
+    /// <summary>
+    /// True ONLY when the player is playing a Chapter they have already completed
+    /// (targetChapterId <= MaxCompletedChapterId). Controls visibility of "Skip Scene" & "Exit to Map".
+    /// </summary>
+    public static bool CanSkipOrExitStory { get; set; } = false;
+
+    /// <summary>
+    /// False whenever a player manually selects a Chapter/Scene from 10_StoryProgress.
+    /// Forces BattleTutorialStarter to request a clean board reset from Instant 0.
+    /// </summary>
+    public static bool IsAutoResumed { get; set; } = false;
+
+    public static int SelectedStoryChapterId { get; set; } = 0;
+    public static int SelectedStorySceneId   { get; set; } = 1;
+
     public static void Clear()
     {
         Token    = string.Empty;
@@ -24,5 +40,9 @@ public static class PlayerSession
         Role     = string.Empty;
         MatchId  = string.Empty;
         SelectedOwnedUnitId = string.Empty;
+        CanSkipOrExitStory  = false;
+        IsAutoResumed       = false;
+        SelectedStoryChapterId = 0;
+        SelectedStorySceneId   = 1;
     }
 }

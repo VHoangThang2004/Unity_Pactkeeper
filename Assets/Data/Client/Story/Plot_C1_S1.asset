@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C1_S1
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 1
+  sceneId: 1
+  nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Hold the line, Varek! Your Warrior stands wounded at (0, 0), directly beneath the enemy raider - and an Axe cannot cleave straight ahead."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Paladin Tank first to interpose his shield.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 15
+  - type: 2
+    text: Right-click the Tank's Unique Passive (The Guardian) to inspect his vow.
+    tutorialTargetId: PSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Whenever the Tank acts during a Paused Instant, he gains Iron Body at the Instant's end - capping the next blow he suffers to 1 damage."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Now right-click his Class Skill (Guard!) to see how a vanguard rescues an ally.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Guard! is an Instant skill - for 1 SP, your Tank immediately swaps places with an adjacent ally while keeping the Instant paused!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Guard! to arm the swap.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your wounded Warrior at (0, 0) to trade positions.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Guard! and step into the breach.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Your Tank now holds the center at (0, 0) and remains ready. Select him again.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Sword & Shield to strike straight ahead.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the enemy raider at (0, 1).
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm to queue your Tank's Non-Instant shield thrust.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now select your Warrior - safely repositioned to (0, -1) and shifted to the front of the Ready Bar.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Flank diagonally to (1, 0) so your Axe has a clean side arc!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Warrior's stride.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior at (1, 0) to unleash his counterattack.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Right-click the Warrior's Unique Passive (Assault) before striking.
+    tutorialTargetId: PSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Advancing with his own footwork awakened Momentum - doubling his Axe damage this Instant! Remember, an Axe cleaves adjacent left or right columns, never straight up or down."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the enemy raider diagonally at (0, 1).
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm! Both queued strikes will now crash down in sequence!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4.5
+    targetWaitTimeout: 10
+  - type: 5
+    text: "Shield in front, steel on the flank - that is the Iron Vanguard! Onward to the ridge."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

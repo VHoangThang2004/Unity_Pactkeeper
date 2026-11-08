@@ -21,8 +21,14 @@ EditorBuildSettings:
     path: Assets/Scenes/4_Lobby.unity
     guid: 0bcbaf24d348640438c787e6be462c95
   - enabled: 1
+    path: Assets/Scenes/4_SingleStoryLobby.unity
+    guid: 3f3b1b16428024b4091a3c24059a314e
+  - enabled: 1
     path: Assets/Scenes/5_ClientMatch.unity
     guid: 09d259b7cf3b8ca4e89b35242e669969
+  - enabled: 1
+    path: Assets/Scenes/5_ServerMatch.unity
+    guid: efd9472b92ce7544293210cab6c26736
   - enabled: 1
     path: Assets/Scenes/6_MatchResult.unity
     guid: 7f939e44cb9e81a4eb14d3adc7589739
@@ -36,8 +42,92 @@ EditorBuildSettings:
     path: Assets/Scenes/9_Gacha.unity
     guid: e60011e8254d2f047b3f33615485e34b
   - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S0.unity
+    guid: e9414f174dd9ddd49bf6279c2c254f02
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S1.unity
+    guid: 6625f338745d0c64fbedfb18bf133bef
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S1_Server.unity
+    guid: 407f9ac473db26643bfa1e5b8d5e1084
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S2.unity
+    guid: c16895b8c142c9c4c9c683a1fb216612
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S2_Server.unity
+    guid: b41f4e08da2a69f45a139f12a9ebf9e2
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S3.unity
+    guid: 15cef65f8a297084f9f7149c5d91a665
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S3_Server.unity
+    guid: 875d82637b0cbd94a9aad44c551ac63f
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S4.unity
+    guid: 6931be719d0f4a345b40d0873e7cfd85
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S5.unity
+    guid: ab33643473f595d47b3c3253f7924f24
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C0_S6.unity
+    guid: c5c49c460faa667419d31034af0f924e
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C1_S1.unity
+    guid: e1000000a1514a51bd4c550000000101
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C1_S2.unity
+    guid: e1000000a1524a51bd4c550000000102
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C1_S3.unity
+    guid: e1000000a1534a51bd4c550000000103
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C2_S1.unity
+    guid: e1000000a2514a51bd4c550000000201
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C2_S2.unity
+    guid: e1000000a2524a51bd4c550000000202
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C3_S1.unity
+    guid: e1000000a3514a51bd4c550000000301
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C3_S2.unity
+    guid: e1000000a3524a51bd4c550000000302
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C1_S1_Server.unity
+    guid: e2000000b1514b51cd5d660000000101
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C1_S2_Server.unity
+    guid: e2000000b1524b51cd5d660000000102
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C1_S3_Server.unity
+    guid: e2000000b1534b51cd5d660000000103
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C2_S1_Server.unity
+    guid: e2000000b2514b51cd5d660000000201
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C2_S2_Server.unity
+    guid: e2000000b2524b51cd5d660000000202
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C3_S1_Server.unity
+    guid: e2000000b3514b51cd5d660000000301
+  - enabled: 1
+    path: Assets/Scenes/StoryScenes/C3_S2_Server.unity
+    guid: e2000000b3524b51cd5d660000000302
+  - enabled: 1
+    path: Assets/Scenes/10_StoryProgress.unity
+    guid: ecd3501d18311d44a9a2dbcfbcb45f01
+  - enabled: 1
     path: Assets/Scenes/11_Ranking.unity
     guid: a16cccba5621a1f4481f2e3675682548
+  - enabled: 1
+    path: Assets/Scenes/12_Inventory.unity
+    guid: e1975658de75cb14285d582e2cc319b1
+  - enabled: 1
+    path: Assets/Scenes/13_Quest.unity
+    guid: 620f69c0ecfafa74d838a5d424e0e74e
+  - enabled: 1
+    path: Assets/Scenes/14_Chat.unity
+    guid: 115fc5a529ef0034e9f6356065a550c1
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 2d4cb3d70441b4844bbbb96d81739dd7, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

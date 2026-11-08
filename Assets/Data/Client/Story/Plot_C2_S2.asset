@@ -1,0 +1,179 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C2_S2
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 2
+  sceneId: 2
+  nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "An armored sentinel guards (1, 0) from 3 tiles away. Your Archer lacks the 2 SP required for Focused Aim, and your Warrior stands too far west to reach him in one stride."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "When SP is scarce, Trinket Skills turn the tide - spending zero SP to reshape your reach!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Archer at (-2, 0).
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 15
+  - type: 2
+    text: Right-click the Trinket Skill slot (Far Sight!) to inspect its power.
+    tutorialTargetId: TSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Far Sight! is an Instant Trinket costing 0 SP - extending horizontal weapon reach by +1 tile for 10 Instants!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Far Sight! to arm it.
+    tutorialTargetId: TSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your Archer at (-2, 0).
+    tutorialTargetId: 
+    targetCell: {x: -2, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Far Sight!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Archer again - her Bow now reaches 3 tiles horizontally!
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Bow.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the sentinel 3 tiles east at (1, 0).
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm to queue your Archer's opening shot.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now select your Warrior at (-2, -1).
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Right-click the Warrior's Trinket Skill (Turbo!) to inspect his relic.
+    tutorialTargetId: TSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Turbo! costs 0 SP and expands both horizontal and vertical outer movement reach by +1 tile - letting a heavy Warrior cross half the board in a single bound!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Turbo! to ignite it.
+    tutorialTargetId: TSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your Warrior at (-2, -1).
+    tutorialTargetId: 
+    targetCell: {x: -2, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Turbo!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior again to test his expanded stride.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Surge across 2 columns onto (0, 0) to close the gap and trigger Momentum!
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Turbo-charged leap!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior at (0, 0) to seal the sentinel's fate.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the sentinel at (1, 0) for 2 Momentum damage!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm! Arrow and axe fall together!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4
+    targetWaitTimeout: 10
+  - type: 5
+    text: "Relics mastered, Chapter 2 complete! Ahead lies the Emerald Sanctum - and the final trial of the Pact."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

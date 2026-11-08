@@ -915,6 +915,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5de8ea34fc6c68649b4d6236b97490b5, type: 3}
   - {fileID: 21300000, guid: 03b3043baf317384b80a1f0c3ca5249f, type: 3}
   - {fileID: 21300000, guid: 5757e0e3e7529bd41aaa601f6a8a3c51, type: 3}
+  - {fileID: 21300000, guid: a3000000c3004c71bf2d770000000300, type: 3}
   backButton: {fileID: 395956818}
   popupPanel: {fileID: 460457518}
   popupCloseButton: {fileID: 189713288}
@@ -925,6 +926,8 @@ MonoBehaviour:
   popupProgressText: {fileID: 760016189}
   popupCurrentSceneLabel: {fileID: 1400226170}
   popupSceneListText: {fileID: 191905347}
+  popupSceneDropdownContainer: {fileID: 105141883}
+  sceneDropdownItemPrefab: {fileID: 1000010000000000001, guid: f1000000d1514d61ae3f660000000101, type: 3}
   popupColorCompleted: {r: 0.18, g: 0.72, b: 0.35, a: 1}
   popupColorInProgress: {r: 0.93, g: 0.65, b: 0.1, a: 1}
   popupColorNotStarted: {r: 0.65, g: 0.65, b: 0.65, a: 1}
