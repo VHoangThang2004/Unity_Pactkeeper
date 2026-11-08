@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C1_S2
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 1
+  sceneId: 2
+  nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Two targets hold the eastern lane - a sentry at (1, 0) and a heavy bastion behind him at (2, 0). Patience and precision win a marksman's duel."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Archer to survey the firing lane.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 15
+  - type: 2
+    text: Right-click the Archer's Unique Passive (Steady Aim).
+    tutorialTargetId: PSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Each resolved arrow builds focus. After 2 resolved shots, Steady Aim grants Piercing Shot - doubling the damage of your third arrow!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Step diagonally to (-1, 0) to align your Bow with the center row.
+    tutorialTargetId: 
+    targetCell: {x: -1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Archer's diagonal step.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Archer at (-1, 0).
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: "A standard Bow strikes strictly 2 tiles away. Left-click Bow to loose your first shaft."
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the near sentry 2 tiles east at (1, 0).
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm! Loose the first arrow and let the Timeline advance to your next turn.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: "First target down, and Steady Aim holds 1 charge! Select your Archer now that she has recovered."
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 25
+  - type: 2
+    text: "The bastion at (2, 0) stands 3 tiles away - beyond standard Bow reach. Right-click Focused Aim to inspect it."
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "For 2 SP, Focused Aim extends your Bow's reach to 3 tiles for 10 Instants - long enough to carry across multiple turns!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Focused Aim to arm it.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your Archer at (-1, 0).
+    tutorialTargetId: 
+    targetCell: {x: -1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Focused Aim!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Sightline extended! Select your Archer again.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Bow to fire at long range.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the distant bastion 3 tiles away at (2, 0).
+    tutorialTargetId: 
+    targetCell: {x: 2, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your second shot to complete Steady Aim's second charge!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: "Piercing Shot is primed, and Focused Aim still holds! Select your Archer for the finishing shot."
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 25
+  - type: 6
+    text: Left-click Bow - your arrow now gleams with double damage!
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the bastion at (2, 0) to pierce his armor!
+    tutorialTargetId: 
+    targetCell: {x: 2, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm the Piercing Shot!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4
+    targetWaitTimeout: 10
+  - type: 5
+    text: "Three shafts, zero wasted motion. No fortress wall can shelter a foe from a disciplined eye."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

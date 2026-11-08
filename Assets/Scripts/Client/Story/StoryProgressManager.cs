@@ -8,12 +8,9 @@ using TMPro;
 
 /// <summary>
 /// Scene manager for 10_StoryProgress.
-/// Fetches chapter configs + player progress, renders a horizontal scroll list
-/// of ChapterCard prefabs, and shows a detail popup when a card is clicked.
-///
-/// API calls:
-///   GET /api/chapterconfig              — all chapter definitions (title, scenes)
-///   GET /api/story/progress/all         — player progress per chapter
+/// Fetches chapter configs + player progress, renders a horizontal/vertical list
+/// of ChapterCard prefabs (with Accordion Dropdowns), and supports launching any unlocked
+/// scene with autoResume = false.
 /// </summary>
 public class StoryProgressManager : MonoBehaviour
 {
@@ -72,8 +69,8 @@ public class StoryProgressManager : MonoBehaviour
     [SerializeField] private BackendConfig config;
     [SerializeField] private SceneConfig   sceneConfig;
 
-    [Header("Horizontal Scroll — Chapter Cards")]
-    [SerializeField] private Transform  cardContainer;     // HorizontalLayoutGroup Content
+    [Header("Horizontal/Vertical Scroll - Chapter Cards")]
+    [SerializeField] private Transform  cardContainer;     // LayoutGroup Content
     [SerializeField] private GameObject chapterCardPrefab;
     [SerializeField] private GameObject loadingIndicator;
     [SerializeField] private GameObject emptyState;        // "No chapters available"
@@ -97,8 +94,12 @@ public class StoryProgressManager : MonoBehaviour
     [SerializeField] private Slider     popupProgressBar;
     [SerializeField] private TMP_Text   popupProgressText;  // "3 / 5 scenes"
 
-    [SerializeField] private TMP_Text   popupCurrentSceneLabel;  // "Scene 2 — Tutorial battle"
+    [SerializeField] private TMP_Text   popupCurrentSceneLabel;  // "Scene 2 - Tutorial battle"
     [SerializeField] private TMP_Text   popupSceneListText;       // all scenes breakdown
+
+    [Header("Popup Interactive Scene List (Optional)")]
+    [SerializeField] private RectTransform popupSceneDropdownContainer;
+    [SerializeField] private GameObject    sceneDropdownItemPrefab;
 
     [Header("Status Colors (Popup)")]
     [SerializeField] private Color popupColorCompleted  = new Color(0.18f, 0.72f, 0.35f);
@@ -108,6 +109,11 @@ public class StoryProgressManager : MonoBehaviour
     // ── Runtime ───────────────────────────────────────────────────────────────
 
     private List<ChapterDisplayData> chapters = new();
+    private int  _maxCompletedChapterId = -1;
+    private bool _isStartingMatch = false;
+    private readonly List<GameObject> _popupSpawnedSceneItems = new();
+
+    public bool HasPopupPanel => popupPanel != null;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -206,11 +212,16 @@ public class StoryProgressManager : MonoBehaviour
     void BuildDisplayData(ChapterConfigDto[] configs, StoryProgressDto[] progresses)
     {
         chapters.Clear();
+        _maxCompletedChapterId = -1;
 
         // Build lookup maps
         var progressMap = new Dictionary<int, StoryProgressDto>();
         foreach (var p in progresses)
+        {
             progressMap[p.chapterId] = p;
+            if (p.isChapterCompleted && p.chapterId > _maxCompletedChapterId)
+                _maxCompletedChapterId = p.chapterId;
+        }
 
         var configMap = new Dictionary<int, ChapterConfigDto>();
         foreach (var cfg in configs)
@@ -278,11 +289,13 @@ public class StoryProgressManager : MonoBehaviour
         }
     }
 
-    // ── Render cards ──────────────────────────────────────────────────────────
+    // ── Rendering ─────────────────────────────────────────────────────────────
 
     void RenderCards()
     {
-        // Clear old cards
+        if (cardContainer == null || chapterCardPrefab == null) return;
+
+        // Clear existing cards
         foreach (Transform child in cardContainer)
             Destroy(child.gameObject);
 
@@ -306,11 +319,82 @@ public class StoryProgressManager : MonoBehaviour
 
     public void OnChapterCardClicked(ChapterDisplayData data)
     {
-        // Don't open popup for coming soon chapters (no config)
-        if (data.config == null)
+        // Don't open popup for coming soon or locked chapters
+        if (data.config == null || data.status == ChapterStatus.Locked)
             return;
 
         ShowPopup(data);
+    }
+
+    // ── Called by SceneDropdownItemUI when a scene row is clicked ─────────────
+
+    public void OnSceneSelectedFromDropdown(int targetChapterId, int targetSceneId)
+    {
+        if (_isStartingMatch) return;
+        StartCoroutine(StartSelectedSceneRoutine(targetChapterId, targetSceneId));
+    }
+
+    private IEnumerator StartSelectedSceneRoutine(int targetChapterId, int targetSceneId)
+    {
+        _isStartingMatch = true;
+        if (loadingIndicator != null) loadingIndicator.SetActive(true);
+
+        bool isChapterAlreadyCompleted = targetChapterId <= _maxCompletedChapterId;
+        PlayerSession.CanSkipOrExitStory = isChapterAlreadyCompleted;
+
+        // Enforce technical requirement: manual chapter/scene selection ALWAYS sets autoResume = false
+        PlayerSession.IsAutoResumed = false;
+        PlayerSession.SelectedStoryChapterId = targetChapterId;
+        PlayerSession.SelectedStorySceneId   = targetSceneId;
+
+        Debug.Log($"[StoryProgressManager] Launching C{targetChapterId}_S{targetSceneId} " +
+                  $"(autoResume=false, CanSkipOrExit={PlayerSession.CanSkipOrExitStory})");
+
+        bool requestSuccess = false;
+        StoryMatchSelectData matchData = null;
+
+        yield return StartCoroutine(StoryClient.StartSelectedStoryMatch(
+            config,
+            targetChapterId,
+            targetSceneId,
+            autoResume: false,
+            onSuccess: data =>
+            {
+                matchData = data;
+                requestSuccess = true;
+            },
+            onFail: err =>
+            {
+                Debug.LogError($"[StoryProgressManager] Failed to start selected scene: {err}");
+            }));
+
+        if (!requestSuccess || matchData == null)
+        {
+            _isStartingMatch = false;
+            if (loadingIndicator != null) loadingIndicator.SetActive(false);
+            yield break;
+        }
+
+        if (Unity.Netcode.NetworkManager.Singleton != null &&
+            Unity.Netcode.NetworkManager.Singleton.IsListening)
+        {
+            Debug.Log("[StoryProgressManager] Shutting down previous NetworkManager session before loading selected scene...");
+            Unity.Netcode.NetworkManager.Singleton.Shutdown();
+            yield return new WaitUntil(() => !Unity.Netcode.NetworkManager.Singleton.IsListening);
+        }
+
+        string targetUnityScene = $"C{targetChapterId}_S{targetSceneId}";
+
+        if (!Application.CanStreamedLevelBeLoaded(targetUnityScene))
+        {
+            string fallback = sceneConfig != null && !string.IsNullOrEmpty(sceneConfig.clientMatch)
+                ? sceneConfig.clientMatch
+                : "5_ClientMatch";
+            Debug.LogWarning($"[StoryProgressManager] Scene '{targetUnityScene}' not in Build Settings - falling back to '{fallback}'.");
+            targetUnityScene = fallback;
+        }
+
+        SceneManager.LoadScene(targetUnityScene);
     }
 
     // ── Detail Popup ──────────────────────────────────────────────────────────
@@ -386,8 +470,8 @@ public class StoryProgressManager : MonoBehaviour
                 string typeLabel = currentScene != null ? FormatSceneType(currentScene.type) : string.Empty;
 
                 popupCurrentSceneLabel.text = string.IsNullOrEmpty(desc)
-                    ? $"Scene {prog.sceneId} — {typeLabel}"
-                    : $"Scene {prog.sceneId} — {desc}";
+                    ? $"Scene {prog.sceneId} - {typeLabel}"
+                    : $"Scene {prog.sceneId} - {desc}";
             }
             else if (prog != null && prog.isChapterCompleted)
             {
@@ -395,11 +479,11 @@ public class StoryProgressManager : MonoBehaviour
             }
             else
             {
-                popupCurrentSceneLabel.text = "Not started yet.";
+                popupCurrentSceneLabel.text = "Select a scene below to begin.";
             }
         }
 
-        // Scene list breakdown
+        // Scene list breakdown (text fallback)
         if (popupSceneListText != null && cfg?.scenes != null)
         {
             var sb = new System.Text.StringBuilder();
@@ -416,9 +500,90 @@ public class StoryProgressManager : MonoBehaviour
                     ? typeLabel
                     : scene.description;
 
-                sb.AppendLine($"{tick}  Scene {scene.sceneId}  [{typeLabel}]  {desc}");
+                sb.AppendLine($"{tick}  {desc}  [{typeLabel}]");
             }
             popupSceneListText.text = sb.ToString().TrimEnd();
+        }
+
+        // Interactive scene buttons in popup (if container + prefab assigned)
+        BuildPopupInteractiveSceneList(data);
+    }
+
+    private void BuildPopupInteractiveSceneList(ChapterDisplayData data)
+    {
+        foreach (var go in _popupSpawnedSceneItems)
+        {
+            if (go != null) Destroy(go);
+        }
+        _popupSpawnedSceneItems.Clear();
+
+        if (popupSceneDropdownContainer == null || sceneDropdownItemPrefab == null || data?.config?.scenes == null)
+            return;
+
+        if (popupSceneListText != null)
+            popupSceneListText.gameObject.SetActive(false);
+
+        var vlg = popupSceneDropdownContainer.GetComponent<VerticalLayoutGroup>();
+        if (vlg == null)
+        {
+            vlg = popupSceneDropdownContainer.gameObject.AddComponent<VerticalLayoutGroup>();
+            vlg.spacing = 10f;
+            vlg.padding = new RectOffset(8, 8, 8, 8);
+            vlg.childAlignment = TextAnchor.UpperCenter;
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
+        }
+
+        var csf = popupSceneDropdownContainer.GetComponent<ContentSizeFitter>();
+        if (csf == null)
+        {
+            csf = popupSceneDropdownContainer.gameObject.AddComponent<ContentSizeFitter>();
+            csf.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        }
+
+        bool isChapterCompleted = data.status == ChapterStatus.Completed ||
+                                  (data.progress != null && data.progress.isChapterCompleted);
+        bool isChapterUnlocked = data.status != ChapterStatus.Locked;
+
+        int firstSceneId = data.config.scenes.Length > 0 ? data.config.scenes[0].sceneId : 0;
+        int unlockedSceneHighWaterMark = firstSceneId;
+
+        if (data.progress != null)
+        {
+            unlockedSceneHighWaterMark = data.progress.isCompleted
+                ? data.progress.sceneId + 1
+                : data.progress.sceneId;
+        }
+
+        foreach (var scene in data.config.scenes)
+        {
+            var itemObj = Instantiate(sceneDropdownItemPrefab, popupSceneDropdownContainer);
+            _popupSpawnedSceneItems.Add(itemObj);
+
+            var itemUI = itemObj.GetComponent<SceneDropdownItemUI>() ?? itemObj.AddComponent<SceneDropdownItemUI>();
+            string englishLabel = !string.IsNullOrEmpty(scene.description)
+                ? scene.description
+                : $"{data.chapterId}.{scene.sceneId} - {scene.type}";
+
+            bool sceneCompleted = isChapterCompleted ||
+                                  (data.progress != null &&
+                                   (data.progress.sceneId > scene.sceneId ||
+                                    (data.progress.sceneId == scene.sceneId && data.progress.isCompleted)));
+
+            bool sceneUnlocked = isChapterUnlocked &&
+                                 (isChapterCompleted || scene.sceneId <= unlockedSceneHighWaterMark);
+
+            int capturedSceneId = scene.sceneId;
+            itemUI.Setup(
+                data.chapterId,
+                capturedSceneId,
+                englishLabel,
+                sceneCompleted,
+                sceneUnlocked,
+                (chId, scId) => OnSceneSelectedFromDropdown(chId, scId));
         }
     }
 
@@ -441,18 +606,11 @@ public class StoryProgressManager : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Calculates how many scenes the player has completed in this chapter.
-    /// StoryProgress stores the current sceneId, not a count —
-    /// so we use sceneId as a high-water mark.
-    /// </summary>
     static int CalcCompletedScenes(StoryProgressDto prog, int totalScenes)
     {
         if (prog == null)              return 0;
         if (prog.isChapterCompleted)   return totalScenes;
 
-        // All scenes before current sceneId are done;
-        // current scene is done only if isCompleted = true
         return prog.isCompleted ? prog.sceneId + 1 : prog.sceneId;
     }
 

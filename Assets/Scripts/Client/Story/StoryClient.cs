@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Shared story API client — any scene can use these coroutines.
+/// Shared story API client - any scene can use these coroutines.
 /// No MonoBehaviour dependency. Pass a MonoBehaviour as the runner to start coroutines.
 /// </summary>
 public static class StoryClient
@@ -36,16 +36,21 @@ public static class StoryClient
 
     // -------------------------------------------------------
     // POST /api/story/progress/complete
-    // Marks current scene as completed.
+    // Marks current scene as completed (with optional chapterId/sceneId idempotency guard).
     // -------------------------------------------------------
 
     public static IEnumerator CompleteCurrentScene(
         BackendConfig config,
         System.Action<StoryProgressData> onSuccess,
-        System.Action onFail = null)
+        System.Action onFail = null,
+        int? chapterId = null,
+        int? sceneId = null)
     {
-        using var req = UnityWebRequest.PostWwwForm(
-            $"{config.backendUrl}/api/story/progress/complete", "");
+        string url = $"{config.backendUrl}/api/story/progress/complete";
+        if (chapterId.HasValue && sceneId.HasValue && chapterId.Value >= 0 && sceneId.Value >= 0)
+            url += $"?chapterId={chapterId.Value}&sceneId={sceneId.Value}";
+
+        using var req = UnityWebRequest.PostWwwForm(url, "");
         config.SetHeaders(req, PlayerSession.Token);
         yield return req.SendWebRequest();
 
@@ -113,6 +118,81 @@ public static class StoryClient
     }
 
     // -------------------------------------------------------
+    // POST /api/story/match/select
+    // Manually starts or replays a specific (chapterId, sceneId) from 10_StoryProgress
+    // with autoResume = false.
+    // -------------------------------------------------------
+
+    public static IEnumerator StartSelectedStoryMatch(
+        BackendConfig config,
+        int chapterId,
+        int sceneId,
+        bool autoResume,
+        System.Action<StoryMatchSelectData> onSuccess,
+        System.Action<string> onFail = null)
+    {
+        var payload = new SelectStoryMatchRequestPayload
+        {
+            chapterId = chapterId,
+            sceneId = sceneId,
+            autoResume = false // Strictly false for manual chapter/scene selection
+        };
+
+        string json = JsonUtility.ToJson(payload);
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+
+        using var req = new UnityWebRequest($"{config.backendUrl}/api/story/match/select", "POST");
+        req.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        req.downloadHandler = new DownloadHandlerBuffer();
+        config.SetHeaders(req, PlayerSession.Token);
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        yield return req.SendWebRequest();
+
+        if (req.result != UnityWebRequest.Result.Success)
+        {
+            string err = req.downloadHandler != null ? req.downloadHandler.text : req.error;
+            Debug.LogWarning($"[StoryClient] StartSelectedStoryMatch failed: {err}");
+            onFail?.Invoke(err);
+            yield break;
+        }
+
+        var data = JsonUtility.FromJson<StoryMatchSelectData>(req.downloadHandler.text);
+        PlayerSession.IsAutoResumed = false;
+        PlayerSession.CanSkipOrExitStory = data.canSkipOrExit;
+        PlayerSession.SelectedStoryChapterId = data.chapterId;
+        PlayerSession.SelectedStorySceneId = data.sceneId;
+
+        if (!string.IsNullOrEmpty(data.matchId))
+        {
+            PlayerSession.MatchId = data.matchId;
+            PlayerSession.ServerIp = data.serverIp;
+            PlayerSession.ServerPort = data.serverPort;
+        }
+
+        onSuccess?.Invoke(data);
+    }
+
+    // -------------------------------------------------------
+    // POST /api/story/terminate
+    // Kills the active Dedicated Server immediately when clicking "Exit to Map".
+    // -------------------------------------------------------
+
+    public static IEnumerator TerminateStoryMatch(
+        BackendConfig config,
+        System.Action onDone = null)
+    {
+        using var req = UnityWebRequest.PostWwwForm(
+            $"{config.backendUrl}/api/story/terminate", "");
+        config.SetHeaders(req, PlayerSession.Token);
+        yield return req.SendWebRequest();
+
+        PlayerSession.MatchId = string.Empty;
+        PlayerSession.ServerIp = string.Empty;
+        onDone?.Invoke();
+    }
+
+    // -------------------------------------------------------
     // POST /api/story/match/abandon
     // Abandons an active story battle match so the player can retry cleanly.
     // -------------------------------------------------------
@@ -142,29 +222,40 @@ public static class StoryClient
     // -------------------------------------------------------
     // Helper: Complete the current scene. The backend auto-advances to the next
     // scene if the completed scene has AutoAdvance (reported via advancedFromPrev).
-    // Common pattern used by any scene that finishes a non-battle step.
-    // After completion, calls onNext with the final progress returned by the server.
     // -------------------------------------------------------
 
     public static IEnumerator CompleteAndAdvance(
         BackendConfig config,
         MonoBehaviour runner,
         System.Action<StoryProgressData> onNext,
-        System.Action onFail = null)
+        System.Action onFail = null,
+        int? chapterId = null,
+        int? sceneId = null)
     {
         StoryProgressData completed = null;
-        yield return runner.StartCoroutine(CompleteCurrentScene(config,
-            data => completed = data, onFail));
+        yield return runner.StartCoroutine(CompleteCurrentScene(
+            config,
+            data => completed = data,
+            onFail,
+            chapterId,
+            sceneId));
 
         if (completed == null) yield break;
 
-        if (completed.advancedFromPrev &&
-            Unity.Netcode.NetworkManager.Singleton != null &&
+        if (Unity.Netcode.NetworkManager.Singleton != null &&
             Unity.Netcode.NetworkManager.Singleton.IsListening)
         {
             Debug.Log("[StoryClient] Shutting down NetworkManager and waiting...");
             Unity.Netcode.NetworkManager.Singleton.Shutdown();
-            yield return new WaitUntil(() => !Unity.Netcode.NetworkManager.Singleton.IsListening);
+
+            float waitLimit = 0f;
+            while (Unity.Netcode.NetworkManager.Singleton != null &&
+                   Unity.Netcode.NetworkManager.Singleton.IsListening &&
+                   waitLimit < 2.0f)
+            {
+                waitLimit += Time.deltaTime;
+                yield return null;
+            }
         }
         onNext(completed);
     }
@@ -172,34 +263,68 @@ public static class StoryClient
     // -------------------------------------------------------
     // Helper: Route to correct Unity scene based on progress.
     // Uses naming convention: C{chapterId}_S{sceneId}
+    // Ensures seamless cross-scene continuity (S1 -> S2 -> S3) within the same chapter.
     // -------------------------------------------------------
 
-    public static void RouteToStoryScene(StoryProgressData progress)
+    public static void RouteToStoryScene(StoryProgressData progress, BackendConfig config = null, MonoBehaviour runner = null)
     {
-        if (progress.isChapterCompleted || progress.isCompleted)
+        bool returnToStoryMap = progress.isChapterCompleted ||
+            (!PlayerSession.IsAutoResumed && progress.isCompleted && Application.CanStreamedLevelBeLoaded("10_StoryProgress"));
+
+        // Case 1: Chapter complete or explicit return to Story Map requested -> exit to 10_StoryProgress
+        if (progress.isChapterCompleted || returnToStoryMap)
         {
-            Debug.Log("[StoryClient] Chapter complete or scene awaiting manual advance — returning to main menu.");
-            SceneManager.LoadScene("3_MainMenu");
+            string dest = Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu";
+            Debug.Log($"[StoryClient] Chapter complete or returning to story map -> loading {dest}.");
+            SceneManager.LoadScene(dest);
             return;
         }
 
-        if (progress.sceneType == "Battle")
+        // Case 2: Chapter is NOT complete -> seamless cross-scene continuity to next scene (C{chapterId}_S{sceneId})
+        string targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
+
+        if (progress.sceneType == "Battle" && runner != null && config != null)
         {
-            Debug.Log($"[StoryClient] Next scene is Battle ({progress.chapterId}_{progress.sceneId}) — routing to main menu to request fresh battle match.");
-            SceneManager.LoadScene("3_MainMenu");
+            Debug.Log($"[StoryClient] Next scene is Battle ({targetScene}) - requesting story match before transition...");
+            runner.StartCoroutine(SpawnMatchAndLoadScene(config, progress.chapterId, progress.sceneId, targetScene));
             return;
         }
-
-        var targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
 
         if (targetScene == SceneManager.GetActiveScene().name)
         {
-            Debug.Log($"[StoryClient] Already on {targetScene} — no scene change needed.");
+            Debug.Log($"[StoryClient] Already on {targetScene} - no scene change needed.");
             return;
         }
 
-        Debug.Log($"[StoryClient] Routing to {targetScene}");
+        Debug.Log($"[StoryClient] Seamless transition to next scene: {targetScene}");
         SceneManager.LoadScene(targetScene);
+    }
+
+    private static IEnumerator SpawnMatchAndLoadScene(BackendConfig config, int chapterId, int sceneId, string targetScene)
+    {
+        bool matchReady = false;
+        yield return StartStoryMatch(
+            config,
+            match =>
+            {
+                PlayerSession.MatchId = match.matchId;
+                PlayerSession.ServerIp = match.serverIp;
+                PlayerSession.ServerPort = match.serverPort;
+                matchReady = true;
+            },
+            () => Debug.LogError($"[StoryClient] Failed to start story match for {targetScene}"));
+
+        if (matchReady)
+        {
+            Debug.Log($"[StoryClient] Story match ready - loading {targetScene}...");
+            SceneManager.LoadScene(targetScene);
+        }
+        else
+        {
+            Debug.LogWarning("[StoryClient] Story match failed - routing to 10_StoryProgress fallback.");
+            string fallback = Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu";
+            SceneManager.LoadScene(fallback);
+        }
     }
 }
 
@@ -225,4 +350,25 @@ public class StoryMatchData
     public string matchId;
     public string serverIp;
     public int serverPort;
+}
+
+[System.Serializable]
+public class SelectStoryMatchRequestPayload
+{
+    public int chapterId;
+    public int sceneId;
+    public bool autoResume;
+}
+
+[System.Serializable]
+public class StoryMatchSelectData
+{
+    public string matchId;
+    public string serverIp;
+    public int serverPort;
+    public int chapterId;
+    public int sceneId;
+    public string sceneType;
+    public bool autoResume;
+    public bool canSkipOrExit;
 }

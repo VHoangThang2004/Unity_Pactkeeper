@@ -22,47 +22,49 @@ MonoBehaviour:
     delay: 2
     targetWaitTimeout: 10
   - type: 0
-    text: Welcome to boot camp, rookie. I am Commander Reinhardt. Use "W, A, S, D"and
-      the "mouse wheel" to survey the arena.
+    text: Welcome to the proving grounds, Pactkeeper. I am Commander Reinhardt. Use
+      W, A, S, D and the mouse wheel to survey the arena.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Look at the queue at the top. The Assassin order is already available.
+    text: Eyes on the Ready Bar at the top. Your Assassin has reached Step 0 and
+      awaits your command.
     tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Choose him.
-    tutorialTargetId: C0S1_Unit1
+    text: Select your Assassin.
+    tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
   - type: 0
-    text: See that glowing 'Eye' symbol? Real time has come to a halt. As long as
-      the eye remains open, you are the one who controls the battlefield.
-    tutorialTargetId: C0S1_YourEye
+    text: Notice that glowing Eye symbol? Real time has come to a halt. While the
+      Eye remains open, the battlefield bends to your will.
+    tutorialTargetId: YourEye
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Move your Assassin into this position. Don't leave yourself exposed.
+    text: Advance your Assassin into an L-shaped flanking stance at (0, -1). Never
+      leave yourself exposed.
     tutorialTargetId: 
     targetCell: {x: 0, y: -1}
     delay: 0.5
     targetWaitTimeout: 10
   - type: 1
-    text: 
-    tutorialTargetId: C0S1_ConfirmButton
+    text: Confirm your movement.
+    tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 0.5
+    delay: 1.5
     targetWaitTimeout: 10
   - type: 1
-    text: Good. It moves very smoothly. Now, press "Wait" to end the turn. Those
-      who know how to bide their time are the ones who survive the longest.
-    tutorialTargetId: C0S1_WaitButton
+    text: Clean footwork. Movement is an Instant action, so your turn is still active.
+      Press Wait - those who bide their time survive.
+    tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
     delay: 1
     targetWaitTimeout: 10
@@ -73,48 +75,48 @@ MonoBehaviour:
     delay: 7
     targetWaitTimeout: 15
   - type: 0
-    text: I just voluntarily skipped my turn. Only a fool would blindly rush in when
-      the enemy is out of reach.
+    text: I intentionally yielded my turn as well. Only a fool lunges blindly when
+      the quarry stands out of reach.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: 
-    tutorialTargetId: C0S1_Unit1
+    text: Select your Assassin once more.
+    tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
   - type: 2
-    text: Weapons don't swing themselves. Right-click a skill to see what you can
-      do.
-    tutorialTargetId: C0S1_WSKILL
+    text: Blades do not swing themselves. Right-click your Weapon Skill to inspect
+      its reach.
+    tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Check the Inspect panel. Read the attack range and damage stats carefully.
-      Never swing your weapon at thin air.
-    tutorialTargetId: C0S1_InspectPanel
+    text: "Study the Inspect panel carefully - range, SP cost, and damage. Never
+      swing steel at thin air."
+    tutorialTargetId: InspectPanel
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Close
-    tutorialTargetId: C0S1_CancelButton
+    text: Close the Inspect panel.
+    tutorialTargetId: CancelButton
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 0
-    text: The distance between us is still too great. Charging in now would be suicide.
+  - type: 1
+    text: The distance is still too wide. Press Wait and let your enemy walk into
+      the trap.
+    tutorialTargetId: WaitButton
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 5
+    text: Discipline before bloodshed. That concludes your first lesson, Pactkeeper.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
-    targetWaitTimeout: 10
-  - type: 5
-    text: Keep waiting. Just take your time and wait for the prey to walk into the
-      trap. Lesson 1 ends here.
-    tutorialTargetId: C0S1_WaitButton
-    targetCell: {x: 0, y: 0}
-    delay: 1
     targetWaitTimeout: 10

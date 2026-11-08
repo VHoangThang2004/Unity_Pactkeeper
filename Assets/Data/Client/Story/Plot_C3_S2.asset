@@ -1,0 +1,173 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d56cce9b854dbe4eb4d220d3699184f, type: 3}
+  m_Name: Plot_C3_S2
+  m_EditorClassIdentifier: Client::PlotConfig
+  chapterId: 3
+  sceneId: 2
+  nodes:
+  - type: 4
+    text: 
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 0
+    text: "This is your final trial, Pactkeeper. The Corrupt Tactician cowers on the far eastern edge at (3, 0) with 4 HP."
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: "Unite every discipline you have forged - Half-Instant displacement, high-ground Ambush, Trinket reach, and Momentum - to fell him in a single Instant!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Druid at (0, 0) to open the combo.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 15
+  - type: 6
+    text: Left-click Pull! to rip the Tactician out of his sanctuary.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the Corrupt Tactician at (3, 0) to drag him onto (1, 0)!
+    tutorialTargetId: 
+    targetCell: {x: 3, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Pull!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 1
+    text: "He is snared at (1, 0)! Select your Assassin - now leading the Ready Bar from (0, -1)."
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Vault in an L-step onto the high ground at (1, 1), directly above the Tactician!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Assassin's bound.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Assassin at (1, 1) to prime a Critical Ambush.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Dagger Thrust.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Strike downward onto (1, 0) for 2 Ambush damage!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm to queue your Assassin's blade.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 1.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Now select your Warrior at (-2, -1) to bring the hammer down!
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Turbo! (0 SP Trinket) to extend your Warrior's stride.
+    tutorialTargetId: TSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target your Warrior at (-2, -1).
+    tutorialTargetId: 
+    targetCell: {x: -2, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm Turbo!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior again to charge into melee range.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Surge east onto (0, -1) - vacated by your Assassin - to ignite Momentum!
+    tutorialTargetId: 
+    targetCell: {x: 0, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your Warrior's charge!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Warrior at (0, -1) to deliver the Pact's judgment!
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Target the Corrupt Tactician diagonally at (1, 0) for 2 Momentum damage!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm! Let blade and axe execute the judgment together!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 4.5
+    targetWaitTimeout: 10
+  - type: 5
+    text: "Four hearts of damage in a single breath! You have mastered every law of the Pact - go forth and conquer the arena!"
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10

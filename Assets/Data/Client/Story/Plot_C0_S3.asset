@@ -22,116 +22,152 @@ MonoBehaviour:
     delay: 2
     targetWaitTimeout: 10
   - type: 0
-    text: All units are ready. Time for the final blow!
+    text: Both warriors stand ready, and your Assassin has gathered Skill Points
+      (SP). Time to finish this duel!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Click to select Unit 1 (Assassin)
-    tutorialTargetId: C0S3_Unit1
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 2
-    text: Inspect Class Skill - read and understand the plan
-    tutorialTargetId: C0S3_CSKILL
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 0
-    text: Understood the plan? Limit Break will reset movement!
-    tutorialTargetId: 
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 1
-    text: 
-    tutorialTargetId: C0S3_CSKILL
+    text: Select your Assassin first.
+    tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Use Class Skill on yourself (0,-1)
+    text: Leap forward to (0, -1) to close the gap.
     tutorialTargetId: 
     targetCell: {x: 0, y: -1}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: 
-    tutorialTargetId: C0S3_ConfirmButton
+    text: Confirm your first bound.
+    tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 2.5
     targetWaitTimeout: 10
   - type: 1
-    text: Select Unit 1 again (turn not over)
-    tutorialTargetId: C0S3_Unit1
+    text: A unit can normally move only once per Instant - unless it shatters its
+      own limit. Select your Assassin again.
+    tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 3
-    text: Move to the flank position (2,0)
+  - type: 2
+    text: Right-click the Class Skill (Limit Break!) to inspect its effect.
+    tutorialTargetId: CSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Spending 1 SP on Limit Break! immediately refreshes your Movement Skill
+      within the same Instant!
     tutorialTargetId: 
-    targetCell: {x: 2, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 1
-    text: 
-    tutorialTargetId: C0S3_ConfirmButton
-    targetCell: {x: 0, y: 0}
-    delay: 2
-    targetWaitTimeout: 10
-  - type: 1
-    text: Select Unit 1 once more
-    tutorialTargetId: C0S3_Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 6
-    text: Click Weapon Skill
-    tutorialTargetId: C0S3_WSKILL
+    text: Left-click Limit Break! to arm it.
+    tutorialTargetId: CSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Attack cell (1,0)
+    text: Target your Assassin at (0, -1).
+    tutorialTargetId: 
+    targetCell: {x: 0, y: -1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Activate Limit Break!
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Footwork restored! Select your Assassin again.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Vault overhead to the high ground at (1, 1), directly above the target!
+    tutorialTargetId: 
+    targetCell: {x: 1, y: 1}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 1
+    text: Confirm your second bound.
+    tutorialTargetId: ConfirmButton
+    targetCell: {x: 0, y: 0}
+    delay: 2.5
+    targetWaitTimeout: 10
+  - type: 1
+    text: Select your Assassin at (1, 1) to prepare the execution.
+    tutorialTargetId: Unit1
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 2
+    text: Right-click the Unique Passive icon (Ambush) first.
+    tutorialTargetId: PSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 0
+    text: Ambush doubles your Assassin's damage whenever striking downward onto a
+      lower row!
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 6
+    text: Left-click Dagger Thrust to strike from above.
+    tutorialTargetId: WSKILL
+    targetCell: {x: 0, y: 0}
+    delay: 0
+    targetWaitTimeout: 10
+  - type: 3
+    text: Aim downward at the enemy on (1, 0) for Critical Ambush damage!
     tutorialTargetId: 
     targetCell: {x: 1, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: 
-    tutorialTargetId: C0S3_ConfirmButton
+    text: Lock in the Assassin's strike.
+    tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 1
+    delay: 1.5
     targetWaitTimeout: 10
   - type: 1
-    text: Select Unit 2 (Paladin)
-    tutorialTargetId: C0S3_Unit1
+    text: Now select your Paladin - he has shifted to the front of the Ready Bar
+      - to seal the kill!
+    tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 6
-    text: Click Weapon Skill
-    tutorialTargetId: C0S3_WSKILL
+    text: Left-click Axe Swing.
+    tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Attack cell (1,0)
+    text: Target the enemy at (1, 0).
     tutorialTargetId: 
     targetCell: {x: 1, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Confirm
-    tutorialTargetId: C0S3_ConfirmButton
+    text: Confirm! With every ready unit committed, the Instant resolves automatically!
+    tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 4
     targetWaitTimeout: 10
   - type: 5
-    text: This concludes the Battle tutorial, thank you!
+    text: Flawless execution! Return to the Sanctum - it is time to inspect your
+      roster and armaments.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
-    delay: 3
+    delay: 0
     targetWaitTimeout: 10

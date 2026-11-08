@@ -8,12 +8,23 @@ public class C0_S0 : MonoBehaviour
     [SerializeField] private BackendConfig config;
     [SerializeField] private SceneConfig sceneConfig;
 
+    void Start()
+    {
+        var replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
+        if (replayUI == null)
+            replayUI = gameObject.AddComponent<TutorialReplayUIController>();
+        replayUI.ConfigureDependencies(config, null);
+        replayUI.InitializeUI();
+    }
+
     public void CompleteAndContinue()
     {
         StartCoroutine(StoryClient.CompleteAndAdvance(
             config, this,
-            next => SceneManager.LoadScene(sceneConfig.mainMenuScene),
-            () => Debug.LogWarning("[MainMenu] Story advance failed.")
+            next => StoryClient.RouteToStoryScene(next),
+            () => Debug.LogWarning("[MainMenu] Story advance failed."),
+            chapterId: 0,
+            sceneId: 0
         ));
     }
 }

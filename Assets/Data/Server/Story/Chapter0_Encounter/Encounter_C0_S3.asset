@@ -17,7 +17,7 @@ MonoBehaviour:
   mapId: MD_PVE_C0S3
   playerUnits:
   - uId: 1
-    passiveSkillId: -1
+    passiveSkillId: 5001
     movementSkillId: 1001
     weaponSkillId: 2001
     classSkillId: 3001
@@ -50,7 +50,7 @@ MonoBehaviour:
     classSkillId: -1
     trinketSkillId: -1
     maxHP: 3
-    currentHP: 2
+    currentHP: 3
     maxSkillPoint: 3
     currentSkillPoint: 0
     speed: 100

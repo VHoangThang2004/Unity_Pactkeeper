@@ -13,6 +13,7 @@ public class BattleTutorialStarter : MonoBehaviour
 {
     [SerializeField] private ClientController controller;
     [SerializeField] private PlotSequencer sequencer;
+    [UnityEngine.Serialization.FormerlySerializedAs("trigger")]
     [SerializeField] private TutorialTrigger tutorialTrigger;
     [SerializeField] private string additiveBattleSceneName = "5_ClientMatch";
 
@@ -35,6 +36,12 @@ public class BattleTutorialStarter : MonoBehaviour
 
         if (sequencer != null)
             sequencer.SetAllowSkip(false);
+
+        var replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
+        if (replayUI == null)
+            replayUI = gameObject.AddComponent<TutorialReplayUIController>();
+        replayUI.ConfigureDependencies(backendConfig, sequencer);
+        replayUI.InitializeUI();
 
         StartCoroutine(InitBattleOverlayRoutine());
     }
@@ -101,40 +108,44 @@ public class BattleTutorialStarter : MonoBehaviour
 
     private void BindBattleTutorialTargets(ClientScene scene)
     {
-        string sceneName = SceneManager.GetActiveScene().name; // e.g. "C0_S1"
-        string scenePrefix = sceneName.Replace("_", "");       // e.g. "C0S1"
+        string sceneName = SceneManager.GetActiveScene().name; // e.g. "C0_S1", "C1_S2"
+        string scenePrefix = sceneName.Replace("_", "");       // e.g. "C0S1", "C1S2"
+
+        int plotCh = ResolveChapterId();
+        int plotSc = ResolveSceneId();
+        string plotPrefix = (plotCh >= 0 && plotSc >= 0) ? $"C{plotCh}S{plotSc}" : null;
 
         var vc = scene.visualController;
         if (vc != null)
         {
             if (vc.ConfirmButtonCanvasGroup != null)
-                EnsureTarget(vc.ConfirmButtonCanvasGroup.gameObject, "ConfirmButton", scenePrefix);
+                EnsureTarget(vc.ConfirmButtonCanvasGroup.gameObject, "ConfirmButton", scenePrefix, plotPrefix);
             if (vc.myInstantStatus != null)
-                EnsureTarget(vc.myInstantStatus.gameObject, "YourEye", scenePrefix);
+                EnsureTarget(vc.myInstantStatus.gameObject, "YourEye", scenePrefix, plotPrefix);
             if (vc.enemyInstantStatus != null)
-                EnsureTarget(vc.enemyInstantStatus.gameObject, "EnemyEye", scenePrefix);
+                EnsureTarget(vc.enemyInstantStatus.gameObject, "EnemyEye", scenePrefix, plotPrefix);
             if (vc.cancelButtonLayer != null)
-                EnsureTarget(vc.cancelButtonLayer, "CancelButton", scenePrefix);
+                EnsureTarget(vc.cancelButtonLayer, "CancelButton", scenePrefix, plotPrefix);
             if (vc.waitButtonLayer != null)
-                EnsureTarget(vc.waitButtonLayer, "WaitButton", scenePrefix);
+                EnsureTarget(vc.waitButtonLayer, "WaitButton", scenePrefix, plotPrefix);
             if (vc.InstantCounterText != null)
-                EnsureTarget(vc.InstantCounterText.gameObject, "1", scenePrefix);
+                EnsureTarget(vc.InstantCounterText.gameObject, "1", scenePrefix, plotPrefix);
 
             if (vc.CurrentUnitInfo != null && vc.CurrentUnitInfo.transform.parent != null)
-                EnsureTarget(vc.CurrentUnitInfo.transform.parent.gameObject, "CharStat", scenePrefix);
+                EnsureTarget(vc.CurrentUnitInfo.transform.parent.gameObject, "CharStat", scenePrefix, plotPrefix);
 
             if (vc.OwnedReadyUnitCanvasGroups != null)
             {
                 for (int i = 0; i < vc.OwnedReadyUnitCanvasGroups.Length; i++)
                 {
                     if (vc.OwnedReadyUnitCanvasGroups[i] != null)
-                        EnsureTarget(vc.OwnedReadyUnitCanvasGroups[i].gameObject, $"Unit{i + 1}", scenePrefix);
+                        EnsureTarget(vc.OwnedReadyUnitCanvasGroups[i].gameObject, $"Unit{i + 1}", scenePrefix, plotPrefix);
                 }
                 if (vc.OwnedReadyUnitCanvasGroups.Length > 0 &&
                     vc.OwnedReadyUnitCanvasGroups[0] != null &&
                     vc.OwnedReadyUnitCanvasGroups[0].transform.parent != null)
                 {
-                    EnsureTarget(vc.OwnedReadyUnitCanvasGroups[0].transform.parent.gameObject, "OwnedReadyBar", scenePrefix);
+                    EnsureTarget(vc.OwnedReadyUnitCanvasGroups[0].transform.parent.gameObject, "OwnedReadyBar", scenePrefix, plotPrefix);
                 }
             }
 
@@ -143,59 +154,68 @@ public class BattleTutorialStarter : MonoBehaviour
                 vc.EnemyReadyUnitCanvasGroups[0] != null &&
                 vc.EnemyReadyUnitCanvasGroups[0].transform.parent != null)
             {
-                EnsureTarget(vc.EnemyReadyUnitCanvasGroups[0].transform.parent.gameObject, "3", scenePrefix);
+                EnsureTarget(vc.EnemyReadyUnitCanvasGroups[0].transform.parent.gameObject, "3", scenePrefix, plotPrefix);
             }
 
             if (vc.LeftCommandLogAnimator != null && vc.LeftCommandLogAnimator.transform.parent != null)
             {
                 var scrollBtn = vc.LeftCommandLogAnimator.transform.parent.Find("ScrollButton");
                 if (scrollBtn != null)
-                    EnsureTarget(scrollBtn.gameObject, "X", scenePrefix);
+                    EnsureTarget(scrollBtn.gameObject, "X", scenePrefix, plotPrefix);
+            }
+            if (TutorialTargetRegistry.Get("X") == null)
+            {
+                var scrollBtn = GameObject.Find("ScrollButton");
+                if (scrollBtn != null)
+                    EnsureTarget(scrollBtn, "X", scenePrefix, plotPrefix);
             }
 
             if (vc.ActionMenuUI != null)
             {
                 var skillPanel = vc.ActionMenuUI.transform.Find("SkillPanel");
                 if (skillPanel != null)
-                    EnsureTarget(skillPanel.gameObject, "Skills", scenePrefix);
+                    EnsureTarget(skillPanel.gameObject, "Skills", scenePrefix, plotPrefix);
             }
         }
 
         if (scene.InspectPanel != null)
-            EnsureTarget(scene.InspectPanel, "InspectPanel", scenePrefix);
+            EnsureTarget(scene.InspectPanel, "InspectPanel", scenePrefix, plotPrefix);
         if (scene.EffectType != null)
-            EnsureTarget(scene.EffectType.gameObject, "STYPE", scenePrefix);
+            EnsureTarget(scene.EffectType.gameObject, "STYPE", scenePrefix, plotPrefix);
         if (scene.mainWeaponSkillSlot != null)
         {
-            EnsureTarget(scene.mainWeaponSkillSlot.gameObject, "WSKILL", scenePrefix);
+            EnsureTarget(scene.mainWeaponSkillSlot.gameObject, "WSKILL", scenePrefix, plotPrefix);
             if (scene.mainWeaponSkillSlot.transform.parent != null &&
                 scene.mainWeaponSkillSlot.transform.parent.parent != null)
             {
-                EnsureTarget(scene.mainWeaponSkillSlot.transform.parent.parent.gameObject, "Skills", scenePrefix);
+                EnsureTarget(scene.mainWeaponSkillSlot.transform.parent.parent.gameObject, "Skills", scenePrefix, plotPrefix);
             }
         }
         if (scene.classSkillSlot != null)
-            EnsureTarget(scene.classSkillSlot.gameObject, "CSKILL", scenePrefix);
+            EnsureTarget(scene.classSkillSlot.gameObject, "CSKILL", scenePrefix, plotPrefix);
         if (scene.trinketSkillSlot != null)
-            EnsureTarget(scene.trinketSkillSlot.gameObject, "TSKILL", scenePrefix);
+            EnsureTarget(scene.trinketSkillSlot.gameObject, "TSKILL", scenePrefix, plotPrefix);
         if (scene.uniquePassiveSlot != null)
-            EnsureTarget(scene.uniquePassiveSlot.gameObject, "PSKILL", scenePrefix);
+            EnsureTarget(scene.uniquePassiveSlot.gameObject, "PSKILL", scenePrefix, plotPrefix);
 
         if (sequencer != null && sequencer.TextBoxPanel != null)
-            EnsureTarget(sequencer.TextBoxPanel, "END", scenePrefix);
+            EnsureTarget(sequencer.TextBoxPanel, "END", scenePrefix, plotPrefix);
     }
 
-    private static void EnsureTarget(GameObject go, string canonicalId, string scenePrefix)
+    private static void EnsureTarget(GameObject go, string canonicalId, string scenePrefix, string plotPrefix)
     {
         if (go == null || string.IsNullOrEmpty(canonicalId)) return;
         var target = go.GetComponent<TutorialTarget>();
         if (target == null)
             target = go.AddComponent<TutorialTarget>();
 
-        string prefixed = !string.IsNullOrEmpty(scenePrefix) ? $"{scenePrefix}_{canonicalId}" : null;
+        string prefixedScene = !string.IsNullOrEmpty(scenePrefix) ? $"{scenePrefix}_{canonicalId}" : null;
+        string prefixedPlot = !string.IsNullOrEmpty(plotPrefix) ? $"{plotPrefix}_{canonicalId}" : null;
+
         target.Configure(
             canonicalId,
-            prefixed,
+            prefixedScene,
+            prefixedPlot,
             $"C0S1_{canonicalId}",
             $"C0S2_{canonicalId}",
             $"C0S3_{canonicalId}");
@@ -206,23 +226,41 @@ public class BattleTutorialStarter : MonoBehaviour
         if (_tutorialStarted) return;
         _tutorialStarted = true;
 
-        Debug.Log("[BattleTutorialStarter] Match ready — preparing tutorial.");
+        Debug.Log("[BattleTutorialStarter] Match ready - preparing tutorial.");
 
         // Keep input blocked while timeline counts down to the first decision window
         if (sequencer != null)
             sequencer.SetBlockerOnly(true);
 
+        int chapterId = ResolveChapterId();
         int sceneId = ResolveSceneId();
+        bool forceCleanReset = !PlayerSession.IsAutoResumed;
         bool waitForReset = false;
         int tokenBeforeReset = controller?.session != null ? controller.session.CurrentToken : -1;
 
         if (sceneId >= 1 && controller != null && controller.bridge != null)
         {
-            waitForReset = IsClientSnapshotDirtyForScene(sceneId);
-            controller.bridge.AdvanceTutorialPhaseServerRpc(sceneId);
+            waitForReset = forceCleanReset || IsClientSnapshotDirtyForScene(chapterId, sceneId);
+            controller.bridge.AdvanceTutorialPhaseServerRpc(sceneId, forceCleanReset);
         }
 
-        StartCoroutine(WaitForCountingInstantThenStart(waitForReset, tokenBeforeReset));
+        StartCoroutine(WaitForCountingInstantThenStart(waitForReset, tokenBeforeReset, chapterId, sceneId));
+    }
+
+    private int ResolveChapterId()
+    {
+        if (plots != null && plots.Count > 0 && plots[0].plot != null)
+            return plots[0].plot.chapterId;
+
+        string sceneName = SceneManager.GetActiveScene().name;
+        int sIdx = sceneName.IndexOf("_S", System.StringComparison.OrdinalIgnoreCase);
+        if (sceneName.StartsWith("C", System.StringComparison.OrdinalIgnoreCase) && sIdx > 1 &&
+            int.TryParse(sceneName.Substring(1, sIdx - 1), out int parsedCh))
+        {
+            return parsedCh;
+        }
+
+        return PlayerSession.SelectedStoryChapterId;
     }
 
     private int ResolveSceneId()
@@ -238,42 +276,36 @@ public class BattleTutorialStarter : MonoBehaviour
         return -1;
     }
 
-    private bool IsClientSnapshotDirtyForScene(int sceneId)
+    private bool IsClientSnapshotDirtyForScene(int chapterId, int sceneId)
     {
         var sess = controller?.session;
         if (sess == null) return false;
 
         if (sess.Timeline.currentInstant > 0) return true;
 
-        var ownedTeam = sess.GetOwnedTeamData();
-        if (ownedTeam != null)
+        if (chapterId == 0)
         {
-            if (sceneId == 1 && ownedTeam.unitIds.Count != 1) return true;
-            if ((sceneId == 2 || sceneId == 3) && ownedTeam.unitIds.Count != 2) return true;
+            var ownedTeam = sess.GetOwnedTeamData();
+            if (ownedTeam != null)
+            {
+                if (sceneId == 1 && ownedTeam.unitIds.Count != 1) return true;
+                if ((sceneId == 2 || sceneId == 3) && ownedTeam.unitIds.Count != 2) return true;
+            }
         }
 
-        if (sess.units != null && sess.MapAsset != null)
+        if (sess.units != null && sess.MapAsset != null && sess.teams != null)
         {
-            foreach (var u in sess.units)
+            for (int t = 0; t < sess.teams.Count; t++)
             {
-                if (u.CurrentHP != u.MaxHP || u.CurrentSkillPoint != 0)
-                    return true;
-            }
-
-            if ( sess.teams != null)
-            {
-                for (int t = 0; t < sess.teams.Count; t++)
+                var team = sess.teams[t];
+                if (team?.unitIds == null) continue;
+                for (int i = 0; i < team.unitIds.Count; i++)
                 {
-                    var team = sess.teams[t];
-                    if (team?.unitIds == null) continue;
-                    for (int i = 0; i < team.unitIds.Count; i++)
-                    {
-                        var unit = sess.GetUnitDataById(team.unitIds[i]);
-                        if (unit == null) continue;
-                        Vector2Int spawnPt = sess.MapAsset.GetSpawn(team.teamId, i);
-                        if (unit.CurrentCell.x != spawnPt.x || unit.CurrentCell.y != spawnPt.y)
-                            return true;
-                    }
+                    var unit = sess.GetUnitDataById(team.unitIds[i]);
+                    if (unit == null) continue;
+                    Vector2Int spawnPt = sess.MapAsset.GetSpawn(team.teamId, i);
+                    if (unit.CurrentCell.x != spawnPt.x || unit.CurrentCell.y != spawnPt.y)
+                        return true;
                 }
             }
         }
@@ -281,7 +313,7 @@ public class BattleTutorialStarter : MonoBehaviour
         return false;
     }
 
-    private IEnumerator WaitForCountingInstantThenStart(bool waitForReset, int tokenBeforeReset)
+    private IEnumerator WaitForCountingInstantThenStart(bool waitForReset, int tokenBeforeReset, int chapterId, int sceneId)
     {
         if (waitForReset)
         {
@@ -303,7 +335,7 @@ public class BattleTutorialStarter : MonoBehaviour
             controller.session.ownedReadyUnitIds != null &&
             controller.session.ownedReadyUnitIds.Count > 0);
 
-        Debug.Log("[BattleTutorialStarter] Counting instant finished — starting plot sequencer.");
+        Debug.Log("[BattleTutorialStarter] Counting instant finished - starting plot sequencer.");
 
         if (plots != null)
         {
@@ -317,18 +349,22 @@ public class BattleTutorialStarter : MonoBehaviour
         sequencer.StartPlotWithTriggers(plots, () =>
         {
             Debug.Log("[BattleTutorialStarter] Tutorial plot complete - advancing to the next scene.");
-            StartCoroutine(StoryClient.CompleteAndAdvance(backendConfig, this,
+            StartCoroutine(StoryClient.CompleteAndAdvance(
+                backendConfig,
+                this,
                 nextProgress =>
                 {
                     TutorialContext.Reset();
-                    StoryClient.RouteToStoryScene(nextProgress);
+                    StoryClient.RouteToStoryScene(nextProgress, backendConfig, this);
                 },
                 () =>
                 {
                     Debug.LogError("[BattleTutorialStarter] Failed to advance story");
                     TutorialContext.Reset();
                     SceneManager.LoadScene("3_MainMenu");
-                }));
+                },
+                chapterId,
+                sceneId));
         });
     }
 }

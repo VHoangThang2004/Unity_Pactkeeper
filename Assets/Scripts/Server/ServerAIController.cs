@@ -13,8 +13,12 @@ public class ServerAIController : MonoBehaviour
 
     public void StartAI()
     {
-        if (encounterConfig == null && session != null)
-            encounterConfig = session.GetStoryEncounter();
+        if (session != null)
+        {
+            var dynamicEncounter = session.GetStoryEncounter();
+            if (dynamicEncounter != null)
+                encounterConfig = dynamicEncounter;
+        }
 
         watchCoroutine = StartCoroutine(WatchForTurn());
         Debug.Log("[ServerAI] Started watching for AI team's turn.");

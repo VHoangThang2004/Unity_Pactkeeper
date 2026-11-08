@@ -110,7 +110,7 @@ public class ServerTimelineManager : MonoBehaviour
         if (session.backendClient != null && session.backendClient.Mode == "story")
             isPvE = true;
 
-        session.FlaggedTeamId = session.GetOtherTeamId(0);
+        session.FlaggedTeamId = isPvE ? 0 : session.GetOtherTeamId(0);
 
         TransitionTo(ServerSessionState.Flowing);
         LogInstantFlowing(session.CurrentInstant);
