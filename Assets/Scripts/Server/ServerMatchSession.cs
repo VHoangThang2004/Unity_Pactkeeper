@@ -237,8 +237,7 @@ public class ServerMatchSession : MonoBehaviour
     {
         if (backendClient == null) backendClient = FindAnyObjectByType<ServerBackendClient>();
         if (backendClient.LoadoutResponse == null) return false;
-        if (backendClient.Mode == "pvp") return true;
-        if (backendClient.Mode != "story") return false;
+        if (backendClient.Mode != "story") return true; // pvp, ranked, friendly
         var encounter = GetStoryEncounter();
         return encounter != null && !encounter.HasPresetPlayerLoadout;
     }

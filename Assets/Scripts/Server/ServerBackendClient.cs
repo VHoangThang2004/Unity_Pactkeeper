@@ -147,14 +147,11 @@ public class ServerBackendClient : MonoBehaviour
             Mode = modeFromArgs;
         }
 
-        if (Mode == "pvp" || Mode == "friendly")
-            yield return StartCoroutine(FetchLoadouts());
-        else if (Mode == "story")
-        {
+        // Every mode (pvp, ranked, friendly, story) plays with backend loadouts
+        if (Mode == "story")
             Debug.Log($"[ServerBackendClient] Story mode — chapter={ChapterId} scene={SceneId} " +
                       $"MapId={MapId}. Fetching player1 loadout (may be unused if scene has local preset).");
-            yield return StartCoroutine(FetchLoadouts());
-        }
+        yield return StartCoroutine(FetchLoadouts());
 
         IsReady = true;
         Debug.Log($"[ServerBackendClient] Ready. Mode={Mode}");
