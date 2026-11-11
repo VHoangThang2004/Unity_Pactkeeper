@@ -75,6 +75,22 @@ public class LobbyHubClient : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
             if (_instance == this) _instance = null;
             Destroy(transform.root.gameObject);
+            return;
+        }
+
+        // Ensure connected whenever a new scene loads while logged in
+        if (PlayerSession.IsLoggedIn && !IsConnected)
+        {
+            Connect();
+        }
+    }
+
+    void Start()
+    {
+        // Auto-connect as soon as PresenceManager starts if player is logged in
+        if (PlayerSession.IsLoggedIn && !IsConnected)
+        {
+            Connect();
         }
     }
 

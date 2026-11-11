@@ -164,6 +164,8 @@ public class FriendTabManager : MonoBehaviour
     {
         this.OpenPanel(panel);
         SwitchToFriendsTab();
+        StartCoroutine(FetchFriendsList());
+        StartCoroutine(FetchPendingRequestsCount());
     }
 
     public void Close()
