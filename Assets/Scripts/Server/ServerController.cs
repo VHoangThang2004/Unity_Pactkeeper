@@ -42,6 +42,7 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
     {
         NetworkManager.Singleton.Shutdown();
         yield return StartCoroutine(backendClient.ReportCancelled());
+        Application.Quit(); // never linger holding the port, even if the report failed
     }
 
 
