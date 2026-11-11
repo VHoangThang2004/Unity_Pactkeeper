@@ -51,7 +51,8 @@ public class ServerBootstrap : MonoBehaviour
 
         if (!success)
         {
-            Debug.LogError("❌ Failed to start server!");
+            Debug.LogError("❌ Failed to start server! Quitting — the backend sees the process gone and ends the match.");
+            Application.Quit(1);
             return;
         }
 

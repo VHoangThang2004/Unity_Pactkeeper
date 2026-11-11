@@ -496,6 +496,11 @@ public class ServerMatchSession : MonoBehaviour
     // so this clientId is never used for an actual network lookup.
     public const ulong AI_CLIENT_ID = ulong.MaxValue;
 
+    // Sentinel for a team whose player isn't connected at Init. Bound later by
+    // ServerConnectionManager.OnClientConnected when that player (re)connects; if they never do,
+    // ServerController's client-init timeout cancels the match.
+    public const ulong NO_CLIENT_ID = ulong.MaxValue - 1;
+
     private void SetTeamFromLoadout()
     {
         teams = new List<TeamData>();
@@ -534,9 +539,12 @@ public class ServerMatchSession : MonoBehaviour
                 if (MatchIdentityRegistry.GetPlayerId(clientId) == playerId)
                     return clientId;
             }
-            Debug.LogWarning($"[MatchSession] No client matched playerId={playerId} — using first available.");
+            // Never hand the team to someone else's connection (or to clientId 0 = the server itself)
+            Debug.LogWarning($"[MatchSession] No client connected for playerId={playerId} — team left unbound until they connect.");
+            return NO_CLIENT_ID;
         }
-        return candidates.Count > 0 ? candidates[0] : 0;
+        // No playerId (local preset / dev): take whoever is connected
+        return candidates.Count > 0 ? candidates[0] : NO_CLIENT_ID;
     }
 
     // -------------------------------------------------------

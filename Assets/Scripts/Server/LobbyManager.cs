@@ -66,6 +66,7 @@ public class LobbyManager : MonoBehaviour
     {
         NetworkManager.Singleton.Shutdown();
         yield return StartCoroutine(backendClient.ReportCancelled());
+        Application.Quit(); // if the report didn't land, the backend reaper sees the dead process and ends the match
     }
 
     bool IsServer() =>

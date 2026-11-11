@@ -790,7 +790,8 @@ public class ServerTimelineManager : MonoBehaviour
 
     public void SendSnapshot(ulong clientId)
     {
-        if (clientId == ServerMatchSession.AI_CLIENT_ID) return; // AI has no network client
+        // AI, unbound team (NO_CLIENT_ID) or disconnected player — no network client to send to
+        if (!NetworkManager.Singleton.ConnectedClients.ContainsKey(clientId)) return;
         int team = session.GetTeamNumberByClientId(clientId);
         SecretData secret = session.GetSecretData(team);
         ClientRpcParams rpcParams = new ClientRpcParams
@@ -1050,8 +1051,9 @@ public class ServerTimelineManager : MonoBehaviour
             }
         }
 
-        if (isPvE)
-            Application.Quit();
+        // PvP servers are normally killed by the backend while it handles the report; quitting here too
+        // means a failed report still frees the port (backend reaper sees the dead process).
+        Application.Quit();
     }
 
 }

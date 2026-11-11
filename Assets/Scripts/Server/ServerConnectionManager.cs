@@ -39,6 +39,32 @@ public class ServerConnectionManager : MonoBehaviour
             return;
         }
 
+        // Unsigned payload is only a hint — with a real match, hold the approval until the backend verifies the token
+        if (!string.IsNullOrEmpty(backendClient?.MatchId))
+        {
+            response.Pending = true;
+            StartCoroutine(backendClient.VerifyPlayer(token, verifiedPlayerId =>
+            {
+                if (verifiedPlayerId != null) Approve(request, response, verifiedPlayerId);
+                else
+                {
+                    Debug.LogWarning($"[ConnectionManager] Rejected — backend did not verify {playerId} for match {backendClient.MatchId}.");
+                    response.Approved = false;
+                }
+                response.Pending = false;
+            }));
+            return;
+        }
+
+        Debug.LogWarning("[ConnectionManager] No -matchId (dev server) — approving without backend token check.");
+        Approve(request, response, playerId);
+    }
+
+    private void Approve(
+        NetworkManager.ConnectionApprovalRequest request,
+        NetworkManager.ConnectionApprovalResponse response,
+        string playerId)
+    {
         if (backendClient?.LoadoutResponse != null)
         {
             Debug.Log($"[ConnectionManager] LoadoutResponse — p1={backendClient.LoadoutResponse.player1?.playerId} p2={backendClient.LoadoutResponse.player2?.playerId} checking for playerId={playerId}");
