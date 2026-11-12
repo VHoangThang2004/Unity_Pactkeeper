@@ -8,6 +8,7 @@ public interface ISyncedBridgeServer
     void HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillCardId, int clientToken);
     void HandleAdvanceTutorialPhase(int newSceneId, bool forceCleanReset = false);
     void HandlePrepSubmit(ulong senderClientId, int[] uIds, int[] spawnIndices, bool ready);
+    void HandleForfeit(ulong senderClientId);
     void OnBridgeReady(SyncedBridge bridge);
 }
 

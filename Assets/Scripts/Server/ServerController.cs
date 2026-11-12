@@ -233,4 +233,10 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         UnitRecalculator.RecalculateAll(session);
         timeline.RestartTimelineForTutorialPhase();
     }
+
+    public void HandleForfeit(ulong clientId)
+    {
+        Debug.Log($"[ServerController] Forfeit requested by clientId={clientId}");
+        timeline?.ForfeitMatch(clientId);
+    }
 }
