@@ -1,0 +1,271 @@
+fileFormatVersion: 2
+guid: 09bada093147c254cbfecfecafec9e33
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -539634787534627644
+    second: Gems_for_Gacha_0
+  - first:
+      213: -1009315693004393914
+    second: Gems_for_Gacha_1
+  - first:
+      213: -2982157275672329071
+    second: Gems_for_Gacha_2
+  - first:
+      213: 4176111108013502309
+    second: Gems_for_Gacha_3
+  - first:
+      213: -5127454456224745633
+    second: Gems_for_Gacha_4
+  - first:
+      213: -2879681893667389342
+    second: Gems_for_Gacha_5
+  - first:
+      213: 3885355867952995004
+    second: Gems_for_Gacha_6
+  - first:
+      213: 6911082041372304783
+    second: Gems_for_Gacha_7
+  - first:
+      213: 1159011906877276482
+    second: Gems_for_Gacha_8
+  - first:
+      213: -6935326032685616975
+    second: Gems_for_Gacha_9
+  - first:
+      213: 1664562839637715264
+    second: Gems_for_Gacha_10
+  - first:
+      213: -8619344674874270221
+    second: Gems_for_Gacha_11
+  - first:
+      213: -2571053801983018635
+    second: Gems_for_Gacha_12
+  - first:
+      213: 2069895421445212314
+    second: Gems_for_Gacha_13
+  - first:
+      213: 4228851550710513143
+    second: Gems_for_Gacha_14
+  - first:
+      213: 2001447610470504305
+    second: Gems_for_Gacha_15
+  - first:
+      213: -3154791815049819982
+    second: Gems_for_Gacha_16
+  - first:
+      213: 4741247685562253387
+    second: Gems_for_Gacha_17
+  - first:
+      213: 6707924944077225360
+    second: Gems_for_Gacha_18
+  - first:
+      213: -17014355707225555
+    second: Gems_for_Gacha_19
+  - first:
+      213: -7311281584784645858
+    second: Gems_for_Gacha_20
+  - first:
+      213: -1196874886032044313
+    second: Gems_for_Gacha_21
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Gems_for_Gacha_0
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 275
+        width: 307
+        height: 312
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cc1e841505d288f0800000000000000
+      internalID: -539634787534627644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gems_for_Gacha_3
+      rect:
+        serializedVersion: 2
+        x: 941
+        y: 252
+        width: 371
+        height: 366
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56f25bf3de684f930800000000000000
+      internalID: 4176111108013502309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gems_for_Gacha_6
+      rect:
+        serializedVersion: 2
+        x: 490
+        y: 269
+        width: 374
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cba515f839e8be530800000000000000
+      internalID: 3885355867952995004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: da4250b4a22e3534692caa571c172438
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Gems_for_Gacha_0: -539634787534627644
+      Gems_for_Gacha_1: -1009315693004393914
+      Gems_for_Gacha_10: 1664562839637715264
+      Gems_for_Gacha_11: -8619344674874270221
+      Gems_for_Gacha_12: -2571053801983018635
+      Gems_for_Gacha_13: 2069895421445212314
+      Gems_for_Gacha_14: 4228851550710513143
+      Gems_for_Gacha_15: 2001447610470504305
+      Gems_for_Gacha_16: -3154791815049819982
+      Gems_for_Gacha_17: 4741247685562253387
+      Gems_for_Gacha_18: 6707924944077225360
+      Gems_for_Gacha_19: -17014355707225555
+      Gems_for_Gacha_2: -2982157275672329071
+      Gems_for_Gacha_20: -7311281584784645858
+      Gems_for_Gacha_21: -1196874886032044313
+      Gems_for_Gacha_3: 4176111108013502309
+      Gems_for_Gacha_4: -5127454456224745633
+      Gems_for_Gacha_5: -2879681893667389342
+      Gems_for_Gacha_6: 3885355867952995004
+      Gems_for_Gacha_7: 6911082041372304783
+      Gems_for_Gacha_8: 1159011906877276482
+      Gems_for_Gacha_9: -6935326032685616975
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

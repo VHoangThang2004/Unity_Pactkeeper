@@ -22,12 +22,14 @@ public class GachaManager : MonoBehaviour
     [Header("UI Display")]
     [SerializeField] private TextMeshProUGUI gemsText;
 
-    [Header("Formation")]
-    [SerializeField] public List<UnitContainer> formationSlots;
-
     [Header("Banners List")]
     [SerializeField] public Transform unitListContainer;
-    [SerializeField] public GameObject unitContainerPrefab;
+    [SerializeField] public GameObject unitContainerPrefab; // dùng cho banner list buttons (fallback)
+
+    [Header("Gacha Result Card")]
+    [Tooltip("Danh sách icon Gems theo mức số lượng. Sắp xếp tăng dần theo minAmount.\n"
+           + "Ví dụ: 0 => UI1 (50 gems), 51 => UI2 (100 gems), 101 => UI3 (150+ gems)")]
+    [SerializeField] private GemIconEntry[] gemIcons = new GemIconEntry[3];
 
     [Header("Details Panel References")]
     [SerializeField] public Image bannerPromotionalImage;
@@ -46,6 +48,8 @@ public class GachaManager : MonoBehaviour
     [SerializeField] public GameObject resultsPanel;
     [SerializeField] public Transform resultsContainer;
     [SerializeField] public Button resultsCloseButton;
+    [Tooltip("Prefab UnitGachaPrefab mới dùng cho gacha results. Nếu để null sẽ fallback về unitContainerPrefab cũ.")]
+    [SerializeField] public GameObject unitGachaPrefab;
 
     [Header("Error Popup (Wired in Editor)")]
     [SerializeField] public GameObject errorPanel;
@@ -350,63 +354,8 @@ public class GachaManager : MonoBehaviour
                 }
             }
         }
-
-        PopulateFeaturedSlots(banner);
     }
 
-    void PopulateFeaturedSlots(GachaBannerDto banner)
-    {
-        if (formationSlots == null) return;
-
-        List<BannerItemDto> featuredUnits = new List<BannerItemDto>();
-        foreach (var item in banner.items)
-        {
-            if (item.reward.type == "Unit" && item.isFeatured)
-            {
-                featuredUnits.Add(item);
-            }
-        }
-
-        if (featuredUnits.Count == 0)
-        {
-            foreach (var item in banner.items)
-            {
-                if (item.reward.type == "Unit")
-                {
-                    featuredUnits.Add(item);
-                }
-            }
-        }
-
-        for (int i = 0; i < formationSlots.Count; i++)
-        {
-            var slot = formationSlots[i];
-            if (slot == null) continue;
-
-            if (i < featuredUnits.Count)
-            {
-                var item = featuredUnits[i];
-                string name = GetRewardName(item.reward);
-                Sprite portrait = GetRewardIcon(item.reward);
-
-                slot.gameObject.SetActive(true);
-                slot.Setup(
-                    $"featured_{item.reward.definitionId}",
-                    item.reward.definitionId,
-                    portrait,
-                    name + "\n(Featured)",
-                    null,
-                    null,
-                    true
-                );
-                slot.ShowDefault();
-            }
-            else
-            {
-                slot.gameObject.SetActive(false);
-            }
-        }
-    }
 
     Sprite GetRewardIcon(RewardDto reward)
     {
@@ -422,26 +371,34 @@ public class GachaManager : MonoBehaviour
                 break;
             case "Weapon":
                 if (weaponRegistry != null)
-                {
                     return weaponRegistry.GetIcon(reward.definitionId);
-                }
                 break;
             case "Trinket":
                 if (trinketRegistry != null)
-                {
                     return trinketRegistry.GetIcon(reward.definitionId);
-                }
                 break;
             case "Gems":
-                var existingBtn = FindAnyObjectByType<Button>();
-                if (existingBtn != null)
-                {
-                    var img = existingBtn.GetComponent<Image>();
-                    if (img != null) return img.sprite;
-                }
-                break;
+                return GetGemIcon(reward.amount);
         }
         return null;
+    }
+
+    /// <summary>
+    /// Chọn gem icon phù hợp dựa vào số lượng gems.
+    /// GemIconEntry được sắp theo minAmount tăng dần trong Inspector.
+    /// Ví dụ: [{minAmount:0, icon:gem1}, {minAmount:51, icon:gem2}, {minAmount:101, icon:gem3}]
+    /// </summary>
+    Sprite GetGemIcon(int amount)
+    {
+        if (gemIcons == null || gemIcons.Length == 0) return null;
+
+        Sprite result = gemIcons[0].icon; // fallback = icon nhỏ nhất
+        foreach (var entry in gemIcons)
+        {
+            if (amount >= entry.minAmount && entry.icon != null)
+                result = entry.icon;
+        }
+        return result;
     }
 
     string GetRewardName(RewardDto reward)
@@ -524,46 +481,60 @@ public class GachaManager : MonoBehaviour
         if (resultsContainer == null || resultsPanel == null) return;
 
         foreach (Transform child in resultsContainer)
-        {
             Destroy(child.gameObject);
-        }
 
         foreach (var result in results)
         {
-            GameObject cardGo = Instantiate(unitContainerPrefab, resultsContainer);
+            // Ưu tiên unitGachaPrefab mới; fallback về unitContainerPrefab nếu chưa gán
+            GameObject prefab = unitGachaPrefab != null ? unitGachaPrefab : unitContainerPrefab;
+            if (prefab == null) continue;
+
+            GameObject cardGo = Instantiate(prefab, resultsContainer);
+
+            // --- Path mới: UnitGachaPrefab ---
+            UnitGachaPrefab gachaCard = cardGo.GetComponent<UnitGachaPrefab>();
+            if (gachaCard != null)
+            {
+                Sprite icon = GetRewardIcon(result.reward);
+                string displayName = result.isDuplicate
+                    ? $"{result.compensationGems} GEMS (DUP)"
+                    : GetRewardName(result.reward);
+                int tier = UnitGachaPrefab.TierFromRewardType(result.reward.type);
+
+                gachaCard.Setup(icon, displayName, tier, result.isDuplicate);
+
+                // Tắt button nếu có (card gacha không cần click)
+                Button gachaBtn = cardGo.GetComponent<Button>();
+                if (gachaBtn == null) gachaBtn = cardGo.GetComponentInChildren<Button>();
+                if (gachaBtn != null) gachaBtn.onClick.RemoveAllListeners();
+                continue;
+            }
+
+            // --- Fallback path cũ: UnitContainer ---
             UnitContainer container = cardGo.GetComponent<UnitContainer>();
             if (container != null)
             {
-                string displayText = result.isDuplicate 
-                    ? $"{result.compensationGems} Gems (Dup)" 
+                string displayText = result.isDuplicate
+                    ? $"{result.compensationGems} Gems (Dup)"
                     : GetRewardName(result.reward);
 
-                Sprite portrait = GetRewardIcon(result.reward);
-
                 container.Setup(
-                    $"rolled_{result.reward.definitionId}_{System.Guid.NewGuid().ToString().Substring(0,4)}",
+                    $"rolled_{result.reward.definitionId}_{System.Guid.NewGuid().ToString().Substring(0, 4)}",
                     result.reward.definitionId,
-                    portrait,
+                    GetRewardIcon(result.reward),
                     displayText,
-                    null,
-                    null,
-                    false
+                    null, null, false
                 );
 
                 if (result.isDuplicate)
-                {
                     container.SetTint(new Color(0.55f, 0.75f, 1.0f, 1.0f));
-                }
 
                 container.ShowDefault();
             }
 
             Button btn = cardGo.GetComponent<Button>();
             if (btn == null) btn = cardGo.GetComponentInChildren<Button>();
-            if (btn != null)
-            {
-                btn.onClick.RemoveAllListeners();
-            }
+            if (btn != null) btn.onClick.RemoveAllListeners();
         }
 
         resultsPanel.SetActive(true);

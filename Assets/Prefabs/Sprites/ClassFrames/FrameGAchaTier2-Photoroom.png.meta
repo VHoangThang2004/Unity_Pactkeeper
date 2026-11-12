@@ -1,0 +1,213 @@
+fileFormatVersion: 2
+guid: 1a2af6d6256678c408e7406f28019e33
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1562324950810830150
+    second: FrameGAchaTier2-Photoroom_0
+  - first:
+      213: -4971746512453667960
+    second: FrameGAchaTier2-Photoroom_1
+  - first:
+      213: 1351327452230855626
+    second: FrameGAchaTier2-Photoroom_2
+  - first:
+      213: -4738564913339925075
+    second: FrameGAchaTier2-Photoroom_3
+  - first:
+      213: -1660272318007294422
+    second: FrameGAchaTier2-Photoroom_4
+  - first:
+      213: 8097906461592749246
+    second: FrameGAchaTier2-Photoroom_5
+  - first:
+      213: 7777540880228796014
+    second: FrameGAchaTier2-Photoroom_6
+  - first:
+      213: -5148711649331396110
+    second: FrameGAchaTier2-Photoroom_7
+  - first:
+      213: 4136606860681769750
+    second: FrameGAchaTier2-Photoroom_8
+  - first:
+      213: -263454588380044073
+    second: FrameGAchaTier2-Photoroom_9
+  - first:
+      213: 6129991937769109023
+    second: FrameGAchaTier2-Photoroom_10
+  - first:
+      213: -6059837791373872532
+    second: FrameGAchaTier2-Photoroom_11
+  - first:
+      213: 4339373575018464881
+    second: FrameGAchaTier2-Photoroom_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FrameGAchaTier2-Photoroom_11
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 2
+        width: 420
+        height: 524
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c623ca892a127eba0800000000000000
+      internalID: -6059837791373872532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrameGAchaTier2-Photoroom_12
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 2
+        width: 376
+        height: 508
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17641b6864d883c30800000000000000
+      internalID: 4339373575018464881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 1d6c767ba684e8f4b98b74d5acc2a96a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FrameGAchaTier2-Photoroom_0: -1562324950810830150
+      FrameGAchaTier2-Photoroom_1: -4971746512453667960
+      FrameGAchaTier2-Photoroom_10: 6129991937769109023
+      FrameGAchaTier2-Photoroom_11: -6059837791373872532
+      FrameGAchaTier2-Photoroom_12: 4339373575018464881
+      FrameGAchaTier2-Photoroom_2: 1351327452230855626
+      FrameGAchaTier2-Photoroom_3: -4738564913339925075
+      FrameGAchaTier2-Photoroom_4: -1660272318007294422
+      FrameGAchaTier2-Photoroom_5: 8097906461592749246
+      FrameGAchaTier2-Photoroom_6: 7777540880228796014
+      FrameGAchaTier2-Photoroom_7: -5148711649331396110
+      FrameGAchaTier2-Photoroom_8: 4136606860681769750
+      FrameGAchaTier2-Photoroom_9: -263454588380044073
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
