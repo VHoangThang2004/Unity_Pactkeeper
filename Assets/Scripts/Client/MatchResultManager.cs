@@ -25,6 +25,8 @@ public class MatchResultManager : MonoBehaviour
     public string WinnerId { get; private set; } = string.Empty;
     public int DurationSeconds { get; private set; }
     public int TotalInstants { get; private set; }
+    public bool IsForfeit { get; private set; }
+    public string ForfeitPlayerId { get; private set; } = string.Empty;
 
     void Start()
     {
@@ -75,18 +77,31 @@ public class MatchResultManager : MonoBehaviour
         IsWinner = (data.result.winnerId == PlayerSession.PlayerId);
         DurationSeconds = data.result.durationSeconds;
         TotalInstants = data.result.totalInstants;
+        IsForfeit = data.result.isForfeit;
+        ForfeitPlayerId = data.result.forfeitPlayerId;
         ResultLoaded = true;
 
-        Debug.Log($"[MatchResult] Loaded — winner={WinnerId} isWinner={IsWinner} instants={TotalInstants}");
+        Debug.Log($"[MatchResult] Loaded — winner={WinnerId} isWinner={IsWinner} instants={TotalInstants} isForfeit={IsForfeit}");
 
         ApplyResultBackground(IsWinner);
 
         if (resultText != null)
         {
             bool isDraw = string.IsNullOrEmpty(data.result.winnerId);
-            resultText.text = isDraw
-                ? Loc.Format(LocTables.MatchResult, LocKeys.MatchResult.DrawFormat, TotalInstants)
-                : Loc.Format(LocTables.MatchResult, LocKeys.MatchResult.InstantsFormat, TotalInstants);
+            if (isDraw)
+            {
+                resultText.text = Loc.Format(LocTables.MatchResult, LocKeys.MatchResult.DrawFormat, TotalInstants);
+            }
+            else if (IsForfeit)
+            {
+                resultText.text = IsWinner
+                    ? $"Victory\nOpponent forfeited ({TotalInstants} instants)"
+                    : $"Defeat\nYou forfeited ({TotalInstants} instants)";
+            }
+            else
+            {
+                resultText.text = Loc.Format(LocTables.MatchResult, LocKeys.MatchResult.InstantsFormat, TotalInstants);
+            }
         }
 
         OnResultLoaded();
@@ -133,5 +148,7 @@ public class MatchResultManager : MonoBehaviour
         public string winnerId;
         public int durationSeconds;
         public int totalInstants;
+        public bool isForfeit;
+        public string forfeitPlayerId;
     }
 }

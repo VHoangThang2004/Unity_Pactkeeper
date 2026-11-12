@@ -978,7 +978,56 @@ public class ServerTimelineManager : MonoBehaviour
     // -------------------------------------------------------
     // Match End
     // -------------------------------------------------------
-    IEnumerator EndMatch()
+    public void ForfeitMatch(ulong forfeitingClientId)
+    {
+        if (session.TimelineState == ServerSessionState.Finished)
+        {
+            Debug.LogWarning("[Timeline] Forfeit ignored — match already finished.");
+            return;
+        }
+
+        var teams = session.GetAllTeamData();
+        if (teams == null || teams.Count < 2)
+        {
+            Debug.LogError("[Timeline] Forfeit failed — invalid teams count.");
+            return;
+        }
+
+        string winnerId = string.Empty;
+        string forfeitPlayerId = string.Empty;
+        var backendClient = session.backendClient;
+        bool isStory = (backendClient != null && backendClient.Mode == "story") || isPvE;
+
+        int forfeitingTeamIndex = 0;
+        if (teams[1].clientId == forfeitingClientId)
+        {
+            forfeitingTeamIndex = 1;
+        }
+
+        forfeitPlayerId = MatchIdentityRegistry.GetPlayerId(teams[forfeitingTeamIndex].clientId);
+        if (string.IsNullOrEmpty(forfeitPlayerId))
+            forfeitPlayerId = teams[forfeitingTeamIndex].playerId;
+
+        if (isStory)
+        {
+            // In story mode, player is team 0. If player forfeits, AI wins
+            winnerId = "AI";
+        }
+        else
+        {
+            // In PvP / Ranked / Friendly: winner is the other team's player
+            int winningTeamIndex = (forfeitingTeamIndex == 0) ? 1 : 0;
+            winnerId = MatchIdentityRegistry.GetPlayerId(teams[winningTeamIndex].clientId);
+            if (string.IsNullOrEmpty(winnerId))
+                winnerId = teams[winningTeamIndex].playerId;
+        }
+
+        session.AddLog($"Team {forfeitingTeamIndex} forfeited the match.");
+        Debug.Log($"[Timeline] Forfeit processed for clientId={forfeitingClientId} (player={forfeitPlayerId}). Winner={winnerId}");
+        StartCoroutine(EndMatch(winnerId, isForfeit: true, forfeitPlayerId: forfeitPlayerId));
+    }
+
+    IEnumerator EndMatch(string forcedWinnerId = null, bool isForfeit = false, string forfeitPlayerId = null)
     {
         TransitionTo(ServerSessionState.Finished);
 
@@ -986,26 +1035,29 @@ public class ServerTimelineManager : MonoBehaviour
         int team0Units = teams[0].unitIds.Count;
         int team1Units = teams[1].unitIds.Count;
 
-        string winnerId = string.Empty;
-        if (winCondition == WinCondition.EliminateAll)
+        string winnerId = forcedWinnerId;
+        if (string.IsNullOrEmpty(winnerId))
         {
-            // PvE: only wins if opponent is fully eliminated
-            if (team1Units == 0 && team0Units > 0)
-                winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
-            else if (team0Units == 0 && team1Units > 0)
-                winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
-            // else: no winner (timeout/draw — no progress reported for story)
-        }
-        else
-        {
-            // PvP: more units alive = winner
-            if (team0Units > team1Units)
-                winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
-            else if (team1Units > team0Units)
-                winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+            if (winCondition == WinCondition.EliminateAll)
+            {
+                // PvE: only wins if opponent is fully eliminated
+                if (team1Units == 0 && team0Units > 0)
+                    winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
+                else if (team0Units == 0 && team1Units > 0)
+                    winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+                // else: no winner (timeout/draw — no progress reported for story)
+            }
+            else
+            {
+                // PvP: more units alive = winner
+                if (team0Units > team1Units)
+                    winnerId = MatchIdentityRegistry.GetPlayerId(teams[0].clientId);
+                else if (team1Units > team0Units)
+                    winnerId = MatchIdentityRegistry.GetPlayerId(teams[1].clientId);
+            }
         }
 
-        Debug.Log($"[Timeline] Match ended — winner={winnerId}");
+        Debug.Log($"[Timeline] Match ended — winner={winnerId} isForfeit={isForfeit}");
 
         var afterMatchData = new AfterMatchPlayerReport[]
         {
@@ -1023,17 +1075,14 @@ public class ServerTimelineManager : MonoBehaviour
             }
         };
 
-        NetworkManager.Singleton.Shutdown();
-
         // Notify backend before shutting down
-
         var backendClient = session.backendClient;
         if (backendClient != null)
         {
             if (backendClient.Mode == "story")
             {
-                // Player is always team 0 in story mode. Player wins if AI team (1) is wiped.
-                bool playerWon = team1Units == 0 && team0Units > 0;
+                // Player is always team 0 in story mode. Player wins if AI team (1) is wiped and winner is player
+                bool playerWon = winnerId == teams[0].playerId && team1Units == 0 && team0Units > 0;
                 string storyPlayerId = teams[0].playerId;
 
                 if (playerWon)
@@ -1042,18 +1091,20 @@ public class ServerTimelineManager : MonoBehaviour
                     Debug.Log("[Timeline] Story battle not won — no progress reported.");
 
                 yield return StartCoroutine(backendClient.ReportResult(
-                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
+                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId));
             }
             else
             {
                 yield return StartCoroutine(backendClient.ReportResult(
-                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData));
+                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId));
             }
         }
 
-        // PvP servers are normally killed by the backend while it handles the report; quitting here too
-        // means a failed report still frees the port (backend reaper sees the dead process).
-        Application.Quit();
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            NetworkManager.Singleton.Shutdown();
+
+        if (isPvE)
+            Application.Quit();
     }
 
 }

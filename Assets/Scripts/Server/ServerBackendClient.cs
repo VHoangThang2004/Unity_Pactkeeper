@@ -316,14 +316,16 @@ public class ServerBackendClient : MonoBehaviour
         yield return StartCoroutine(ReportStatus("cancelled", null));
     }
 
-    public IEnumerator ReportResult(string winnerId, int durationSeconds, int totalInstants, AfterMatchPlayerReport[] afterMatchTeamData)
+    public IEnumerator ReportResult(string winnerId, int durationSeconds, int totalInstants, AfterMatchPlayerReport[] afterMatchTeamData, bool isForfeit = false, string forfeitPlayerId = null)
     {
-        Debug.Log($"[ServerBackendClient] Reporting result for match {MatchId} — winner: {winnerId}");
+        Debug.Log($"[ServerBackendClient] Reporting result for match {MatchId} — winner: {winnerId}, isForfeit: {isForfeit}");
         yield return StartCoroutine(ReportStatus("completed", new MatchReportResult
         {
             winnerId = winnerId,
             durationSeconds = durationSeconds,
             totalInstants = totalInstants,
+            isForfeit = isForfeit,
+            forfeitPlayerId = forfeitPlayerId ?? string.Empty,
             afterMatchTeamData = afterMatchTeamData
         }));
     }
@@ -397,6 +399,8 @@ public class ServerBackendClient : MonoBehaviour
         public string winnerId;
         public int durationSeconds;
         public int totalInstants;
+        public bool isForfeit;
+        public string forfeitPlayerId;
         public AfterMatchPlayerReport[] afterMatchTeamData;
     }
 

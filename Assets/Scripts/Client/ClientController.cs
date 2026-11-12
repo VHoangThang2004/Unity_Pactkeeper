@@ -243,6 +243,19 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     public void TryDecision(int unitId, Vector3Int target, DecisionType type, int skillId)
         => bridge.SendDecisionServerRpc(unitId, target, type, skillId, session.CurrentToken);
 
+    public void RequestForfeit()
+    {
+        if (bridge != null)
+        {
+            Debug.Log("[ClientController] Sending forfeit request to server.");
+            bridge.RequestForfeitServerRpc();
+        }
+        else
+        {
+            Debug.LogWarning("[ClientController] Cannot forfeit — SyncedBridge is null.");
+        }
+    }
+
     // -------------------------------------------------------
     // Bridge -> Client (from SyncedBridge RPCs)
     // -------------------------------------------------------

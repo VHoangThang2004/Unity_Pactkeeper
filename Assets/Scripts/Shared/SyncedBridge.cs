@@ -65,6 +65,12 @@ public class SyncedBridge : NetworkBehaviour
         server?.HandlePrepSubmit(rpcParams.Receive.SenderClientId, uIds, spawnIndices, ready);
     }
 
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void RequestForfeitServerRpc(RpcParams rpcParams = default)
+    {
+        server?.HandleForfeit(rpcParams.Receive.SenderClientId);
+    }
+
     // -------------------------------------------------------
     // SERVER -> ALL CLIENTS
     // -------------------------------------------------------
