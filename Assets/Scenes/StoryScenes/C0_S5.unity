@@ -620,7 +620,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 604687039873851053, guid: 335c1310ee9f1484fb431a9c64b80611, type: 3}
+  m_Sprite: {fileID: -4600708983188495006, guid: 6d45911c488460c4caf7031f7cf4fe43, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1165,6 +1165,7 @@ MonoBehaviour:
   blockerPanel: {fileID: 346793039}
   tutorialButton: {fileID: 999043111}
   highlighter: {fileID: 978349976}
+  highlighterClip: {fileID: 7400000, guid: 3b92344e3063eb7499a6b1451593b20e, type: 2}
   gameCamera: {fileID: 0}
   interactionSystem: {fileID: 0}
   inputReader: {fileID: 0}

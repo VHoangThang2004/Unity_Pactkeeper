@@ -88,9 +88,10 @@ public class ChapterCard : MonoBehaviour
 
         if (data.progress != null)
         {
-            unlockedSceneHighWaterMark = data.progress.isCompleted
+            int rawMark = data.progress.isCompleted
                 ? data.progress.sceneId + 1
                 : data.progress.sceneId;
+            unlockedSceneHighWaterMark = Mathf.Max(firstSceneId, rawMark);
         }
 
         foreach (var scene in data.config.scenes)

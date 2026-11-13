@@ -56,7 +56,7 @@ public class StorySceneWithAdditiveManager : MonoBehaviour
             next =>
             {
                 TutorialContext.Reset();
-                StoryClient.RouteToStoryScene(next);
+                StoryClient.RouteToStoryScene(next, config, this);
             },
             () =>
             {

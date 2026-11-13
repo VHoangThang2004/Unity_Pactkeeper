@@ -268,13 +268,21 @@ public static class StoryClient
 
     public static void RouteToStoryScene(StoryProgressData progress, BackendConfig config = null, MonoBehaviour runner = null)
     {
-        bool returnToStoryMap = progress.isChapterCompleted ||
-            (!PlayerSession.IsAutoResumed && progress.isCompleted && Application.CanStreamedLevelBeLoaded("10_StoryProgress"));
+        bool isManualStorySelection = !PlayerSession.IsAutoResumed;
 
-        // Case 1: Chapter complete or explicit return to Story Map requested -> exit to 10_StoryProgress
+        // If launched manually from 10_StoryProgress and the next scene is non-PvE (e.g. 0.4..0.6 Dialogue),
+        // or the chapter/scene run has finished, return to 10_StoryProgress.
+        bool returnToStoryMap = progress.isChapterCompleted ||
+            (isManualStorySelection && (progress.isCompleted || progress.sceneType != "Battle") && Application.CanStreamedLevelBeLoaded("10_StoryProgress"));
+
+        // Case 1: Chapter complete or explicit return to Story Map requested
         if (progress.isChapterCompleted || returnToStoryMap)
         {
-            string dest = Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu";
+            // When completing Chapter 0 for the first time via AutoResume (after 0.6 MainMenu tutorial), return to 3_MainMenu.
+            // Otherwise (Chapters 1..3 or manual replay from Story Progress), return to 10_StoryProgress.
+            string dest = (progress.chapterId == 0 && PlayerSession.IsAutoResumed)
+                ? "3_MainMenu"
+                : (Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu");
             Debug.Log($"[StoryClient] Chapter complete or returning to story map -> loading {dest}.");
             SceneManager.LoadScene(dest);
             return;
@@ -283,11 +291,21 @@ public static class StoryClient
         // Case 2: Chapter is NOT complete -> seamless cross-scene continuity to next scene (C{chapterId}_S{sceneId})
         string targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
 
-        if (progress.sceneType == "Battle" && runner != null && config != null)
+        if (progress.sceneType == "Battle")
         {
-            Debug.Log($"[StoryClient] Next scene is Battle ({targetScene}) - requesting story match before transition...");
-            runner.StartCoroutine(SpawnMatchAndLoadScene(config, progress.chapterId, progress.sceneId, targetScene));
-            return;
+            if (runner != null && config != null)
+            {
+                Debug.Log($"[StoryClient] Next scene is Battle ({targetScene}) - requesting story match before transition...");
+                runner.StartCoroutine(SpawnMatchAndLoadScene(config, progress.chapterId, progress.sceneId, targetScene));
+                return;
+            }
+            else
+            {
+                // Fallback if caller did not pass runner/config: route through 3_MainMenu so MainMenuManager spawns the battle server
+                Debug.LogWarning($"[StoryClient] Next scene is Battle ({targetScene}) but runner/config is null - routing via 3_MainMenu to spawn server.");
+                SceneManager.LoadScene("3_MainMenu");
+                return;
+            }
         }
 
         if (targetScene == SceneManager.GetActiveScene().name)
