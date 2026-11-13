@@ -225,7 +225,15 @@ public class StoryProgressManager : MonoBehaviour
 
         var configMap = new Dictionary<int, ChapterConfigDto>();
         foreach (var cfg in configs)
+        {
+            if (cfg.scenes != null)
+            {
+                // Filter out non-PvE scenes (e.g. Cutscene 0.0 and Dialogue UI tutorials 0.4, 0.5, 0.6)
+                cfg.scenes = System.Array.FindAll(cfg.scenes, s =>
+                    s != null && string.Equals(s.type, "Battle", System.StringComparison.OrdinalIgnoreCase));
+            }
             configMap[cfg.chapterId] = cfg;
+        }
 
         // Determine how many chapters to show: max(backend configs, thumbnail sprites)
         int maxChapterToShow = 0;
@@ -446,7 +454,7 @@ public class StoryProgressManager : MonoBehaviour
 
         // Progress bar
         int totalScenes     = cfg?.scenes?.Length ?? 0;
-        int completedScenes = CalcCompletedScenes(prog, totalScenes);
+        int completedScenes = CalcCompletedScenes(prog, cfg?.scenes);
 
         if (popupProgressBar != null)
         {
@@ -463,19 +471,26 @@ public class StoryProgressManager : MonoBehaviour
         // Current scene label
         if (popupCurrentSceneLabel != null)
         {
-            if (prog != null && !prog.isChapterCompleted && cfg?.scenes != null)
-            {
-                var currentScene = System.Array.Find(cfg.scenes, s => s.sceneId == prog.sceneId);
-                string desc = currentScene != null ? currentScene.description : string.Empty;
-                string typeLabel = currentScene != null ? FormatSceneType(currentScene.type) : string.Empty;
-
-                popupCurrentSceneLabel.text = string.IsNullOrEmpty(desc)
-                    ? $"Scene {prog.sceneId} - {typeLabel}"
-                    : $"Scene {prog.sceneId} - {desc}";
-            }
-            else if (prog != null && prog.isChapterCompleted)
+            if (prog != null && (prog.isChapterCompleted || (totalScenes > 0 && completedScenes >= totalScenes)))
             {
                 popupCurrentSceneLabel.text = "All scenes completed!";
+            }
+            else if (prog != null && !prog.isChapterCompleted && cfg?.scenes != null)
+            {
+                var currentScene = System.Array.Find(cfg.scenes, s => s.sceneId == prog.sceneId)
+                                ?? System.Array.Find(cfg.scenes, s => s.sceneId >= prog.sceneId);
+                if (currentScene != null)
+                {
+                    string desc = currentScene.description;
+                    string typeLabel = FormatSceneType(currentScene.type);
+                    popupCurrentSceneLabel.text = string.IsNullOrEmpty(desc)
+                        ? $"Scene {currentScene.sceneId} - {typeLabel}"
+                        : $"Scene {currentScene.sceneId} - {desc}";
+                }
+                else
+                {
+                    popupCurrentSceneLabel.text = "Select a scene below to begin.";
+                }
             }
             else
             {
@@ -553,9 +568,10 @@ public class StoryProgressManager : MonoBehaviour
 
         if (data.progress != null)
         {
-            unlockedSceneHighWaterMark = data.progress.isCompleted
+            int rawMark = data.progress.isCompleted
                 ? data.progress.sceneId + 1
                 : data.progress.sceneId;
+            unlockedSceneHighWaterMark = Mathf.Max(firstSceneId, rawMark);
         }
 
         foreach (var scene in data.config.scenes)
@@ -606,12 +622,18 @@ public class StoryProgressManager : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    static int CalcCompletedScenes(StoryProgressDto prog, int totalScenes)
+    static int CalcCompletedScenes(StoryProgressDto prog, SceneConfigDto[] scenes)
     {
-        if (prog == null)              return 0;
-        if (prog.isChapterCompleted)   return totalScenes;
+        if (prog == null || scenes == null || scenes.Length == 0) return 0;
+        if (prog.isChapterCompleted) return scenes.Length;
 
-        return prog.isCompleted ? prog.sceneId + 1 : prog.sceneId;
+        int completed = 0;
+        foreach (var s in scenes)
+        {
+            if (prog.sceneId > s.sceneId || (prog.sceneId == s.sceneId && prog.isCompleted))
+                completed++;
+        }
+        return completed;
     }
 
     static string FormatSceneType(string type)

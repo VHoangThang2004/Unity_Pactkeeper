@@ -51,7 +51,7 @@ public class C0_S4_Manager : MonoBehaviour
         int scene = sequencer != null && sequencer.Plot != null ? sequencer.Plot.sceneId : 6;
 
         yield return StartCoroutine(StoryClient.CompleteAndAdvance(config, this,
-            next => { TutorialContext.Reset(); StoryClient.RouteToStoryScene(next); },
+            next => { TutorialContext.Reset(); StoryClient.RouteToStoryScene(next, config, this); },
             () => { TutorialContext.Reset(); SceneManager.LoadScene("3_MainMenu"); },
             chapterId: chapter,
             sceneId: scene

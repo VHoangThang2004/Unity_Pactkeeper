@@ -21,7 +21,7 @@ public class C0_S0 : MonoBehaviour
     {
         StartCoroutine(StoryClient.CompleteAndAdvance(
             config, this,
-            next => StoryClient.RouteToStoryScene(next),
+            next => StoryClient.RouteToStoryScene(next, config, this),
             () => Debug.LogWarning("[MainMenu] Story advance failed."),
             chapterId: 0,
             sceneId: 0
