@@ -1,0 +1,307 @@
+fileFormatVersion: 2
+guid: d9b3f8d4d9e58f94ab4a37469be11030
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1730240964969177864
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_0
+  - first:
+      213: 712646557555998892
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_1
+  - first:
+      213: -2240082732429912009
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_2
+  - first:
+      213: -1729138413055280261
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_3
+  - first:
+      213: -6531559520286919649
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_4
+  - first:
+      213: 1297197200787397724
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_5
+  - first:
+      213: -6566574756358857444
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_6
+  - first:
+      213: -3829633167725020525
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_7
+  - first:
+      213: 6949379395222089412
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_8
+  - first:
+      213: -5355710743505780118
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_9
+  - first:
+      213: 2672426469932852435
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_10
+  - first:
+      213: 4935572143612442960
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_11
+  - first:
+      213: -1150461239559843787
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_12
+  - first:
+      213: -2163070752860234616
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_13
+  - first:
+      213: -4681504719981380937
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_14
+  - first:
+      213: -3502104812296404593
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_15
+  - first:
+      213: -5192296087190436815
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_16
+  - first:
+      213: -7670795407313676277
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_17
+  - first:
+      213: 8430780590730278528
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_18
+  - first:
+      213: -8294410692048011198
+    second: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_11
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 288
+        width: 150
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 059355ff6bcae7440800000000000000
+      internalID: 4935572143612442960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_12
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 288
+        width: 148
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5301e28199db800f0800000000000000
+      internalID: -1150461239559843787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_13
+      rect:
+        serializedVersion: 2
+        x: 335
+        y: 288
+        width: 150
+        height: 148
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88c9ab75c9a3bf1e0800000000000000
+      internalID: -2163070752860234616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_17
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 73
+        width: 152
+        height: 143
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b08de5af73cdb8590800000000000000
+      internalID: -7670795407313676277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_18
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 73
+        width: 152
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0867cb17746200570800000000000000
+      internalID: 8430780590730278528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 3f3eca3b185facc4fb04a7dc89c8de7f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_0: 1730240964969177864
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_1: 712646557555998892
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_10: 2672426469932852435
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_11: 4935572143612442960
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_12: -1150461239559843787
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_13: -2163070752860234616
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_14: -4681504719981380937
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_15: -3502104812296404593
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_16: -5192296087190436815
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_17: -7670795407313676277
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_18: 8430780590730278528
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_19: -8294410692048011198
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_2: -2240082732429912009
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_3: -1729138413055280261
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_4: -6531559520286919649
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_5: 1297197200787397724
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_6: -6566574756358857444
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_7: -3829633167725020525
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_8: 6949379395222089412
+      Passive_UI_for_Assasin-tanker-warrior-archer-druid-no1_9: -5355710743505780118
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
