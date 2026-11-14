@@ -22,5 +22,5 @@ MonoBehaviour:
   useLimitPerInstant: -1
   useLimitTotal: -1
   effectIds: 274e0000
-  icon: {fileID: -6717884257390833292, guid: bd90b0bdda825634493785a5ab19aaca, type: 3}
+  icon: {fileID: -1150461239559843787, guid: d9b3f8d4d9e58f94ab4a37469be11030, type: 3}
   description: Passive

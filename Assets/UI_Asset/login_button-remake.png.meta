@@ -1,0 +1,537 @@
+fileFormatVersion: 2
+guid: 723dbe7e01378c2459932a39a7e0e8e6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8134282936412036532
+    second: login_button-remake_0
+  - first:
+      213: 8475663035547439712
+    second: login_button-remake_1
+  - first:
+      213: -4379329583072581936
+    second: login_button-remake_2
+  - first:
+      213: 5153854343277665530
+    second: login_button-remake_3
+  - first:
+      213: 7017345202657059842
+    second: login_button-remake_4
+  - first:
+      213: 8817489132800427547
+    second: login_button-remake_5
+  - first:
+      213: -6067091083368479839
+    second: login_button-remake_6
+  - first:
+      213: -6946958048887920646
+    second: login_button-remake_7
+  - first:
+      213: -7112232310832143267
+    second: login_button-remake_8
+  - first:
+      213: 924143859777186084
+    second: login_button-remake_9
+  - first:
+      213: 5986299675865644728
+    second: login_button-remake_10
+  - first:
+      213: -8423549776127700583
+    second: login_button-remake_11
+  - first:
+      213: 8025494352618871913
+    second: login_button-remake_12
+  - first:
+      213: -6643487159301276850
+    second: login_button-remake_13
+  - first:
+      213: -2706720461569324934
+    second: login_button-remake_14
+  - first:
+      213: 936949433608843349
+    second: login_button-remake_15
+  - first:
+      213: 7272482351073252449
+    second: login_button-remake_16
+  - first:
+      213: 2982899972099679707
+    second: login_button-remake_17
+  - first:
+      213: -178419188978856878
+    second: login_button-remake_18
+  - first:
+      213: -4715183346145284587
+    second: login_button-remake_19
+  - first:
+      213: -1188405889635526430
+    second: login_button-remake_20
+  - first:
+      213: 4416061817103465790
+    second: login_button-remake_21
+  - first:
+      213: 3348779154560441538
+    second: login_button-remake_22
+  - first:
+      213: 2028959992738090832
+    second: login_button-remake_23
+  - first:
+      213: 250639617923769044
+    second: login_button-remake_24
+  - first:
+      213: 6619448057432468702
+    second: login_button-remake_25
+  - first:
+      213: -5266567736699845772
+    second: login_button-remake_26
+  - first:
+      213: -7492187721896173841
+    second: login_button-remake_27
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: login_button-remake_0
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 227
+        width: 110
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c42a3a044c83d1f80800000000000000
+      internalID: -8134282936412036532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_1
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 234
+        width: 91
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 062d6b5ff9a9f9570800000000000000
+      internalID: 8475663035547439712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_2
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 207
+        width: 4
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d6699662fe7933c0800000000000000
+      internalID: -4379329583072581936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_10
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 286
+        width: 117
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bef103a6db931350800000000000000
+      internalID: 5986299675865644728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_11
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 285
+        width: 108
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9915616cb1a891b80800000000000000
+      internalID: -8423549776127700583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_12
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 292
+        width: 83
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96c50c2c798406f60800000000000000
+      internalID: 8025494352618871913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_13
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 287
+        width: 110
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4b7af790a79dc3a0800000000000000
+      internalID: -6643487159301276850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_14
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 258
+        width: 190
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7801edb41ccf6ad0800000000000000
+      internalID: -2706720461569324934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_15
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 228
+        width: 121
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55032c2bb86b00d00800000000000000
+      internalID: 936949433608843349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_16
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 229
+        width: 110
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 164d403ca2c0de460800000000000000
+      internalID: 7272482351073252449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_20
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 157
+        width: 39
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e8da4bc32fe18fe0800000000000000
+      internalID: -1188405889635526430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_26
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 36
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47309740c8469e6b0800000000000000
+      internalID: -5266567736699845772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_27
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 16
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: feed5d556f6660890800000000000000
+      internalID: -7492187721896173841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: login_button-remake_3
+      rect:
+        serializedVersion: 2
+        x: 517
+        y: 157
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 543d4f43ce84f7149a5b466774e87633
+      internalID: 5153854343277665530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8e374f5aa1c5f614fa406508733bb4da
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      login_button-remake_0: -8134282936412036532
+      login_button-remake_1: 8475663035547439712
+      login_button-remake_10: 5986299675865644728
+      login_button-remake_11: -8423549776127700583
+      login_button-remake_12: 8025494352618871913
+      login_button-remake_13: -6643487159301276850
+      login_button-remake_14: -2706720461569324934
+      login_button-remake_15: 936949433608843349
+      login_button-remake_16: 7272482351073252449
+      login_button-remake_17: 2982899972099679707
+      login_button-remake_18: -178419188978856878
+      login_button-remake_19: -4715183346145284587
+      login_button-remake_2: -4379329583072581936
+      login_button-remake_20: -1188405889635526430
+      login_button-remake_21: 4416061817103465790
+      login_button-remake_22: 3348779154560441538
+      login_button-remake_23: 2028959992738090832
+      login_button-remake_24: 250639617923769044
+      login_button-remake_25: 6619448057432468702
+      login_button-remake_26: -5266567736699845772
+      login_button-remake_27: -7492187721896173841
+      login_button-remake_3: 5153854343277665530
+      login_button-remake_4: 7017345202657059842
+      login_button-remake_5: 8817489132800427547
+      login_button-remake_6: -6067091083368479839
+      login_button-remake_7: -6946958048887920646
+      login_button-remake_8: -7112232310832143267
+      login_button-remake_9: 924143859777186084
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
