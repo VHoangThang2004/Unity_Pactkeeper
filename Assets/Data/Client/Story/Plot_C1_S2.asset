@@ -171,7 +171,7 @@ MonoBehaviour:
     text: Confirm the Piercing Shot!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 1
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Three shafts, zero wasted motion. No fortress wall can shelter a foe from

@@ -162,7 +162,7 @@ MonoBehaviour:
     text: Confirm! Watch all three blades and arrows converge in a single Instant!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: One shove turned an untouchable warlord into ashes. Chapter 1 is yours,

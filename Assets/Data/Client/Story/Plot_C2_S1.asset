@@ -185,7 +185,7 @@ MonoBehaviour:
     text: Confirm the final cleave!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Time itself bends to a true healer's pulse. Press on - ancient relics await

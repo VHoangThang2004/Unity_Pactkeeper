@@ -28,7 +28,7 @@ public class TutorialReplayUIController : MonoBehaviour
              "BattleTutorialStarter then calls AdvanceTutorialPhaseServerRpc(sceneId, forceCleanReset: true) " +
              "so the server reloads the StoryEncounterConfig in place (no new headless process). " +
              "Turn OFF to always spawn a fresh server per scene.")]
-    [SerializeField] private bool   seamlessSkip = true;
+    [SerializeField] private bool   seamlessSkip = false;
     [SerializeField] private string battleSceneName = "5_ClientMatch";
 
     private bool _isTransitioning = false;
@@ -72,22 +72,31 @@ public class TutorialReplayUIController : MonoBehaviour
             return;
         }
 
+        int chapterId = PlayerSession.SelectedStoryChapterId;
+        int currentSceneId = PlayerSession.SelectedStorySceneId;
+        TryParseActiveScene(ref chapterId, ref currentSceneId);
+        bool hasNextBattleInChapter = HasNextBattleSceneInChapter(chapterId, currentSceneId);
+
         if (replayBarRoot == null)
             BuildRuntimeReplayBar();
-
-        if (replayBarRoot != null)
-            replayBarRoot.SetActive(true);
 
         if (skipSceneButton != null)
         {
             skipSceneButton.onClick.RemoveAllListeners();
             skipSceneButton.onClick.AddListener(OnSkipSceneClicked);
+            skipSceneButton.gameObject.SetActive(hasNextBattleInChapter);
         }
 
         if (exitToMapButton != null)
         {
             exitToMapButton.onClick.RemoveAllListeners();
             exitToMapButton.onClick.AddListener(OnExitToMapClicked);
+        }
+
+        if (replayBarRoot != null)
+        {
+            ApplyReplayBarLayout(replayBarRoot.GetComponent<RectTransform>(), hasNextBattleInChapter);
+            replayBarRoot.SetActive(true);
         }
     }
 
@@ -111,12 +120,7 @@ public class TutorialReplayUIController : MonoBehaviour
         replayBarRoot.transform.SetParent(parentTransform, false);
 
         var rect = replayBarRoot.GetComponent<RectTransform>();
-        // Top-right corner of the HUD
-        rect.anchorMin = new Vector2(1f, 1f);
-        rect.anchorMax = new Vector2(1f, 1f);
-        rect.pivot = new Vector2(1f, 1f);
-        rect.anchoredPosition = new Vector2(-24f, -24f);
-        rect.sizeDelta = new Vector2(380f, 60f);
+        ApplyReplayBarLayout(rect);
 
         var bg = replayBarRoot.GetComponent<Image>();
         bg.color = new Color(0.08f, 0.08f, 0.08f, 0.82f);
@@ -136,6 +140,17 @@ public class TutorialReplayUIController : MonoBehaviour
 
         skipSceneButton = CreateActionButton(replayBarRoot.transform, "SkipSceneButton", "Skip Scene", new Color(0.28f, 0.24f, 0.14f, 0.96f));
         exitToMapButton = CreateActionButton(replayBarRoot.transform, "ExitToMapButton", "Exit to Map", new Color(0.42f, 0.16f, 0.14f, 0.96f));
+    }
+
+    private static void ApplyReplayBarLayout(RectTransform rect, bool hasSkipButton = true)
+    {
+        if (rect == null) return;
+        // Positioned on the right side directly below the "Your turn" / "Time is flowing" hanging sign
+        rect.anchorMin = new Vector2(1f, 1f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(1f, 1f);
+        rect.anchoredPosition = new Vector2(-24f, -215f);
+        rect.sizeDelta = new Vector2(hasSkipButton ? 380f : 190f, 60f);
     }
 
     private static Button CreateActionButton(Transform parent, string objectName, string labelText, Color bgColor)
@@ -186,10 +201,13 @@ public class TutorialReplayUIController : MonoBehaviour
         _isTransitioning = true;
         SetButtonsInteractable(false);
 
+        // Keep TutorialContext.IsActive = true while shutting down NetworkManager and terminating the old server
+        // so ClientMenuReturner.OnDisconnected does not hijack the disconnect and load 6_MatchResult -> 3_MainMenu!
+        TutorialContext.IsActive = true;
+
         if (sequencer != null)
             sequencer.StopAllCoroutines();
         PlotDirector.Clear();
-        TutorialContext.Reset();
 
         int chapterId = PlayerSession.SelectedStoryChapterId;
         int currentSceneId = PlayerSession.SelectedStorySceneId;
@@ -197,20 +215,17 @@ public class TutorialReplayUIController : MonoBehaviour
 
         int nextSceneId = currentSceneId + 1;
         string nextUnitySceneName = $"C{chapterId}_S{nextSceneId}";
+        bool nextIsBattle = IsBattleSceneInChapter(chapterId, nextSceneId);
 
-        if (Application.CanStreamedLevelBeLoaded(nextUnitySceneName))
+        // Only allow skipping to a Battle scene (never skip from C0_S3 Battle into C0_S4 Dialogue)
+        if (nextIsBattle && Application.CanStreamedLevelBeLoaded(nextUnitySceneName))
         {
-            bool nextIsBattle = IsBattleSceneInChapter(chapterId, nextSceneId);
             bool currentIsBattle = IsBattleSceneInChapter(chapterId, currentSceneId);
 
             PlayerSession.SelectedStoryChapterId = chapterId;
             PlayerSession.SelectedStorySceneId = nextSceneId;
             PlayerSession.IsAutoResumed = false;
 
-            // Seamless path: battle -> battle inside the same chapter. Keep the Dedicated Server and the
-            // additive 5_ClientMatch alive; only the overlay scene is swapped. The next BattleTutorialStarter
-            // sends AdvanceTutorialPhaseServerRpc(nextSceneId, forceCleanReset: true) and the server reloads
-            // the StoryEncounterConfig in place.
             string currentUnitySceneName = $"C{chapterId}_S{currentSceneId}";
             if (currentIsBattle && nextIsBattle && CanSwapOverlaySeamlessly(currentUnitySceneName))
             {
@@ -219,38 +234,42 @@ public class TutorialReplayUIController : MonoBehaviour
                 yield break;
             }
 
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+            {
+                Debug.Log("[TutorialReplayUI] Shutting down NetworkManager before transitioning to next scene...");
+                NetworkManager.Singleton.Shutdown();
+                yield return new WaitUntil(() => !NetworkManager.Singleton.IsListening);
+            }
+
             if (nextIsBattle)
             {
-                if (string.IsNullOrEmpty(PlayerSession.MatchId) && backendConfig != null)
+                bool matchStarted = false;
+                if (backendConfig != null)
                 {
                     yield return StartCoroutine(StoryClient.StartSelectedStoryMatch(
                         backendConfig,
                         chapterId,
                         nextSceneId,
                         autoResume: false,
-                        onSuccess: _ => { }));
+                        onSuccess: _ => matchStarted = true,
+                        onFail: err => Debug.LogWarning($"[TutorialReplayUI] Could not start next battle scene C{chapterId}_S{nextSceneId}: {err}")));
                 }
 
-                if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+                if (!matchStarted && backendConfig != null)
                 {
-                    Debug.Log("[TutorialReplayUI] Shutting down NetworkManager before reconnecting in next battle scene...");
-                    NetworkManager.Singleton.Shutdown();
-                    yield return new WaitUntil(() => !NetworkManager.Singleton.IsListening);
+                    TutorialContext.Reset();
+                    SceneManager.LoadScene(storyProgressSceneName);
+                    yield break;
                 }
             }
             else if (currentIsBattle)
             {
                 if (backendConfig != null)
                     yield return StartCoroutine(StoryClient.TerminateStoryMatch(backendConfig));
-
-                if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-                {
-                    NetworkManager.Singleton.Shutdown();
-                    yield return new WaitUntil(() => !NetworkManager.Singleton.IsListening);
-                }
             }
 
             Debug.Log($"[TutorialReplayUI] Skipping from C{chapterId}_S{currentSceneId} to {nextUnitySceneName}.");
+            TutorialContext.Reset();
             SceneManager.LoadScene(nextUnitySceneName);
             yield break;
         }
@@ -318,15 +337,13 @@ public class TutorialReplayUIController : MonoBehaviour
         _isTransitioning = true;
         SetButtonsInteractable(false);
 
+        // Keep TutorialContext.IsActive = true while shutting down NetworkManager and terminating the server
+        // so ClientMenuReturner.OnDisconnected does not hijack the disconnect and load 6_MatchResult -> 3_MainMenu!
+        TutorialContext.IsActive = true;
+
         if (sequencer != null)
             sequencer.StopAllCoroutines();
         PlotDirector.Clear();
-        TutorialContext.Reset();
-
-        if (backendConfig != null)
-        {
-            yield return StartCoroutine(StoryClient.TerminateStoryMatch(backendConfig));
-        }
 
         if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
         {
@@ -335,6 +352,12 @@ public class TutorialReplayUIController : MonoBehaviour
             yield return new WaitUntil(() => !NetworkManager.Singleton.IsListening);
         }
 
+        if (backendConfig != null)
+        {
+            yield return StartCoroutine(StoryClient.TerminateStoryMatch(backendConfig));
+        }
+
+        TutorialContext.Reset();
         SceneManager.LoadScene(storyProgressSceneName);
     }
 
@@ -358,6 +381,14 @@ public class TutorialReplayUIController : MonoBehaviour
             chapterId = parsedCh;
             sceneId = parsedSc;
         }
+    }
+
+    private static bool HasNextBattleSceneInChapter(int chapterId, int currentSceneId)
+    {
+        int nextSceneId = currentSceneId + 1;
+        string nextUnitySceneName = $"C{chapterId}_S{nextSceneId}";
+        return IsBattleSceneInChapter(chapterId, nextSceneId) &&
+               Application.CanStreamedLevelBeLoaded(nextUnitySceneName);
     }
 
     private static bool IsBattleSceneInChapter(int chapterId, int sceneId)

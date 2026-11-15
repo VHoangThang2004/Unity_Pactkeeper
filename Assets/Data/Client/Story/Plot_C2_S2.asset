@@ -175,7 +175,7 @@ MonoBehaviour:
     text: Confirm! Arrow and axe fall together!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Relics mastered, Chapter 2 complete! Ahead lies the Emerald Sanctum - and

@@ -166,7 +166,7 @@ MonoBehaviour:
     text: Confirm! Let blade and axe execute the judgment together!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Four hearts of damage in a single breath! You have mastered every law of

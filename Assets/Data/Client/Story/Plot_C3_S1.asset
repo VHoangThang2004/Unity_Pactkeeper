@@ -122,7 +122,7 @@ MonoBehaviour:
     text: Confirm and sweep both flanks at once!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 2
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: The forest answers those who command space. Prepare yourself, Varek - the
