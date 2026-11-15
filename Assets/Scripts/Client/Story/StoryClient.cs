@@ -46,11 +46,8 @@ public static class StoryClient
         int? chapterId = null,
         int? sceneId = null)
     {
-        string url = $"{config.backendUrl}/api/story/progress/complete";
-        if (chapterId.HasValue && sceneId.HasValue && chapterId.Value >= 0 && sceneId.Value >= 0)
-            url += $"?chapterId={chapterId.Value}&sceneId={sceneId.Value}";
-
-        using var req = UnityWebRequest.PostWwwForm(url, "");
+        using var req = UnityWebRequest.PostWwwForm(
+            $"{config.backendUrl}/api/story/progress/complete", "");
         config.SetHeaders(req, PlayerSession.Token);
         yield return req.SendWebRequest();
 
@@ -232,6 +229,37 @@ public static class StoryClient
         int? chapterId = null,
         int? sceneId = null)
     {
+        // Replay is NOT playing Current Progress:
+        // Do not call CompleteCurrentScene on the backend and do not check AutoAdvance or AutoResume.
+        if (PlayerSession.IsStoryReplay)
+        {
+            Debug.Log("[StoryClient] Replay scene finished — skipping Current Progress completion & AutoAdvance/AutoResume.");
+            if (config != null)
+                yield return runner.StartCoroutine(TerminateStoryMatch(config));
+
+            if (Unity.Netcode.NetworkManager.Singleton != null &&
+                Unity.Netcode.NetworkManager.Singleton.IsListening)
+            {
+                Debug.Log("[StoryClient] Shutting down NetworkManager after replay...");
+                Unity.Netcode.NetworkManager.Singleton.Shutdown();
+
+                float waitLimit = 0f;
+                while (Unity.Netcode.NetworkManager.Singleton != null &&
+                       Unity.Netcode.NetworkManager.Singleton.IsListening &&
+                       waitLimit < 2.0f)
+                {
+                    waitLimit += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
+            PlayerSession.IsStoryReplay = false;
+            TutorialContext.Reset();
+            string dest = Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu";
+            SceneManager.LoadScene(dest);
+            yield break;
+        }
+
         StoryProgressData completed = null;
         yield return runner.StartCoroutine(CompleteCurrentScene(
             config,
@@ -263,30 +291,28 @@ public static class StoryClient
     // -------------------------------------------------------
     // Helper: Route to correct Unity scene based on progress.
     // Uses naming convention: C{chapterId}_S{sceneId}
-    // Ensures seamless cross-scene continuity (S1 -> S2 -> S3) within the same chapter.
+    // Only auto-enters the next scene when Current Progress is incomplete AND autoResume == true.
     // -------------------------------------------------------
 
     public static void RouteToStoryScene(StoryProgressData progress, BackendConfig config = null, MonoBehaviour runner = null)
     {
-        bool isManualStorySelection = !PlayerSession.IsAutoResumed;
+        // AutoResume only applies when Current Progress is NOT completed (isCompleted == false && isChapterCompleted == false)
+        // and the scene's config has autoResume == true.
+        bool shouldAutoEnterNextScene =
+            !progress.isCompleted &&
+            !progress.isChapterCompleted &&
+            progress.autoResume;
 
-        // Return to Story Map (or Main Menu fallback) when:
-        // 1. The chapter is completed (including when finishing a replayed scene of an already-completed chapter)
-        // 2. The current scene is completed without auto-advancing (progress.isCompleted)
-        // 3. The next scene has autoResume == false (e.g. Chapter 1..3 scenes where player must select each battle from 10_StoryProgress)
-        // 4. The run was started manually from 10_StoryProgress and the next scene is non-Battle (e.g. Dialogue)
-        bool returnToStoryMap =
-            progress.isChapterCompleted ||
-            progress.isCompleted ||
-            !progress.autoResume ||
-            (isManualStorySelection && progress.sceneType != "Battle");
-
-        // Case 1: Chapter complete or explicit return to Story Map requested
-        if (returnToStoryMap)
+        if (!shouldAutoEnterNextScene)
         {
-            // When completing Chapter 0 for the first time via AutoResume (after 0.6 MainMenu tutorial), return to 3_MainMenu.
-            // Otherwise (Chapters 1..3 or manual replay from Story Progress), return to 10_StoryProgress.
-            string dest = (progress.chapterId == 0 && PlayerSession.IsAutoResumed && progress.isChapterCompleted)
+            // When finishing the initial AutoResumed Chapter 0 tutorial chain (which advances to C1_S1 with autoResume=false),
+            // return to 3_MainMenu. For all other scenes (Ch1..Ch3), return to 10_StoryProgress.
+            bool justFinishedChapter0AutoResumeChain =
+                PlayerSession.IsAutoResumed && progress.chapterId == 1 && progress.sceneId == 1;
+
+            PlayerSession.IsAutoResumed = false;
+
+            string dest = justFinishedChapter0AutoResumeChain
                 ? "3_MainMenu"
                 : (Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu");
             Debug.Log($"[StoryClient] Returning to story map / menu (ch={progress.chapterId}, sc={progress.sceneId}, " +

@@ -29,6 +29,12 @@ public static class PlayerSession
     /// </summary>
     public static bool IsAutoResumed { get; set; } = false;
 
+    /// <summary>
+    /// True when the player is replaying an already-completed scene (not their active Current Progress).
+    /// When true, completing the scene does NOT call CompleteCurrentScene or check AutoAdvance/AutoResume.
+    /// </summary>
+    public static bool IsStoryReplay { get; set; } = false;
+
     public static int SelectedStoryChapterId { get; set; } = 0;
     public static int SelectedStorySceneId   { get; set; } = 1;
 
@@ -42,6 +48,7 @@ public static class PlayerSession
         SelectedOwnedUnitId = string.Empty;
         CanSkipOrExitStory  = false;
         IsAutoResumed       = false;
+        IsStoryReplay       = false;
         SelectedStoryChapterId = 0;
         SelectedStorySceneId   = 1;
     }

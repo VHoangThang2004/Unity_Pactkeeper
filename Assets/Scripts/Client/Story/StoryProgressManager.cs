@@ -109,6 +109,7 @@ public class StoryProgressManager : MonoBehaviour
     // ── Runtime ───────────────────────────────────────────────────────────────
 
     private List<ChapterDisplayData> chapters = new();
+    private StoryProgressDto _furthestProgress = null;
     private int  _maxCompletedChapterId = -1;
     private bool _isStartingMatch = false;
     private readonly List<GameObject> _popupSpawnedSceneItems = new();
@@ -212,15 +213,29 @@ public class StoryProgressManager : MonoBehaviour
     void BuildDisplayData(ChapterConfigDto[] configs, StoryProgressDto[] progresses)
     {
         chapters.Clear();
+        _furthestProgress = null;
         _maxCompletedChapterId = -1;
 
-        // Build lookup maps
-        var progressMap = new Dictionary<int, StoryProgressDto>();
-        foreach (var p in progresses)
+        // Find the single furthest progress record (1D linear progression)
+        if (progresses != null && progresses.Length > 0)
         {
-            progressMap[p.chapterId] = p;
-            if (p.isChapterCompleted && p.chapterId > _maxCompletedChapterId)
-                _maxCompletedChapterId = p.chapterId;
+            foreach (var p in progresses)
+            {
+                if (p == null) continue;
+                if (_furthestProgress == null ||
+                    p.chapterId > _furthestProgress.chapterId ||
+                    (p.chapterId == _furthestProgress.chapterId && p.sceneId > _furthestProgress.sceneId))
+                {
+                    _furthestProgress = p;
+                }
+            }
+        }
+
+        if (_furthestProgress != null)
+        {
+            _maxCompletedChapterId = _furthestProgress.isChapterCompleted
+                ? _furthestProgress.chapterId
+                : _furthestProgress.chapterId - 1;
         }
 
         var configMap = new Dictionary<int, ChapterConfigDto>();
@@ -250,7 +265,7 @@ public class StoryProgressManager : MonoBehaviour
         for (int chapterId = 0; chapterId < maxChapterToShow; chapterId++)
         {
             configMap.TryGetValue(chapterId, out var cfg);
-            progressMap.TryGetValue(chapterId, out var prog);
+            StoryProgressDto prog = null;
 
             ChapterStatus status;
             if (!previousCompleted)
@@ -263,17 +278,25 @@ public class StoryProgressManager : MonoBehaviour
                 status = ChapterStatus.Locked;
                 previousCompleted = false; // Lock all subsequent chapters
             }
-            else if (prog == null)
+            else if (_furthestProgress == null || chapterId > _furthestProgress.chapterId)
             {
                 status = ChapterStatus.NotStarted;
             }
-            else if (prog.isChapterCompleted)
+            else if (chapterId < _furthestProgress.chapterId || _furthestProgress.isChapterCompleted)
             {
                 status = ChapterStatus.Completed;
+                prog = new StoryProgressDto
+                {
+                    chapterId = chapterId,
+                    sceneId = int.MaxValue,
+                    isCompleted = true,
+                    isChapterCompleted = true
+                };
             }
             else
             {
                 status = ChapterStatus.InProgress;
+                prog = _furthestProgress;
             }
 
             // Next chapter is only unlocked if this one is completed
@@ -292,7 +315,7 @@ public class StoryProgressManager : MonoBehaviour
                 status     = status,
                 thumbnail  = thumb,
                 config     = cfg,      // null for coming soon chapters
-                progress   = prog,     // null for not-started or coming soon
+                progress   = prog,     // derived from furthest progress
             });
         }
     }
@@ -350,13 +373,24 @@ public class StoryProgressManager : MonoBehaviour
         bool isChapterAlreadyCompleted = targetChapterId <= _maxCompletedChapterId;
         PlayerSession.CanSkipOrExitStory = isChapterAlreadyCompleted;
 
+        // Replay is NOT playing Current Progress:
+        // Only when selecting the active incomplete Current Progress scene is IsStoryReplay = false.
+        bool isPlayingCurrentProgress =
+            _furthestProgress != null &&
+            !_furthestProgress.isChapterCompleted &&
+            targetChapterId == _furthestProgress.chapterId &&
+            ((!_furthestProgress.isCompleted && targetSceneId == _furthestProgress.sceneId) ||
+             (_furthestProgress.isCompleted && targetSceneId == _furthestProgress.sceneId + 1));
+
+        PlayerSession.IsStoryReplay = !isPlayingCurrentProgress;
+
         // Enforce technical requirement: manual chapter/scene selection ALWAYS sets autoResume = false
         PlayerSession.IsAutoResumed = false;
         PlayerSession.SelectedStoryChapterId = targetChapterId;
         PlayerSession.SelectedStorySceneId   = targetSceneId;
 
         Debug.Log($"[StoryProgressManager] Launching C{targetChapterId}_S{targetSceneId} " +
-                  $"(autoResume=false, CanSkipOrExit={PlayerSession.CanSkipOrExitStory})");
+                  $"(isReplay={PlayerSession.IsStoryReplay}, autoResume=false, CanSkipOrExit={PlayerSession.CanSkipOrExitStory})");
 
         bool requestSuccess = false;
         StoryMatchSelectData matchData = null;

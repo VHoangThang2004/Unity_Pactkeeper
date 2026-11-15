@@ -111,7 +111,7 @@ public class MainMenuManager : MonoBehaviour
         yield return StartCoroutine(StoryClient.GetCurrent(config,
             progress =>
             {
-                if (!progress.isChapterCompleted)
+                if (!progress.isCompleted && !progress.isChapterCompleted)
                     stayOnMenu = ResumeStory(progress);
             }));
 
@@ -132,14 +132,15 @@ public class MainMenuManager : MonoBehaviour
                   $"type={progress.sceneType} completed={progress.isCompleted} " +
                   $"autoResume={progress.autoResume} force={force}");
 
-        // Scene already completed but not advanced: stay on menu, wait for player input (/next)
-        if (progress.isCompleted)
+        // AutoResume only applies if Current Progress is NOT completed
+        if (progress.isCompleted || progress.isChapterCompleted)
             return true;
 
         // Scene not completed, but config says don't auto-load it: stay on menu
         if (!force && !progress.autoResume)
             return true;
 
+        PlayerSession.IsStoryReplay = false;
         PlayerSession.IsAutoResumed = true;
 
         var targetScene = $"C{progress.chapterId}_S{progress.sceneId}";
