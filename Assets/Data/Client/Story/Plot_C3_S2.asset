@@ -22,13 +22,15 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: "This is your final trial, Pactkeeper. The Corrupt Tactician cowers on the far eastern edge at (3, 0) with 4 HP."
+    text: This is your final trial, Pactkeeper. The Corrupt Tactician cowers on the
+      far eastern edge at (3, 0) with 4 HP.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Unite every discipline you have forged - Half-Instant displacement, high-ground Ambush, Trinket reach, and Momentum - to fell him in a single Instant!"
+    text: Unite every discipline you have forged - Half-Instant displacement, high-ground
+      Ambush, Trinket reach, and Momentum - to fell him in a single Instant!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -58,7 +60,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 1
-    text: "He is snared at (1, 0)! Select your Assassin - now leading the Ready Bar from (0, -1)."
+    text: He is snared at (1, 0)! Select your Assassin - now leading the Ready Bar
+      from (0, -1).
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -163,10 +166,11 @@ MonoBehaviour:
     text: Confirm! Let blade and axe execute the judgment together!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 4.5
+    delay: 2
     targetWaitTimeout: 10
   - type: 5
-    text: "Four hearts of damage in a single breath! You have mastered every law of the Pact - go forth and conquer the arena!"
+    text: Four hearts of damage in a single breath! You have mastered every law of
+      the Pact - go forth and conquer the arena!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

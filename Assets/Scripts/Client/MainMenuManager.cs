@@ -198,12 +198,14 @@ public class MainMenuManager : MonoBehaviour
     // Story advancement
     // -------------------------------------------------------
 
-    public IEnumerator CompleteAndContinue()
+    public IEnumerator CompleteAndContinue(int? chapterId = null, int? sceneId = null)
     {
         yield return StartCoroutine(StoryClient.CompleteAndAdvance(
             config, this,
-            next => ResumeStory(next, force: next.advancedFromPrev),
-            () => Debug.LogWarning("[MainMenu] Story advance failed.")
+            next => ResumeStory(next, force: false),
+            () => Debug.LogWarning("[MainMenu] Story advance failed."),
+            chapterId,
+            sceneId
         ));
     }
 

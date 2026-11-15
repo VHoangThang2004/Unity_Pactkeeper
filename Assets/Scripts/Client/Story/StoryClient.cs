@@ -270,20 +270,27 @@ public static class StoryClient
     {
         bool isManualStorySelection = !PlayerSession.IsAutoResumed;
 
-        // If launched manually from 10_StoryProgress and the next scene is non-PvE (e.g. 0.4..0.6 Dialogue),
-        // or the chapter/scene run has finished, return to 10_StoryProgress.
-        bool returnToStoryMap = progress.isChapterCompleted ||
-            (isManualStorySelection && (progress.isCompleted || progress.sceneType != "Battle") && Application.CanStreamedLevelBeLoaded("10_StoryProgress"));
+        // Return to Story Map (or Main Menu fallback) when:
+        // 1. The chapter is completed (including when finishing a replayed scene of an already-completed chapter)
+        // 2. The current scene is completed without auto-advancing (progress.isCompleted)
+        // 3. The next scene has autoResume == false (e.g. Chapter 1..3 scenes where player must select each battle from 10_StoryProgress)
+        // 4. The run was started manually from 10_StoryProgress and the next scene is non-Battle (e.g. Dialogue)
+        bool returnToStoryMap =
+            progress.isChapterCompleted ||
+            progress.isCompleted ||
+            !progress.autoResume ||
+            (isManualStorySelection && progress.sceneType != "Battle");
 
         // Case 1: Chapter complete or explicit return to Story Map requested
-        if (progress.isChapterCompleted || returnToStoryMap)
+        if (returnToStoryMap)
         {
             // When completing Chapter 0 for the first time via AutoResume (after 0.6 MainMenu tutorial), return to 3_MainMenu.
             // Otherwise (Chapters 1..3 or manual replay from Story Progress), return to 10_StoryProgress.
-            string dest = (progress.chapterId == 0 && PlayerSession.IsAutoResumed)
+            string dest = (progress.chapterId == 0 && PlayerSession.IsAutoResumed && progress.isChapterCompleted)
                 ? "3_MainMenu"
                 : (Application.CanStreamedLevelBeLoaded("10_StoryProgress") ? "10_StoryProgress" : "3_MainMenu");
-            Debug.Log($"[StoryClient] Chapter complete or returning to story map -> loading {dest}.");
+            Debug.Log($"[StoryClient] Returning to story map / menu (ch={progress.chapterId}, sc={progress.sceneId}, " +
+                      $"chDone={progress.isChapterCompleted}, scDone={progress.isCompleted}, autoResume={progress.autoResume}) -> loading {dest}.");
             SceneManager.LoadScene(dest);
             return;
         }
