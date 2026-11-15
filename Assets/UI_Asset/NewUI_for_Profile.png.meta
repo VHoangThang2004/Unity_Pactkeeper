@@ -1,0 +1,785 @@
+fileFormatVersion: 2
+guid: 904d9bb2101fb7d47b0a1d515a8b29fd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1988970901298382662
+    second: NewUI_for_Profile_0
+  - first:
+      213: 1392344600527859275
+    second: NewUI_for_Profile_1
+  - first:
+      213: 6085919517082230217
+    second: NewUI_for_Profile_2
+  - first:
+      213: 582586282135056670
+    second: NewUI_for_Profile_3
+  - first:
+      213: 5075504290771329268
+    second: NewUI_for_Profile_4
+  - first:
+      213: -8021840711517872722
+    second: NewUI_for_Profile_5
+  - first:
+      213: 329920897380945770
+    second: NewUI_for_Profile_6
+  - first:
+      213: -7980692552263297002
+    second: NewUI_for_Profile_7
+  - first:
+      213: -8055309682253022681
+    second: NewUI_for_Profile_8
+  - first:
+      213: 4386727761581745386
+    second: NewUI_for_Profile_9
+  - first:
+      213: 4352986826386268510
+    second: NewUI_for_Profile_10
+  - first:
+      213: 9169505826066737791
+    second: NewUI_for_Profile_11
+  - first:
+      213: -1459653483112964318
+    second: NewUI_for_Profile_12
+  - first:
+      213: 7747036318945672705
+    second: NewUI_for_Profile_13
+  - first:
+      213: 7238647357250509370
+    second: NewUI_for_Profile_14
+  - first:
+      213: 1618144681103567186
+    second: NewUI_for_Profile_15
+  - first:
+      213: -4230599114220613105
+    second: NewUI_for_Profile_16
+  - first:
+      213: -8795546114922217428
+    second: NewUI_for_Profile_17
+  - first:
+      213: 6226172927592387558
+    second: NewUI_for_Profile_18
+  - first:
+      213: -5470793158914987077
+    second: NewUI_for_Profile_19
+  - first:
+      213: 432933293262641157
+    second: NewUI_for_Profile_20
+  - first:
+      213: -6321755927752552977
+    second: NewUI_for_Profile_21
+  - first:
+      213: -4542090979370670494
+    second: NewUI_for_Profile_22
+  - first:
+      213: 1898928549824497232
+    second: NewUI_for_Profile_23
+  - first:
+      213: 1950657106898055524
+    second: NewUI_for_Profile_24
+  - first:
+      213: -5668659953911066849
+    second: NewUI_for_Profile_25
+  - first:
+      213: -8931178879765108950
+    second: NewUI_for_Profile_26
+  - first:
+      213: -3424549357330722787
+    second: NewUI_for_Profile_27
+  - first:
+      213: 5853202820026684528
+    second: NewUI_for_Profile_28
+  - first:
+      213: -2822167111937722510
+    second: NewUI_for_Profile_29
+  - first:
+      213: 8886747621431418721
+    second: NewUI_for_Profile_30
+  - first:
+      213: -8281266960453414668
+    second: NewUI_for_Profile_31
+  - first:
+      213: 7308268291171485927
+    second: NewUI_for_Profile_32
+  - first:
+      213: 7197949874816987938
+    second: NewUI_for_Profile_33
+  - first:
+      213: 8764652022133874115
+    second: NewUI_for_Profile_34
+  - first:
+      213: -475494116130941759
+    second: NewUI_for_Profile_35
+  - first:
+      213: 3966863184775178644
+    second: NewUI_for_Profile_36
+  - first:
+      213: -5561161337736906712
+    second: NewUI_for_Profile_37
+  - first:
+      213: 4965366189181857682
+    second: NewUI_for_Profile_38
+  - first:
+      213: 2300820407911897031
+    second: NewUI_for_Profile_39
+  - first:
+      213: -4293419809910082875
+    second: NewUI_for_Profile_40
+  - first:
+      213: 3340967426825722982
+    second: NewUI_for_Profile_41
+  - first:
+      213: -251769957062126462
+    second: NewUI_for_Profile_42
+  - first:
+      213: -3913020481889569459
+    second: NewUI_for_Profile_43
+  - first:
+      213: -3433628654780889703
+    second: NewUI_for_Profile_44
+  - first:
+      213: -5076055677115695770
+    second: NewUI_for_Profile_45
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: NewUI_for_Profile_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 314
+        width: 1480
+        height: 974
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab87587d081c564e0800000000000000
+      internalID: -1988970901298382662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_10
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 1032
+        width: 246
+        height: 240
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5165ba947ae86c30800000000000000
+      internalID: 4352986826386268510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_11
+      rect:
+        serializedVersion: 2
+        x: 1830
+        y: 1155
+        width: 166
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7a259877f0a04f70800000000000000
+      internalID: 9169505826066737791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_12
+      rect:
+        serializedVersion: 2
+        x: 1831
+        y: 1063
+        width: 421
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22fd3e304e44ebbe0800000000000000
+      internalID: -1459653483112964318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_13
+      rect:
+        serializedVersion: 2
+        x: 1830
+        y: 953
+        width: 395
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10e7ecc8c70038b60800000000000000
+      internalID: 7747036318945672705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_14
+      rect:
+        serializedVersion: 2
+        x: 2239
+        y: 951
+        width: 89
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3a9c3f5b67d47460800000000000000
+      internalID: 7238647357250509370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_19
+      rect:
+        serializedVersion: 2
+        x: 1531
+        y: 659
+        width: 832
+        height: 207
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbb2c338b96d314b0800000000000000
+      internalID: -5470793158914987077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_26
+      rect:
+        serializedVersion: 2
+        x: 1521
+        y: 233
+        width: 428
+        height: 339
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a272126d0241e0480800000000000000
+      internalID: -8931178879765108950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_27
+      rect:
+        serializedVersion: 2
+        x: 1979
+        y: 234
+        width: 204
+        height: 337
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d109288e08e8970d0800000000000000
+      internalID: -3424549357330722787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_28
+      rect:
+        serializedVersion: 2
+        x: 2275
+        y: 283
+        width: 118
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 074510604f0ca3150800000000000000
+      internalID: 5853202820026684528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_29
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 176
+        width: 334
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2777924d6f5a5d8d0800000000000000
+      internalID: -2822167111937722510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_30
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 176
+        width: 323
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16f97ffa0e1145b70800000000000000
+      internalID: 8886747621431418721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_31
+      rect:
+        serializedVersion: 2
+        x: 1617
+        y: 71
+        width: 122
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f0def35397031d80800000000000000
+      internalID: -8281266960453414668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_32
+      rect:
+        serializedVersion: 2
+        x: 1779
+        y: 71
+        width: 123
+        height: 119
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e8078a3a4f2c6560800000000000000
+      internalID: 7308268291171485927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_33
+      rect:
+        serializedVersion: 2
+        x: 1940
+        y: 70
+        width: 122
+        height: 121
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 223b887564144e360800000000000000
+      internalID: 7197949874816987938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_34
+      rect:
+        serializedVersion: 2
+        x: 2104
+        y: 57
+        width: 129
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cdd237b39c42a970800000000000000
+      internalID: 8764652022133874115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_35
+      rect:
+        serializedVersion: 2
+        x: 2255
+        y: 67
+        width: 145
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c41a33ee94b669f0800000000000000
+      internalID: -475494116130941759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_36
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 29
+        width: 122
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49969199c012d0730800000000000000
+      internalID: 3966863184775178644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_37
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 29
+        width: 120
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8283e854a39c2d2b0800000000000000
+      internalID: -5561161337736906712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_38
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 29
+        width: 120
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29f6bedcd3688e440800000000000000
+      internalID: 4965366189181857682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_39
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 29
+        width: 120
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c7de8188f72eef10800000000000000
+      internalID: 2300820407911897031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NewUI_for_Profile_40
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 29
+        width: 118
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c23fae2e65ba64c0800000000000000
+      internalID: -4293419809910082875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 276a555f2c628a541b85085b7eb3703d
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      NewUI_for_Profile_0: -1988970901298382662
+      NewUI_for_Profile_1: 1392344600527859275
+      NewUI_for_Profile_10: 4352986826386268510
+      NewUI_for_Profile_11: 9169505826066737791
+      NewUI_for_Profile_12: -1459653483112964318
+      NewUI_for_Profile_13: 7747036318945672705
+      NewUI_for_Profile_14: 7238647357250509370
+      NewUI_for_Profile_15: 1618144681103567186
+      NewUI_for_Profile_16: -4230599114220613105
+      NewUI_for_Profile_17: -8795546114922217428
+      NewUI_for_Profile_18: 6226172927592387558
+      NewUI_for_Profile_19: -5470793158914987077
+      NewUI_for_Profile_2: 6085919517082230217
+      NewUI_for_Profile_20: 432933293262641157
+      NewUI_for_Profile_21: -6321755927752552977
+      NewUI_for_Profile_22: -4542090979370670494
+      NewUI_for_Profile_23: 1898928549824497232
+      NewUI_for_Profile_24: 1950657106898055524
+      NewUI_for_Profile_25: -5668659953911066849
+      NewUI_for_Profile_26: -8931178879765108950
+      NewUI_for_Profile_27: -3424549357330722787
+      NewUI_for_Profile_28: 5853202820026684528
+      NewUI_for_Profile_29: -2822167111937722510
+      NewUI_for_Profile_3: 582586282135056670
+      NewUI_for_Profile_30: 8886747621431418721
+      NewUI_for_Profile_31: -8281266960453414668
+      NewUI_for_Profile_32: 7308268291171485927
+      NewUI_for_Profile_33: 7197949874816987938
+      NewUI_for_Profile_34: 8764652022133874115
+      NewUI_for_Profile_35: -475494116130941759
+      NewUI_for_Profile_36: 3966863184775178644
+      NewUI_for_Profile_37: -5561161337736906712
+      NewUI_for_Profile_38: 4965366189181857682
+      NewUI_for_Profile_39: 2300820407911897031
+      NewUI_for_Profile_4: 5075504290771329268
+      NewUI_for_Profile_40: -4293419809910082875
+      NewUI_for_Profile_41: 3340967426825722982
+      NewUI_for_Profile_42: -251769957062126462
+      NewUI_for_Profile_43: -3913020481889569459
+      NewUI_for_Profile_44: -3433628654780889703
+      NewUI_for_Profile_45: -5076055677115695770
+      NewUI_for_Profile_5: -8021840711517872722
+      NewUI_for_Profile_6: 329920897380945770
+      NewUI_for_Profile_7: -7980692552263297002
+      NewUI_for_Profile_8: -8055309682253022681
+      NewUI_for_Profile_9: 4386727761581745386
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

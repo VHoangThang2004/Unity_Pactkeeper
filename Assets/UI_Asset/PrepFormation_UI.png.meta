@@ -1,0 +1,597 @@
+fileFormatVersion: 2
+guid: 5ea17cf3463f0dd459d7403c26e704bc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5153449853964985688
+    second: PrepFormation_UI_0
+  - first:
+      213: 9171657346776462001
+    second: PrepFormation_UI_1
+  - first:
+      213: 3694793356479954366
+    second: PrepFormation_UI_2
+  - first:
+      213: 6811578222969263516
+    second: PrepFormation_UI_3
+  - first:
+      213: 9003938305408871860
+    second: PrepFormation_UI_4
+  - first:
+      213: -7592220328200116720
+    second: PrepFormation_UI_5
+  - first:
+      213: 3127518679173069153
+    second: PrepFormation_UI_6
+  - first:
+      213: 5021134680683760314
+    second: PrepFormation_UI_7
+  - first:
+      213: 1852063132945215033
+    second: PrepFormation_UI_8
+  - first:
+      213: -5701179552750100688
+    second: PrepFormation_UI_9
+  - first:
+      213: 1061072481283869982
+    second: PrepFormation_UI_10
+  - first:
+      213: 3970145282778189560
+    second: PrepFormation_UI_11
+  - first:
+      213: 4982102880795316270
+    second: PrepFormation_UI_12
+  - first:
+      213: -2522918124160549362
+    second: PrepFormation_UI_13
+  - first:
+      213: -4823815110505126401
+    second: PrepFormation_UI_14
+  - first:
+      213: -6649578343849319164
+    second: PrepFormation_UI_15
+  - first:
+      213: 490669834710343001
+    second: PrepFormation_UI_16
+  - first:
+      213: -194284001961696480
+    second: PrepFormation_UI_17
+  - first:
+      213: -3860892968990118659
+    second: PrepFormation_UI_18
+  - first:
+      213: -2359785860792857511
+    second: PrepFormation_UI_19
+  - first:
+      213: 150593020252946800
+    second: PrepFormation_UI_20
+  - first:
+      213: 589793995012866025
+    second: PrepFormation_UI_21
+  - first:
+      213: 4518397395553085752
+    second: PrepFormation_UI_22
+  - first:
+      213: -7256387734292984282
+    second: PrepFormation_UI_23
+  - first:
+      213: -1001303277837826583
+    second: PrepFormation_UI_24
+  - first:
+      213: -3340453686642135903
+    second: PrepFormation_UI_25
+  - first:
+      213: 3221823120475015014
+    second: PrepFormation_UI_26
+  - first:
+      213: 3710766865246574826
+    second: PrepFormation_UI_27
+  - first:
+      213: 8280248752821149894
+    second: PrepFormation_UI_28
+  - first:
+      213: 3332894435341010919
+    second: PrepFormation_UI_29
+  - first:
+      213: 5438880551169673331
+    second: PrepFormation_UI_30
+  - first:
+      213: 6910525956191389598
+    second: PrepFormation_UI_31
+  - first:
+      213: 689250729676092801
+    second: PrepFormation_UI_32
+  - first:
+      213: 5310485137141264214
+    second: PrepFormation_UI_33
+  - first:
+      213: 5233351690590573010
+    second: PrepFormation_UI_34
+  - first:
+      213: 6295964052392787444
+    second: PrepFormation_UI_35
+  - first:
+      213: 8135100303519408216
+    second: PrepFormation_UI_36
+  - first:
+      213: -6966647655275566664
+    second: PrepFormation_UI_37
+  - first:
+      213: -8680680904397331937
+    second: PrepFormation_UI_38
+  - first:
+      213: 5871109112098901776
+    second: PrepFormation_UI_39
+  - first:
+      213: 7013041173227797494
+    second: PrepFormation_UI_40
+  - first:
+      213: 4381445510627880517
+    second: PrepFormation_UI_41
+  - first:
+      213: -8163668880869441353
+    second: PrepFormation_UI_42
+  - first:
+      213: -6554615324140566220
+    second: PrepFormation_UI_43
+  - first:
+      213: -6392337674623723324
+    second: PrepFormation_UI_44
+  - first:
+      213: 5788192465158147216
+    second: PrepFormation_UI_45
+  - first:
+      213: 7868253088882414379
+    second: PrepFormation_UI_46
+  - first:
+      213: -9206138711613369211
+    second: PrepFormation_UI_47
+  - first:
+      213: 7787836479334132689
+    second: PrepFormation_UI_48
+  - first:
+      213: 2551637221433427271
+    second: PrepFormation_UI_49
+  - first:
+      213: 8574411291060626598
+    second: PrepFormation_UI_50
+  - first:
+      213: -3950075491162943725
+    second: PrepFormation_UI_51
+  - first:
+      213: -6001545758993860627
+    second: PrepFormation_UI_52
+  - first:
+      213: 1055477675676785493
+    second: PrepFormation_UI_53
+  - first:
+      213: -3332947217855288657
+    second: PrepFormation_UI_54
+  - first:
+      213: -6372498611651084342
+    second: PrepFormation_UI_55
+  - first:
+      213: 3792812092299209190
+    second: PrepFormation_UI_56
+  - first:
+      213: 7750669095625215032
+    second: PrepFormation_UI_57
+  - first:
+      213: 3716393769209720831
+    second: PrepFormation_UI_58
+  - first:
+      213: 5284528308618336910
+    second: PrepFormation_UI_59
+  - first:
+      213: 258241305492711048
+    second: PrepFormation_UI_60
+  - first:
+      213: -1814454671236565591
+    second: PrepFormation_UI_61
+  - first:
+      213: -8243893405537778426
+    second: PrepFormation_UI_62
+  - first:
+      213: -7854805641882036308
+    second: PrepFormation_UI_63
+  - first:
+      213: 8517185499799706769
+    second: PrepFormation_UI_64
+  - first:
+      213: -815977075466845358
+    second: PrepFormation_UI_65
+  - first:
+      213: 2213668424325660990
+    second: PrepFormation_UI_66
+  - first:
+      213: 8165123982061406011
+    second: PrepFormation_UI_67
+  - first:
+      213: -5677124402848006832
+    second: PrepFormation_UI_68
+  - first:
+      213: 3420496551421387618
+    second: PrepFormation_UI_69
+  - first:
+      213: 3919860646428752483
+    second: PrepFormation_UI_70
+  - first:
+      213: -8221617720869508092
+    second: PrepFormation_UI_71
+  - first:
+      213: 6255731614809567546
+    second: PrepFormation_UI_72
+  - first:
+      213: 6080322393721267217
+    second: PrepFormation_UI_73
+  - first:
+      213: 8193682458592339878
+    second: PrepFormation_UI_74
+  - first:
+      213: -2094410131990509133
+    second: PrepFormation_UI_75
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PrepFormation_UI_0
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 212
+        width: 841
+        height: 1390
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8aad0a679a44b78b0800000000000000
+      internalID: -5153449853964985688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_47
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 292
+        width: 70
+        height: 1302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58410553e993d3080800000000000000
+      internalID: -9206138711613369211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_48
+      rect:
+        serializedVersion: 2
+        x: 1489
+        y: 1427
+        width: 543
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1db2a872404f31c60800000000000000
+      internalID: 7787836479334132689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_49
+      rect:
+        serializedVersion: 2
+        x: 1546
+        y: 1134
+        width: 450
+        height: 241
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7454433a88c396320800000000000000
+      internalID: 2551637221433427271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_50
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 669
+        width: 107
+        height: 456
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a464c9d3ad6ef670800000000000000
+      internalID: 8574411291060626598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_51
+      rect:
+        serializedVersion: 2
+        x: 1485
+        y: 808
+        width: 574
+        height: 295
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31f8149e4438e29c0800000000000000
+      internalID: -3950075491162943725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_52
+      rect:
+        serializedVersion: 2
+        x: 1445
+        y: 456
+        width: 667
+        height: 322
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de73be30ee936bca0800000000000000
+      internalID: -6001545758993860627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFormation_UI_53
+      rect:
+        serializedVersion: 2
+        x: 1213
+        y: 91
+        width: 1161
+        height: 354
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55bd1179a5fc5ae00800000000000000
+      internalID: 1055477675676785493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 23e83aa1395777347ae6e1b2fbebbf44
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      PrepFormation_UI_0: -5153449853964985688
+      PrepFormation_UI_1: 9171657346776462001
+      PrepFormation_UI_10: 1061072481283869982
+      PrepFormation_UI_11: 3970145282778189560
+      PrepFormation_UI_12: 4982102880795316270
+      PrepFormation_UI_13: -2522918124160549362
+      PrepFormation_UI_14: -4823815110505126401
+      PrepFormation_UI_15: -6649578343849319164
+      PrepFormation_UI_16: 490669834710343001
+      PrepFormation_UI_17: -194284001961696480
+      PrepFormation_UI_18: -3860892968990118659
+      PrepFormation_UI_19: -2359785860792857511
+      PrepFormation_UI_2: 3694793356479954366
+      PrepFormation_UI_20: 150593020252946800
+      PrepFormation_UI_21: 589793995012866025
+      PrepFormation_UI_22: 4518397395553085752
+      PrepFormation_UI_23: -7256387734292984282
+      PrepFormation_UI_24: -1001303277837826583
+      PrepFormation_UI_25: -3340453686642135903
+      PrepFormation_UI_26: 3221823120475015014
+      PrepFormation_UI_27: 3710766865246574826
+      PrepFormation_UI_28: 8280248752821149894
+      PrepFormation_UI_29: 3332894435341010919
+      PrepFormation_UI_3: 6811578222969263516
+      PrepFormation_UI_30: 5438880551169673331
+      PrepFormation_UI_31: 6910525956191389598
+      PrepFormation_UI_32: 689250729676092801
+      PrepFormation_UI_33: 5310485137141264214
+      PrepFormation_UI_34: 5233351690590573010
+      PrepFormation_UI_35: 6295964052392787444
+      PrepFormation_UI_36: 8135100303519408216
+      PrepFormation_UI_37: -6966647655275566664
+      PrepFormation_UI_38: -8680680904397331937
+      PrepFormation_UI_39: 5871109112098901776
+      PrepFormation_UI_4: 9003938305408871860
+      PrepFormation_UI_40: 7013041173227797494
+      PrepFormation_UI_41: 4381445510627880517
+      PrepFormation_UI_42: -8163668880869441353
+      PrepFormation_UI_43: -6554615324140566220
+      PrepFormation_UI_44: -6392337674623723324
+      PrepFormation_UI_45: 5788192465158147216
+      PrepFormation_UI_46: 7868253088882414379
+      PrepFormation_UI_47: -9206138711613369211
+      PrepFormation_UI_48: 7787836479334132689
+      PrepFormation_UI_49: 2551637221433427271
+      PrepFormation_UI_5: -7592220328200116720
+      PrepFormation_UI_50: 8574411291060626598
+      PrepFormation_UI_51: -3950075491162943725
+      PrepFormation_UI_52: -6001545758993860627
+      PrepFormation_UI_53: 1055477675676785493
+      PrepFormation_UI_54: -3332947217855288657
+      PrepFormation_UI_55: -6372498611651084342
+      PrepFormation_UI_56: 3792812092299209190
+      PrepFormation_UI_57: 7750669095625215032
+      PrepFormation_UI_58: 3716393769209720831
+      PrepFormation_UI_59: 5284528308618336910
+      PrepFormation_UI_6: 3127518679173069153
+      PrepFormation_UI_60: 258241305492711048
+      PrepFormation_UI_61: -1814454671236565591
+      PrepFormation_UI_62: -8243893405537778426
+      PrepFormation_UI_63: -7854805641882036308
+      PrepFormation_UI_64: 8517185499799706769
+      PrepFormation_UI_65: -815977075466845358
+      PrepFormation_UI_66: 2213668424325660990
+      PrepFormation_UI_67: 8165123982061406011
+      PrepFormation_UI_68: -5677124402848006832
+      PrepFormation_UI_69: 3420496551421387618
+      PrepFormation_UI_7: 5021134680683760314
+      PrepFormation_UI_70: 3919860646428752483
+      PrepFormation_UI_71: -8221617720869508092
+      PrepFormation_UI_72: 6255731614809567546
+      PrepFormation_UI_73: 6080322393721267217
+      PrepFormation_UI_74: 8193682458592339878
+      PrepFormation_UI_75: -2094410131990509133
+      PrepFormation_UI_8: 1852063132945215033
+      PrepFormation_UI_9: -5701179552750100688
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
