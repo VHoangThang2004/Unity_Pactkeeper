@@ -22,8 +22,7 @@ MonoBehaviour:
     delay: 2
     targetWaitTimeout: 10
   - type: 0
-    text: Both warriors stand ready, and your Assassin has gathered Skill Points
-      (SP). Time to finish this duel!
+    text: Both warriors stand ready at Step 0, and your conserved SP is full, Varek. Let us finish this ambusher!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

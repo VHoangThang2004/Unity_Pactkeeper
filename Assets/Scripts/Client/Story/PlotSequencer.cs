@@ -58,6 +58,16 @@ public class PlotSequencer : MonoBehaviour
     private bool _guidedDragInProgress;
     private bool _guidedDropCompleted;
 
+    private GameObject _slideOverlayRoot;
+    private Image _slideBackdropImage;
+    private TMP_Text _slidePlaceholderLabel;
+
+    /// <summary>
+    /// Set to true when C0_S0 has just played the 4-slide Visual Novel intro in this session
+    /// so C0_S1 does not repeat the same 4 slides back-to-back.
+    /// </summary>
+    public static bool HasShownChapter0IntroSlides { get; set; } = false;
+
     void Awake()
     {
         EnsureTransparentPanels();
@@ -541,6 +551,14 @@ public class PlotSequencer : MonoBehaviour
         while (_currentIndex < plot.nodes.Count)
         {
             PlotNode node = plot.nodes[_currentIndex];
+            if (!string.IsNullOrEmpty(node.slideId) && HasShownChapter0IntroSlides)
+            {
+                _currentIndex++;
+                continue;
+            }
+            if (string.IsNullOrEmpty(node.slideId) && node.type != PlotNodeType.AutoAdvance)
+                HasShownChapter0IntroSlides = false;
+
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
             bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
@@ -632,6 +650,7 @@ public class PlotSequencer : MonoBehaviour
     IEnumerator RunTextBox(PlotNode node)
     {
         HideAll();
+        ShowSlideIfPresent(node);
         if (nextButton != null)
         {
             var nbImg = nextButton.GetComponent<Image>();
@@ -1600,6 +1619,88 @@ public class PlotSequencer : MonoBehaviour
         if (blockerPanel != null) blockerPanel.SetActive(false);
         if (tutorialButton != null) tutorialButton.SetActive(false);
         if (highlighter != null) highlighter.SetActive(false);
+        if (_slideOverlayRoot != null) _slideOverlayRoot.SetActive(false);
+    }
+
+    private void ShowSlideIfPresent(PlotNode node)
+    {
+        if (node == null || (string.IsNullOrEmpty(node.slideId) && node.slideSprite == null))
+        {
+            if (_slideOverlayRoot != null) _slideOverlayRoot.SetActive(false);
+            return;
+        }
+
+        EnsureSlideOverlayCreated();
+        if (_slideOverlayRoot == null) return;
+
+        Sprite resolvedSprite = node.slideSprite;
+        if (resolvedSprite == null && !string.IsNullOrEmpty(node.slideId))
+        {
+            resolvedSprite = Resources.Load<Sprite>($"StorySlides/{node.slideId}")
+                          ?? Resources.Load<Sprite>(node.slideId);
+        }
+
+        if (_slideBackdropImage != null)
+        {
+            _slideBackdropImage.sprite = resolvedSprite;
+            _slideBackdropImage.color = resolvedSprite != null
+                ? Color.white
+                : new Color(0.06f, 0.05f, 0.09f, 0.94f);
+            _slideBackdropImage.preserveAspect = false;
+        }
+
+        if (_slidePlaceholderLabel != null)
+        {
+            bool showPlaceholder = resolvedSprite == null && !string.IsNullOrEmpty(node.slideId);
+            _slidePlaceholderLabel.gameObject.SetActive(showPlaceholder);
+            if (showPlaceholder)
+            {
+                _slidePlaceholderLabel.text = $"[ Illustration Placeholder: {node.slideId} ]";
+            }
+        }
+
+        _slideOverlayRoot.SetActive(true);
+    }
+
+    private void EnsureSlideOverlayCreated()
+    {
+        if (_slideOverlayRoot != null) return;
+
+        Transform parentCanvasTransform = textBoxPanel != null ? textBoxPanel.transform.parent : transform;
+        _slideOverlayRoot = new GameObject("VN_SlideOverlay", typeof(RectTransform), typeof(Canvas), typeof(CanvasRenderer), typeof(Image));
+        _slideOverlayRoot.transform.SetParent(parentCanvasTransform, false);
+
+        var rt = _slideOverlayRoot.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+
+        var slideCanvas = _slideOverlayRoot.GetComponent<Canvas>();
+        slideCanvas.overrideSorting = true;
+        slideCanvas.sortingOrder = 1001;
+
+        _slideBackdropImage = _slideOverlayRoot.GetComponent<Image>();
+        _slideBackdropImage.raycastTarget = false;
+        _slideBackdropImage.color = new Color(0.06f, 0.05f, 0.09f, 0.94f);
+
+        var labelObj = new GameObject("SlidePlaceholderLabel", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        labelObj.transform.SetParent(_slideOverlayRoot.transform, false);
+        var labelRt = labelObj.GetComponent<RectTransform>();
+        labelRt.anchorMin = new Vector2(0.5f, 0.62f);
+        labelRt.anchorMax = new Vector2(0.5f, 0.62f);
+        labelRt.sizeDelta = new Vector2(900f, 80f);
+        labelRt.anchoredPosition = Vector2.zero;
+
+        _slidePlaceholderLabel = labelObj.GetComponent<TextMeshProUGUI>();
+        if (dialogueText != null && dialogueText.font != null)
+            _slidePlaceholderLabel.font = dialogueText.font;
+        _slidePlaceholderLabel.fontSize = 26f;
+        _slidePlaceholderLabel.alignment = TextAlignmentOptions.Center;
+        _slidePlaceholderLabel.color = new Color(0.85f, 0.76f, 0.55f, 0.85f);
+        _slidePlaceholderLabel.raycastTarget = false;
+
+        _slideOverlayRoot.SetActive(false);
     }
 
     public void ButtonDebugger()

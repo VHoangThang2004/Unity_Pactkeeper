@@ -16,20 +16,19 @@ MonoBehaviour:
   sceneId: 4
   nodes:
   - type: 0
-    text: You did a great job out on the front lines. Now, I'll show you how to prepare
-      in the Main Menu.
+    text: The ambush is broken, Varek. Welcome to the Sanctum—from here, we rebuild our decimated squad and prepare to end this war.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: The first step is learning how to manage your unit.
+    text: A Pactkeeper fights through the warriors bound to his covenant. Let us inspect the survivors and new recruits in your roster.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 5
-    text: Click here to open the Unit List.
+    text: Click Unit List to muster your squad.
     tutorialTargetId: C0S2_1
     targetCell: {x: 0, y: 0}
     delay: 3

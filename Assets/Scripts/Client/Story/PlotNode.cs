@@ -36,4 +36,11 @@ public class PlotNode
     [Header("Timeout")]
     [Tooltip("Seconds to wait for target to register before reloading scene.")]
     public float targetWaitTimeout = 10f;
+
+    [Header("Visual Novel Slide (Optional)")]
+    [Tooltip("Placeholder ID for opening cutscene illustrations (e.g. bg_c0_ambush, bg_c0_heavenly_eye).")]
+    public string slideId;
+
+    [Tooltip("Optional full-screen illustration Sprite displayed during this TextBox step.")]
+    public Sprite slideSprite;
 }
