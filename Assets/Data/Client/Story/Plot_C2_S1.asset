@@ -22,7 +22,8 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: "A commander who masters only Instant and Non-Instant steel knows half the art of war. Watch how a Physician bends the Timeline with Half-Instant arts!"
+    text: A commander who masters only Instant and Non-Instant steel knows half the
+      art of war. Watch how a Physician bends the Timeline with Half-Instant arts!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -40,7 +41,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Whenever your Physician restores missing HP to a wounded ally, she immediately recovers 1 SP!"
+    text: Whenever your Physician restores missing HP to a wounded ally, she immediately
+      recovers 1 SP!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -52,7 +54,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Heal! is a Half-Instant skill - unlike delayed weapon strikes, it resolves right now during the Paused Instant while concluding the Physician's turn!"
+    text: Heal! is a Half-Instant skill - unlike delayed weapon strikes, it resolves
+      right now during the Paused Instant while concluding the Physician's turn!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -64,7 +67,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Target your bleeding Warrior at (-1, 0) to restore 1 HP and trigger +1 SP!
+    text: Target your bleeding Warrior at (-1, 0) to restore 1 HP and trigger +1
+      SP!
     tutorialTargetId: 
     targetCell: {x: -1, y: 0}
     delay: 0
@@ -76,7 +80,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 1
-    text: "Wounds mended, and your Physician now holds a full 3 SP! Select your Warrior - now at the front of the Ready Bar."
+    text: Wounds mended, and your Physician now holds a full 3 SP! Select your Warrior
+      - now at the front of the Ready Bar.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -112,13 +117,15 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Confirm! Watch how your swifter Physician recovers ahead of your exhausted Warrior!
+    text: Confirm! Watch how your swifter Physician recovers ahead of your exhausted
+      Warrior!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
     delay: 3.5
     targetWaitTimeout: 10
   - type: 1
-    text: "Your Physician is ready again with 3 SP, while your Warrior is still recovering steps! Select your Physician."
+    text: Your Physician is ready again with 3 SP, while your Warrior is still recovering
+      steps! Select your Physician.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -130,7 +137,9 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "For 3 SP, Triage! is a Half-Instant miracle - it transfers an adjacent ally's remaining cooldown steps onto the Physician, waking that ally to act immediately!"
+    text: For 3 SP, Triage! is a Half-Instant miracle - it transfers an adjacent
+      ally's remaining cooldown steps onto the Physician, waking that ally to act
+      immediately!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -154,7 +163,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 1
-    text: "Your Warrior surges straight onto the Ready Bar! Select him now to finish the executioner!"
+    text: Your Warrior surges straight onto the Ready Bar! Select him now to finish
+      the executioner!
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -175,10 +185,11 @@ MonoBehaviour:
     text: Confirm the final cleave!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 4
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
-    text: "Time itself bends to a true healer's pulse. Press on - ancient relics await inspection."
+    text: Time itself bends to a true healer's pulse. Press on - ancient relics await
+      inspection.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

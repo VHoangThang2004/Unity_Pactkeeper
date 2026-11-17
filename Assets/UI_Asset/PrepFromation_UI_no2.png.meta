@@ -1,0 +1,713 @@
+fileFormatVersion: 2
+guid: 4ed8796523c6c08459fe7e5f760bc9cf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1694189313259189593
+    second: PrepFromation_UI_no2_0
+  - first:
+      213: -995152121256338463
+    second: PrepFromation_UI_no2_1
+  - first:
+      213: -5637004527284940378
+    second: PrepFromation_UI_no2_2
+  - first:
+      213: 473241381977442314
+    second: PrepFromation_UI_no2_3
+  - first:
+      213: -6044615345789690088
+    second: PrepFromation_UI_no2_4
+  - first:
+      213: -3316729093143828934
+    second: PrepFromation_UI_no2_5
+  - first:
+      213: 4114577001566103675
+    second: PrepFromation_UI_no2_6
+  - first:
+      213: -6114399566387595337
+    second: PrepFromation_UI_no2_7
+  - first:
+      213: 1493603431341699044
+    second: PrepFromation_UI_no2_8
+  - first:
+      213: -4375268130947654479
+    second: PrepFromation_UI_no2_9
+  - first:
+      213: -7546482786439912867
+    second: PrepFromation_UI_no2_10
+  - first:
+      213: -8096671164973620228
+    second: PrepFromation_UI_no2_11
+  - first:
+      213: 6271958835316596236
+    second: PrepFromation_UI_no2_12
+  - first:
+      213: -1678890210962431538
+    second: PrepFromation_UI_no2_13
+  - first:
+      213: -2914850454819410882
+    second: PrepFromation_UI_no2_14
+  - first:
+      213: 8032563542186694064
+    second: PrepFromation_UI_no2_15
+  - first:
+      213: -8151504937325362773
+    second: PrepFromation_UI_no2_16
+  - first:
+      213: -2126113139529585109
+    second: PrepFromation_UI_no2_17
+  - first:
+      213: 6841706412378501872
+    second: PrepFromation_UI_no2_18
+  - first:
+      213: 8905111502633461638
+    second: PrepFromation_UI_no2_19
+  - first:
+      213: -5868643649003706134
+    second: PrepFromation_UI_no2_20
+  - first:
+      213: 9145723566878457490
+    second: PrepFromation_UI_no2_21
+  - first:
+      213: 6105600812747707394
+    second: PrepFromation_UI_no2_22
+  - first:
+      213: -6234809323074812471
+    second: PrepFromation_UI_no2_23
+  - first:
+      213: 3037307192371937187
+    second: PrepFromation_UI_no2_24
+  - first:
+      213: 1951787740476730349
+    second: PrepFromation_UI_no2_25
+  - first:
+      213: 4712867836588581448
+    second: PrepFromation_UI_no2_26
+  - first:
+      213: 674193977129287590
+    second: PrepFromation_UI_no2_27
+  - first:
+      213: -5400092889498385944
+    second: PrepFromation_UI_no2_28
+  - first:
+      213: -13288951038132809
+    second: PrepFromation_UI_no2_29
+  - first:
+      213: 2563268876177966263
+    second: PrepFromation_UI_no2_30
+  - first:
+      213: -6748804310120600399
+    second: PrepFromation_UI_no2_31
+  - first:
+      213: -6637627294940677134
+    second: PrepFromation_UI_no2_32
+  - first:
+      213: -6084298249279001136
+    second: PrepFromation_UI_no2_33
+  - first:
+      213: -575056543417361753
+    second: PrepFromation_UI_no2_34
+  - first:
+      213: -7073558439867150974
+    second: PrepFromation_UI_no2_35
+  - first:
+      213: -726288636645611288
+    second: PrepFromation_UI_no2_36
+  - first:
+      213: 2979096806810053665
+    second: PrepFromation_UI_no2_37
+  - first:
+      213: 2399146286070391845
+    second: PrepFromation_UI_no2_38
+  - first:
+      213: -4252401622274035275
+    second: PrepFromation_UI_no2_39
+  - first:
+      213: -8770343332906465914
+    second: PrepFromation_UI_no2_40
+  - first:
+      213: 2176325771084466870
+    second: PrepFromation_UI_no2_41
+  - first:
+      213: 5708583453819910988
+    second: PrepFromation_UI_no2_42
+  - first:
+      213: 472249245811332460
+    second: PrepFromation_UI_no2_43
+  - first:
+      213: -7741768940288412990
+    second: PrepFromation_UI_no2_44
+  - first:
+      213: -2518061554197137745
+    second: PrepFromation_UI_no2_45
+  - first:
+      213: -1359567315929259355
+    second: PrepFromation_UI_no2_46
+  - first:
+      213: -2558736336075173159
+    second: PrepFromation_UI_no2_47
+  - first:
+      213: -6520821893493254784
+    second: PrepFromation_UI_no2_48
+  - first:
+      213: -4982286225832735348
+    second: PrepFromation_UI_no2_49
+  - first:
+      213: -28630271966925163
+    second: PrepFromation_UI_no2_50
+  - first:
+      213: 7096598033245189892
+    second: PrepFromation_UI_no2_51
+  - first:
+      213: 9205094200083430186
+    second: PrepFromation_UI_no2_52
+  - first:
+      213: -2246965244134625443
+    second: PrepFromation_UI_no2_53
+  - first:
+      213: 6988848384958310736
+    second: PrepFromation_UI_no2_54
+  - first:
+      213: 777892697444298215
+    second: PrepFromation_UI_no2_55
+  - first:
+      213: -128298476463855323
+    second: PrepFromation_UI_no2_56
+  - first:
+      213: 2514802599587778001
+    second: PrepFromation_UI_no2_57
+  - first:
+      213: -2347484265746034509
+    second: PrepFromation_UI_no2_58
+  - first:
+      213: 5530860635743873046
+    second: PrepFromation_UI_no2_59
+  - first:
+      213: -7790567046656494969
+    second: PrepFromation_UI_no2_60
+  - first:
+      213: -2451289055252129970
+    second: PrepFromation_UI_no2_61
+  - first:
+      213: -662010573998114077
+    second: PrepFromation_UI_no2_62
+  - first:
+      213: -948009776020320224
+    second: PrepFromation_UI_no2_63
+  - first:
+      213: 9184792141678026871
+    second: PrepFromation_UI_no2_64
+  - first:
+      213: -5818706656298526947
+    second: PrepFromation_UI_no2_65
+  - first:
+      213: -1145895702458037325
+    second: PrepFromation_UI_no2_66
+  - first:
+      213: 4192530273263451172
+    second: PrepFromation_UI_no2_67
+  - first:
+      213: 1411916317574783110
+    second: PrepFromation_UI_no2_68
+  - first:
+      213: 5967185302887695205
+    second: PrepFromation_UI_no2_69
+  - first:
+      213: 1163260208311111555
+    second: PrepFromation_UI_no2_70
+  - first:
+      213: 2134297542671737525
+    second: PrepFromation_UI_no2_71
+  - first:
+      213: -8752072770099948674
+    second: PrepFromation_UI_no2_72
+  - first:
+      213: 6791610629511088785
+    second: PrepFromation_UI_no2_73
+  - first:
+      213: -2634258254609104242
+    second: PrepFromation_UI_no2_74
+  - first:
+      213: 5950531682996027505
+    second: PrepFromation_UI_no2_75
+  - first:
+      213: -3495395474933232922
+    second: PrepFromation_UI_no2_76
+  - first:
+      213: 8052697644199931568
+    second: PrepFromation_UI_no2_77
+  - first:
+      213: 3123380646420386115
+    second: PrepFromation_UI_no2_78
+  - first:
+      213: -529384710908475107
+    second: PrepFromation_UI_no2_79
+  - first:
+      213: -2707426734078331986
+    second: PrepFromation_UI_no2_80
+  - first:
+      213: -502259147955111054
+    second: PrepFromation_UI_no2_81
+  - first:
+      213: 7438288445304583092
+    second: PrepFromation_UI_no2_82
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_0
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 232
+        width: 844
+        height: 1423
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7aa4ce8bbc70d78e0800000000000000
+      internalID: -1694189313259189593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_31
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 1692
+        width: 12
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bce2a49c3e6752a0800000000000000
+      internalID: -6748804310120600399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_39
+      rect:
+        serializedVersion: 2
+        x: 2033
+        y: 1692
+        width: 26
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b1bf06314f6cf4c0800000000000000
+      internalID: -4252401622274035275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_41
+      rect:
+        serializedVersion: 2
+        x: 2088
+        y: 1692
+        width: 45
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ba840512ccd33e10800000000000000
+      internalID: 2176325771084466870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_48
+      rect:
+        serializedVersion: 2
+        x: 965
+        y: 319
+        width: 105
+        height: 1314
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0859eb269036185a0800000000000000
+      internalID: -6520821893493254784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_49
+      rect:
+        serializedVersion: 2
+        x: 1561
+        y: 1169
+        width: 455
+        height: 243
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8d0beb231d5bdab0800000000000000
+      internalID: -4982286225832735348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_50
+      rect:
+        serializedVersion: 2
+        x: 2135
+        y: 1074
+        width: 176
+        height: 565
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59ea6995be84a9ff0800000000000000
+      internalID: -28630271966925163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_51
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 698
+        width: 105
+        height: 462
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 407b055df4e2c7260800000000000000
+      internalID: 7096598033245189892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_52
+      rect:
+        serializedVersion: 2
+        x: 1501
+        y: 840
+        width: 575
+        height: 299
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2b3bff77601fbf70800000000000000
+      internalID: 9205094200083430186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_53
+      rect:
+        serializedVersion: 2
+        x: 1460
+        y: 484
+        width: 672
+        height: 325
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5fe4b0f30d21d0e0800000000000000
+      internalID: -2246965244134625443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_54
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 121
+        width: 1172
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 059a08ed3906df060800000000000000
+      internalID: 6988848384958310736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PrepFromation_UI_no2_70
+      rect:
+        serializedVersion: 2
+        x: 1871
+        y: 23
+        width: 11
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38f0bb90ffab42010800000000000000
+      internalID: 1163260208311111555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e51131c71f140424c8b8b6f7e8abe386
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      PrepFromation_UI_no2_0: -1694189313259189593
+      PrepFromation_UI_no2_1: -995152121256338463
+      PrepFromation_UI_no2_10: -7546482786439912867
+      PrepFromation_UI_no2_11: -8096671164973620228
+      PrepFromation_UI_no2_12: 6271958835316596236
+      PrepFromation_UI_no2_13: -1678890210962431538
+      PrepFromation_UI_no2_14: -2914850454819410882
+      PrepFromation_UI_no2_15: 8032563542186694064
+      PrepFromation_UI_no2_16: -8151504937325362773
+      PrepFromation_UI_no2_17: -2126113139529585109
+      PrepFromation_UI_no2_18: 6841706412378501872
+      PrepFromation_UI_no2_19: 8905111502633461638
+      PrepFromation_UI_no2_2: -5637004527284940378
+      PrepFromation_UI_no2_20: -5868643649003706134
+      PrepFromation_UI_no2_21: 9145723566878457490
+      PrepFromation_UI_no2_22: 6105600812747707394
+      PrepFromation_UI_no2_23: -6234809323074812471
+      PrepFromation_UI_no2_24: 3037307192371937187
+      PrepFromation_UI_no2_25: 1951787740476730349
+      PrepFromation_UI_no2_26: 4712867836588581448
+      PrepFromation_UI_no2_27: 674193977129287590
+      PrepFromation_UI_no2_28: -5400092889498385944
+      PrepFromation_UI_no2_29: -13288951038132809
+      PrepFromation_UI_no2_3: 473241381977442314
+      PrepFromation_UI_no2_30: 2563268876177966263
+      PrepFromation_UI_no2_31: -6748804310120600399
+      PrepFromation_UI_no2_32: -6637627294940677134
+      PrepFromation_UI_no2_33: -6084298249279001136
+      PrepFromation_UI_no2_34: -575056543417361753
+      PrepFromation_UI_no2_35: -7073558439867150974
+      PrepFromation_UI_no2_36: -726288636645611288
+      PrepFromation_UI_no2_37: 2979096806810053665
+      PrepFromation_UI_no2_38: 2399146286070391845
+      PrepFromation_UI_no2_39: -4252401622274035275
+      PrepFromation_UI_no2_4: -6044615345789690088
+      PrepFromation_UI_no2_40: -8770343332906465914
+      PrepFromation_UI_no2_41: 2176325771084466870
+      PrepFromation_UI_no2_42: 5708583453819910988
+      PrepFromation_UI_no2_43: 472249245811332460
+      PrepFromation_UI_no2_44: -7741768940288412990
+      PrepFromation_UI_no2_45: -2518061554197137745
+      PrepFromation_UI_no2_46: -1359567315929259355
+      PrepFromation_UI_no2_47: -2558736336075173159
+      PrepFromation_UI_no2_48: -6520821893493254784
+      PrepFromation_UI_no2_49: -4982286225832735348
+      PrepFromation_UI_no2_5: -3316729093143828934
+      PrepFromation_UI_no2_50: -28630271966925163
+      PrepFromation_UI_no2_51: 7096598033245189892
+      PrepFromation_UI_no2_52: 9205094200083430186
+      PrepFromation_UI_no2_53: -2246965244134625443
+      PrepFromation_UI_no2_54: 6988848384958310736
+      PrepFromation_UI_no2_55: 777892697444298215
+      PrepFromation_UI_no2_56: -128298476463855323
+      PrepFromation_UI_no2_57: 2514802599587778001
+      PrepFromation_UI_no2_58: -2347484265746034509
+      PrepFromation_UI_no2_59: 5530860635743873046
+      PrepFromation_UI_no2_6: 4114577001566103675
+      PrepFromation_UI_no2_60: -7790567046656494969
+      PrepFromation_UI_no2_61: -2451289055252129970
+      PrepFromation_UI_no2_62: -662010573998114077
+      PrepFromation_UI_no2_63: -948009776020320224
+      PrepFromation_UI_no2_64: 9184792141678026871
+      PrepFromation_UI_no2_65: -5818706656298526947
+      PrepFromation_UI_no2_66: -1145895702458037325
+      PrepFromation_UI_no2_67: 4192530273263451172
+      PrepFromation_UI_no2_68: 1411916317574783110
+      PrepFromation_UI_no2_69: 5967185302887695205
+      PrepFromation_UI_no2_7: -6114399566387595337
+      PrepFromation_UI_no2_70: 1163260208311111555
+      PrepFromation_UI_no2_71: 2134297542671737525
+      PrepFromation_UI_no2_72: -8752072770099948674
+      PrepFromation_UI_no2_73: 6791610629511088785
+      PrepFromation_UI_no2_74: -2634258254609104242
+      PrepFromation_UI_no2_75: 5950531682996027505
+      PrepFromation_UI_no2_76: -3495395474933232922
+      PrepFromation_UI_no2_77: 8052697644199931568
+      PrepFromation_UI_no2_78: 3123380646420386115
+      PrepFromation_UI_no2_79: -529384710908475107
+      PrepFromation_UI_no2_8: 1493603431341699044
+      PrepFromation_UI_no2_80: -2707426734078331986
+      PrepFromation_UI_no2_81: -502259147955111054
+      PrepFromation_UI_no2_82: 7438288445304583092
+      PrepFromation_UI_no2_9: -4375268130947654479
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

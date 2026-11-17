@@ -50,15 +50,13 @@ public class UnitListStateMachine : MonoBehaviour
             case UnitListState.FormationSlot:
                 foreach (UnitContainer slot in manager.formationSlots)
                     slot.ShowDefault();
-                selectedSlot?.ShowFormationSlotState();
                 foreach (UnitContainer item in manager.unitListItems)
                     item.ShowDefault();
                 break;
 
             case UnitListState.FormationConfig:
-                // selectedSlot?.ShowFormationSlotState();
                 foreach (UnitContainer item in manager.unitListItems)
-                    item.ShowChangeUnitOption();
+                    item.ShowDefault();
                 break;
         }
     }
@@ -69,29 +67,73 @@ public class UnitListStateMachine : MonoBehaviour
 
     public void OnContainerClicked(UnitContainer container)
     {
-        if (container.isFormationSlot)
+        if (container == null || container.isEmpty) return;
+        GoToUnitConfig(container.ownedUnitId);
+    }
+
+    public void OnUnitDropped(UnitContainer source, UnitContainer target, bool droppedOnBench)
+    {
+        if (source == null || source.isEmpty) return;
+
+        if (!source.isFormationSlot)
         {
-            if (currentState == UnitListState.None)
-            {
-                if (!container.isEmpty)
-                {
-                    selectedSlot = container;
-                    TransitionTo(UnitListState.FormationSlot);
-                }
-            }
-            else
-            {
-                TransitionTo(UnitListState.None);
-            }
+            if (target != null && target.isFormationSlot)
+                PlaceListItemIntoSlot(source, target);
+            return;
+        }
+
+        if (target != null && target.isFormationSlot && target != source)
+        {
+            MoveOrSwapFormation(source, target);
+            return;
+        }
+
+        if (target != null && !target.isFormationSlot)
+        {
+            PlaceListItemIntoSlot(target, source);
+            return;
+        }
+
+        if (droppedOnBench)
+            OnClickRemove(source);
+    }
+
+    public void PlaceListItemIntoSlot(UnitContainer listItem, UnitContainer slot)
+    {
+        if (listItem == null || slot == null || !slot.isFormationSlot || listItem.isEmpty) return;
+
+        OwnedUnitDto unit = manager.ownedUnits.Find(u => u.ownedUnitId == listItem.ownedUnitId);
+        if (unit == null) return;
+
+        manager.BindUnit(slot, unit, true);
+        listItem.gameObject.SetActive(false);
+
+        TransitionTo(UnitListState.None);
+        SaveFormation();
+    }
+
+    void MoveOrSwapFormation(UnitContainer from, UnitContainer to)
+    {
+        if (from == null || to == null || from == to || from.isEmpty) return;
+
+        if (to.isEmpty)
+        {
+            OwnedUnitDto moving = manager.ownedUnits.Find(u => u.ownedUnitId == from.ownedUnitId);
+            if (moving == null) return;
+            manager.BindUnit(to, moving, true);
+            from.SetEmpty();
         }
         else
         {
-            // Unit list item clicked in None state → go to unit config
-            if (currentState == UnitListState.None)
-                GoToUnitConfig(container.ownedUnitId);
-            else
-                TransitionTo(UnitListState.None);
+            OwnedUnitDto a = manager.ownedUnits.Find(u => u.ownedUnitId == from.ownedUnitId);
+            OwnedUnitDto b = manager.ownedUnits.Find(u => u.ownedUnitId == to.ownedUnitId);
+            if (a == null || b == null) return;
+            manager.BindUnit(from, b, true);
+            manager.BindUnit(to, a, true);
         }
+
+        TransitionTo(UnitListState.None);
+        SaveFormation();
     }
 
     public void OnClickChangeUnit(UnitContainer slot)
@@ -117,33 +159,7 @@ public class UnitListStateMachine : MonoBehaviour
     public void OnClickEnterTeam(UnitContainer listItem)
     {
         if (currentState != UnitListState.FormationConfig || selectedSlot == null) return;
-
-        // Swap — put old slot unit back into list
-        if (!selectedSlot.isEmpty)
-        {
-            // Find the list item that matches the slot's unit and restore it to default
-            var displaced = manager.unitListItems.Find(u => u.ownedUnitId == selectedSlot.ownedUnitId);
-            displaced?.ShowDefault();
-        }
-
-        // Move list item data into slot
-        var prefab = manager.unitPrefabRegistry.Get(listItem.uId);
-        Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-
-        OwnedUnitDto unit = manager.ownedUnits.Find(u => u.unitDefinitionUId == listItem.uId);
-        selectedSlot.Setup(
-                        unit.ownedUnitId,
-                        unit.unitDefinitionUId,
-                        portrait,
-                        manager.unitPrefabRegistry.GetName(unit.unitDefinitionUId),
-                        unit.unlockedClassIds.Length > 0 ? manager.classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
-                        unit.unlockedClassIds.Length > 1 ? manager.classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
-                        true);
-        // Hide the list item that entered the team
-        listItem.gameObject.SetActive(false);
-
-        TransitionTo(UnitListState.None);
-        SaveFormation();
+        PlaceListItemIntoSlot(listItem, selectedSlot);
     }
 
     public void OnClickSelectUnit(UnitContainer emptySlot)
@@ -159,6 +175,11 @@ public class UnitListStateMachine : MonoBehaviour
     void GoToUnitConfig(string ownedUnitId)
     {
         PlayerSession.SelectedOwnedUnitId = ownedUnitId;
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[UnitListStateMachine] Tutorial active - SelectedOwnedUnitId set, deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.unitConfigScene);
     }
     void SaveFormation()

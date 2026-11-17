@@ -1,0 +1,273 @@
+fileFormatVersion: 2
+guid: 0c5bba345ba55b14fa5fc69ed26ef92d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5993875037672237761
+    second: ThinkBubble_Inventory_UI-removebg-preview_0
+  - first:
+      213: -1403707211525813724
+    second: ThinkBubble_Inventory_UI-removebg-preview_1
+  - first:
+      213: 7809026896874412801
+    second: ThinkBubble_Inventory_UI-removebg-preview_2
+  - first:
+      213: -1658969661406851411
+    second: ThinkBubble_Inventory_UI-removebg-preview_3
+  - first:
+      213: 1655338177840915940
+    second: ThinkBubble_Inventory_UI-removebg-preview_4
+  - first:
+      213: 8059013761755451137
+    second: ThinkBubble_Inventory_UI-removebg-preview_5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ThinkBubble_Inventory_UI-removebg-preview_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 195
+        width: 164
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cae88007958e2350800000000000000
+      internalID: 5993875037672237761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThinkBubble_Inventory_UI-removebg-preview_1
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 231
+        width: 171
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42a89507ab7058ce0800000000000000
+      internalID: -1403707211525813724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThinkBubble_Inventory_UI-removebg-preview_2
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 220
+        width: 125
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10b9ba5b69c3f5c60800000000000000
+      internalID: 7809026896874412801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThinkBubble_Inventory_UI-removebg-preview_3
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 59
+        width: 138
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daec1bee1e72af8e0800000000000000
+      internalID: -1658969661406851411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThinkBubble_Inventory_UI-removebg-preview_4
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 98
+        width: 113
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e5a9596d41f8f610800000000000000
+      internalID: 1655338177840915940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThinkBubble_Inventory_UI-removebg-preview_5
+      rect:
+        serializedVersion: 2
+        x: 398
+        y: 81
+        width: 141
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10f0b6d515e57df60800000000000000
+      internalID: 8059013761755451137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 69c9e3ba9e424094fb9afa67abaadd10
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ThinkBubble_Inventory_UI-removebg-preview_0: 5993875037672237761
+      ThinkBubble_Inventory_UI-removebg-preview_1: -1403707211525813724
+      ThinkBubble_Inventory_UI-removebg-preview_2: 7809026896874412801
+      ThinkBubble_Inventory_UI-removebg-preview_3: -1658969661406851411
+      ThinkBubble_Inventory_UI-removebg-preview_4: 1655338177840915940
+      ThinkBubble_Inventory_UI-removebg-preview_5: 8059013761755451137
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,2015 @@
+fileFormatVersion: 2
+guid: 6d45911c488460c4caf7031f7cf4fe43
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4600708983188495006
+    second: highlighter_animations_1-8_spaced_0
+  - first:
+      213: -7439953334934405699
+    second: highlighter_animations_1-8_spaced_1
+  - first:
+      213: -7888264863147890795
+    second: highlighter_animations_1-8_spaced_2
+  - first:
+      213: 3331504894064962660
+    second: highlighter_animations_1-8_spaced_3
+  - first:
+      213: -7597274378714687034
+    second: highlighter_animations_1-8_spaced_4
+  - first:
+      213: 6004196975393088395
+    second: highlighter_animations_1-8_spaced_5
+  - first:
+      213: -241470842318491263
+    second: highlighter_animations_1-8_spaced_6
+  - first:
+      213: -5656074452682341221
+    second: highlighter_animations_1-8_spaced_7
+  - first:
+      213: -3177950495512311597
+    second: highlighter_animations_1-8_spaced_8
+  - first:
+      213: -3439442684141238750
+    second: highlighter_animations_1-8_spaced_9
+  - first:
+      213: -7871283032246783991
+    second: highlighter_animations_1-8_spaced_10
+  - first:
+      213: 6493987619877501294
+    second: highlighter_animations_1-8_spaced_11
+  - first:
+      213: 8815717641915018604
+    second: highlighter_animations_1-8_spaced_12
+  - first:
+      213: -6062634124134563033
+    second: highlighter_animations_1-8_spaced_13
+  - first:
+      213: -2543359556993983425
+    second: highlighter_animations_1-8_spaced_14
+  - first:
+      213: -6907575635123609777
+    second: highlighter_animations_1-8_spaced_15
+  - first:
+      213: -1019811951329624777
+    second: highlighter_animations_1-8_spaced_16
+  - first:
+      213: 7078543635935586495
+    second: highlighter_animations_1-8_spaced_17
+  - first:
+      213: 2261766355410260001
+    second: highlighter_animations_1-8_spaced_18
+  - first:
+      213: -4282922453947288427
+    second: highlighter_animations_1-8_spaced_19
+  - first:
+      213: -5759502706623933347
+    second: highlighter_animations_1-8_spaced_20
+  - first:
+      213: 6647500712597302054
+    second: highlighter_animations_1-8_spaced_21
+  - first:
+      213: 4671769802911997978
+    second: highlighter_animations_1-8_spaced_22
+  - first:
+      213: -4002816270850671636
+    second: highlighter_animations_1-8_spaced_23
+  - first:
+      213: 8199279691424351159
+    second: highlighter_animations_1-8_spaced_24
+  - first:
+      213: 8394742971617146043
+    second: highlighter_animations_1-8_spaced_25
+  - first:
+      213: 315365182133096444
+    second: highlighter_animations_1-8_spaced_26
+  - first:
+      213: 2350543327374037753
+    second: highlighter_animations_1-8_spaced_27
+  - first:
+      213: -2636752211131466118
+    second: highlighter_animations_1-8_spaced_28
+  - first:
+      213: 361798134919712882
+    second: highlighter_animations_1-8_spaced_29
+  - first:
+      213: 4303967196142097601
+    second: highlighter_animations_1-8_spaced_30
+  - first:
+      213: -4568442544319912308
+    second: highlighter_animations_1-8_spaced_31
+  - first:
+      213: -2970620015698417662
+    second: highlighter_animations_1-8_spaced_32
+  - first:
+      213: -2147130141406856168
+    second: highlighter_animations_1-8_spaced_33
+  - first:
+      213: 7116799831403221393
+    second: highlighter_animations_1-8_spaced_34
+  - first:
+      213: 1696311048205692237
+    second: highlighter_animations_1-8_spaced_35
+  - first:
+      213: -3702235464522332650
+    second: highlighter_animations_1-8_spaced_36
+  - first:
+      213: -3940280829418583503
+    second: highlighter_animations_1-8_spaced_37
+  - first:
+      213: -1991716583463934273
+    second: highlighter_animations_1-8_spaced_38
+  - first:
+      213: -3898760496795899316
+    second: highlighter_animations_1-8_spaced_39
+  - first:
+      213: -2112817242095845270
+    second: highlighter_animations_1-8_spaced_40
+  - first:
+      213: -7626261545394203853
+    second: highlighter_animations_1-8_spaced_41
+  - first:
+      213: 2643967158330325454
+    second: highlighter_animations_1-8_spaced_42
+  - first:
+      213: -4409911158148590580
+    second: highlighter_animations_1-8_spaced_43
+  - first:
+      213: -4964733551322033154
+    second: highlighter_animations_1-8_spaced_44
+  - first:
+      213: 5579709085056158746
+    second: highlighter_animations_1-8_spaced_45
+  - first:
+      213: -5740619618564814325
+    second: highlighter_animations_1-8_spaced_46
+  - first:
+      213: 3214302641473133126
+    second: highlighter_animations_1-8_spaced_47
+  - first:
+      213: -745775365586259909
+    second: highlighter_animations_1-8_spaced_48
+  - first:
+      213: -7664439611249085846
+    second: highlighter_animations_1-8_spaced_49
+  - first:
+      213: 8238209937789404207
+    second: highlighter_animations_1-8_spaced_50
+  - first:
+      213: 3660070424538451455
+    second: highlighter_animations_1-8_spaced_51
+  - first:
+      213: 3444604615577420783
+    second: highlighter_animations_1-8_spaced_52
+  - first:
+      213: 795022081218378595
+    second: highlighter_animations_1-8_spaced_53
+  - first:
+      213: 3648176388702971641
+    second: highlighter_animations_1-8_spaced_54
+  - first:
+      213: -3681016720437770541
+    second: highlighter_animations_1-8_spaced_55
+  - first:
+      213: -8683247577587512704
+    second: highlighter_animations_1-8_spaced_56
+  - first:
+      213: -5141618327615722172
+    second: highlighter_animations_1-8_spaced_57
+  - first:
+      213: -6285439353181863647
+    second: highlighter_animations_1-8_spaced_58
+  - first:
+      213: 4740792414184559826
+    second: highlighter_animations_1-8_spaced_59
+  - first:
+      213: -5819799794136417236
+    second: highlighter_animations_1-8_spaced_60
+  - first:
+      213: -392842468410009836
+    second: highlighter_animations_1-8_spaced_61
+  - first:
+      213: 4710853579698534164
+    second: highlighter_animations_1-8_spaced_62
+  - first:
+      213: -7544897192047921546
+    second: highlighter_animations_1-8_spaced_63
+  - first:
+      213: 6345168324382848266
+    second: highlighter_animations_1-8_spaced_64
+  - first:
+      213: 8963106473801103012
+    second: highlighter_animations_1-8_spaced_65
+  - first:
+      213: 4300294733822902836
+    second: highlighter_animations_1-8_spaced_66
+  - first:
+      213: 3660372109347735755
+    second: highlighter_animations_1-8_spaced_67
+  - first:
+      213: 9050649203508093504
+    second: highlighter_animations_1-8_spaced_68
+  - first:
+      213: -8028557470821993013
+    second: highlighter_animations_1-8_spaced_69
+  - first:
+      213: -3789149845119957810
+    second: highlighter_animations_1-8_spaced_70
+  - first:
+      213: -2171823097156510319
+    second: highlighter_animations_1-8_spaced_71
+  - first:
+      213: 8837948809842785834
+    second: highlighter_animations_1-8_spaced_72
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 914
+        width: 80
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 265e91e2e8ff620c0800000000000000
+      internalID: -4600708983188495006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_1
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 917
+        width: 80
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbd70c54cd9ffb890800000000000000
+      internalID: -7439953334934405699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_2
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 917
+        width: 80
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 597efd996e0478290800000000000000
+      internalID: -7888264863147890795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_3
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 917
+        width: 80
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46ca732dc02eb3e20800000000000000
+      internalID: 3331504894064962660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_4
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 915
+        width: 80
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c9d883643f019690800000000000000
+      internalID: -7597274378714687034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_5
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 916
+        width: 80
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b83a7c76651335350800000000000000
+      internalID: 6004196975393088395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_6
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 917
+        width: 80
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 181fdfb5c8f16acf0800000000000000
+      internalID: -241470842318491263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_7
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 917
+        width: 80
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9405b0a0469181b0800000000000000
+      internalID: -5656074452682341221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_8
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 775
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d84631acd6a5e3d0800000000000000
+      internalID: -3177950495512311597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_9
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 775
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 226027a0a15a440d0800000000000000
+      internalID: -3439442684141238750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_10
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 775
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 900fe5839c593c290800000000000000
+      internalID: -7871283032246783991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_11
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 775
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e69359a65574f1a50800000000000000
+      internalID: 6493987619877501294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_12
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 775
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6d2d76dc78b75a70800000000000000
+      internalID: 8815717641915018604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_13
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 775
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7234cc3a2623ddba0800000000000000
+      internalID: -6062634124134563033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_14
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3c574d45fb24bcd0800000000000000
+      internalID: -2543359556993983425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_15
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4f5059ce8c5320a0800000000000000
+      internalID: -6907575635123609777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_16
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73dbc47fe66e8d1f0800000000000000
+      internalID: -1019811951329624777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_17
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb8ea03eee90c3260800000000000000
+      internalID: 7078543635935586495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_18
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12098235488636f10800000000000000
+      internalID: 2261766355410260001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_19
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5947de358b00094c0800000000000000
+      internalID: -4282922453947288427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_20
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5497c0bdc22210b0800000000000000
+      internalID: -5759502706623933347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_21
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 647
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62ba48a9daaa04c50800000000000000
+      internalID: 6647500712597302054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_22
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1067f632e575d040800000000000000
+      internalID: 4671769802911997978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_23
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cebbaca3fc32378c0800000000000000
+      internalID: -4002816270850671636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_24
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b34c6d0071b9c170800000000000000
+      internalID: 8199279691424351159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_25
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb472f3614e108470800000000000000
+      internalID: 8394742971617146043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_26
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cffc19756f6606400800000000000000
+      internalID: 315365182133096444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_27
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f25b49d3bece9020800000000000000
+      internalID: 2350543327374037753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_28
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7e78c685df586bd0800000000000000
+      internalID: -2636752211131466118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_29
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 519
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 270d940ac7d550500800000000000000
+      internalID: 361798134919712882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_30
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c4dbfa8c53cabb30800000000000000
+      internalID: 4303967196142097601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_31
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c86a709e5b1a990c0800000000000000
+      internalID: -4568442544319912308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_32
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20861a1b5dc36c6d0800000000000000
+      internalID: -2970620015698417662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_33
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81cf8ea238cd332e0800000000000000
+      internalID: -2147130141406856168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_34
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19159508db3f3c260800000000000000
+      internalID: 7116799831403221393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_35
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4deed039e18a8710800000000000000
+      internalID: 1696311048205692237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_36
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6160b46d5740f9cc0800000000000000
+      internalID: -3702235464522332650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_37
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 391
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13a493f467f4159c0800000000000000
+      internalID: -3940280829418583503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_38
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 263
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb6a065e1500c54e0800000000000000
+      internalID: -1991716583463934273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_39
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 271
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4aa7241cf1d4e9c0800000000000000
+      internalID: -3898760496795899316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_40
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 263
+        width: 41
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a608e8999e3cda2e0800000000000000
+      internalID: -2112817242095845270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_41
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 263
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3339e86b7831a2690800000000000000
+      internalID: -7626261545394203853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_42
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 263
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec9f3164f1241b420800000000000000
+      internalID: 2643967158330325454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_43
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 263
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0495879a29dcc2c0800000000000000
+      internalID: -4409911158148590580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_44
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 263
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef39cfca329b91bb0800000000000000
+      internalID: -4964733551322033154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_45
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 232
+        width: 80
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1ccacca9db1f6d40800000000000000
+      internalID: 5579709085056158746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_46
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 242
+        width: 80
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0a4ecc3fd83550b0800000000000000
+      internalID: -5740619618564814325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_47
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 232
+        width: 80
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64a1b99e83f7b9c20800000000000000
+      internalID: 3214302641473133126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_48
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 135
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b307efb914976a5f0800000000000000
+      internalID: -745775365586259909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_49
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 135
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a62b01118c072a590800000000000000
+      internalID: -7664439611249085846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_50
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 135
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f24c70f5a40045270800000000000000
+      internalID: 8238209937789404207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_51
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 135
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffd0783c8ae2bc230800000000000000
+      internalID: 3660070424538451455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_52
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 135
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe3c927c5a1bdcf20800000000000000
+      internalID: 3444604615577420783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_53
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 154
+        width: 80
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36bfc93ee5c780b00800000000000000
+      internalID: 795022081218378595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_54
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 180
+        width: 35
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f6ab9eb81de0a230800000000000000
+      internalID: 3648176388702971641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_55
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 172
+        width: 8
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d6880eabc66aecc0800000000000000
+      internalID: -3681016720437770541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_56
+      rect:
+        serializedVersion: 2
+        x: 836
+        y: 135
+        width: 36
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08a00218558ee7780800000000000000
+      internalID: -8683247577587512704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_57
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 135
+        width: 79
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44da3db5f5d45a8b0800000000000000
+      internalID: -5141618327615722172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_58
+      rect:
+        serializedVersion: 2
+        x: 668
+        y: 150
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1218550c532a5c8a0800000000000000
+      internalID: -6285439353181863647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_59
+      rect:
+        serializedVersion: 2
+        x: 708
+        y: 135
+        width: 36
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d45659359daac140800000000000000
+      internalID: 4740792414184559826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_60
+      rect:
+        serializedVersion: 2
+        x: 712
+        y: 162
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2c7b9efbeaeb3fa0800000000000000
+      internalID: -5819799794136417236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_61
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 135
+        width: 49
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 417dbb93bd75c8af0800000000000000
+      internalID: -392842468410009836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_62
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 135
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 417fece1f50506140800000000000000
+      internalID: 4710853579698534164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_63
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 135
+        width: 25
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67634297af32b4790800000000000000
+      internalID: -7544897192047921546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_64
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 135
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0576ee09f09e0850800000000000000
+      internalID: 6345168324382848266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_65
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a63bee69d9536c70800000000000000
+      internalID: 8963106473801103012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_66
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4324ff6c647bdab30800000000000000
+      internalID: 4300294733822902836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_67
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc84b6b3a014cc230800000000000000
+      internalID: 3660372109347735755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_68
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 042a5c98f7d5a9d70800000000000000
+      internalID: 9050649203508093504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_69
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc5b8d47485d49090800000000000000
+      internalID: -8028557470821993013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_70
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec406e8aa4c3a6bc0800000000000000
+      internalID: -3789149845119957810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_71
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d5ff266622cd1e0800000000000000
+      internalID: -2171823097156510319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: highlighter_animations_1-8_spaced_72
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 7
+        width: 80
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2ef3c9fd93b6aa70800000000000000
+      internalID: 8837948809842785834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 4005f899efc18b34cb4f0f668b33273c
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      highlighter_animations_1-8_spaced_0: -4600708983188495006
+      highlighter_animations_1-8_spaced_1: -7439953334934405699
+      highlighter_animations_1-8_spaced_10: -7871283032246783991
+      highlighter_animations_1-8_spaced_11: 6493987619877501294
+      highlighter_animations_1-8_spaced_12: 8815717641915018604
+      highlighter_animations_1-8_spaced_13: -6062634124134563033
+      highlighter_animations_1-8_spaced_14: -2543359556993983425
+      highlighter_animations_1-8_spaced_15: -6907575635123609777
+      highlighter_animations_1-8_spaced_16: -1019811951329624777
+      highlighter_animations_1-8_spaced_17: 7078543635935586495
+      highlighter_animations_1-8_spaced_18: 2261766355410260001
+      highlighter_animations_1-8_spaced_19: -4282922453947288427
+      highlighter_animations_1-8_spaced_2: -7888264863147890795
+      highlighter_animations_1-8_spaced_20: -5759502706623933347
+      highlighter_animations_1-8_spaced_21: 6647500712597302054
+      highlighter_animations_1-8_spaced_22: 4671769802911997978
+      highlighter_animations_1-8_spaced_23: -4002816270850671636
+      highlighter_animations_1-8_spaced_24: 8199279691424351159
+      highlighter_animations_1-8_spaced_25: 8394742971617146043
+      highlighter_animations_1-8_spaced_26: 315365182133096444
+      highlighter_animations_1-8_spaced_27: 2350543327374037753
+      highlighter_animations_1-8_spaced_28: -2636752211131466118
+      highlighter_animations_1-8_spaced_29: 361798134919712882
+      highlighter_animations_1-8_spaced_3: 3331504894064962660
+      highlighter_animations_1-8_spaced_30: 4303967196142097601
+      highlighter_animations_1-8_spaced_31: -4568442544319912308
+      highlighter_animations_1-8_spaced_32: -2970620015698417662
+      highlighter_animations_1-8_spaced_33: -2147130141406856168
+      highlighter_animations_1-8_spaced_34: 7116799831403221393
+      highlighter_animations_1-8_spaced_35: 1696311048205692237
+      highlighter_animations_1-8_spaced_36: -3702235464522332650
+      highlighter_animations_1-8_spaced_37: -3940280829418583503
+      highlighter_animations_1-8_spaced_38: -1991716583463934273
+      highlighter_animations_1-8_spaced_39: -3898760496795899316
+      highlighter_animations_1-8_spaced_4: -7597274378714687034
+      highlighter_animations_1-8_spaced_40: -2112817242095845270
+      highlighter_animations_1-8_spaced_41: -7626261545394203853
+      highlighter_animations_1-8_spaced_42: 2643967158330325454
+      highlighter_animations_1-8_spaced_43: -4409911158148590580
+      highlighter_animations_1-8_spaced_44: -4964733551322033154
+      highlighter_animations_1-8_spaced_45: 5579709085056158746
+      highlighter_animations_1-8_spaced_46: -5740619618564814325
+      highlighter_animations_1-8_spaced_47: 3214302641473133126
+      highlighter_animations_1-8_spaced_48: -745775365586259909
+      highlighter_animations_1-8_spaced_49: -7664439611249085846
+      highlighter_animations_1-8_spaced_5: 6004196975393088395
+      highlighter_animations_1-8_spaced_50: 8238209937789404207
+      highlighter_animations_1-8_spaced_51: 3660070424538451455
+      highlighter_animations_1-8_spaced_52: 3444604615577420783
+      highlighter_animations_1-8_spaced_53: 795022081218378595
+      highlighter_animations_1-8_spaced_54: 3648176388702971641
+      highlighter_animations_1-8_spaced_55: -3681016720437770541
+      highlighter_animations_1-8_spaced_56: -8683247577587512704
+      highlighter_animations_1-8_spaced_57: -5141618327615722172
+      highlighter_animations_1-8_spaced_58: -6285439353181863647
+      highlighter_animations_1-8_spaced_59: 4740792414184559826
+      highlighter_animations_1-8_spaced_6: -241470842318491263
+      highlighter_animations_1-8_spaced_60: -5819799794136417236
+      highlighter_animations_1-8_spaced_61: -392842468410009836
+      highlighter_animations_1-8_spaced_62: 4710853579698534164
+      highlighter_animations_1-8_spaced_63: -7544897192047921546
+      highlighter_animations_1-8_spaced_64: 6345168324382848266
+      highlighter_animations_1-8_spaced_65: 8963106473801103012
+      highlighter_animations_1-8_spaced_66: 4300294733822902836
+      highlighter_animations_1-8_spaced_67: 3660372109347735755
+      highlighter_animations_1-8_spaced_68: 9050649203508093504
+      highlighter_animations_1-8_spaced_69: -8028557470821993013
+      highlighter_animations_1-8_spaced_7: -5656074452682341221
+      highlighter_animations_1-8_spaced_70: -3789149845119957810
+      highlighter_animations_1-8_spaced_71: -2171823097156510319
+      highlighter_animations_1-8_spaced_72: 8837948809842785834
+      highlighter_animations_1-8_spaced_8: -3177950495512311597
+      highlighter_animations_1-8_spaced_9: -3439442684141238750
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

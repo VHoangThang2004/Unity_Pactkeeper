@@ -77,6 +77,8 @@ public class ClientSpawner : MonoBehaviour
         var worldPos = scene.movableTilemap.GetCellCenterWorld(unitData.CurrentCell);
         var go = Instantiate(prefab, worldPos, Quaternion.identity);
         go.name = $"Unit_{unitData.Id}_{unitName}";
+        if (gameObject.scene.IsValid() && go.scene != gameObject.scene)
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go, gameObject.scene);
 
         var clientUnit = go.GetComponent<ClientUnit>();
         if (clientUnit == null)

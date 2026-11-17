@@ -148,10 +148,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_0"
       rect:
         serializedVersion: 2
-        x: 26
+        x: 54
         y: 510
-        width: 362
-        height: 418
+        width: 292
+        height: 353
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 18, w: 37}
@@ -170,10 +170,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_1"
       rect:
         serializedVersion: 2
-        x: 419
+        x: 428
         y: 503
-        width: 341
-        height: 393
+        width: 326
+        height: 380
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,10 +192,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_2"
       rect:
         serializedVersion: 2
-        x: 759
-        y: 479
-        width: 404
-        height: 448
+        x: 797
+        y: 487
+        width: 362
+        height: 436
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -214,10 +214,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_3"
       rect:
         serializedVersion: 2
-        x: 1174
-        y: 491
-        width: 460
-        height: 453
+        x: 1244
+        y: 506
+        width: 368
+        height: 432
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -236,10 +236,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_6"
       rect:
         serializedVersion: 2
-        x: 1061
-        y: 0
-        width: 499
-        height: 488
+        x: 1070
+        y: 12
+        width: 483
+        height: 476
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,10 +258,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_7"
       rect:
         serializedVersion: 2
-        x: 141
-        y: 25
-        width: 451
-        height: 449
+        x: 184
+        y: 65
+        width: 405
+        height: 404
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -280,10 +280,10 @@ TextureImporter:
       name: "B\u1ED9 Huy Hi\u1EC7u X\u1EBFp H\u1EA1ng Pixel Fantasy_8"
       rect:
         serializedVersion: 2
-        x: 614
-        y: 0
-        width: 428
-        height: 486
+        x: 647
+        y: 36
+        width: 390
+        height: 446
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

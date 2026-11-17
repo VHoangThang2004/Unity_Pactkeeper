@@ -19,8 +19,16 @@ public class ClientVisualController : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI instantStatusText;
     [SerializeField] private TextMeshProUGUI instantCounterText;
+
+    [Tooltip("Left bar — normal time (blue/green). Shown when waitDur > 0.")]
     [SerializeField] private Image myTimerBar;
+    [Tooltip("Left bar — overtime (red). Shown when waitDur == 0 and overtimeDur > 0.")]
+    [SerializeField] private Image myOvertimeBar;
+
+    [Tooltip("Right bar — normal time (blue/green). Shown when it's enemy turn + waitDur > 0.")]
     [SerializeField] private Image enemyTimerBar;
+    [Tooltip("Right bar — overtime (red). Shown when it's enemy turn + overtime.")]
+    [SerializeField] private Image enemyOvertimeBar;
 
     [SerializeField] public GameObject waitButtonLayer;
     [SerializeField] public GameObject cancelButtonLayer;
@@ -599,19 +607,37 @@ public class ClientVisualController : MonoBehaviour
             // Turn flip — update button visibility on turn change
             bool isMyTurn = session.IsMyTurn();
 
-            var timerBar = isMyTurn ? myTimerBar : enemyTimerBar;
-            var otherBar = isMyTurn ? enemyTimerBar : myTimerBar;
+            // ── Timebars ──────────────────────────────────────────────────────
+            // Chỉ hiện timebar của bên đang đến lượt, ẩn bên còn lại.
+            // Mỗi bên có 2 bar: normalBar (xanh, khi waitDur > 0)
+            //                   overtimeBar (đỏ, khi waitDur == 0)
 
+            var timerBar        = isMyTurn ? myTimerBar        : enemyTimerBar;
+            var overtimeBar     = isMyTurn ? myOvertimeBar     : enemyOvertimeBar;
+            var otherTimerBar   = isMyTurn ? enemyTimerBar     : myTimerBar;
+            var otherOvertimeBar= isMyTurn ? enemyOvertimeBar  : myOvertimeBar;
+
+            bool isInOvertime = session.waitDur <= 0;
+
+            // Bar của người đang đến lượt
             if (timerBar != null)
             {
-                float waitDur = session.waitDur > 0 ? session.waitDur : session.overtimeDur;
-                float maxDur = session.waitDur > 0 ? session.maxWaitDur : session.maxOvertimeDur;
-                timerBar.fillAmount = maxDur > 0 ? waitDur / maxDur : 0f;
+                timerBar.enabled    = !isInOvertime;
+                timerBar.fillAmount = !isInOvertime && session.maxWaitDur > 0
+                    ? (float)session.waitDur / session.maxWaitDur
+                    : 0f;
             }
-            if (otherBar != null)
+            if (overtimeBar != null)
             {
-                otherBar.fillAmount = 0f;
+                overtimeBar.enabled    = isInOvertime;
+                overtimeBar.fillAmount = isInOvertime && session.maxOvertimeDur > 0
+                    ? (float)session.overtimeDur / session.maxOvertimeDur
+                    : 0f;
             }
+
+            // Bar của người không đến lượt — ẩn cả 2
+            if (otherTimerBar    != null) { otherTimerBar.enabled    = false; otherTimerBar.fillAmount    = 0f; }
+            if (otherOvertimeBar != null) { otherOvertimeBar.enabled = false; otherOvertimeBar.fillAmount = 0f; }
 
             if (turnFlip != isMyTurn)
             {

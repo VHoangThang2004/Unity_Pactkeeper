@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -46,6 +47,12 @@ public class FormationPrepManager : MonoBehaviour
     private readonly Dictionary<string, UnitContainer> listItems = new();
     private bool saving, dirty;
 
+    private int boardPressIndex = -1;
+    private OwnedUnitDto boardPressUnit;
+    private Vector2 boardPressPosition;
+    private bool boardDragging;
+    private GameObject boardDragVisual;
+
     int MaxUnits => Mathf.Min(maxUnits, spawns.Length);
 
     void Awake()
@@ -58,6 +65,9 @@ public class FormationPrepManager : MonoBehaviour
     {
         if (IsActive && countdownText != null)
             countdownText.text = Mathf.CeilToInt(Mathf.Max(0f, deadline - Time.time)).ToString();
+
+        if (IsActive && !ready)
+            TrackBoardPointer();
     }
 
     // -------------------------------------------------------
@@ -102,7 +112,6 @@ public class FormationPrepManager : MonoBehaviour
 
         BuildUnitList();
         Refresh();
-        scene.input.OnLeftClick += OnFieldClick;
         scene.loadingScreen.Hide();
         panel.SetActive(true);
         RequestSave();
@@ -112,7 +121,7 @@ public class FormationPrepManager : MonoBehaviour
     {
         if (!IsActive) return;
         IsActive = false;
-        scene.input.OnLeftClick -= OnFieldClick;
+        ClearBoardPointer();
 
         var overlay = SceneManager.GetSceneByName(sceneConfig.unitConfigScene);
         if (overlay.isLoaded) SceneManager.UnloadSceneAsync(overlay);
@@ -164,7 +173,11 @@ public class FormationPrepManager : MonoBehaviour
 
         if (target < 0)
         {
-            if (current < 0 || placed.Count <= 1) return; // never leave the formation empty
+            if (current < 0 || placed.Count <= 1)
+            {
+                Refresh();
+                return;
+            }
             placed.Remove(current);
         }
         else
@@ -173,9 +186,13 @@ public class FormationPrepManager : MonoBehaviour
             if (current >= 0)
             {
                 placed.Remove(current);
-                if (occupant != null) placed[current] = occupant; // swap
+                if (occupant != null) placed[current] = occupant;
             }
-            else if (occupant == null && placed.Count >= MaxUnits) return;
+            else if (occupant == null && placed.Count >= MaxUnits)
+            {
+                Refresh();
+                return;
+            }
             placed[target] = unit;
         }
 
@@ -183,18 +200,80 @@ public class FormationPrepManager : MonoBehaviour
         RequestSave();
     }
 
-    void OnFieldClick()
+    void TrackBoardPointer()
     {
-        if (ready || EventSystem.current.IsPointerOverGameObject()) return;
-        if (SceneManager.GetSceneByName(sceneConfig.unitConfigScene).isLoaded) return;
+        var mouse = Mouse.current;
+        if (mouse == null) return;
 
-        int idx = SpawnIndexAt(scene.input.MouseScreenPosition);
+        Vector2 pos = mouse.position.ReadValue();
+        if (mouse.leftButton.wasPressedThisFrame)
+            BeginBoardPress(pos);
+        else if (boardPressIndex >= 0 && mouse.leftButton.isPressed)
+            UpdateBoardPress(pos);
+        else if (mouse.leftButton.wasReleasedThisFrame && boardPressIndex >= 0)
+            EndBoardPress(pos);
+    }
+
+    void BeginBoardPress(Vector2 pos)
+    {
+        ClearBoardPointer();
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
+        int idx = SpawnIndexAt(pos);
         if (idx < 0 || !placed.TryGetValue(idx, out var unit)) return;
 
-        // Same flow as 7_UnitList "Configure", but additive so the match stays alive
+        boardPressIndex = idx;
+        boardPressUnit = unit;
+        boardPressPosition = pos;
+    }
+
+    void UpdateBoardPress(Vector2 pos)
+    {
+        if (!boardDragging && Vector2.Distance(pos, boardPressPosition) >= DragThreshold())
+        {
+            boardDragging = true;
+            if (ghosts.TryGetValue(boardPressIndex, out var world) && world != null)
+                world.SetActive(false);
+            if (listItems.TryGetValue(boardPressUnit.ownedUnitId, out var card))
+                boardDragVisual = PrepDragItem.CreateCardGhost((RectTransform)card.transform, pos);
+        }
+
+        if (boardDragging && boardDragVisual != null)
+            boardDragVisual.transform.position = pos;
+    }
+
+    void EndBoardPress(Vector2 pos)
+    {
+        var unit = boardPressUnit;
+        bool dragged = boardDragging;
+        ClearBoardPointer();
+
+        if (dragged)
+        {
+            DropUnit(unit, pos);
+            return;
+        }
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        if (SceneManager.GetSceneByName(sceneConfig.unitConfigScene).isLoaded) return;
+
         PlayerSession.SelectedOwnedUnitId = unit.ownedUnitId;
         UnitConfigManager.IsOverlay = true;
         SceneManager.LoadSceneAsync(sceneConfig.unitConfigScene, LoadSceneMode.Additive);
+    }
+
+    void ClearBoardPointer()
+    {
+        if (boardDragVisual != null) Destroy(boardDragVisual);
+        boardDragVisual = null;
+        boardPressIndex = -1;
+        boardPressUnit = null;
+        boardDragging = false;
+    }
+
+    static float DragThreshold()
+    {
+        return EventSystem.current != null ? EventSystem.current.pixelDragThreshold : 10f;
     }
 
     void OnClickReady()

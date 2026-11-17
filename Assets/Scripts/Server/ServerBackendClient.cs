@@ -337,7 +337,7 @@ public class ServerBackendClient : MonoBehaviour
         Debug.Log($"[ServerBackendClient] Reporting battle complete for player {playerId} " +
                   $"chapter={ChapterId} scene={SceneId}");
 
-        string json = $"{{\"playerId\":\"{playerId}\"}}";
+        string json = $"{{\"playerId\":\"{playerId}\",\"chapterId\":{ChapterId},\"sceneId\":{SceneId}}}";
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
         using var request = new UnityWebRequest(

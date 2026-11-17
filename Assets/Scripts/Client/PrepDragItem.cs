@@ -1,10 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-/// <summary>
-/// Added at runtime to each unit list entry during formation prep.
-/// Drags a copy of the entry; on release hands the drop point to FormationPrepManager.
-/// </summary>
 public class PrepDragItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private FormationPrepManager manager;
@@ -19,13 +16,7 @@ public class PrepDragItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnBeginDrag(PointerEventData e)
     {
-        var canvas = GetComponentInParent<Canvas>().rootCanvas;
-        dragVisual = Instantiate(gameObject, canvas.transform);
-        Destroy(dragVisual.GetComponent<PrepDragItem>());
-        var group = dragVisual.AddComponent<CanvasGroup>();
-        group.blocksRaycasts = false; // let the drop reach the field
-        group.alpha = 0.8f;
-        dragVisual.transform.position = e.position;
+        dragVisual = CreateCardGhost((RectTransform)transform, e.position);
     }
 
     public void OnDrag(PointerEventData e)
@@ -36,6 +27,30 @@ public class PrepDragItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnEndDrag(PointerEventData e)
     {
         if (dragVisual != null) Destroy(dragVisual);
+        dragVisual = null;
         manager.DropUnit(unit, e.position);
+    }
+
+    public static GameObject CreateCardGhost(RectTransform source, Vector2 screenPosition)
+    {
+        var canvas = source.GetComponentInParent<Canvas>().rootCanvas;
+        var ghost = Instantiate(source.gameObject, canvas.transform);
+        ghost.transform.SetAsLastSibling();
+
+        var drag = ghost.GetComponent<PrepDragItem>();
+        if (drag != null)
+        {
+            drag.enabled = false;
+            Destroy(drag);
+        }
+
+        UnitListDragHandler.FitGhostToSource((RectTransform)ghost.transform, source);
+
+        var group = ghost.GetComponent<CanvasGroup>();
+        if (group == null) group = ghost.AddComponent<CanvasGroup>();
+        group.blocksRaycasts = false;
+        group.alpha = 0.85f;
+        ghost.transform.position = screenPosition;
+        return ghost;
     }
 }

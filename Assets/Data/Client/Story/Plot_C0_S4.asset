@@ -24,7 +24,7 @@ MonoBehaviour:
     targetWaitTimeout: 10
   - type: 0
     text: The first step is learning how to manage your unit.
-    tutorialTargetId: C0S2_1
+    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10

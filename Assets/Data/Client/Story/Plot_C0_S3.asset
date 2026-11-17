@@ -162,7 +162,7 @@ MonoBehaviour:
     text: Confirm! With every ready unit committed, the Instant resolves automatically!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 4
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Flawless execution! Return to the Sanctum - it is time to inspect your

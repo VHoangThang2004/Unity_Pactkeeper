@@ -22,13 +22,16 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: "An armored sentinel guards (1, 0) from 3 tiles away. Your Archer lacks the 2 SP required for Focused Aim, and your Warrior stands too far west to reach him in one stride."
+    text: An armored sentinel guards (1, 0) from 3 tiles away. Your Archer lacks
+      the 2 SP required for Focused Aim, and your Warrior stands too far west to
+      reach him in one stride.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "When SP is scarce, Trinket Skills turn the tide - spending zero SP to reshape your reach!"
+    text: When SP is scarce, Trinket Skills turn the tide - spending zero SP to reshape
+      your reach!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -46,7 +49,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Far Sight! is an Instant Trinket costing 0 SP - extending horizontal weapon reach by +1 tile for 10 Instants!"
+    text: Far Sight! is an Instant Trinket costing 0 SP - extending horizontal weapon
+      reach by +1 tile for 10 Instants!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -106,7 +110,9 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Turbo! costs 0 SP and expands both horizontal and vertical outer movement reach by +1 tile - letting a heavy Warrior cross half the board in a single bound!"
+    text: Turbo! costs 0 SP and expands both horizontal and vertical outer movement
+      reach by +1 tile - letting a heavy Warrior cross half the board in a single
+      bound!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -169,10 +175,11 @@ MonoBehaviour:
     text: Confirm! Arrow and axe fall together!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 4
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
-    text: "Relics mastered, Chapter 2 complete! Ahead lies the Emerald Sanctum - and the final trial of the Pact."
+    text: Relics mastered, Chapter 2 complete! Ahead lies the Emerald Sanctum - and
+      the final trial of the Pact.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

@@ -22,7 +22,8 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: "Two targets hold the eastern lane - a sentry at (1, 0) and a heavy bastion behind him at (2, 0). Patience and precision win a marksman's duel."
+    text: Two targets hold the eastern lane - a sentry at (1, 0) and a heavy bastion
+      behind him at (2, 0). Patience and precision win a marksman's duel.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -40,7 +41,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Each resolved arrow builds focus. After 2 resolved shots, Steady Aim grants Piercing Shot - doubling the damage of your third arrow!"
+    text: Each resolved arrow builds focus. After 2 resolved shots, Steady Aim grants
+      Piercing Shot - doubling the damage of your third arrow!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -64,7 +66,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 6
-    text: "A standard Bow strikes strictly 2 tiles away. Left-click Bow to loose your first shaft."
+    text: A standard Bow strikes strictly 2 tiles away. Left-click Bow to loose your
+      first shaft.
     tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -76,25 +79,29 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Confirm! Loose the first arrow and let the Timeline advance to your next turn.
+    text: Confirm! Loose the first arrow and let the Timeline advance to your next
+      turn.
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 1
-    text: "First target down, and Steady Aim holds 1 charge! Select your Archer now that she has recovered."
+    text: First target down, and Steady Aim holds 1 charge! Select your Archer now
+      that she has recovered.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 25
   - type: 2
-    text: "The bastion at (2, 0) stands 3 tiles away - beyond standard Bow reach. Right-click Focused Aim to inspect it."
+    text: The bastion at (2, 0) stands 3 tiles away - beyond standard Bow reach.
+      Right-click Focused Aim to inspect it.
     tutorialTargetId: CSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "For 2 SP, Focused Aim extends your Bow's reach to 3 tiles for 10 Instants - long enough to carry across multiple turns!"
+    text: For 2 SP, Focused Aim extends your Bow's reach to 3 tiles for 10 Instants
+      - long enough to carry across multiple turns!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -142,7 +149,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 1
-    text: "Piercing Shot is primed, and Focused Aim still holds! Select your Archer for the finishing shot."
+    text: Piercing Shot is primed, and Focused Aim still holds! Select your Archer
+      for the finishing shot.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -163,10 +171,11 @@ MonoBehaviour:
     text: Confirm the Piercing Shot!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 4
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
-    text: "Three shafts, zero wasted motion. No fortress wall can shelter a foe from a disciplined eye."
+    text: Three shafts, zero wasted motion. No fortress wall can shelter a foe from
+      a disciplined eye.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

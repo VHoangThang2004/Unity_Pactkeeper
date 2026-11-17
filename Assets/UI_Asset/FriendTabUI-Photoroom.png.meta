@@ -1,0 +1,537 @@
+fileFormatVersion: 2
+guid: 4f83e4aeef3242541a1a81572db4e0dc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -848848358908774756
+    second: FriendTabUI-Photoroom_0
+  - first:
+      213: 3261766271843059931
+    second: FriendTabUI-Photoroom_1
+  - first:
+      213: 3506068265888499247
+    second: FriendTabUI-Photoroom_2
+  - first:
+      213: 8509706792599125736
+    second: FriendTabUI-Photoroom_3
+  - first:
+      213: 909692857317224023
+    second: FriendTabUI-Photoroom_4
+  - first:
+      213: 7733186127790292135
+    second: FriendTabUI-Photoroom_5
+  - first:
+      213: 530644352678943142
+    second: FriendTabUI-Photoroom_6
+  - first:
+      213: -947069431952973372
+    second: FriendTabUI-Photoroom_7
+  - first:
+      213: 717633377955420170
+    second: FriendTabUI-Photoroom_8
+  - first:
+      213: 4820158205361096013
+    second: FriendTabUI-Photoroom_9
+  - first:
+      213: -4882539398505840199
+    second: FriendTabUI-Photoroom_10
+  - first:
+      213: -5762572930287879033
+    second: FriendTabUI-Photoroom_11
+  - first:
+      213: -7122486722764661521
+    second: FriendTabUI-Photoroom_12
+  - first:
+      213: 4354765368532223854
+    second: FriendTabUI-Photoroom_13
+  - first:
+      213: -6178053126696979557
+    second: FriendTabUI-Photoroom_14
+  - first:
+      213: -3179832952619155840
+    second: FriendTabUI-Photoroom_15
+  - first:
+      213: -2319947467227093347
+    second: FriendTabUI-Photoroom_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_0
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 64
+        width: 57
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c96b11b3ae84834f0800000000000000
+      internalID: -848848358908774756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_1
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 472
+        width: 142
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd84e85842f144d20800000000000000
+      internalID: 3261766271843059931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_2
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 32
+        width: 645
+        height: 493
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f26cd8a038e08a030800000000000000
+      internalID: 3506068265888499247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_3
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 472
+        width: 142
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ee7993dd3d881670800000000000000
+      internalID: 8509706792599125736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_4
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 414
+        width: 129
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75e6a1f75d0ef9c00800000000000000
+      internalID: 909692857317224023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_5
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 414
+        width: 130
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ac3be0afcbc15b60800000000000000
+      internalID: 7733186127790292135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_6
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 359
+        width: 110
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a9de7f2a3a3d5700800000000000000
+      internalID: 530644352678943142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_7
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 360
+        width: 98
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c1efc29e555bd2f0800000000000000
+      internalID: -947069431952973372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_9
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 271
+        width: 131
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d458bb77954a4e240800000000000000
+      internalID: 4820158205361096013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_10
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 271
+        width: 129
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b1c53e294cbd3cb0800000000000000
+      internalID: -4882539398505840199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_11
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 209
+        width: 130
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78cb8e9837a3700b0800000000000000
+      internalID: -5762572930287879033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_12
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 209
+        width: 129
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fec1d2cef08d72d90800000000000000
+      internalID: -7122486722764661521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_13
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 142
+        width: 120
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e674987b70c3f6c30800000000000000
+      internalID: 4354765368532223854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_14
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 137
+        width: 136
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b933cbbf965234aa0800000000000000
+      internalID: -6178053126696979557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_15
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 64
+        width: 58
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08ebd0ee6c6fed3d0800000000000000
+      internalID: -3179832952619155840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FriendTabUI-Photoroom_16
+      rect:
+        serializedVersion: 2
+        x: 841
+        y: 71
+        width: 136
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d96ac56f114edcfd0800000000000000
+      internalID: -2319947467227093347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 62959aa48ec8dd44c8d9fb069a6fa828
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      FriendTabUI-Photoroom_0: -848848358908774756
+      FriendTabUI-Photoroom_1: 3261766271843059931
+      FriendTabUI-Photoroom_10: -4882539398505840199
+      FriendTabUI-Photoroom_11: -5762572930287879033
+      FriendTabUI-Photoroom_12: -7122486722764661521
+      FriendTabUI-Photoroom_13: 4354765368532223854
+      FriendTabUI-Photoroom_14: -6178053126696979557
+      FriendTabUI-Photoroom_15: -3179832952619155840
+      FriendTabUI-Photoroom_16: -2319947467227093347
+      FriendTabUI-Photoroom_2: 3506068265888499247
+      FriendTabUI-Photoroom_3: 8509706792599125736
+      FriendTabUI-Photoroom_4: 909692857317224023
+      FriendTabUI-Photoroom_5: 7733186127790292135
+      FriendTabUI-Photoroom_6: 530644352678943142
+      FriendTabUI-Photoroom_7: -947069431952973372
+      FriendTabUI-Photoroom_8: 717633377955420170
+      FriendTabUI-Photoroom_9: 4820158205361096013
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

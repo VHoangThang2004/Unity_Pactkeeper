@@ -332,8 +332,11 @@ public class FriendTabManager : MonoBehaviour
 
     private void UpdateFriendItemView(GameObject itemObj, FriendProfile friend)
     {
-        var nameText = itemObj.transform.Find("NameText")?.GetComponent<TMP_Text>();
-        if (nameText != null) nameText.text = $"{friend.username} (Lv.{friend.level})";
+        var nameText  = itemObj.transform.Find("NameText")?.GetComponent<TMP_Text>();
+        var levelText = itemObj.transform.Find("LevelText")?.GetComponent<TMP_Text>();
+
+        if (nameText  != null) nameText.text  = friend.username;
+        if (levelText != null) levelText.text = $"Lv.{friend.level}";
 
         var statusDot = itemObj.transform.Find("StatusDot")?.GetComponent<Image>();
         var statusLabel = itemObj.transform.Find("StatusText")?.GetComponent<TMP_Text>();
@@ -411,8 +414,11 @@ public class FriendTabManager : MonoBehaviour
         var itemObj = Instantiate(requestItemPrefab, requestsContainer);
         requestItemViews.Add(itemObj);
 
-        var nameText = itemObj.transform.Find("NameText")?.GetComponent<TMP_Text>();
-        if (nameText != null) nameText.text = $"{req.senderUsername} (Lv.{req.senderLevel})";
+        var nameText  = itemObj.transform.Find("NameText")?.GetComponent<TMP_Text>();
+        var levelText = itemObj.transform.Find("LevelText")?.GetComponent<TMP_Text>();
+
+        if (nameText  != null) nameText.text  = req.senderUsername;
+        if (levelText != null) levelText.text = $"Lv.{req.senderLevel}";
 
         var acceptBtn = itemObj.transform.Find("AcceptButton")?.GetComponent<Button>();
         if (acceptBtn != null)
@@ -485,13 +491,26 @@ public class FriendTabManager : MonoBehaviour
     {
         Debug.Log($"[FriendTabManager] Challenging friend: {friend.username} ({friend.playerId})");
 
+        if (LobbyHubClient.Instance == null)
+        {
+            Debug.LogError("[FriendTabManager] LobbyHubClient.Instance is null — cannot send invite.");
+            return;
+        }
+
         StartCoroutine(LobbyHubClient.Instance.SendMatchInvite(
             friend.playerId,
             inviteId =>
             {
+                Debug.Log($"[FriendTabManager] Invite sent, inviteId={inviteId}");
+
                 if (MatchInviteModal.Instance != null)
                 {
                     MatchInviteModal.Instance.ShowOutgoingWaiting(inviteId, friend.username);
+                }
+                else
+                {
+                    Debug.LogError("[FriendTabManager] MatchInviteModal.Instance is null — " +
+                                   "make sure MatchInviteModal prefab is in the scene.");
                 }
             },
             error =>
