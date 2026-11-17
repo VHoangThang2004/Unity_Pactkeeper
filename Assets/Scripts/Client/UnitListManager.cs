@@ -28,6 +28,14 @@ public class UnitListManager : MonoBehaviour
     public List<int> formationUIds = new();
     public List<UnitContainer> unitListItems = new();
 
+    public bool IsBusy { get; private set; } = true;
+    private bool _initialTutorialSetupDone = false;
+
+    void Awake()
+    {
+        IsBusy = true;
+    }
+
     void Start()
     {
         unitPrefabRegistry.Init();
@@ -37,10 +45,17 @@ public class UnitListManager : MonoBehaviour
 
     IEnumerator InitSequence()
     {
+        IsBusy = true;
         loadingScreen?.Show();
 
         yield return StartCoroutine(FetchOwnedUnits());
         yield return StartCoroutine(FetchFormation());
+
+        if (TutorialContext.IsActive && !_initialTutorialSetupDone)
+        {
+            _initialTutorialSetupDone = true;
+            EnsureTutorialFormationHasBenchAndEmptySlot();
+        }
 
         PopulateFormationSlots();
         PopulateUnitList();
@@ -50,6 +65,26 @@ public class UnitListManager : MonoBehaviour
 
         loadingScreen?.Hide();
         loadingScreen = null;
+        IsBusy = false;
+    }
+
+    void EnsureTutorialFormationHasBenchAndEmptySlot()
+    {
+        if (ownedUnits == null || ownedUnits.Count == 0 || formationUIds == null)
+            return;
+
+        if (ownedUnits.Count == 1)
+        {
+            // With only 1 owned unit, place it on the bench initially so the player can drag it into a slot
+            formationUIds.Clear();
+            return;
+        }
+
+        int maxAllowedInFormation = Mathf.Min(formationSlots != null && formationSlots.Count > 1 ? formationSlots.Count - 1 : 4, ownedUnits.Count - 1);
+        if (formationUIds.Count > maxAllowedInFormation)
+        {
+            formationUIds.RemoveRange(maxAllowedInFormation, formationUIds.Count - maxAllowedInFormation);
+        }
     }
 
     // -------------------------------------------------------
@@ -94,6 +129,34 @@ public class UnitListManager : MonoBehaviour
             {
                 slot.SetEmpty();
             }
+
+            ConfigureFormationSlotTutorialTargets(slot, i);
+        }
+    }
+
+    void ConfigureFormationSlotTutorialTargets(UnitContainer slot, int slotIndex)
+    {
+        if (slot == null) return;
+
+        if (slot.EmptySlotStatePanel != null)
+        {
+            var emptyTarget = slot.EmptySlotStatePanel.GetComponent<TutorialTarget>();
+            if (emptyTarget == null)
+                emptyTarget = slot.EmptySlotStatePanel.AddComponent<TutorialTarget>();
+            TutorialTargetRegistry.Unregister("C0S3_1", emptyTarget);
+            emptyTarget.Configure("C0S3_1");
+        }
+
+        if (slot.MainFrameObject != null)
+        {
+            var mainTarget = slot.MainFrameObject.GetComponent<TutorialTarget>();
+            if (mainTarget == null)
+                mainTarget = slot.MainFrameObject.AddComponent<TutorialTarget>();
+
+            if (slotIndex == 0)
+                mainTarget.Configure("C0S3_4", "C0S3_5", "C0S3_0");
+            else
+                mainTarget.Configure("C0S3_0");
         }
     }
 
@@ -117,6 +180,16 @@ public class UnitListManager : MonoBehaviour
             container.Init(stateMachine);
             BindUnit(container, unit, false);
             AttachDrag(container);
+
+            if (container.MainFrameObject != null)
+            {
+                var benchTarget = container.MainFrameObject.GetComponent<TutorialTarget>();
+                if (benchTarget == null)
+                    benchTarget = container.MainFrameObject.AddComponent<TutorialTarget>();
+                TutorialTargetRegistry.Unregister("C0S3_0", benchTarget);
+                benchTarget.Configure("C0S3_2");
+            }
+
             unitListItems.Add(container);
         }
     }
@@ -182,7 +255,9 @@ public class UnitListManager : MonoBehaviour
 
     public IEnumerator SaveFormationToBackend(List<int> uIds)
     {
+        IsBusy = true;
         yield return FormationApi.SaveFormation(clientBackendConfig, uIds);
-        StartCoroutine(InitSequence());
+        yield return StartCoroutine(InitSequence());
+        IsBusy = false;
     }
 }

@@ -21,6 +21,7 @@ public class C0_S4_Manager : MonoBehaviour
     IEnumerator Run()
     {
         TutorialContext.IsActive = true;
+        UnitConfigManager.IsOverlay = false;
 
         var replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
         if (replayUI == null)
@@ -28,15 +29,13 @@ public class C0_S4_Manager : MonoBehaviour
         replayUI.ConfigureDependencies(config, sequencer);
         replayUI.InitializeUI();
 
-        // Fetch first unit in team loadout
-        bool fetchDone = false;
+        // Fetch first unit in team loadout (fallback to existing selection or first owned unit)
         yield return StartCoroutine(FetchFirstUnitId(unitId =>
         {
             if (!string.IsNullOrEmpty(unitId))
                 PlayerSession.SelectedOwnedUnitId = unitId;
-            else
-                Debug.LogWarning("[C0_S4] No unit found in team loadout - tutorial may not display correctly.");
-            fetchDone = true;
+            else if (string.IsNullOrEmpty(PlayerSession.SelectedOwnedUnitId))
+                Debug.LogWarning("[C0_S4] No unit found in team loadout - UnitConfigManager will fallback to first owned unit.");
         }));
 
         yield return SceneManager.LoadSceneAsync("8_UnitConfig", LoadSceneMode.Additive);

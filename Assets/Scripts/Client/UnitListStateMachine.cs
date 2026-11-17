@@ -175,6 +175,11 @@ public class UnitListStateMachine : MonoBehaviour
     void GoToUnitConfig(string ownedUnitId)
     {
         PlayerSession.SelectedOwnedUnitId = ownedUnitId;
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[UnitListStateMachine] Tutorial active - SelectedOwnedUnitId set, deferring scene transition to StoryScene manager.");
+            return;
+        }
         SceneManager.LoadScene(sceneConfig.unitConfigScene);
     }
     void SaveFormation()

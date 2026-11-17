@@ -93,6 +93,33 @@ public class UnitListDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandle
         machine?.OnUnitDropped(container, target, onBench);
     }
 
+    public void BeginTutorialDrag(PointerEventData eventData)
+    {
+        if (container == null || container.isEmpty) return;
+
+        container.suppressNextClick = true;
+        if (eventData != null)
+            eventData.eligibleForClick = false;
+
+        EndScrollRoute(null);
+        BeginUnitDrag(eventData);
+    }
+
+    public UnitContainer ResolveDropSlot(PointerEventData eventData)
+    {
+        FindDrop(eventData, out var target, out _);
+        if (target != null && target.isFormationSlot)
+            return target;
+        return null;
+    }
+
+    public void CancelDrag()
+    {
+        EndScrollRoute(null);
+        ClearUnitDragVisuals();
+        ReleaseClickSuppression();
+    }
+
     void ReleaseClickSuppression()
     {
         if (!isActiveAndEnabled)

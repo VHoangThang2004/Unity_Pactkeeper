@@ -10,6 +10,8 @@ public enum PlotNodeType
     CompleteAndExit,     // Final button - marks story progress complete and reloads main menu
     GuidedLeftClick,    // Special case of GuidedClick that involves the extended button component
     InspectCellClick,   // Highlight a world-space grid cell, fires HandleTileClick and advances immediately (inspect / view loadout, no isTargetLocked required)
+    GuidedDrag,         // Highlight a draggable UI target, player starts dragging (or clicks) to advance
+    GuidedDrop,         // Highlight a drop destination UI target, player drops the dragged item (or clicks) to advance
 }
 
 [System.Serializable]

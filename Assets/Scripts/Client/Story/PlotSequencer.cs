@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
@@ -50,6 +51,12 @@ public class PlotSequencer : MonoBehaviour
     private int _currentIndex = 0;
     private bool _waitingForInput = false;
     private System.Action _onComplete;
+
+    private TutorialTarget _guidedDragSourceTarget;
+    private UnitContainer _guidedDragSourceContainer;
+    private UnitListDragHandler _guidedDragHandler;
+    private bool _guidedDragInProgress;
+    private bool _guidedDropCompleted;
 
     void Awake()
     {
@@ -277,6 +284,14 @@ public class PlotSequencer : MonoBehaviour
             return true;
 
         if (!target.gameObject.activeInHierarchy)
+            return false;
+
+        var ulm = FindAnyObjectByType<UnitListManager>();
+        if (ulm != null && ulm.IsBusy)
+            return false;
+
+        var ucm = FindAnyObjectByType<UnitConfigManager>();
+        if (ucm != null && ucm.IsBusy)
             return false;
 
         // Ensure no parent CanvasGroup is hiding the element (e.g., Unit1/Unit2 queue slot or ConfirmButton with alpha=0)
@@ -528,8 +543,12 @@ public class PlotSequencer : MonoBehaviour
             PlotNode node = plot.nodes[_currentIndex];
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
+            bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
+                             (_currentIndex + 1 < plot.nodes.Count) &&
+                             (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
             _currentIndex++;
-            yield return new WaitForSeconds(node.delay);
+            if (!skipDelay)
+                yield return new WaitForSeconds(node.delay);
         }
 
         HideAll();
@@ -544,8 +563,12 @@ public class PlotSequencer : MonoBehaviour
             var node = plot.nodes[_currentIndex];
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
+            bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
+                             (_currentIndex + 1 < plot.nodes.Count) &&
+                             (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
             _currentIndex++;
-            yield return new WaitForSeconds(0.3f);
+            if (!skipDelay)
+                yield return new WaitForSeconds(0.3f);
         }
 
         HideAll();
@@ -582,6 +605,14 @@ public class PlotSequencer : MonoBehaviour
 
             case PlotNodeType.InspectCellClick:
                 yield return StartCoroutine(RunInspectCellClick(node));
+                break;
+
+            case PlotNodeType.GuidedDrag:
+                yield return StartCoroutine(RunGuidedDrag(node));
+                break;
+
+            case PlotNodeType.GuidedDrop:
+                yield return StartCoroutine(RunGuidedDrop(node));
                 break;
 
             case PlotNodeType.AutoAdvance:
@@ -1011,6 +1042,296 @@ public class PlotSequencer : MonoBehaviour
     }
 
     // -------------------------------------------------------
+    // GuidedDrag & GuidedDrop
+    // -------------------------------------------------------
+
+    IEnumerator RunGuidedDrag(PlotNode node)
+    {
+        bool hasNextDropNode = (_currentIndex + 1 < plot.nodes.Count) &&
+                               (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
+
+        HideAll();
+        blockerPanel.SetActive(true);
+
+        TutorialTarget target = null;
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
+
+        if (target == null)
+        {
+            Debug.LogError($"[PlotSequencer] GuidedDrag: target '{node.tutorialTargetId}' " +
+                           $"not found after {node.targetWaitTimeout}s.");
+            yield break;
+        }
+
+        _guidedDragSourceTarget = target;
+        _guidedDragSourceContainer = target.GetComponentInParent<UnitContainer>();
+        _guidedDragHandler = target.GetComponentInParent<UnitListDragHandler>();
+        _guidedDragInProgress = false;
+        _guidedDropCompleted = false;
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        PositionButtonHighlight(target);
+
+        var btnProxy = EnsureDragProxy(tutorialButton);
+        var blockerProxy = EnsureDragProxy(blockerPanel);
+
+        Action<PointerEventData> onBeginDrag = (eventData) =>
+        {
+            if (!_waitingForInput) return;
+            if (!IsPointerNearTarget(eventData.pressPosition, target) &&
+                !IsPointerNearRect(eventData.pressPosition, tutorialButton != null ? tutorialButton.GetComponent<RectTransform>() : null))
+                return;
+
+            if (_guidedDragHandler != null)
+            {
+                _guidedDragHandler.BeginTutorialDrag(eventData);
+                _guidedDragInProgress = true;
+            }
+
+            if (hasNextDropNode)
+            {
+                _waitingForInput = false;
+            }
+        };
+
+        Action<PointerEventData> onDrag = (eventData) =>
+        {
+            if (_guidedDragInProgress && _guidedDragHandler != null)
+                _guidedDragHandler.OnDrag(eventData);
+        };
+
+        Action<PointerEventData> onEndDrag = (eventData) =>
+        {
+            if (!_guidedDragInProgress) return;
+            var hitSlot = _guidedDragHandler != null ? _guidedDragHandler.ResolveDropSlot(eventData) : null;
+            _guidedDragHandler?.CancelDrag();
+            _guidedDragInProgress = false;
+
+            if (hitSlot != null && hitSlot.isFormationSlot && _guidedDragSourceContainer != null && !_guidedDragSourceContainer.isEmpty)
+            {
+                var sm = _guidedDragSourceContainer.StateMachine != null
+                    ? _guidedDragSourceContainer.StateMachine
+                    : FindAnyObjectByType<UnitListStateMachine>();
+                if (sm != null)
+                {
+                    sm.PlaceListItemIntoSlot(_guidedDragSourceContainer, hitSlot);
+                    _guidedDropCompleted = true;
+                    _waitingForInput = false;
+                }
+            }
+        };
+
+        BindDragProxies(btnProxy, blockerProxy, onBeginDrag, onDrag, onEndDrag);
+
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(() =>
+        {
+            if (hasNextDropNode)
+                _waitingForInput = false;
+        });
+
+        _waitingForInput = true;
+        while (_waitingForInput)
+        {
+            if (!_guidedDragInProgress && target != null)
+                PositionButtonHighlight(target);
+            yield return null;
+        }
+
+        if (!hasNextDropNode)
+        {
+            ClearDragProxies(btnProxy, blockerProxy);
+            HideAll();
+        }
+    }
+
+    IEnumerator RunGuidedDrop(PlotNode node)
+    {
+        if (_guidedDropCompleted)
+        {
+            _guidedDropCompleted = false;
+            yield return StartCoroutine(WaitForUnitListIdle());
+            ClearDragProxies(
+                tutorialButton != null ? tutorialButton.GetComponent<TutorialDragProxy>() : null,
+                blockerPanel != null ? blockerPanel.GetComponent<TutorialDragProxy>() : null);
+            HideAll();
+            yield break;
+        }
+
+        if (blockerPanel != null) blockerPanel.SetActive(true);
+        if (tutorialButton != null) tutorialButton.SetActive(true);
+
+        TutorialTarget dropTarget = null;
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => dropTarget = t));
+
+        if (dropTarget == null)
+        {
+            Debug.LogError($"[PlotSequencer] GuidedDrop: target '{node.tutorialTargetId}' " +
+                           $"not found after {node.targetWaitTimeout}s.");
+            _guidedDragHandler?.CancelDrag();
+            _guidedDragInProgress = false;
+            HideAll();
+            yield break;
+        }
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        PositionButtonHighlight(dropTarget);
+
+        var btnProxy = EnsureDragProxy(tutorialButton);
+        var blockerProxy = EnsureDragProxy(blockerPanel);
+
+        Action<UnitContainer> completeDropIntoSlot = (preferredSlot) =>
+        {
+            if (!_waitingForInput) return;
+
+            UnitContainer slotContainer = preferredSlot != null
+                ? preferredSlot
+                : (dropTarget != null ? dropTarget.GetComponentInParent<UnitContainer>() : null);
+
+            if (_guidedDragSourceContainer == null || _guidedDragSourceContainer.isEmpty)
+            {
+                var ulm = FindAnyObjectByType<UnitListManager>();
+                if (ulm != null && ulm.unitListItems != null)
+                    _guidedDragSourceContainer = ulm.unitListItems.Find(u => u != null && !u.isEmpty);
+            }
+
+            if (slotContainer != null && slotContainer.isFormationSlot &&
+                _guidedDragSourceContainer != null && !_guidedDragSourceContainer.isEmpty)
+            {
+                var sm = _guidedDragSourceContainer.StateMachine != null
+                    ? _guidedDragSourceContainer.StateMachine
+                    : FindAnyObjectByType<UnitListStateMachine>();
+                if (sm != null)
+                {
+                    sm.PlaceListItemIntoSlot(_guidedDragSourceContainer, slotContainer);
+                    _guidedDropCompleted = true;
+                    _waitingForInput = false;
+                }
+            }
+        };
+
+        Action<PointerEventData> onBeginDrag = (eventData) =>
+        {
+            if (!_waitingForInput || _guidedDragInProgress) return;
+            if (_guidedDragSourceTarget != null && IsPointerNearTarget(eventData.pressPosition, _guidedDragSourceTarget))
+            {
+                if (_guidedDragHandler != null)
+                {
+                    _guidedDragHandler.BeginTutorialDrag(eventData);
+                    _guidedDragInProgress = true;
+                }
+            }
+        };
+
+        Action<PointerEventData> onDrag = (eventData) =>
+        {
+            if (_guidedDragInProgress && _guidedDragHandler != null)
+                _guidedDragHandler.OnDrag(eventData);
+        };
+
+        Action<PointerEventData> onEndDrag = (eventData) =>
+        {
+            if (!_guidedDragInProgress) return;
+
+            UnitContainer hitSlot = _guidedDragHandler != null ? _guidedDragHandler.ResolveDropSlot(eventData) : null;
+            if (hitSlot == null && dropTarget != null && IsPointerNearTarget(eventData.position, dropTarget))
+                hitSlot = dropTarget.GetComponentInParent<UnitContainer>();
+
+            _guidedDragHandler?.CancelDrag();
+            _guidedDragInProgress = false;
+
+            if (hitSlot != null && hitSlot.isFormationSlot)
+            {
+                completeDropIntoSlot(hitSlot);
+            }
+        };
+
+        BindDragProxies(btnProxy, blockerProxy, onBeginDrag, onDrag, onEndDrag);
+
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(() => completeDropIntoSlot(null));
+
+        _waitingForInput = true;
+        while (_waitingForInput)
+        {
+            if (dropTarget != null)
+                PositionButtonHighlight(dropTarget);
+            yield return null;
+        }
+
+        ClearDragProxies(btnProxy, blockerProxy);
+        yield return StartCoroutine(WaitForUnitListIdle());
+        HideAll();
+    }
+
+    private IEnumerator WaitForUnitListIdle()
+    {
+        yield return null;
+        var ulm = FindAnyObjectByType<UnitListManager>();
+        float waited = 0f;
+        while (ulm != null && ulm.IsBusy && waited < 5f)
+        {
+            waited += Time.deltaTime;
+            yield return null;
+        }
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private static TutorialDragProxy EnsureDragProxy(GameObject go)
+    {
+        if (go == null) return null;
+        var proxy = go.GetComponent<TutorialDragProxy>();
+        if (proxy == null)
+            proxy = go.AddComponent<TutorialDragProxy>();
+        return proxy;
+    }
+
+    private static void BindDragProxies(
+        TutorialDragProxy a,
+        TutorialDragProxy b,
+        Action<PointerEventData> onBegin,
+        Action<PointerEventData> onDrag,
+        Action<PointerEventData> onEnd)
+    {
+        if (a != null) a.Bind(onBegin, onDrag, onEnd);
+        if (b != null) b.Bind(onBegin, onDrag, onEnd);
+    }
+
+    private static void ClearDragProxies(TutorialDragProxy a, TutorialDragProxy b)
+    {
+        if (a != null) a.Clear();
+        if (b != null) b.Clear();
+    }
+
+    private bool IsPointerNearTarget(Vector2 screenPos, TutorialTarget target)
+    {
+        if (target == null || target.RectTransform == null) return false;
+        CalculateScreenRect(target, out Vector2 center, out Vector2 size);
+        Vector2 half = (size * 0.5f) + new Vector2(24f, 24f);
+        return Mathf.Abs(screenPos.x - center.x) <= half.x &&
+               Mathf.Abs(screenPos.y - center.y) <= half.y;
+    }
+
+    private static bool IsPointerNearRect(Vector2 screenPos, RectTransform rect)
+    {
+        if (rect == null) return false;
+        return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPos, null);
+    }
+
+    // -------------------------------------------------------
     // CompleteAndExit - final button, no real button onClick copied
     // -------------------------------------------------------
 
@@ -1116,6 +1437,11 @@ public class PlotSequencer : MonoBehaviour
             var btn = tutorialButton.GetComponent<Button>();
             bool buttonClicked = false;
             btn.onClick.RemoveAllListeners();
+            if (target.Button != null)
+            {
+                var persistent = target.Button.onClick;
+                btn.onClick.AddListener(() => persistent.Invoke());
+            }
             btn.onClick.AddListener(() =>
             {
                 HideAll();
@@ -1280,4 +1606,32 @@ public class PlotSequencer : MonoBehaviour
     {
         Debug.Log($"Button is clicked");
     }
+}
+
+public class TutorialDragProxy : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    private Action<PointerEventData> _onBeginDrag;
+    private Action<PointerEventData> _onDrag;
+    private Action<PointerEventData> _onEndDrag;
+
+    public void Bind(
+        Action<PointerEventData> onBeginDrag,
+        Action<PointerEventData> onDrag,
+        Action<PointerEventData> onEndDrag)
+    {
+        _onBeginDrag = onBeginDrag;
+        _onDrag = onDrag;
+        _onEndDrag = onEndDrag;
+    }
+
+    public void Clear()
+    {
+        _onBeginDrag = null;
+        _onDrag = null;
+        _onEndDrag = null;
+    }
+
+    public void OnBeginDrag(PointerEventData eventData) => _onBeginDrag?.Invoke(eventData);
+    public void OnDrag(PointerEventData eventData) => _onDrag?.Invoke(eventData);
+    public void OnEndDrag(PointerEventData eventData) => _onEndDrag?.Invoke(eventData);
 }

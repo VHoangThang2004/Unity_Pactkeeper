@@ -26,6 +26,9 @@ public class UnitContainer : MonoBehaviour
     private UnitListStateMachine sm;
 
     public UnitListStateMachine StateMachine => sm;
+    public GameObject DefaultPanel => defaultPanel;
+    public GameObject EmptySlotStatePanel => emptySlotStatePanel;
+    public GameObject MainFrameObject => fullFrameImg != null ? fullFrameImg.gameObject : gameObject;
 
     public void Init(UnitListStateMachine stateMachine)
     {

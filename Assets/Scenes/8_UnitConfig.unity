@@ -32409,8 +32409,6 @@ MonoBehaviour:
   unitImage: {fileID: 4432665411353211168}
   unitNameText: {fileID: 7188482551004172396}
   defaultPanel: {fileID: 979540563066369684}
-  formationSlotStatePanel: {fileID: 661507290223714434}
-  changeUnitOptionPanel: {fileID: 9138856474222075118}
   emptySlotStatePanel: {fileID: 1482271802429526412}
 --- !u!114 &4478675472652701729
 MonoBehaviour:

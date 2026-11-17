@@ -27,15 +27,15 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
-  - type: 1
-    text: Add another unit to the team.
-    tutorialTargetId: C0S3_1
+  - type: 8
+    text: Choose the person to whom you entrust your life.
+    tutorialTargetId: C0S3_2
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
-  - type: 1
-    text: Choose the person to whom you entrust your life.
-    tutorialTargetId: C0S3_2
+  - type: 9
+    text: Add another unit to the team.
+    tutorialTargetId: C0S3_1
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
@@ -45,15 +45,15 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
-  - type: 1
+  - type: 0
     text: Now, we need to inspect their equipment.
-    tutorialTargetId: C0S3_4
+    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 5
-    text: Equip the skill now.
-    tutorialTargetId: C0S3_5
+    text: 
+    tutorialTargetId: C0S3_4
     targetCell: {x: 0, y: 0}
     delay: 4
     targetWaitTimeout: 10
