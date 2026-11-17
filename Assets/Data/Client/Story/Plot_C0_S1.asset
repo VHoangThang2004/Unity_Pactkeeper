@@ -95,8 +95,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Study the Inspect panel carefully - range, SP cost, and damage. Never
-      swing steel at thin air."
+    text: Study the Inspect panel carefully - range, SP cost, and damage. Never swing
+      steel at thin air.
     tutorialTargetId: InspectPanel
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
       the trap.
     tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
-    delay: 1.5
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
     text: Discipline before bloodshed. That concludes your first lesson, Pactkeeper.

@@ -48,6 +48,8 @@ public class ClientMapLoader : MonoBehaviour
         // Instantiate
         spawnedMap = Instantiate(session.MapAsset.tilemapPrefab, Vector3.zero, Quaternion.identity);
         spawnedMap.name = $"Map_{session.MapAsset.name}";
+        if (gameObject.scene.IsValid() && spawnedMap.scene != gameObject.scene)
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(spawnedMap, gameObject.scene);
 
         var mapPrefab = spawnedMap.GetComponent<MapPrefab>();
         if (mapPrefab == null || mapPrefab.movableTilemap == null || mapPrefab.rangeTilemap == null)

@@ -1,0 +1,483 @@
+fileFormatVersion: 2
+guid: 3e168e05c76f897498d5af70eabbe286
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3636257854773731239
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_0"
+  - first:
+      213: -2714983864239210123
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_1"
+  - first:
+      213: -3144948038957649363
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_2"
+  - first:
+      213: 6564988945909388928
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_3"
+  - first:
+      213: -3248043851822197620
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_4"
+  - first:
+      213: -3969186853544674491
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_5"
+  - first:
+      213: -4105745359669681321
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_6"
+  - first:
+      213: 6892423652007632715
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_7"
+  - first:
+      213: -3245629863596600813
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_8"
+  - first:
+      213: -8376023898968347749
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_9"
+  - first:
+      213: -6126813144689067478
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_10"
+  - first:
+      213: 2230858732867908232
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_11"
+  - first:
+      213: 3235260854780970834
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_12"
+  - first:
+      213: 6813685246172838793
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_13"
+  - first:
+      213: 7283082826787367382
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_14"
+  - first:
+      213: 4255204503581096731
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_15"
+  - first:
+      213: 529847389711252134
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_16"
+  - first:
+      213: 6614145768956203521
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_17"
+  - first:
+      213: -3601342980462087851
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_18"
+  - first:
+      213: 3756995638626869283
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_19"
+  - first:
+      213: -2487668126485878940
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_20"
+  - first:
+      213: -5033587960829890546
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_21"
+  - first:
+      213: 8707328803040656938
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_22"
+  - first:
+      213: 2125256092430152186
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_23"
+  - first:
+      213: -6901756020983405091
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_24"
+  - first:
+      213: 3949214760806326785
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_25"
+  - first:
+      213: 8996230300556194657
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_26"
+  - first:
+      213: 1529447259551855652
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_27"
+  - first:
+      213: 379952596855456782
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_28"
+  - first:
+      213: 4046525775845525103
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_29"
+  - first:
+      213: -7715186781284234083
+    second: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_30"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_0"
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 213
+        width: 661
+        height: 716
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 950ec7e2fba698dc0800000000000000
+      internalID: -3636257854773731239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_1"
+      rect:
+        serializedVersion: 2
+        x: 1229
+        y: 819
+        width: 429
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 571ca116f80725ad0800000000000000
+      internalID: -2714983864239210123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_2"
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 213
+        width: 496
+        height: 716
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d223ed4db66ea54d0800000000000000
+      internalID: -3144948038957649363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_3"
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 710
+        width: 366
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0869b4bd9a68b1b50800000000000000
+      internalID: 6564988945909388928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_5"
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 56
+        width: 120
+        height: 143
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54bb15b169d9ae8c0800000000000000
+      internalID: -3969186853544674491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_6"
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 61
+        width: 281
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7532eaa39567507c0800000000000000
+      internalID: -4105745359669681321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_7"
+      rect:
+        serializedVersion: 2
+        x: 469
+        y: 54
+        width: 122
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4f5a6b3bcec6af50800000000000000
+      internalID: 6892423652007632715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_10"
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 47
+        width: 155
+        height: 139
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2a3d99f7ef29faa0800000000000000
+      internalID: -6126813144689067478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_11"
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 51
+        width: 139
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8827baca23a95fe10800000000000000
+      internalID: 2230858732867908232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_12"
+      rect:
+        serializedVersion: 2
+        x: 969
+        y: 60
+        width: 79
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25742f43b94f5ec20800000000000000
+      internalID: 3235260854780970834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_13"
+      rect:
+        serializedVersion: 2
+        x: 1076
+        y: 60
+        width: 110
+        height: 117
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98bb37581a21f8e50800000000000000
+      internalID: 6813685246172838793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 27a727829651f71479903fc0b95ae9f8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_0": -3636257854773731239
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_1": -2714983864239210123
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_10": -6126813144689067478
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_11": 2230858732867908232
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_12": 3235260854780970834
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_13": 6813685246172838793
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_14": 7283082826787367382
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_15": 4255204503581096731
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_16": 529847389711252134
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_17": 6614145768956203521
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_18": -3601342980462087851
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_19": 3756995638626869283
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_2": -3144948038957649363
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_20": -2487668126485878940
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_21": -5033587960829890546
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_22": 8707328803040656938
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_23": 2125256092430152186
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_24": -6901756020983405091
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_25": 3949214760806326785
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_26": 8996230300556194657
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_27": 1529447259551855652
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_28": 379952596855456782
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_29": 4046525775845525103
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_3": 6564988945909388928
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_30": -7715186781284234083
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_4": -3248043851822197620
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_5": -3969186853544674491
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_6": -4105745359669681321
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_7": 6892423652007632715
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_8": -3245629863596600813
+      "B\u1ED9 giao di\u1EC7n b\u1EA3ng x\u1EBFp h\u1EA1ng fantasy_9": -8376023898968347749
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

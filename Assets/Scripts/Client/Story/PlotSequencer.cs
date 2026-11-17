@@ -1,10 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
+using UnityEngine.Animations;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -28,6 +31,11 @@ public class PlotSequencer : MonoBehaviour
     [SerializeField] private GameObject blockerPanel;
     [SerializeField] private GameObject tutorialButton;
     [SerializeField] private GameObject highlighter;
+    [SerializeField] private AnimationClip highlighterClip;
+    [SerializeField] private float highlighterScaleMultiplier = 1.75f;
+    [SerializeField] private Vector2 highlighterExtraPadding = new Vector2(36f, 36f);
+
+    private PlayableGraph _highlighterGraph;
 
     [Header("GuidedCellClick UI")]
     [Tooltip("Camera used to convert world cell position to screen position.")]
@@ -44,10 +52,17 @@ public class PlotSequencer : MonoBehaviour
     private bool _waitingForInput = false;
     private System.Action _onComplete;
 
+    private TutorialTarget _guidedDragSourceTarget;
+    private UnitContainer _guidedDragSourceContainer;
+    private UnitListDragHandler _guidedDragHandler;
+    private bool _guidedDragInProgress;
+    private bool _guidedDropCompleted;
+
     void Awake()
     {
         EnsureTransparentPanels();
         EnsureHighlightSorting();
+        EnsureHighlighterAnimation();
         HideAll();
     }
 
@@ -116,6 +131,49 @@ public class PlotSequencer : MonoBehaviour
     void OnDestroy()
     {
         PlotDirector.OnTrigger -= HandleTrigger;
+        if (_highlighterGraph.IsValid())
+            _highlighterGraph.Destroy();
+    }
+
+    private void EnsureHighlighterAnimation()
+    {
+        if (highlighter == null) return;
+
+#if UNITY_EDITOR
+        if (highlighterClip == null)
+        {
+            highlighterClip = UnityEditor.AssetDatabase.LoadAssetAtPath<AnimationClip>(
+                "Assets/Prefabs/Sprites/HighLighter/Highlighter.anim");
+        }
+#endif
+
+        if (highlighterClip == null) return;
+
+        var animator = highlighter.GetComponent<Animator>();
+        if (animator == null)
+            animator = highlighter.AddComponent<Animator>();
+
+        animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+
+        if (!_highlighterGraph.IsValid())
+        {
+            _highlighterGraph = PlayableGraph.Create("TutorialHighlighterGraph");
+            _highlighterGraph.SetTimeUpdateMode(DirectorUpdateMode.UnscaledGameTime);
+            var output = AnimationPlayableOutput.Create(_highlighterGraph, "HighlighterOutput", animator);
+            var clipPlayable = AnimationClipPlayable.Create(_highlighterGraph, highlighterClip);
+            output.SetSourcePlayable(clipPlayable);
+        }
+
+        if (!_highlighterGraph.IsPlaying())
+            _highlighterGraph.Play();
+    }
+
+    private void ShowHighlighter()
+    {
+        if (highlighter == null) return;
+        highlighter.SetActive(true);
+        EnsureHighlighterAnimation();
     }
 
     public void SetAllowSkip(bool allow)
@@ -183,14 +241,30 @@ public class PlotSequencer : MonoBehaviour
             yield return null;
         }
 
-        // 2. Wait until snapshot sync, eye animation, effect resolve replay, and LockedInputState are all finished.
+        // 2. Wait until snapshot sync, eye animation, effect resolve replay, LockedInputState,
+        // and any intervening Enemy turn (e.g. "[Enemy team] wait.") are all finished and it is Player's turn.
         float syncWait = 0f;
-        while ((matchSession.SyncState != SyncStateValue.Idle ||
-                matchSession.IsSceneSyncing ||
-                interactionSystem.decisionSpamRoutine != null ||
-                (interactionSystem.stateMachine?.currentState is LockedInputState)) &&
-               syncWait < 12f)
+        float stableTimer = 0f;
+        while (syncWait < 15f)
         {
+            bool busy = matchSession.SyncState != SyncStateValue.Idle ||
+                        matchSession.IsSceneSyncing ||
+                        interactionSystem.decisionSpamRoutine != null ||
+                        (interactionSystem.stateMachine?.currentState is LockedInputState) ||
+                        !matchSession.Timeline.isPaused ||
+                        !matchSession.IsMyTurn();
+
+            if (!busy)
+            {
+                stableTimer += Time.deltaTime;
+                if (stableTimer >= 0.15f)
+                    break;
+            }
+            else
+            {
+                stableTimer = 0f;
+            }
+
             syncWait += Time.deltaTime;
             yield return null;
         }
@@ -210,6 +284,14 @@ public class PlotSequencer : MonoBehaviour
             return true;
 
         if (!target.gameObject.activeInHierarchy)
+            return false;
+
+        var ulm = FindAnyObjectByType<UnitListManager>();
+        if (ulm != null && ulm.IsBusy)
+            return false;
+
+        var ucm = FindAnyObjectByType<UnitConfigManager>();
+        if (ucm != null && ucm.IsBusy)
             return false;
 
         // Ensure no parent CanvasGroup is hiding the element (e.g., Unit1/Unit2 queue slot or ConfirmButton with alpha=0)
@@ -276,6 +358,38 @@ public class PlotSequencer : MonoBehaviour
                 }
             }
             if (!hasSprite)
+                return false;
+        }
+        else if (targetId == "WaitButton" || targetId.EndsWith("_WaitButton"))
+        {
+            EnsureBattleReferences();
+            if (matchSession != null &&
+                (!matchSession.Timeline.isPaused ||
+                 !matchSession.IsMyTurn() ||
+                 matchSession.SyncState != SyncStateValue.Idle ||
+                 matchSession.IsSceneSyncing))
+                return false;
+
+            if (interactionSystem != null &&
+                (interactionSystem.decisionSpamRoutine != null ||
+                 interactionSystem.stateMachine?.currentState is not NoneState))
+                return false;
+
+            if (target.Button != null && !target.Button.interactable)
+                return false;
+        }
+        else if (targetId == "ConfirmButton" || targetId.EndsWith("_ConfirmButton") ||
+                 targetId == "CancelButton" || targetId.EndsWith("_CancelButton"))
+        {
+            EnsureBattleReferences();
+            if (matchSession != null &&
+                (!matchSession.Timeline.isPaused ||
+                 !matchSession.IsMyTurn() ||
+                 matchSession.SyncState != SyncStateValue.Idle ||
+                 matchSession.IsSceneSyncing))
+                return false;
+
+            if (interactionSystem != null && interactionSystem.decisionSpamRoutine != null)
                 return false;
         }
 
@@ -429,8 +543,12 @@ public class PlotSequencer : MonoBehaviour
             PlotNode node = plot.nodes[_currentIndex];
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
+            bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
+                             (_currentIndex + 1 < plot.nodes.Count) &&
+                             (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
             _currentIndex++;
-            yield return new WaitForSeconds(node.delay);
+            if (!skipDelay)
+                yield return new WaitForSeconds(node.delay);
         }
 
         HideAll();
@@ -445,8 +563,12 @@ public class PlotSequencer : MonoBehaviour
             var node = plot.nodes[_currentIndex];
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
+            bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
+                             (_currentIndex + 1 < plot.nodes.Count) &&
+                             (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
             _currentIndex++;
-            yield return new WaitForSeconds(0.3f);
+            if (!skipDelay)
+                yield return new WaitForSeconds(0.3f);
         }
 
         HideAll();
@@ -481,6 +603,18 @@ public class PlotSequencer : MonoBehaviour
                 yield return StartCoroutine(RunGuidedCellClick(node));
                 break;
 
+            case PlotNodeType.InspectCellClick:
+                yield return StartCoroutine(RunInspectCellClick(node));
+                break;
+
+            case PlotNodeType.GuidedDrag:
+                yield return StartCoroutine(RunGuidedDrag(node));
+                break;
+
+            case PlotNodeType.GuidedDrop:
+                yield return StartCoroutine(RunGuidedDrop(node));
+                break;
+
             case PlotNodeType.AutoAdvance:
                 yield return StartCoroutine(RunAutoAdvance(node));
                 break;
@@ -507,15 +641,6 @@ public class PlotSequencer : MonoBehaviour
         if (skipButton != null)
             skipButton.gameObject.SetActive(allowSkip && !ContainsInteractiveBattleNodes(plot));
 
-        textBoxPanel.SetActive(true);
-        dialogueText.text = node.text;
-
-        if (!string.IsNullOrEmpty(node.text))
-        {
-            textBoxPanel.SetActive(true);
-            dialogueText.text = node.text;
-        }
-
         TutorialTarget target = null;
         if (!string.IsNullOrEmpty(node.tutorialTargetId))
         {
@@ -531,6 +656,9 @@ public class PlotSequencer : MonoBehaviour
                 PositionTargetHighlight(target);
             }
         }
+
+        textBoxPanel.SetActive(true);
+        dialogueText.text = node.text;
 
         _waitingForInput = true;
         nextButton.onClick.RemoveAllListeners();
@@ -555,6 +683,8 @@ public class PlotSequencer : MonoBehaviour
                 yield return null;
             }
         }
+
+        HideAll();
     }
 
     // -------------------------------------------------------
@@ -567,12 +697,6 @@ public class PlotSequencer : MonoBehaviour
 
         blockerPanel.SetActive(true);
 
-        if (!string.IsNullOrEmpty(node.text))
-        {
-            textBoxPanel.SetActive(true);
-            dialogueText.text = node.text;
-        }
-
         TutorialTarget target = null;
         yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
@@ -583,13 +707,13 @@ public class PlotSequencer : MonoBehaviour
             yield break;
         }
 
-        PositionButtonHighlight(target);
-
         if (!string.IsNullOrEmpty(node.text))
         {
             textBoxPanel.SetActive(true);
             dialogueText.text = node.text;
         }
+
+        PositionButtonHighlight(target);
 
         var btn = tutorialButton.GetComponent<Button>();
         btn.onClick.RemoveAllListeners();
@@ -624,12 +748,6 @@ public class PlotSequencer : MonoBehaviour
         HideAll();
         blockerPanel.SetActive(true);
 
-        if (!string.IsNullOrEmpty(node.text))
-        {
-            textBoxPanel.SetActive(true);
-            dialogueText.text = node.text;
-        }
-
         TutorialTarget target = null;
         yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
@@ -638,6 +756,12 @@ public class PlotSequencer : MonoBehaviour
             Debug.LogError($"[PlotSequencer] GuidedRightClick: target '{node.tutorialTargetId}' " +
                            $"not found after {node.targetWaitTimeout}s.");
             yield break;
+        }
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
         }
 
         PositionButtonHighlight(target);
@@ -676,12 +800,6 @@ public class PlotSequencer : MonoBehaviour
         HideAll();
         blockerPanel.SetActive(true);
 
-        if (!string.IsNullOrEmpty(node.text))
-        {
-            textBoxPanel.SetActive(true);
-            dialogueText.text = node.text;
-        }
-
         TutorialTarget target = null;
         yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
 
@@ -690,6 +808,12 @@ public class PlotSequencer : MonoBehaviour
             Debug.LogError($"[PlotSequencer] GuidedLeftClick: target '{node.tutorialTargetId}' " +
                            $"not found after {node.targetWaitTimeout}s.");
             yield break;
+        }
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
         }
 
         PositionButtonHighlight(target);
@@ -786,9 +910,9 @@ public class PlotSequencer : MonoBehaviour
         highlightRect.position = screenPos;
         highlighterRect.position = screenPos;
         highlightRect.sizeDelta = new Vector2(160f, 160f);     // one cell size approx
-        highlighterRect.sizeDelta = new Vector2(192f, 192f);   // 1.2x
+        highlighterRect.sizeDelta = new Vector2(260f, 260f);   // padded ring around cell
         tutorialButton.SetActive(true);
-        highlighter.SetActive(true);
+        ShowHighlighter();
 
         if (!string.IsNullOrEmpty(node.text))
         {
@@ -846,6 +970,365 @@ public class PlotSequencer : MonoBehaviour
         }
 
         HideAll();
+    }
+
+    // -------------------------------------------------------
+    // InspectCellClick - highlight a world-space grid cell,
+    // fire HandleTileClick and advance immediately WITHOUT
+    // requiring isTargetLocked (used for inspecting a unit
+    // already standing on that cell, e.g. "view his loadout").
+    // -------------------------------------------------------
+
+    IEnumerator RunInspectCellClick(PlotNode node)
+    {
+        EnsureBattleReferences();
+        HideAll();
+        blockerPanel.SetActive(true);
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        yield return null;
+
+        var cam = gameCamera != null ? gameCamera : Camera.main;
+        Vector3 worldPos = new Vector3(node.targetCell.x + 0.5f, node.targetCell.y + 0.5f, 0f);
+        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+
+        var highlightRect = tutorialButton.GetComponent<RectTransform>();
+        var highlighterRect = highlighter.GetComponent<RectTransform>();
+        highlightRect.position = screenPos;
+        highlighterRect.position = screenPos;
+        highlightRect.sizeDelta = new Vector2(160f, 160f);
+        highlighterRect.sizeDelta = new Vector2(260f, 260f);
+        tutorialButton.SetActive(true);
+        ShowHighlighter();
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        _waitingForInput = true;
+        btn.onClick.AddListener(() =>
+        {
+            if (interactionSystem != null && interactionSystem.stateMachine != null)
+            {
+                var targetCell = new Vector3Int(node.targetCell.x, node.targetCell.y, 0);
+                interactionSystem.stateMachine.OnTileHover(targetCell);
+                interactionSystem.HandleTileClick(targetCell);
+                Debug.Log($"[PlotSequencer] InspectCellClick: fired HandleTileClick on {targetCell}, advancing immediately.");
+            }
+            // Advance regardless - this node does NOT require isTargetLocked
+            _waitingForInput = false;
+        });
+
+        while (_waitingForInput)
+        {
+            screenPos = cam.WorldToScreenPoint(worldPos);
+            highlightRect.position = screenPos;
+            highlighterRect.position = screenPos;
+            if (textBoxPanel.activeSelf)
+                PositionTextBoxAwayFrom(screenPos.y);
+            yield return null;
+        }
+
+        HideAll();
+    }
+
+    // -------------------------------------------------------
+    // GuidedDrag & GuidedDrop
+    // -------------------------------------------------------
+
+    IEnumerator RunGuidedDrag(PlotNode node)
+    {
+        bool hasNextDropNode = (_currentIndex + 1 < plot.nodes.Count) &&
+                               (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
+
+        HideAll();
+        blockerPanel.SetActive(true);
+
+        TutorialTarget target = null;
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => target = t));
+
+        if (target == null)
+        {
+            Debug.LogError($"[PlotSequencer] GuidedDrag: target '{node.tutorialTargetId}' " +
+                           $"not found after {node.targetWaitTimeout}s.");
+            yield break;
+        }
+
+        _guidedDragSourceTarget = target;
+        _guidedDragSourceContainer = target.GetComponentInParent<UnitContainer>();
+        _guidedDragHandler = target.GetComponentInParent<UnitListDragHandler>();
+        _guidedDragInProgress = false;
+        _guidedDropCompleted = false;
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        PositionButtonHighlight(target);
+
+        var btnProxy = EnsureDragProxy(tutorialButton);
+        var blockerProxy = EnsureDragProxy(blockerPanel);
+
+        Action<PointerEventData> onBeginDrag = (eventData) =>
+        {
+            if (!_waitingForInput) return;
+            if (!IsPointerNearTarget(eventData.pressPosition, target) &&
+                !IsPointerNearRect(eventData.pressPosition, tutorialButton != null ? tutorialButton.GetComponent<RectTransform>() : null))
+                return;
+
+            if (_guidedDragHandler != null)
+            {
+                _guidedDragHandler.BeginTutorialDrag(eventData);
+                _guidedDragInProgress = true;
+            }
+
+            if (hasNextDropNode)
+            {
+                _waitingForInput = false;
+            }
+        };
+
+        Action<PointerEventData> onDrag = (eventData) =>
+        {
+            if (_guidedDragInProgress && _guidedDragHandler != null)
+                _guidedDragHandler.OnDrag(eventData);
+        };
+
+        Action<PointerEventData> onEndDrag = (eventData) =>
+        {
+            if (!_guidedDragInProgress) return;
+            var hitSlot = _guidedDragHandler != null ? _guidedDragHandler.ResolveDropSlot(eventData) : null;
+            _guidedDragHandler?.CancelDrag();
+            _guidedDragInProgress = false;
+
+            if (hitSlot != null && hitSlot.isFormationSlot && _guidedDragSourceContainer != null && !_guidedDragSourceContainer.isEmpty)
+            {
+                var sm = _guidedDragSourceContainer.StateMachine != null
+                    ? _guidedDragSourceContainer.StateMachine
+                    : FindAnyObjectByType<UnitListStateMachine>();
+                if (sm != null)
+                {
+                    sm.PlaceListItemIntoSlot(_guidedDragSourceContainer, hitSlot);
+                    _guidedDropCompleted = true;
+                    _waitingForInput = false;
+                }
+            }
+        };
+
+        BindDragProxies(btnProxy, blockerProxy, onBeginDrag, onDrag, onEndDrag);
+
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(() =>
+        {
+            if (hasNextDropNode)
+                _waitingForInput = false;
+        });
+
+        _waitingForInput = true;
+        while (_waitingForInput)
+        {
+            if (!_guidedDragInProgress && target != null)
+                PositionButtonHighlight(target);
+            yield return null;
+        }
+
+        if (!hasNextDropNode)
+        {
+            ClearDragProxies(btnProxy, blockerProxy);
+            HideAll();
+        }
+    }
+
+    IEnumerator RunGuidedDrop(PlotNode node)
+    {
+        if (_guidedDropCompleted)
+        {
+            _guidedDropCompleted = false;
+            yield return StartCoroutine(WaitForUnitListIdle());
+            ClearDragProxies(
+                tutorialButton != null ? tutorialButton.GetComponent<TutorialDragProxy>() : null,
+                blockerPanel != null ? blockerPanel.GetComponent<TutorialDragProxy>() : null);
+            HideAll();
+            yield break;
+        }
+
+        if (blockerPanel != null) blockerPanel.SetActive(true);
+        if (tutorialButton != null) tutorialButton.SetActive(true);
+
+        TutorialTarget dropTarget = null;
+        yield return StartCoroutine(WaitForReadyTarget(node.tutorialTargetId, node.targetWaitTimeout, t => dropTarget = t));
+
+        if (dropTarget == null)
+        {
+            Debug.LogError($"[PlotSequencer] GuidedDrop: target '{node.tutorialTargetId}' " +
+                           $"not found after {node.targetWaitTimeout}s.");
+            _guidedDragHandler?.CancelDrag();
+            _guidedDragInProgress = false;
+            HideAll();
+            yield break;
+        }
+
+        if (!string.IsNullOrEmpty(node.text))
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+        }
+
+        PositionButtonHighlight(dropTarget);
+
+        var btnProxy = EnsureDragProxy(tutorialButton);
+        var blockerProxy = EnsureDragProxy(blockerPanel);
+
+        Action<UnitContainer> completeDropIntoSlot = (preferredSlot) =>
+        {
+            if (!_waitingForInput) return;
+
+            UnitContainer slotContainer = preferredSlot != null
+                ? preferredSlot
+                : (dropTarget != null ? dropTarget.GetComponentInParent<UnitContainer>() : null);
+
+            if (_guidedDragSourceContainer == null || _guidedDragSourceContainer.isEmpty)
+            {
+                var ulm = FindAnyObjectByType<UnitListManager>();
+                if (ulm != null && ulm.unitListItems != null)
+                    _guidedDragSourceContainer = ulm.unitListItems.Find(u => u != null && !u.isEmpty);
+            }
+
+            if (slotContainer != null && slotContainer.isFormationSlot &&
+                _guidedDragSourceContainer != null && !_guidedDragSourceContainer.isEmpty)
+            {
+                var sm = _guidedDragSourceContainer.StateMachine != null
+                    ? _guidedDragSourceContainer.StateMachine
+                    : FindAnyObjectByType<UnitListStateMachine>();
+                if (sm != null)
+                {
+                    sm.PlaceListItemIntoSlot(_guidedDragSourceContainer, slotContainer);
+                    _guidedDropCompleted = true;
+                    _waitingForInput = false;
+                }
+            }
+        };
+
+        Action<PointerEventData> onBeginDrag = (eventData) =>
+        {
+            if (!_waitingForInput || _guidedDragInProgress) return;
+            if (_guidedDragSourceTarget != null && IsPointerNearTarget(eventData.pressPosition, _guidedDragSourceTarget))
+            {
+                if (_guidedDragHandler != null)
+                {
+                    _guidedDragHandler.BeginTutorialDrag(eventData);
+                    _guidedDragInProgress = true;
+                }
+            }
+        };
+
+        Action<PointerEventData> onDrag = (eventData) =>
+        {
+            if (_guidedDragInProgress && _guidedDragHandler != null)
+                _guidedDragHandler.OnDrag(eventData);
+        };
+
+        Action<PointerEventData> onEndDrag = (eventData) =>
+        {
+            if (!_guidedDragInProgress) return;
+
+            UnitContainer hitSlot = _guidedDragHandler != null ? _guidedDragHandler.ResolveDropSlot(eventData) : null;
+            if (hitSlot == null && dropTarget != null && IsPointerNearTarget(eventData.position, dropTarget))
+                hitSlot = dropTarget.GetComponentInParent<UnitContainer>();
+
+            _guidedDragHandler?.CancelDrag();
+            _guidedDragInProgress = false;
+
+            if (hitSlot != null && hitSlot.isFormationSlot)
+            {
+                completeDropIntoSlot(hitSlot);
+            }
+        };
+
+        BindDragProxies(btnProxy, blockerProxy, onBeginDrag, onDrag, onEndDrag);
+
+        var btn = tutorialButton.GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(() => completeDropIntoSlot(null));
+
+        _waitingForInput = true;
+        while (_waitingForInput)
+        {
+            if (dropTarget != null)
+                PositionButtonHighlight(dropTarget);
+            yield return null;
+        }
+
+        ClearDragProxies(btnProxy, blockerProxy);
+        yield return StartCoroutine(WaitForUnitListIdle());
+        HideAll();
+    }
+
+    private IEnumerator WaitForUnitListIdle()
+    {
+        yield return null;
+        var ulm = FindAnyObjectByType<UnitListManager>();
+        float waited = 0f;
+        while (ulm != null && ulm.IsBusy && waited < 5f)
+        {
+            waited += Time.deltaTime;
+            yield return null;
+        }
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+    }
+
+    private static TutorialDragProxy EnsureDragProxy(GameObject go)
+    {
+        if (go == null) return null;
+        var proxy = go.GetComponent<TutorialDragProxy>();
+        if (proxy == null)
+            proxy = go.AddComponent<TutorialDragProxy>();
+        return proxy;
+    }
+
+    private static void BindDragProxies(
+        TutorialDragProxy a,
+        TutorialDragProxy b,
+        Action<PointerEventData> onBegin,
+        Action<PointerEventData> onDrag,
+        Action<PointerEventData> onEnd)
+    {
+        if (a != null) a.Bind(onBegin, onDrag, onEnd);
+        if (b != null) b.Bind(onBegin, onDrag, onEnd);
+    }
+
+    private static void ClearDragProxies(TutorialDragProxy a, TutorialDragProxy b)
+    {
+        if (a != null) a.Clear();
+        if (b != null) b.Clear();
+    }
+
+    private bool IsPointerNearTarget(Vector2 screenPos, TutorialTarget target)
+    {
+        if (target == null || target.RectTransform == null) return false;
+        CalculateScreenRect(target, out Vector2 center, out Vector2 size);
+        Vector2 half = (size * 0.5f) + new Vector2(24f, 24f);
+        return Mathf.Abs(screenPos.x - center.x) <= half.x &&
+               Mathf.Abs(screenPos.y - center.y) <= half.y;
+    }
+
+    private static bool IsPointerNearRect(Vector2 screenPos, RectTransform rect)
+    {
+        if (rect == null) return false;
+        return RectTransformUtility.RectangleContainsScreenPoint(rect, screenPos, null);
     }
 
     // -------------------------------------------------------
@@ -954,6 +1437,11 @@ public class PlotSequencer : MonoBehaviour
             var btn = tutorialButton.GetComponent<Button>();
             bool buttonClicked = false;
             btn.onClick.RemoveAllListeners();
+            if (target.Button != null)
+            {
+                var persistent = target.Button.onClick;
+                btn.onClick.AddListener(() => persistent.Invoke());
+            }
             btn.onClick.AddListener(() =>
             {
                 HideAll();
@@ -1029,21 +1517,21 @@ public class PlotSequencer : MonoBehaviour
             Vector2 canvasSize = new Vector2(sizeScreen.x / scaleX, sizeScreen.y / scaleY);
 
             buttonRect.sizeDelta = canvasSize;
-            highlighterRect.sizeDelta = canvasSize * 1.2f;
+            highlighterRect.sizeDelta = canvasSize * highlighterScaleMultiplier + highlighterExtraPadding;
         }
         else
         {
             buttonRect.position = target.RectTransform.position;
             buttonRect.sizeDelta = target.RectTransform.rect.size;
             highlighterRect.position = target.RectTransform.position;
-            highlighterRect.sizeDelta = target.RectTransform.rect.size * 1.2f;
+            highlighterRect.sizeDelta = target.RectTransform.rect.size * highlighterScaleMultiplier + highlighterExtraPadding;
         }
 
         buttonRect.pivot = new Vector2(0.5f, 0.5f);
         highlighterRect.pivot = new Vector2(0.5f, 0.5f);
 
         tutorialButton.SetActive(true);
-        highlighter.SetActive(true);
+        ShowHighlighter();
 
         // Move textbox away from target if it's visible
         if (textBoxPanel.activeSelf)
@@ -1068,16 +1556,16 @@ public class PlotSequencer : MonoBehaviour
             float scaleY = parentRect.lossyScale.y > 0 ? parentRect.lossyScale.y : 1f;
             Vector2 canvasSize = new Vector2(sizeScreen.x / scaleX, sizeScreen.y / scaleY);
 
-            highlighterRect.sizeDelta = canvasSize * 1.2f;
+            highlighterRect.sizeDelta = canvasSize * highlighterScaleMultiplier + highlighterExtraPadding;
         }
         else
         {
             highlighterRect.position = target.RectTransform.position;
-            highlighterRect.sizeDelta = target.RectTransform.rect.size * 1.2f;
+            highlighterRect.sizeDelta = target.RectTransform.rect.size * highlighterScaleMultiplier + highlighterExtraPadding;
         }
 
         highlighterRect.pivot = new Vector2(0.5f, 0.5f);
-        highlighter.SetActive(true);
+        ShowHighlighter();
 
         if (textBoxPanel.activeSelf)
             PositionTextBoxAwayFrom(centerScreen.y);
@@ -1118,4 +1606,32 @@ public class PlotSequencer : MonoBehaviour
     {
         Debug.Log($"Button is clicked");
     }
+}
+
+public class TutorialDragProxy : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    private Action<PointerEventData> _onBeginDrag;
+    private Action<PointerEventData> _onDrag;
+    private Action<PointerEventData> _onEndDrag;
+
+    public void Bind(
+        Action<PointerEventData> onBeginDrag,
+        Action<PointerEventData> onDrag,
+        Action<PointerEventData> onEndDrag)
+    {
+        _onBeginDrag = onBeginDrag;
+        _onDrag = onDrag;
+        _onEndDrag = onEndDrag;
+    }
+
+    public void Clear()
+    {
+        _onBeginDrag = null;
+        _onDrag = null;
+        _onEndDrag = null;
+    }
+
+    public void OnBeginDrag(PointerEventData eventData) => _onBeginDrag?.Invoke(eventData);
+    public void OnDrag(PointerEventData eventData) => _onDrag?.Invoke(eventData);
+    public void OnEndDrag(PointerEventData eventData) => _onEndDrag?.Invoke(eventData);
 }

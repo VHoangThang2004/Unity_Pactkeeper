@@ -56,7 +56,7 @@ public class C0_S5_Manager : MonoBehaviour
             next =>
             {
                 TutorialContext.Reset();
-                StoryClient.RouteToStoryScene(next);
+                StoryClient.RouteToStoryScene(next, config, this);
             },
             () =>
             {

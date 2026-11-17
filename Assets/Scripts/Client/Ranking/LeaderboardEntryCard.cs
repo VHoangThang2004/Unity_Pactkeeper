@@ -19,9 +19,14 @@ public class LeaderboardEntryCard : MonoBehaviour
 
     [Header("Visual Feedback")]
     [SerializeField] private Image    backgroundImage;   // Card background
+    [SerializeField] private Image    numberFrame;
+    [Tooltip("0 = Top 1, 1 = Top 2, 2 = Top 3, 3 = Rank 4+")]
+    [SerializeField] private Sprite[] backgroundSprites = new Sprite[4];
+    [Tooltip("0 = Top 1, 1 = Top 2, 2 = Top 3, 3 = Rank 4+")]
+    [SerializeField] private Sprite[] numberFrameSprites = new Sprite[4];
     [SerializeField] private Color    normalColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
     [SerializeField] private Color    highlightColor = new Color(0.3f, 0.3f, 0.4f, 0.9f);
-    [SerializeField] private Color    topThreeColor = new Color(0.4f, 0.3f, 0.1f, 0.9f); // Gold tint for top 3
+    [SerializeField] private Color    topThreeColor = new Color(0.4f, 0.3f, 0.1f, 0.9f);
 
     // ── Runtime ───────────────────────────────────────────────────────────────
 
@@ -59,14 +64,51 @@ public class LeaderboardEntryCard : MonoBehaviour
         if (scoreText != null)
             scoreText.text = entryData.score.ToString();
 
-        // Background color — highlight top 3
+        ApplyPlacementArt(entryData.position);
+    }
+
+    static int PlacementIndex(int position)
+    {
+        if (position <= 1) return 0;
+        if (position == 2) return 1;
+        if (position == 3) return 2;
+        return 3;
+    }
+
+    static Sprite SpriteAt(Sprite[] sprites, int index)
+    {
+        if (sprites == null || index < 0 || index >= sprites.Length) return null;
+        return sprites[index];
+    }
+
+    void ApplyPlacementArt(int position)
+    {
+        int index = PlacementIndex(position);
+        Sprite background = SpriteAt(backgroundSprites, index);
         if (backgroundImage != null)
         {
-            if (entryData.position <= 3)
-                backgroundImage.color = topThreeColor;
+            if (background != null)
+            {
+                backgroundImage.sprite = background;
+                backgroundImage.color = Color.white;
+            }
             else
-                backgroundImage.color = normalColor;
+            {
+                backgroundImage.color = position <= 3 ? topThreeColor : normalColor;
+            }
         }
+
+        Sprite frame = SpriteAt(numberFrameSprites, index);
+        if (numberFrame != null && frame != null)
+        {
+            numberFrame.sprite = frame;
+            numberFrame.color = Color.white;
+        }
+    }
+
+    bool HasPlacementSprite()
+    {
+        return data != null && SpriteAt(backgroundSprites, PlacementIndex(data.position)) != null;
     }
 
     // ── Click ─────────────────────────────────────────────────────────────────
@@ -81,13 +123,13 @@ public class LeaderboardEntryCard : MonoBehaviour
 
     public void OnPointerEnter()
     {
-        if (backgroundImage != null && data.position > 3)
+        if (backgroundImage != null && data.position > 3 && !HasPlacementSprite())
             backgroundImage.color = highlightColor;
     }
 
     public void OnPointerExit()
     {
-        if (backgroundImage != null && data.position > 3)
+        if (backgroundImage != null && data.position > 3 && !HasPlacementSprite())
             backgroundImage.color = normalColor;
     }
 }

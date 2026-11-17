@@ -14,6 +14,7 @@ public class MatchmakingManager : MonoBehaviour
     [SerializeField] private GameObject findMatchButton;
     [SerializeField] private GameObject cancelButton;
     [SerializeField] private GameObject matchFoundPanel;
+    [SerializeField] private MatchmakingTimerUI matchmakingTimer;
     [SerializeField] private TMP_Text player1Text;
     [SerializeField] private TMP_Text player2Text;
     [SerializeField] private TMP_Text vsText;
@@ -73,6 +74,7 @@ public class MatchmakingManager : MonoBehaviour
         findMatchButton.SetActive(false);
         cancelButton.SetActive(true);
         statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.FindingMatch);
+        matchmakingTimer?.StartTimer();
 
         pollingCoroutine = StartCoroutine(PollQueueStatus());
     }
@@ -90,6 +92,7 @@ public class MatchmakingManager : MonoBehaviour
         findMatchButton.SetActive(true);
         cancelButton.SetActive(false);
         statusText.text = Loc.Get(LocTables.MainMenu, LocKeys.Matchmaking.Cancelled);
+        matchmakingTimer?.StopTimer();
     }
 
     IEnumerator PollQueueStatus()
@@ -166,6 +169,7 @@ public class MatchmakingManager : MonoBehaviour
 
         findMatchButton.SetActive(false);
         cancelButton.SetActive(false);
+        matchmakingTimer?.StopTimer();
 
         if (matchFoundPanel != null)
         {

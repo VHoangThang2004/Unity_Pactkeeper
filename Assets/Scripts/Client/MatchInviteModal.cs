@@ -13,11 +13,11 @@ public class MatchInviteModal : MonoBehaviour
 
     [Header("Incoming Invite Modal")]
     [SerializeField] private GameObject incomingModal;
-    [SerializeField] private TMP_Text incomingPromptText;
-    [SerializeField] private TMP_Text incomingCountdownText;
-    [SerializeField] private Image incomingCountdownFill;
-    [SerializeField] private Button acceptButton;
-    [SerializeField] private Button declineButton;
+    [SerializeField] private TMP_Text   incomingPromptText;
+    [SerializeField] private TMP_Text   incomingCountdownText;
+    [SerializeField] private Slider     incomingCountdownSlider; // interactable = false, giảm dần 30→0
+    [SerializeField] private Button     acceptButton;
+    [SerializeField] private Button     declineButton;
 
     [Header("Outgoing Invite Modal")]
     [SerializeField] private GameObject outgoingModal;
@@ -133,19 +133,33 @@ public class MatchInviteModal : MonoBehaviour
 
     private IEnumerator IncomingCountdown(int totalSeconds)
     {
-        float remaining = totalSeconds;
-        while (remaining > 0)
+        float total     = totalSeconds;
+        float remaining = total;
+
+        // Khởi tạo slider: max = totalSeconds, value bắt đầu đầy
+        if (incomingCountdownSlider != null)
+        {
+            incomingCountdownSlider.minValue = 0f;
+            incomingCountdownSlider.maxValue = total;
+            incomingCountdownSlider.value    = total;
+        }
+
+        while (remaining > 0f)
         {
             if (incomingCountdownText != null)
                 incomingCountdownText.text = $"Expires in {Mathf.CeilToInt(remaining)}s";
-            if (incomingCountdownFill != null)
-                incomingCountdownFill.fillAmount = remaining / totalSeconds;
+
+            if (incomingCountdownSlider != null)
+                incomingCountdownSlider.value = remaining; // giảm dần từ total → 0
 
             yield return new WaitForSeconds(0.1f);
             remaining -= 0.1f;
         }
 
-        // Expired
+        // Hết giờ
+        if (incomingCountdownSlider != null)
+            incomingCountdownSlider.value = 0f;
+
         HideIncoming();
     }
 

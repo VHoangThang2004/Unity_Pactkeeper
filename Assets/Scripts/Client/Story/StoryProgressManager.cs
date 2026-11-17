@@ -109,6 +109,7 @@ public class StoryProgressManager : MonoBehaviour
     // ── Runtime ───────────────────────────────────────────────────────────────
 
     private List<ChapterDisplayData> chapters = new();
+    private StoryProgressDto _furthestProgress = null;
     private int  _maxCompletedChapterId = -1;
     private bool _isStartingMatch = false;
     private readonly List<GameObject> _popupSpawnedSceneItems = new();
@@ -212,20 +213,42 @@ public class StoryProgressManager : MonoBehaviour
     void BuildDisplayData(ChapterConfigDto[] configs, StoryProgressDto[] progresses)
     {
         chapters.Clear();
+        _furthestProgress = null;
         _maxCompletedChapterId = -1;
 
-        // Build lookup maps
-        var progressMap = new Dictionary<int, StoryProgressDto>();
-        foreach (var p in progresses)
+        // Find the single furthest progress record (1D linear progression)
+        if (progresses != null && progresses.Length > 0)
         {
-            progressMap[p.chapterId] = p;
-            if (p.isChapterCompleted && p.chapterId > _maxCompletedChapterId)
-                _maxCompletedChapterId = p.chapterId;
+            foreach (var p in progresses)
+            {
+                if (p == null) continue;
+                if (_furthestProgress == null ||
+                    p.chapterId > _furthestProgress.chapterId ||
+                    (p.chapterId == _furthestProgress.chapterId && p.sceneId > _furthestProgress.sceneId))
+                {
+                    _furthestProgress = p;
+                }
+            }
+        }
+
+        if (_furthestProgress != null)
+        {
+            _maxCompletedChapterId = _furthestProgress.isChapterCompleted
+                ? _furthestProgress.chapterId
+                : _furthestProgress.chapterId - 1;
         }
 
         var configMap = new Dictionary<int, ChapterConfigDto>();
         foreach (var cfg in configs)
+        {
+            if (cfg.scenes != null)
+            {
+                // Filter out non-PvE scenes (e.g. Cutscene 0.0 and Dialogue UI tutorials 0.4, 0.5, 0.6)
+                cfg.scenes = System.Array.FindAll(cfg.scenes, s =>
+                    s != null && string.Equals(s.type, "Battle", System.StringComparison.OrdinalIgnoreCase));
+            }
             configMap[cfg.chapterId] = cfg;
+        }
 
         // Determine how many chapters to show: max(backend configs, thumbnail sprites)
         int maxChapterToShow = 0;
@@ -242,7 +265,7 @@ public class StoryProgressManager : MonoBehaviour
         for (int chapterId = 0; chapterId < maxChapterToShow; chapterId++)
         {
             configMap.TryGetValue(chapterId, out var cfg);
-            progressMap.TryGetValue(chapterId, out var prog);
+            StoryProgressDto prog = null;
 
             ChapterStatus status;
             if (!previousCompleted)
@@ -255,17 +278,25 @@ public class StoryProgressManager : MonoBehaviour
                 status = ChapterStatus.Locked;
                 previousCompleted = false; // Lock all subsequent chapters
             }
-            else if (prog == null)
+            else if (_furthestProgress == null || chapterId > _furthestProgress.chapterId)
             {
                 status = ChapterStatus.NotStarted;
             }
-            else if (prog.isChapterCompleted)
+            else if (chapterId < _furthestProgress.chapterId || _furthestProgress.isChapterCompleted)
             {
                 status = ChapterStatus.Completed;
+                prog = new StoryProgressDto
+                {
+                    chapterId = chapterId,
+                    sceneId = int.MaxValue,
+                    isCompleted = true,
+                    isChapterCompleted = true
+                };
             }
             else
             {
                 status = ChapterStatus.InProgress;
+                prog = _furthestProgress;
             }
 
             // Next chapter is only unlocked if this one is completed
@@ -284,7 +315,7 @@ public class StoryProgressManager : MonoBehaviour
                 status     = status,
                 thumbnail  = thumb,
                 config     = cfg,      // null for coming soon chapters
-                progress   = prog,     // null for not-started or coming soon
+                progress   = prog,     // derived from furthest progress
             });
         }
     }
@@ -342,13 +373,24 @@ public class StoryProgressManager : MonoBehaviour
         bool isChapterAlreadyCompleted = targetChapterId <= _maxCompletedChapterId;
         PlayerSession.CanSkipOrExitStory = isChapterAlreadyCompleted;
 
+        // Replay is NOT playing Current Progress:
+        // Only when selecting the active incomplete Current Progress scene is IsStoryReplay = false.
+        bool isPlayingCurrentProgress =
+            _furthestProgress != null &&
+            !_furthestProgress.isChapterCompleted &&
+            targetChapterId == _furthestProgress.chapterId &&
+            ((!_furthestProgress.isCompleted && targetSceneId == _furthestProgress.sceneId) ||
+             (_furthestProgress.isCompleted && targetSceneId == _furthestProgress.sceneId + 1));
+
+        PlayerSession.IsStoryReplay = !isPlayingCurrentProgress;
+
         // Enforce technical requirement: manual chapter/scene selection ALWAYS sets autoResume = false
         PlayerSession.IsAutoResumed = false;
         PlayerSession.SelectedStoryChapterId = targetChapterId;
         PlayerSession.SelectedStorySceneId   = targetSceneId;
 
         Debug.Log($"[StoryProgressManager] Launching C{targetChapterId}_S{targetSceneId} " +
-                  $"(autoResume=false, CanSkipOrExit={PlayerSession.CanSkipOrExitStory})");
+                  $"(isReplay={PlayerSession.IsStoryReplay}, autoResume=false, CanSkipOrExit={PlayerSession.CanSkipOrExitStory})");
 
         bool requestSuccess = false;
         StoryMatchSelectData matchData = null;
@@ -446,7 +488,7 @@ public class StoryProgressManager : MonoBehaviour
 
         // Progress bar
         int totalScenes     = cfg?.scenes?.Length ?? 0;
-        int completedScenes = CalcCompletedScenes(prog, totalScenes);
+        int completedScenes = CalcCompletedScenes(prog, cfg?.scenes);
 
         if (popupProgressBar != null)
         {
@@ -463,19 +505,26 @@ public class StoryProgressManager : MonoBehaviour
         // Current scene label
         if (popupCurrentSceneLabel != null)
         {
-            if (prog != null && !prog.isChapterCompleted && cfg?.scenes != null)
-            {
-                var currentScene = System.Array.Find(cfg.scenes, s => s.sceneId == prog.sceneId);
-                string desc = currentScene != null ? currentScene.description : string.Empty;
-                string typeLabel = currentScene != null ? FormatSceneType(currentScene.type) : string.Empty;
-
-                popupCurrentSceneLabel.text = string.IsNullOrEmpty(desc)
-                    ? $"Scene {prog.sceneId} - {typeLabel}"
-                    : $"Scene {prog.sceneId} - {desc}";
-            }
-            else if (prog != null && prog.isChapterCompleted)
+            if (prog != null && (prog.isChapterCompleted || (totalScenes > 0 && completedScenes >= totalScenes)))
             {
                 popupCurrentSceneLabel.text = "All scenes completed!";
+            }
+            else if (prog != null && !prog.isChapterCompleted && cfg?.scenes != null)
+            {
+                var currentScene = System.Array.Find(cfg.scenes, s => s.sceneId == prog.sceneId)
+                                ?? System.Array.Find(cfg.scenes, s => s.sceneId >= prog.sceneId);
+                if (currentScene != null)
+                {
+                    string desc = currentScene.description;
+                    string typeLabel = FormatSceneType(currentScene.type);
+                    popupCurrentSceneLabel.text = string.IsNullOrEmpty(desc)
+                        ? $"Scene {currentScene.sceneId} - {typeLabel}"
+                        : $"Scene {currentScene.sceneId} - {desc}";
+                }
+                else
+                {
+                    popupCurrentSceneLabel.text = "Select a scene below to begin.";
+                }
             }
             else
             {
@@ -553,9 +602,10 @@ public class StoryProgressManager : MonoBehaviour
 
         if (data.progress != null)
         {
-            unlockedSceneHighWaterMark = data.progress.isCompleted
+            int rawMark = data.progress.isCompleted
                 ? data.progress.sceneId + 1
                 : data.progress.sceneId;
+            unlockedSceneHighWaterMark = Mathf.Max(firstSceneId, rawMark);
         }
 
         foreach (var scene in data.config.scenes)
@@ -606,12 +656,18 @@ public class StoryProgressManager : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    static int CalcCompletedScenes(StoryProgressDto prog, int totalScenes)
+    static int CalcCompletedScenes(StoryProgressDto prog, SceneConfigDto[] scenes)
     {
-        if (prog == null)              return 0;
-        if (prog.isChapterCompleted)   return totalScenes;
+        if (prog == null || scenes == null || scenes.Length == 0) return 0;
+        if (prog.isChapterCompleted) return scenes.Length;
 
-        return prog.isCompleted ? prog.sceneId + 1 : prog.sceneId;
+        int completed = 0;
+        foreach (var s in scenes)
+        {
+            if (prog.sceneId > s.sceneId || (prog.sceneId == s.sceneId && prog.isCompleted))
+                completed++;
+        }
+        return completed;
     }
 
     static string FormatSceneType(string type)

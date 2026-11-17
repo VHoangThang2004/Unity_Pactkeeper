@@ -22,7 +22,9 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: "Two raiders flank the glade - one west at (-2, 0) and a marksman far east at (3, 0). A Druid commands the battlefield itself to crush scattered foes at once!"
+    text: Two raiders flank the glade - one west at (-2, 0) and a marksman far east
+      at (3, 0). A Druid commands the battlefield itself to crush scattered foes
+      at once!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -40,13 +42,15 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "After casting Pull!, Nature's Force empowers your Druid's next Thorns Attack to strike EVERY non-ally cell across her entire left-and-right weapon span!"
+    text: After casting Pull!, Nature's Force empowers your Druid's next Thorns Attack
+      to strike EVERY non-ally cell across her entire left-and-right weapon span!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: "Druids step exclusively onto upper or lower rows - never straight sideways. Move north onto (0, 0) between both foes!"
+    text: Druids step exclusively onto upper or lower rows - never straight sideways.
+      Move north onto (0, 0) between both foes!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -70,7 +74,9 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: "Pull! is a Half-Instant skill - for 1 SP, it immediately drags a distant foe 2 or 3 tiles away right beside your Druid and awakens Nature's Force for her next turn!"
+    text: Pull! is a Half-Instant skill - for 1 SP, it immediately drags a distant
+      foe 2 or 3 tiles away right beside your Druid and awakens Nature's Force for
+      her next turn!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -94,7 +100,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 1
-    text: "Both foes now stand inside your horizontal thorn span - at (-2, 0) and (1, 0) - with Nature's Force glowing! Select your Druid."
+    text: Both foes now stand inside your horizontal thorn span - at (-2, 0) and
+      (1, 0) - with Nature's Force glowing! Select your Druid.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -115,10 +122,11 @@ MonoBehaviour:
     text: Confirm and sweep both flanks at once!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
-    delay: 4.5
+    delay: 0
     targetWaitTimeout: 10
   - type: 5
-    text: "The forest answers those who command space. Prepare yourself, Varek - the Corrupt Tactician awaits."
+    text: The forest answers those who command space. Prepare yourself, Varek - the
+      Corrupt Tactician awaits.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

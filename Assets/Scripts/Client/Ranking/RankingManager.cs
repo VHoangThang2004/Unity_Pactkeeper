@@ -35,6 +35,8 @@ public class RankingManager : MonoBehaviour
         public string username;
         public int    level;
         public int    score;            // Rating/MMR
+        public int    rankWins;
+        public int    rankLosses;
         public int    rankTier;         // 0-6 (maps to rank badges), -1 = Unranked
         public string rankName;         // "Beginner", "Master", etc.
         public Sprite rankBadgeSprite;  // Assigned from rankBadgeSprites array
@@ -46,7 +48,6 @@ public class RankingManager : MonoBehaviour
         public int    tier;             // 0-6, -1 = Unranked
         public string rankName;         // English name
         public int    minScore;         // Score required to reach this tier
-        public string loreDescription;  // Story description (hidden until player completes story)
         public Sprite badgeSprite;
     }
 
@@ -61,19 +62,6 @@ public class RankingManager : MonoBehaviour
         "Warlord",                  // 4
         "Grand Commander",          // 5
         "Union"                     // 6
-    };
-
-    // ── Rank tier lore descriptions (from Pactkeeper story) ───────────────────
-
-    private static readonly string[] RankTierLore = new string[]
-    {
-        "Varek in his youth, growing up amidst war, with nothing in hand.",                                     // 0 - Beginner
-        "Varek gradually becomes battle-hardened, accumulating combat experience.",                             // 1 - Master
-        "At 22 years old, becomes the leader of a small warband.",                                              // 2 - Captain
-        "The moment of life and death — forging a pact with the gods, receiving the power of Time Sight.",     // 3 - Pactkeeper
-        "Using Time Sight to win continuously, beginning to recruit legendary generals from defeated tribes.",  // 4 - Warlord
-        "The warband has gathered all 6 classes of champions, nearly invincible across East and West.",        // 5 - Grand Commander
-        "Unified the entire Thiên Nhãn Giới into one — fulfilling the divine pact."                            // 6 - Union
     };
 
     // ── Rank tier score thresholds (100 LP per tier) ─────────────────────────
@@ -108,6 +96,8 @@ public class RankingManager : MonoBehaviour
     [SerializeField] private TMP_Text       detailRankNameText;     // "Pactkeeper", "Beginner", etc.
     [SerializeField] private TMP_Text       detailScoreText;        // Score display in frame
     [SerializeField] private TMP_Text       detailPositionText;     // "#1 / #15 / #234"
+    [SerializeField] private TMP_Text       detailWinrateText;
+    [SerializeField] private TMP_Text       detailMatchCountText;
 
     [Header("Rank Badge Sprites (7 tiers + Unranked)")]
     [Tooltip("Index 0 = Beginner, 1 = Master, ..., 6 = Union")]
@@ -125,9 +115,6 @@ public class RankingManager : MonoBehaviour
     [SerializeField] private Transform  rankTierCardContainer;  // HorizontalLayoutGroup Content
     [SerializeField] private GameObject rankTierCardPrefab;
     [SerializeField] private Button     rankTierPopupCloseButton;
-
-    [Header("Story Completion Check")]
-    [SerializeField] private bool hasCompletedStory = false;  // Set via API check (future)
 
     // ── Runtime ───────────────────────────────────────────────────────────────
 
@@ -221,6 +208,8 @@ public class RankingManager : MonoBehaviour
                 username        = cp.username,
                 level           = cp.level,
                 score           = cp.rating,
+                rankWins        = cp.rankWins,
+                rankLosses      = cp.rankLosses,
                 rankTier        = cp.rankTier,
                 rankName        = GetRankTierName(cp.rankTier),
                 rankBadgeSprite = GetRankBadgeSprite(cp.rankTier),
@@ -285,6 +274,8 @@ public class RankingManager : MonoBehaviour
                     username        = currentPlayerProfile.username,
                     level           = currentPlayerProfile.level,
                     score           = currentPlayerProfile.rating,
+                    rankWins        = currentPlayerProfile.rankWins,
+                    rankLosses      = currentPlayerProfile.rankLosses,
                     rankTier        = tier,
                     rankName        = GetRankTierName(tier),
                     rankBadgeSprite = GetRankBadgeSprite(tier),
@@ -304,6 +295,8 @@ public class RankingManager : MonoBehaviour
                 username        = item.username,
                 level           = item.level,
                 score           = item.rating,
+                rankWins        = item.rankWins,
+                rankLosses      = item.rankLosses,
                 rankTier        = tier,
                 rankName        = !string.IsNullOrEmpty(item.rankName) ? item.rankName : GetRankTierName(tier),
                 rankBadgeSprite = GetRankBadgeSprite(tier),
@@ -349,11 +342,13 @@ public class RankingManager : MonoBehaviour
         return RankTierNamesEN[tier];
     }
 
-    string GetRankTierLore(int tier)
+    int CurrentDetailRankTier()
     {
-        if (tier < 0 || tier >= RankTierLore.Length)
-            return "";
-        return RankTierLore[tier];
+        if (selectedEntry != null)
+            return selectedEntry.rankTier;
+        if (currentPlayerProfile != null)
+            return currentPlayerProfile.rankTier;
+        return -1;
     }
 
     // ── Render leaderboard ────────────────────────────────────────────────────
@@ -427,6 +422,15 @@ public class RankingManager : MonoBehaviour
         // Position
         if (detailPositionText != null)
             detailPositionText.text = $"#{entry.position}";
+
+        int totalMatches = entry.rankWins + entry.rankLosses;
+        int winratePct = totalMatches > 0
+            ? Mathf.RoundToInt((float)entry.rankWins / totalMatches * 100f)
+            : 0;
+        if (detailMatchCountText != null)
+            detailMatchCountText.text = totalMatches.ToString();
+        if (detailWinrateText != null)
+            detailWinrateText.text = $"{winratePct}%";
     }
 
     // ── Button callbacks ──────────────────────────────────────────────────────
@@ -472,7 +476,6 @@ public class RankingManager : MonoBehaviour
             tier            = -1,
             rankName        = "Unranked",
             minScore        = 0,
-            loreDescription = "No rank yet. Start playing to earn your rating!",
             badgeSprite     = unrankedBadgeSprite
         });
 
@@ -484,7 +487,6 @@ public class RankingManager : MonoBehaviour
                 tier            = i,
                 rankName        = RankTierNamesEN[i],
                 minScore        = RankTierMinScores[i],
-                loreDescription = RankTierLore[i],
                 badgeSprite     = GetRankBadgeSprite(i)
             });
         }
@@ -498,7 +500,7 @@ public class RankingManager : MonoBehaviour
         if (card != null)
         {
             // Pass story completion status to card
-            card.Setup(data, hasCompletedStory);
+            card.Setup(data, CurrentDetailRankTier());
         }
     }
 }

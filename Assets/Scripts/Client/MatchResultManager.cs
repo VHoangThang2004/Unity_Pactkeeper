@@ -81,7 +81,17 @@ public class MatchResultManager : MonoBehaviour
         ForfeitPlayerId = data.result.forfeitPlayerId;
         ResultLoaded = true;
 
-        Debug.Log($"[MatchResult] Loaded — winner={WinnerId} isWinner={IsWinner} instants={TotalInstants} isForfeit={IsForfeit}");
+        Debug.Log($"[MatchResult] Loaded — " +
+                  $"winnerId={WinnerId} | " +
+                  $"myPlayerId={PlayerSession.PlayerId} | " +
+                  $"isWinner={IsWinner} | " +
+                  $"isForfeit={IsForfeit} | " +
+                  $"forfeitPlayerId={ForfeitPlayerId} | " +
+                  $"instants={TotalInstants}");
+
+        // Safety check: nếu PlayerId trống → không xác định được thắng/thua
+        if (string.IsNullOrEmpty(PlayerSession.PlayerId))
+            Debug.LogError("[MatchResult] PlayerSession.PlayerId is EMPTY — IsWinner will be incorrect!");
 
         ApplyResultBackground(IsWinner);
 
@@ -94,9 +104,13 @@ public class MatchResultManager : MonoBehaviour
             }
             else if (IsForfeit)
             {
-                resultText.text = IsWinner
-                    ? $"Victory\nOpponent forfeited ({TotalInstants} instants)"
-                    : $"Defeat\nYou forfeited ({TotalInstants} instants)";
+                // forfeitPlayerId = player who forfeited (loser)
+                // IsWinner = true  → opponent forfeited → I win
+                // IsWinner = false → I forfeited → I lose
+                bool iForfeited = !IsWinner;
+                resultText.text = iForfeited
+                    ? $"Defeat\nYou forfeited ({TotalInstants} instants)"
+                    : $"Victory\nOpponent forfeited ({TotalInstants} instants)";
             }
             else
             {

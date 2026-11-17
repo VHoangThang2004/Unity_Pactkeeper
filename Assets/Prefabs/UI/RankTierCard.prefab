@@ -171,10 +171,7 @@ MonoBehaviour:
   rankBadgeImage: {fileID: 4948367570193341643}
   rankNameText: {fileID: 6556237097422184759}
   minScoreText: {fileID: 3517643494499792269}
-  loreDescriptionText: {fileID: 3048819062075299029}
   loreLockedOverlay: {fileID: 556429910243185296}
-  lockedTextColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  unlockedTextColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &2316244066109691899
 GameObject:
   m_ObjectHideFlags: 0

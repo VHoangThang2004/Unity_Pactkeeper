@@ -68,11 +68,13 @@ public class UnitConfigManager : MonoBehaviour
 
     // Overlay mode: 8_ loaded additively on top of the match during formation prep
     public static bool IsOverlay { get; set; }
+    public bool IsBusy { get; private set; } = true;
     [Header("Overlay")]
     [SerializeField] private GameObject mainMenuButton; // hidden in overlay mode
 
     void Awake()
     {
+        IsBusy = true;
         if (!IsOverlay) return;
         // The match scene already owns camera, audio listener and event system
         foreach (var root in gameObject.scene.GetRootGameObjects())
@@ -101,6 +103,7 @@ public class UnitConfigManager : MonoBehaviour
 
     IEnumerator FullInitSequence(LoadingScreen screen)
     {
+        IsBusy = true;
         screen?.Show();
 
         yield return FetchPlayerProfile();
@@ -110,6 +113,7 @@ public class UnitConfigManager : MonoBehaviour
         PopulateAllSlots();
 
         screen?.Hide();
+        IsBusy = false;
     }
 
     public IEnumerator ReinitEquipment()
@@ -171,6 +175,11 @@ public class UnitConfigManager : MonoBehaviour
         var profile = JsonUtility.FromJson<PlayerProfileResponse>(request.downloadHandler.text);
         List<OwnedUnitDto> ownedUnits = profile.ownedUnits != null ? new List<OwnedUnitDto>(profile.ownedUnits) : new List<OwnedUnitDto>();
         CurrentUnitDataWithUnlockedClass = ownedUnits.Find(u => u.ownedUnitId == PlayerSession.SelectedOwnedUnitId);
+        if (CurrentUnitDataWithUnlockedClass == null && ownedUnits.Count > 0)
+        {
+            CurrentUnitDataWithUnlockedClass = ownedUnits[0];
+            PlayerSession.SelectedOwnedUnitId = ownedUnits[0].ownedUnitId;
+        }
     }
 
     IEnumerator FetchUnitConfig()
@@ -191,13 +200,14 @@ public class UnitConfigManager : MonoBehaviour
 
         var prefab = unitPrefabRegistry.Get(CurrentUnit.uId);
         Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
+        int[] unlockedClasses = CurrentUnitDataWithUnlockedClass != null ? CurrentUnitDataWithUnlockedClass.unlockedClassIds : null;
         currentUnitContainer.Setup(
                         CurrentUnit.ownedUnitId,
                         CurrentUnit.uId,
                         portrait,
                         unitPrefabRegistry.GetName(CurrentUnit.uId),
-                        CurrentUnitDataWithUnlockedClass.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(CurrentUnitDataWithUnlockedClass.unlockedClassIds[0]) : null,
-                        CurrentUnitDataWithUnlockedClass.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(CurrentUnitDataWithUnlockedClass.unlockedClassIds[1]) : null,
+                        unlockedClasses != null && unlockedClasses.Length > 0 ? classLibrary.GetFullFrame(unlockedClasses[0]) : null,
+                        unlockedClasses != null && unlockedClasses.Length > 1 ? classLibrary.GetHalfFrame(unlockedClasses[1]) : null,
                         false);
 
 
@@ -433,12 +443,22 @@ public class UnitConfigManager : MonoBehaviour
     public void OnClickReturnMainMenu()
     {
         if (IsOverlay) { CloseOverlay(); return; }
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[UnitConfig] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.mainMenuScene);
     }
 
     public void OnClickReturnUnitList()
     {
         if (IsOverlay) { CloseOverlay(); return; }
+        if (TutorialContext.IsActive)
+        {
+            Debug.Log("[UnitConfig] Tutorial active - deferring scene transition to StoryScene manager.");
+            return;
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.unitListScene);
     }
 

@@ -227,6 +227,9 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
 
     public void HandleAdvanceTutorialPhase(int newSceneId, bool forceCleanReset = false)
     {
+        if (backendClient != null && newSceneId > 0)
+            backendClient.SceneId = newSceneId;
+
         if (!session.AdvanceTutorialPhase(newSceneId, spawnManager, forceCleanReset))
             return;
 
