@@ -579,6 +579,14 @@ public class PlotSequencer : MonoBehaviour
         while (_currentIndex < plot.nodes.Count)
         {
             var node = plot.nodes[_currentIndex];
+            if (!string.IsNullOrEmpty(node.slideId) && HasShownChapter0IntroSlides)
+            {
+                _currentIndex++;
+                continue;
+            }
+            if (string.IsNullOrEmpty(node.slideId) && node.type != PlotNodeType.AutoAdvance)
+                HasShownChapter0IntroSlides = false;
+
             yield return StartCoroutine(RunNode(node));
             blockerPanel.SetActive(true);
             bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
