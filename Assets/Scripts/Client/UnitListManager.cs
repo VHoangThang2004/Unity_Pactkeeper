@@ -44,6 +44,7 @@ public class UnitListManager : MonoBehaviour
 
         PopulateFormationSlots();
         PopulateUnitList();
+        EnsureBenchDropZone();
 
         stateMachine.Init(formationSlots, unitListItems);
 
@@ -79,23 +80,13 @@ public class UnitListManager : MonoBehaviour
         {
             var slot = formationSlots[i];
             slot.Init(stateMachine);
+            AttachDrag(slot);
 
             if (i < formationUIds.Count)
             {
                 OwnedUnitDto unit = ownedUnits.Find(u => u.unitDefinitionUId == formationUIds[i]);
                 if (unit != null)
-                {
-                    var prefab = unitPrefabRegistry.Get(unit.unitDefinitionUId);
-                    Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-                    slot.Setup(
-                        unit.ownedUnitId,
-                        unit.unitDefinitionUId,
-                        portrait,
-                        unitPrefabRegistry.GetName(unit.unitDefinitionUId),
-                        unit.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
-                        unit.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
-                        true);
-                }
+                    BindUnit(slot, unit, true);
                 else
                     slot.SetEmpty();
             }
@@ -124,16 +115,8 @@ public class UnitListManager : MonoBehaviour
             var go = Instantiate(unitContainerPrefab, unitListContainer);
             var container = go.GetComponent<UnitContainer>();
             container.Init(stateMachine);
-            var prefab = unitPrefabRegistry.Get(unit.unitDefinitionUId);
-            Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
-            container.Setup(
-                        unit.ownedUnitId,
-                        unit.unitDefinitionUId,
-                        portrait,
-                        unitPrefabRegistry.GetName(unit.unitDefinitionUId),
-                        unit.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
-                        unit.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
-                        false);
+            BindUnit(container, unit, false);
+            AttachDrag(container);
             unitListItems.Add(container);
         }
     }
@@ -148,6 +131,45 @@ public class UnitListManager : MonoBehaviour
         stateMachine.UpdateUnitListItems(unitListItems);
     }
 
+    public void BindUnit(UnitContainer container, OwnedUnitDto unit, bool asFormationSlot)
+    {
+        var prefab = unitPrefabRegistry.Get(unit.unitDefinitionUId);
+        Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;
+        container.Setup(
+            unit.ownedUnitId,
+            unit.unitDefinitionUId,
+            portrait,
+            unitPrefabRegistry.GetName(unit.unitDefinitionUId),
+            unit.unlockedClassIds != null && unit.unlockedClassIds.Length > 0 ? classLibrary.GetFullFrame(unit.unlockedClassIds[0]) : null,
+            unit.unlockedClassIds != null && unit.unlockedClassIds.Length > 1 ? classLibrary.GetHalfFrame(unit.unlockedClassIds[1]) : null,
+            asFormationSlot);
+    }
+
+    void AttachDrag(UnitContainer container)
+    {
+        if (container != null && container.GetComponent<UnitListDragHandler>() == null)
+            container.gameObject.AddComponent<UnitListDragHandler>();
+    }
+
+    void EnsureBenchDropZone()
+    {
+        if (unitListContainer == null) return;
+
+        MarkBench(unitListContainer.gameObject);
+        var scroll = unitListContainer.GetComponentInParent<UnityEngine.UI.ScrollRect>();
+        if (scroll == null) return;
+
+        MarkBench(scroll.gameObject);
+        if (scroll.viewport != null)
+            MarkBench(scroll.viewport.gameObject);
+    }
+
+    static void MarkBench(GameObject go)
+    {
+        if (go != null && go.GetComponent<UnitListDropCatcher>() == null)
+            go.AddComponent<UnitListDropCatcher>();
+    }
+
     public void OnClickReturnMainMenu()
     {
         if (TutorialContext.IsActive)
@@ -157,9 +179,10 @@ public class UnitListManager : MonoBehaviour
         }
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneConfig.mainMenuScene);
     }
+
     public IEnumerator SaveFormationToBackend(List<int> uIds)
     {
         yield return FormationApi.SaveFormation(clientBackendConfig, uIds);
-        StartCoroutine(InitSequence()); // reload formation from backend to ensure UI consistency
+        StartCoroutine(InitSequence());
     }
 }

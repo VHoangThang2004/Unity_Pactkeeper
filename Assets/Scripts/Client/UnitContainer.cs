@@ -15,15 +15,17 @@ public class UnitContainer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI unitNameText;
     [Header("State Panels")]
     [SerializeField] private GameObject defaultPanel;
-    [SerializeField] private GameObject formationSlotStatePanel; // configure/remove/change unit buttons
-    [SerializeField] private GameObject changeUnitOptionPanel;   // enter team button
-    [SerializeField] private GameObject emptySlotStatePanel;     // select unit button
+    [SerializeField] private GameObject emptySlotStatePanel;
 
     public string ownedUnitId { get; private set; } = string.Empty;
     public int uId { get; private set; } = -1;
     public bool isEmpty => string.IsNullOrEmpty(ownedUnitId);
 
+    public bool suppressNextClick;
+
     private UnitListStateMachine sm;
+
+    public UnitListStateMachine StateMachine => sm;
 
     public void Init(UnitListStateMachine stateMachine)
     {
@@ -92,38 +94,27 @@ public class UnitContainer : MonoBehaviour
             ShowEmptySlotState();
             return;
         }
-        defaultPanel?.SetActive(true);
-        formationSlotStatePanel?.SetActive(false);
-        changeUnitOptionPanel?.SetActive(false);
-        emptySlotStatePanel?.SetActive(false);
+        SetPanel(defaultPanel, true);
+        SetPanel(emptySlotStatePanel, false);
         Debug.Log($"[UnitContainer] ShowDefault called for slotIndex: {slotIndex}");
-    }
-
-    public void ShowFormationSlotState()
-    {
-        defaultPanel?.SetActive(false);
-        formationSlotStatePanel?.SetActive(true);
-        changeUnitOptionPanel?.SetActive(false);
-        emptySlotStatePanel?.SetActive(false);
-        Debug.Log($"[UnitContainer] ShowFormationSlotState called for slotIndex: {slotIndex}");
-    }
-
-    public void ShowChangeUnitOption()
-    {
-        defaultPanel?.SetActive(false);
-        formationSlotStatePanel?.SetActive(false);
-        changeUnitOptionPanel?.SetActive(true);
-        emptySlotStatePanel?.SetActive(false);
-        Debug.Log($"[UnitContainer] ShowChangeUnitOption called for slotIndex: {slotIndex}");
     }
 
     public void ShowEmptySlotState()
     {
-        defaultPanel?.SetActive(false);
-        formationSlotStatePanel?.SetActive(false);
-        changeUnitOptionPanel?.SetActive(false);
-        emptySlotStatePanel?.SetActive(true);
+        if (emptySlotStatePanel == null)
+        {
+            SetPanel(defaultPanel, true);
+            return;
+        }
+        SetPanel(defaultPanel, false);
+        SetPanel(emptySlotStatePanel, true);
         Debug.Log($"[UnitContainer] ShowEmptySlotState called for slotIndex: {slotIndex}");
+    }
+
+    static void SetPanel(GameObject panel, bool active)
+    {
+        if (panel != null)
+            panel.SetActive(active);
     }
 
     // -------------------------------------------------------
@@ -132,6 +123,12 @@ public class UnitContainer : MonoBehaviour
 
     public void OnClick()
     {
+        if (suppressNextClick)
+        {
+            suppressNextClick = false;
+            return;
+        }
+
         Debug.Log($"[UnitContainer] OnClick called for slotIndex: {slotIndex}, isFormationSlot: {isFormationSlot}, isEmpty: {isEmpty}, state {sm?.currentState}");
         sm?.OnContainerClicked(this);
     }
