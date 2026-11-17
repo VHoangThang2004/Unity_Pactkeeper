@@ -38,15 +38,16 @@ public class PanelAnimator : MonoBehaviour
     private CanvasGroup   _cg;
     private RectTransform _rect;
     private Coroutine     _current;
+    private Vector2       _restPosition;
+    private bool          _restCaptured;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     void Awake()
     {
         _rect = GetComponent<RectTransform>();
-        _cg   = GetComponent<CanvasGroup>(); // guaranteed by [RequireComponent]
-
-        // Snap hidden immediately so panel is invisible but GO stays active
+        _cg   = GetComponent<CanvasGroup>();
+        CaptureRest();
         SnapHidden();
     }
 
@@ -67,6 +68,7 @@ public class PanelAnimator : MonoBehaviour
             _rect = GetComponent<RectTransform>();
             _cg   = GetComponent<CanvasGroup>();
         }
+        CaptureRest();
 
         StopCurrent();
         SnapHidden();
@@ -91,6 +93,7 @@ public class PanelAnimator : MonoBehaviour
             _rect = GetComponent<RectTransform>();
             _cg   = GetComponent<CanvasGroup>();
         }
+        CaptureRest();
 
         if (_cg == null)
         {
@@ -120,6 +123,7 @@ public class PanelAnimator : MonoBehaviour
             _rect = GetComponent<RectTransform>();
             _cg   = GetComponent<CanvasGroup>();
         }
+        CaptureRest();
 
         StopCurrent();
         SnapHidden();
@@ -136,7 +140,14 @@ public class PanelAnimator : MonoBehaviour
         _cg.alpha          = 0f;
         _cg.interactable   = false;
         _cg.blocksRaycasts = false;
-        if (_rect != null) _rect.anchoredPosition = Vector2.zero;
+        if (_rect != null) _rect.anchoredPosition = _restPosition;
+    }
+
+    void CaptureRest()
+    {
+        if (_restCaptured || _rect == null) return;
+        _restPosition = _rect.anchoredPosition;
+        _restCaptured = true;
     }
 
     void StopCurrent()
@@ -150,7 +161,7 @@ public class PanelAnimator : MonoBehaviour
 
     IEnumerator AnimateIn(AnimationType type, float duration, Action onComplete)
     {
-        Vector2 startPos = StartOffset(type);
+        Vector2 startPos = _restPosition + StartOffset(type);
         float elapsed = 0f;
 
         _cg.alpha = 0f;
@@ -162,18 +173,19 @@ public class PanelAnimator : MonoBehaviour
             float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
             _cg.alpha = t;
             if (_rect != null && type != AnimationType.Fade)
-                _rect.anchoredPosition = Vector2.LerpUnclamped(startPos, Vector2.zero, t);
+                _rect.anchoredPosition = Vector2.LerpUnclamped(startPos, _restPosition, t);
             yield return null;
         }
 
         _cg.alpha = 1f;
-        if (_rect != null) _rect.anchoredPosition = Vector2.zero;
+        if (_rect != null) _rect.anchoredPosition = _restPosition;
         onComplete?.Invoke();
     }
 
     IEnumerator AnimateOut(AnimationType type, float duration, Action onComplete)
     {
-        Vector2 endPos = EndOffset(type);
+        Vector2 endPos = _restPosition + EndOffset(type);
+        Vector2 from = _rect != null ? _rect.anchoredPosition : _restPosition;
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -182,7 +194,7 @@ public class PanelAnimator : MonoBehaviour
             float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
             _cg.alpha = 1f - t;
             if (_rect != null && type != AnimationType.Fade)
-                _rect.anchoredPosition = Vector2.LerpUnclamped(Vector2.zero, endPos, t);
+                _rect.anchoredPosition = Vector2.LerpUnclamped(from, endPos, t);
             yield return null;
         }
 

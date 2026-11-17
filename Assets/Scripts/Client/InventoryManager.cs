@@ -1,68 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-using TMPro;
-using System.Collections.Generic;
+using UnityEngine.UI;
 
-/// <summary>
-/// Scene manager for 12_Inventory.
-/// Can run as standalone scene or as tab in MainMenu.
-/// </summary>
 public class InventoryManager : MonoBehaviour
 {
     [Header("Panel")]
     [SerializeField] private GameObject panel;
     [SerializeField] private Button closeButton;
-    [SerializeField] private Button backButton;  // Back to MainMenu (standalone mode)
+    [SerializeField] private Button backButton;
 
     [Header("Config")]
     [SerializeField] private BackendConfig config;
     [SerializeField] private SceneConfig sceneConfig;
+    [SerializeField] private bool isStandaloneScene = false;
 
-    [Header("Scene Mode")]
-    [SerializeField] private bool isStandaloneScene = false;  // Set true for scene 12_Inventory
-
-    [Header("Left Panel - Item List")]
-    [SerializeField] private Transform itemListContainer;
+    [Header("Item Panel")]
+    [SerializeField] private Transform weaponListContainer;
+    [SerializeField] private Transform trinketListContainer;
     [SerializeField] private GameObject inventoryItemPrefab;
-    [SerializeField] private GameObject emptyStatePanel;
 
     [Header("Pagination")]
-    [SerializeField] private int      itemsPerPage = 35; // 5 rows × 7 cols
-    [SerializeField] private Button   prevButton;
-    [SerializeField] private Button   nextButton;
+    [SerializeField] private int itemsPerPage = 16;
+    [SerializeField] private Button prevButton;
+    [SerializeField] private Button nextButton;
     [SerializeField] private TMP_Text pageLabel;
 
-    [Header("Filter Buttons")]
-    [SerializeField] private Button filterAllButton;
-    [SerializeField] private Button filterWeaponsButton;
-    [SerializeField] private Button filterTrinketsButton;
+    [Header("Detail - Command")]
+    [SerializeField] private GameObject commandPanel;
+    [SerializeField] private TMP_Text commandText;
 
-    [Header("Right Panel - Item Detail")]
-    [SerializeField] private GameObject detailPanel;
-    [SerializeField] private GameObject detailEmptyState;
+    [Header("Detail - Name and type")]
+    [SerializeField] private GameObject nameTypePanel;
     [SerializeField] private Image detailIcon;
-    [SerializeField] private TMP_Text detailNameText;
-    [SerializeField] private TMP_Text detailTypeText;
+    [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private Button detailButton;
+    [SerializeField] private Button nameTypeCloseButton;
+
+    [Header("Detail - Stats")]
+    [SerializeField] private GameObject statPanel;
     [SerializeField] private TMP_Text detailStatText;
+    [SerializeField] private Button statCloseButton;
 
     [Header("Registries")]
     [SerializeField] private WeaponDefinitionRegistry weaponRegistry;
     [SerializeField] private TrinketDefinitionRegistry trinketRegistry;
 
-    private List<InventoryItemData> allItems = new List<InventoryItemData>();
-    private List<InventoryItemData> filteredItems = new List<InventoryItemData>();
-    private InventoryItem selectedItem = null;
-    private ItemFilter currentFilter = ItemFilter.All;
-    private int currentPage = 0;
+    const string WelcomeHasItems = "Welcome to inventory. Please select an item to view details";
+    const string WelcomeEmpty = "Welcome to inventory. There is no item in your inventory at all";
 
-    private enum ItemFilter
-    {
-        All,
-        Weapon,
-        Trinket
-    }
+    readonly List<InventoryItemData> weapons = new();
+    readonly List<InventoryItemData> trinkets = new();
+
+    InventoryItem selectedItem;
+    InventoryItemData selectedData;
+    int currentPage;
 
     public class InventoryItemData
     {
@@ -83,103 +78,71 @@ public class InventoryManager : MonoBehaviour
     void Awake()
     {
         if (closeButton != null)
-            closeButton.onClick.AddListener(OnCloseClick);
-
+            closeButton.onClick.AddListener(Close);
         if (backButton != null)
-            backButton.onClick.AddListener(OnBackClick);
-
-        if (filterAllButton != null)
-            filterAllButton.onClick.AddListener(() => SetFilter(ItemFilter.All));
-        if (filterWeaponsButton != null)
-            filterWeaponsButton.onClick.AddListener(() => SetFilter(ItemFilter.Weapon));
-        if (filterTrinketsButton != null)
-            filterTrinketsButton.onClick.AddListener(() => SetFilter(ItemFilter.Trinket));
+            backButton.onClick.AddListener(Close);
+        if (detailButton != null)
+            detailButton.onClick.AddListener(OnClickShowStats);
+        if (nameTypeCloseButton != null)
+            nameTypeCloseButton.onClick.AddListener(OnClickCloseNameType);
+        if (statCloseButton != null)
+            statCloseButton.onClick.AddListener(OnClickCloseStat);
         if (prevButton != null)
             prevButton.onClick.AddListener(PrevPage);
         if (nextButton != null)
             nextButton.onClick.AddListener(NextPage);
 
-        // Standalone scene mode — auto-open on Start
+        HideDetailImmediate(nameTypePanel);
+        HideDetailImmediate(statPanel);
+        HideDetailImmediate(commandPanel);
+
         if (isStandaloneScene)
         {
             if (!PlayerSession.IsLoggedIn)
             {
-                Debug.LogWarning("[InventoryManager] Not logged in, returning to MainMenu");
                 SceneManager.LoadScene(sceneConfig.mainMenuScene);
                 return;
             }
 
-            // Init registries trước khi load data
-            if (weaponRegistry  != null) weaponRegistry.Init();
+            if (weaponRegistry != null) weaponRegistry.Init();
             if (trinketRegistry != null) trinketRegistry.Init();
-
             if (panel != null) panel.SetActive(true);
             LoadInventory();
         }
         else
         {
-            // Tab mode — hide by default
-            HidePanel();
+            if (panel != null) panel.SetActive(false);
         }
     }
 
     void OnDestroy()
     {
-        if (closeButton != null)
-            closeButton.onClick.RemoveListener(OnCloseClick);
-
-        if (backButton != null)
-            backButton.onClick.RemoveListener(OnBackClick);
-
-        if (filterAllButton != null)
-            filterAllButton.onClick.RemoveAllListeners();
-        if (filterWeaponsButton != null)
-            filterWeaponsButton.onClick.RemoveAllListeners();
-        if (filterTrinketsButton != null)
-            filterTrinketsButton.onClick.RemoveAllListeners();
-        if (prevButton != null)
-            prevButton.onClick.RemoveListener(PrevPage);
-        if (nextButton != null)
-            nextButton.onClick.RemoveListener(NextPage);
+        if (closeButton != null) closeButton.onClick.RemoveListener(Close);
+        if (backButton != null) backButton.onClick.RemoveListener(Close);
+        if (detailButton != null) detailButton.onClick.RemoveListener(OnClickShowStats);
+        if (nameTypeCloseButton != null) nameTypeCloseButton.onClick.RemoveListener(OnClickCloseNameType);
+        if (statCloseButton != null) statCloseButton.onClick.RemoveListener(OnClickCloseStat);
+        if (prevButton != null) prevButton.onClick.RemoveListener(PrevPage);
+        if (nextButton != null) nextButton.onClick.RemoveListener(NextPage);
     }
 
     public void Open()
     {
-        // Initialize registries
-        if (weaponRegistry != null)
-            weaponRegistry.Init();
-        if (trinketRegistry != null)
-            trinketRegistry.Init();
-
-        if (panel != null)
-            panel.SetActive(true);
+        if (weaponRegistry != null) weaponRegistry.Init();
+        if (trinketRegistry != null) trinketRegistry.Init();
+        if (panel != null) panel.SetActive(true);
         currentPage = 0;
+        selectedItem = null;
+        selectedData = null;
         LoadInventory();
     }
 
     public void Close()
     {
         if (isStandaloneScene)
-        {
-            // Standalone mode — return to MainMenu
             SceneManager.LoadScene(sceneConfig.mainMenuScene);
-        }
-        else
-        {
-            // Tab mode — hide panel
-            HidePanel();
-        }
-    }
-
-    void OnCloseClick()
-    {
-        Close();
-    }
-
-    void OnBackClick()
-    {
-        // Same as close for standalone mode
-        Close();
+        else if (panel != null)
+            panel.SetActive(false);
     }
 
     void LoadInventory()
@@ -187,271 +150,274 @@ public class InventoryManager : MonoBehaviour
         StartCoroutine(LoadInventoryCoroutine());
     }
 
-    void HidePanel()
-    {
-        if (panel != null)
-            panel.SetActive(false);
-    }
-
-    System.Collections.IEnumerator LoadInventoryCoroutine()
+    IEnumerator LoadInventoryCoroutine()
     {
         using var request = UnityWebRequest.Get($"{config.backendUrl}/api/PlayerProfile");
         config.SetHeaders(request, PlayerSession.Token);
         yield return request.SendWebRequest();
 
+        weapons.Clear();
+        trinkets.Clear();
+        selectedItem = null;
+        selectedData = null;
+
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError("[Inventory] Failed to load inventory: " + request.error);
-            ShowEmptyState();
+            RenderLists();
+            ShowWelcome();
             yield break;
         }
 
-        Debug.Log("[Inventory] API Response: " + request.downloadHandler.text);
         var profile = JsonUtility.FromJson<PlayerProfileResponse>(request.downloadHandler.text);
-        Debug.Log("[Inventory] Weapons count: " + (profile.ownedWeapons != null ? profile.ownedWeapons.Length : 0));
-        Debug.Log("[Inventory] Trinkets count: " + (profile.ownedTrinkets != null ? profile.ownedTrinkets.Length : 0));
-        ProcessInventoryData(profile);
-    }
-
-    void ProcessInventoryData(PlayerProfileResponse profile)
-    {
-        allItems.Clear();
-
-        // Process weapons
         if (profile.ownedWeapons != null)
         {
             foreach (var weapon in profile.ownedWeapons)
             {
-                Debug.Log($"[Inventory] Processing weapon: {weapon.weaponDefinitionId}");
-                var weaponDef = GetWeaponDefinition(weapon.weaponDefinitionId);
-                if (weaponDef != null)
+                var def = weaponRegistry != null ? weaponRegistry.GetDefinition(weapon.weaponDefinitionId) : null;
+                if (def == null) continue;
+                weapons.Add(new InventoryItemData
                 {
-                    Debug.Log($"[Inventory] Weapon name: {weaponDef.name}");
-                    allItems.Add(new InventoryItemData
-                    {
-                        ownedId = weapon.ownedWeaponId,
-                        definitionId = weapon.weaponDefinitionId,
-                        type = InventoryItemData.ItemType.Weapon,
-                        name = weaponDef.name,
-                        icon = weaponRegistry?.GetIcon(weapon.weaponDefinitionId),
-                        stats = weaponDef.statModifiers
-                    });
-                }
-                else
-                {
-                    Debug.LogError($"[Inventory] Weapon definition not found for ID: {weapon.weaponDefinitionId}");
-                }
+                    ownedId = weapon.ownedWeaponId,
+                    definitionId = weapon.weaponDefinitionId,
+                    type = InventoryItemData.ItemType.Weapon,
+                    name = def.name,
+                    icon = weaponRegistry.GetIcon(weapon.weaponDefinitionId),
+                    stats = def.statModifiers
+                });
             }
         }
 
-        // Process trinkets
         if (profile.ownedTrinkets != null)
         {
             foreach (var trinket in profile.ownedTrinkets)
             {
-                Debug.Log($"[Inventory] Processing trinket: {trinket.trinketDefinitionId}");
-                var trinketDef = GetTrinketDefinition(trinket.trinketDefinitionId);
-                if (trinketDef != null)
+                var def = trinketRegistry != null ? trinketRegistry.GetDefinition(trinket.trinketDefinitionId) : null;
+                if (def == null) continue;
+                trinkets.Add(new InventoryItemData
                 {
-                    Debug.Log($"[Inventory] Trinket name: {trinketDef.name}");
-                    allItems.Add(new InventoryItemData
-                    {
-                        ownedId = trinket.ownedTrinketId,
-                        definitionId = trinket.trinketDefinitionId,
-                        type = InventoryItemData.ItemType.Trinket,
-                        name = trinketDef.name,
-                        icon = trinketRegistry?.GetIcon(trinket.trinketDefinitionId),
-                        stats = trinketDef.statModifiers
-                    });
-                }
-                else
-                {
-                    Debug.LogError($"[Inventory] Trinket definition not found for ID: {trinket.trinketDefinitionId}");
-                }
+                    ownedId = trinket.ownedTrinketId,
+                    definitionId = trinket.trinketDefinitionId,
+                    type = InventoryItemData.ItemType.Trinket,
+                    name = def.name,
+                    icon = trinketRegistry.GetIcon(trinket.trinketDefinitionId),
+                    stats = def.statModifiers
+                });
             }
         }
 
-        Debug.Log($"[Inventory] Total items loaded: {allItems.Count}");
-        ApplyFilter();
+        weapons.Sort((a, b) => a.definitionId.CompareTo(b.definitionId));
+        trinkets.Sort((a, b) => a.definitionId.CompareTo(b.definitionId));
+        currentPage = 0;
+        RenderLists();
+        ShowWelcome();
     }
 
-    void ApplyFilter()
+    void RenderLists()
     {
-        filteredItems.Clear();
+        int pages = TotalPages();
+        currentPage = Mathf.Clamp(currentPage, 0, Mathf.Max(0, pages - 1));
+        FillPage(weaponListContainer, weapons);
+        FillPage(trinketListContainer, trinkets);
 
-        foreach (var item in allItems)
+        if (pageLabel != null)
+            pageLabel.text = pages > 0 ? $"Page {currentPage + 1} / {pages}" : string.Empty;
+        if (prevButton != null)
+            prevButton.interactable = currentPage > 0;
+        if (nextButton != null)
+            nextButton.interactable = currentPage < pages - 1;
+    }
+
+    int TotalPages()
+    {
+        int perPage = Mathf.Max(1, itemsPerPage);
+        int weaponPages = Mathf.CeilToInt(weapons.Count / (float)perPage);
+        int trinketPages = Mathf.CeilToInt(trinkets.Count / (float)perPage);
+        return Mathf.Max(weaponPages, trinketPages);
+    }
+
+    void FillPage(Transform container, List<InventoryItemData> source)
+    {
+        if (container == null) return;
+        for (int i = container.childCount - 1; i >= 0; i--)
+            Destroy(container.GetChild(i).gameObject);
+
+        int perPage = Mathf.Max(1, itemsPerPage);
+        int start = currentPage * perPage;
+        int end = Mathf.Min(start + perPage, source.Count);
+        for (int i = start; i < end; i++)
         {
-            switch (currentFilter)
+            if (inventoryItemPrefab == null) return;
+            var itemObj = Instantiate(inventoryItemPrefab, container);
+            var view = itemObj.GetComponent<InventoryItem>();
+            if (view == null) continue;
+            view.Setup(source[i], this);
+            if (selectedData != null && source[i].ownedId == selectedData.ownedId)
             {
-                case ItemFilter.All:
-                    filteredItems.Add(item);
-                    break;
-                case ItemFilter.Weapon:
-                    if (item.type == InventoryItemData.ItemType.Weapon)
-                        filteredItems.Add(item);
-                    break;
-                case ItemFilter.Trinket:
-                    if (item.type == InventoryItemData.ItemType.Trinket)
-                        filteredItems.Add(item);
-                    break;
+                selectedItem = view;
+                view.SetSelected(true);
             }
         }
-
-        RenderItemList();
-    }
-
-    void SetFilter(ItemFilter filter)
-    {
-        currentFilter = filter;
-        currentPage   = 0;
-        ApplyFilter();
-    }
-
-    void RenderItemList()
-    {
-        ClearItemList();
-
-        if (filteredItems.Count == 0)
-        {
-            ShowEmptyState();
-            UpdatePageLabel(0, 0);
-            return;
-        }
-
-        HideEmptyState();
-
-        int totalPages = Mathf.CeilToInt((float)filteredItems.Count / itemsPerPage);
-        currentPage = Mathf.Clamp(currentPage, 0, Mathf.Max(0, totalPages - 1));
-
-        int startIndex = currentPage * itemsPerPage;
-        int endIndex   = Mathf.Min(startIndex + itemsPerPage, filteredItems.Count);
-
-        for (int i = startIndex; i < endIndex; i++)
-        {
-            var itemObj       = Instantiate(inventoryItemPrefab, itemListContainer);
-            var itemComponent = itemObj.GetComponent<InventoryItem>();
-            if (itemComponent != null)
-                itemComponent.Setup(filteredItems[i], this);
-        }
-
-        UpdatePageLabel(currentPage + 1, totalPages);
     }
 
     void PrevPage()
     {
         if (currentPage <= 0) return;
         currentPage--;
-        RenderItemList();
+        RenderLists();
     }
 
     void NextPage()
     {
-        int totalPages = Mathf.CeilToInt((float)filteredItems.Count / itemsPerPage);
-        if (currentPage >= totalPages - 1) return;
+        if (currentPage >= TotalPages() - 1) return;
         currentPage++;
-        RenderItemList();
-    }
-
-    void UpdatePageLabel(int current, int total)
-    {
-        if (pageLabel  != null)
-            pageLabel.text = total > 0 ? $"Page {current} / {total}" : string.Empty;
-        if (prevButton != null)
-            prevButton.interactable = current > 1;
-        if (nextButton != null)
-            nextButton.interactable = current < total;
-    }
-
-    void ClearItemList()
-    {
-        foreach (Transform child in itemListContainer)
-        {
-            Destroy(child.gameObject);
-        }
-    }
-
-    void ShowEmptyState()
-    {
-        if (emptyStatePanel != null)
-            emptyStatePanel.SetActive(true);
-    }
-
-    void HideEmptyState()
-    {
-        if (emptyStatePanel != null)
-            emptyStatePanel.SetActive(false);
+        RenderLists();
     }
 
     public void OnItemSelected(InventoryItem item, InventoryItemData itemData)
     {
-        // Deselect previous
         if (selectedItem != null)
             selectedItem.SetSelected(false);
 
-        // Select new
         selectedItem = item;
+        selectedData = itemData;
         selectedItem.SetSelected(true);
-
-        // Show detail
-        ShowItemDetail(itemData);
+        ShowNameType(itemData);
     }
 
-    void ShowItemDetail(InventoryItemData itemData)
+    public void OnClickShowStats()
     {
-        Debug.Log("[Inventory] Showing detail for item: " + itemData.name);
-
-        if (detailPanel != null)
-            detailPanel.SetActive(true);
-        if (detailEmptyState != null)
-            detailEmptyState.SetActive(false);
-
-        if (detailIcon != null)
-            detailIcon.sprite = itemData.icon;
-        if (detailNameText != null)
-        {
-            detailNameText.text = itemData.name;
-            Debug.Log("[Inventory] Detail name set to: " + itemData.name);
-        }
-        else
-        {
-            Debug.LogError("[Inventory] detailNameText is null!");
-        }
-
-        if (detailTypeText != null)
-            detailTypeText.text = itemData.type.ToString();
+        if (selectedData == null) return;
 
         if (detailStatText != null)
+            detailStatText.text = DescribeStats(selectedData);
+
+        RiseOpen(statPanel);
+    }
+
+    public void OnClickCloseNameType()
+    {
+        FadeClose(nameTypePanel);
+        FadeClose(statPanel);
+        RiseOpen(commandPanel);
+    }
+
+    public void OnClickCloseStat()
+    {
+        FadeClose(statPanel);
+    }
+
+    void ShowWelcome()
+    {
+        bool empty = weapons.Count == 0 && trinkets.Count == 0;
+        if (commandText != null)
+            commandText.text = empty ? WelcomeEmpty : WelcomeHasItems;
+
+        HideDetailImmediate(nameTypePanel);
+        HideDetailImmediate(statPanel);
+        RiseOpen(commandPanel);
+    }
+
+    void ShowNameType(InventoryItemData itemData)
+    {
+        if (detailIcon != null)
         {
-            var stats = itemData.stats;
-            detailStatText.text = $"HP: {stats.maxHP}\n" +
-                                  $"Speed: {stats.speed}\n" +
-                                  $"Skill Point: {stats.maxSkillPoint}\n" +
-                                  $"Damage: {stats.damageMultiplier}\n" +
-                                  $"Defense: {stats.damageReduction}";
+            detailIcon.sprite = itemData.icon;
+            detailIcon.enabled = itemData.icon != null;
         }
+        if (descriptionText != null)
+            descriptionText.text = $"This is {itemData.name}. {DescribeItem(itemData)}";
+
+        RiseClose(commandPanel);
+        HideDetailImmediate(statPanel);
+        RiseOpen(nameTypePanel);
     }
 
-    void HideDetailPanel()
+    void RiseClose(GameObject target)
     {
-        if (detailPanel != null)
-            detailPanel.SetActive(false);
-        if (detailEmptyState != null)
-            detailEmptyState.SetActive(true);
-        selectedItem = null;
+        if (target == null) return;
+        var anim = target.GetComponent<PanelAnimator>();
+        if (anim != null && !anim.IsVisible) return;
+        if (anim != null)
+        {
+            anim.openAnimation = PanelAnimator.AnimationType.Rise;
+            anim.closeAnimation = PanelAnimator.AnimationType.Rise;
+        }
+        this.ClosePanel(target);
     }
 
-    // Helper methods to get definitions
-    private WeaponDefinitionDto GetWeaponDefinition(int weaponId)
+    static string DescribeItem(InventoryItemData item)
     {
-        if (weaponRegistry != null)
-            return weaponRegistry.GetDefinition(weaponId);
-        return null;
+        if (item.type == InventoryItemData.ItemType.Weapon &&
+            WeaponBlurbs.TryGetValue(item.definitionId, out var weaponLine))
+            return weaponLine;
+        if (item.type == InventoryItemData.ItemType.Trinket &&
+            TrinketBlurbs.TryGetValue(item.definitionId, out var trinketLine))
+            return trinketLine;
+        return "It doesn't have a story written down yet.";
     }
 
-    private TrinketDefinitionDto GetTrinketDefinition(int trinketId)
+    static string DescribeStats(InventoryItemData item)
     {
-        if (trinketRegistry != null)
-            return trinketRegistry.GetDefinition(trinketId);
-        return null;
+        var stats = item.stats;
+        if (stats == null)
+            return $"This is {item.name}'s Stat: nothing readable.";
+
+        return $"This is {item.name}'s Stat: HP {stats.maxHP}, Speed {stats.speed}, Skill Point {stats.maxSkillPoint}, Damage {stats.damageMultiplier}, Defense {stats.damageReduction}.";
+    }
+
+    void FadeClose(GameObject target)
+    {
+        if (target == null) return;
+        var anim = target.GetComponent<PanelAnimator>();
+        if (anim != null && !anim.IsVisible) return;
+        if (anim != null)
+            anim.closeAnimation = PanelAnimator.AnimationType.Fade;
+        this.ClosePanel(target);
+    }
+
+    static readonly Dictionary<int, string> WeaponBlurbs = new()
+    {
+        { 1, "It is a short blade made for a quick step in and a quicker step out." },
+        { 2, "It is a sword paired with a shield, built for holding the line." },
+        { 3, "It is a heavy chopper. One good swing can split a shield." },
+        { 4, "It is a crossbow. You loose a bolt and let the distance do the work." },
+        { 5, "It is a holy book. The pages mend as much as they strike." },
+        { 6, "It is a druid's staff, still warm with wild roots and old magic." },
+        { 7, "It is a keener dagger. The edge finds the gaps in armor." },
+        { 8, "It is a kite shield, broad enough to cover a friend." },
+        { 9, "It is a war axe. Slow to lift, ugly when it lands." },
+        { 10, "It is a compound bow, drawn tight for a cleaner shot." },
+        { 11, "It is a sacred tome. The ink still glows when you open it." },
+        { 12, "It is an ancient staff. The wood remembers older battles than you do." }
+    };
+
+    static readonly Dictionary<int, string> TrinketBlurbs = new()
+    {
+        { 1, "They are high heels. You step lighter, and a little louder." },
+        { 2, "It is a monocle. Squint through it and the field gets clearer." },
+        { 3, "They are strong boots. The ground feels a bit more solid under you." },
+        { 4, "It is a spyglass. Far targets stop looking so far." },
+        { 5, "They are steel heels. Same strut, with more metal in the step." },
+        { 6, "It is a jeweled monocle. Fancy glass, sharper eyes." },
+        { 7, "They are iron boots. Heavy, but they keep you planted." },
+        { 8, "It is a brass spyglass. A little tarnished, still true." }
+    };
+
+    void RiseOpen(GameObject target)
+    {
+        if (target == null) return;
+        var anim = target.GetComponent<PanelAnimator>();
+        if (anim != null)
+        {
+            anim.openAnimation = PanelAnimator.AnimationType.Rise;
+            anim.closeAnimation = PanelAnimator.AnimationType.Rise;
+        }
+        this.OpenPanel(target);
+    }
+
+    void HideDetailImmediate(GameObject target)
+    {
+        this.HidePanelImmediate(target);
     }
 }
