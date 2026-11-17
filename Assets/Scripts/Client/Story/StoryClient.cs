@@ -36,7 +36,7 @@ public static class StoryClient
 
     // -------------------------------------------------------
     // POST /api/story/progress/complete
-    // Marks current scene as completed (with optional chapterId/sceneId idempotency guard).
+    // Marks current scene as completed (with chapterId/sceneId guard so replays never advance Current Progress).
     // -------------------------------------------------------
 
     public static IEnumerator CompleteCurrentScene(
@@ -46,9 +46,18 @@ public static class StoryClient
         int? chapterId = null,
         int? sceneId = null)
     {
-        using var req = UnityWebRequest.PostWwwForm(
-            $"{config.backendUrl}/api/story/progress/complete", "");
+        TryResolveActiveScene(ref chapterId, ref sceneId);
+
+        string json = (chapterId.HasValue && sceneId.HasValue)
+            ? $"{{\"chapterId\":{chapterId.Value},\"sceneId\":{sceneId.Value}}}"
+            : "{}";
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+
+        using var req = new UnityWebRequest($"{config.backendUrl}/api/story/progress/complete", "POST");
+        req.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        req.downloadHandler = new DownloadHandlerBuffer();
         config.SetHeaders(req, PlayerSession.Token);
+        req.SetRequestHeader("Content-Type", "application/json");
         yield return req.SendWebRequest();
 
         if (req.result != UnityWebRequest.Result.Success)
@@ -60,6 +69,29 @@ public static class StoryClient
 
         var data = JsonUtility.FromJson<StoryProgressData>(req.downloadHandler.text);
         onSuccess(data);
+    }
+
+    private static void TryResolveActiveScene(ref int? chapterId, ref int? sceneId)
+    {
+        if (chapterId.HasValue && sceneId.HasValue)
+            return;
+
+        string sceneName = SceneManager.GetActiveScene().name;
+        int sIdx = sceneName.IndexOf("_S", System.StringComparison.OrdinalIgnoreCase);
+        if (sceneName.StartsWith("C", System.StringComparison.OrdinalIgnoreCase) && sIdx > 1 &&
+            int.TryParse(sceneName.Substring(1, sIdx - 1), out int parsedCh) &&
+            int.TryParse(sceneName.Substring(sIdx + 2), out int parsedSc))
+        {
+            chapterId ??= parsedCh;
+            sceneId ??= parsedSc;
+            return;
+        }
+
+        if (PlayerSession.SelectedStoryChapterId >= 0 && PlayerSession.SelectedStorySceneId >= 0)
+        {
+            chapterId ??= PlayerSession.SelectedStoryChapterId;
+            sceneId ??= PlayerSession.SelectedStorySceneId;
+        }
     }
 
     // -------------------------------------------------------
