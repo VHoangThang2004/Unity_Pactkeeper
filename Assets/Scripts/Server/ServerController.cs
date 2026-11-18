@@ -30,19 +30,20 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         {
             if (trialErrorCount > 10 || totalErrorCount > 50)
             {
-                Debug.LogError("[ServerController] Too many errors — shutting down!");
-                yield return StartCoroutine(Shutdown());
+                yield return StartCoroutine(Shutdown("too many errors"));
                 yield break;
             }
             yield return new WaitForSeconds(60f);
             trialErrorCount = 0;
         }
     }
-    IEnumerator Shutdown()
+    // Cancels the match. Never quits: the backend stops this process once the report lands (or as an orphan / at the limit).
+    IEnumerator Shutdown(string reason)
     {
-        NetworkManager.Singleton.Shutdown();
-        yield return StartCoroutine(backendClient.ReportCancelled());
-        Application.Quit(); // never linger holding the port, even if the report failed
+        Debug.LogError($"[ServerController] Ending match: {reason} " +
+                       $"(trialErrors={trialErrorCount} totalErrors={totalErrorCount})");
+        backendClient.EndMatch(reason);
+        yield break;
     }
 
 
@@ -137,8 +138,8 @@ public class ServerController : MonoBehaviour, ISyncedBridgeServer
         {
             if (Time.time - waitStart > clientInitTimeout)
             {
-                Debug.LogError($"[ServerController] Clients didn't initialize within {clientInitTimeout}s — shutting down.");
-                yield return StartCoroutine(Shutdown());
+                yield return StartCoroutine(Shutdown(
+                    $"only {clientsReceivedInit}/{session.matchConfig.requiredClients} clients initialized within {clientInitTimeout}s"));
                 yield break;
             }
             yield return new WaitForSeconds(1f);

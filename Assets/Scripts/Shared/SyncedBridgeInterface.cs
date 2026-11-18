@@ -2,6 +2,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 // Shared interfaces that SyncedBridge can safely see
+// Lets Shared code (ServerBootstrap) end the match without referencing the Server assembly (ServerBackendClient)
+public interface IMatchEnder
+{
+    void EndMatch(string reason);
+}
+
 public interface ISyncedBridgeServer
 {
     void HandleAllInitialStateRequest(ulong senderClientId);

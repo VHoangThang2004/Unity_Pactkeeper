@@ -53,7 +53,8 @@ public class ServerTimelineManager : MonoBehaviour
     private int Token = 0;
     public int CurrentToken => Token;
     private float _matchStartTime = 0f;
-    private const float MAX_MATCH_DURATION = 3600f; // 60 minutes
+    // 55 min: must report before the backend's 60-min record limit (counted from record creation, i.e. incl. lobby + prep)
+    private const float MAX_MATCH_DURATION = 3300f;
     private const float DISCONNECT_TIMEOUT = 60f;   // 60s after all clients disconnect
 
     // -------------------------------------------------------
@@ -960,14 +961,14 @@ public class ServerTimelineManager : MonoBehaviour
         }
     }
 
-    // Cancel match if running longer than 60 minutes
+    // End the match once it has run MAX_MATCH_DURATION
     IEnumerator MatchTimeoutWatchdog()
     {
         while (session.TimelineState != ServerSessionState.Finished)
         {
             if (Time.time - _matchStartTime >= MAX_MATCH_DURATION)
             {
-                Debug.Log("[Timeline] Match exceeded 60 minutes — ending match.");
+                Debug.Log($"[Timeline] Match exceeded {MAX_MATCH_DURATION / 60f:0} minutes — ending match.");
                 yield return StartCoroutine(EndMatch());
                 yield break;
             }
@@ -1075,36 +1076,31 @@ public class ServerTimelineManager : MonoBehaviour
             }
         };
 
-        // Notify backend before shutting down
+        // Report to the backend. The server never quits itself — ReportResult shuts the network down,
+        // reports, and waits for the backend to stop this process.
         var backendClient = session.backendClient;
-        if (backendClient != null)
+        if (backendClient == null)
         {
-            if (backendClient.Mode == "story")
-            {
-                // Player is always team 0 in story mode. Player wins if AI team (1) is wiped and winner is player
-                bool playerWon = winnerId == teams[0].playerId && team1Units == 0 && team0Units > 0;
-                string storyPlayerId = teams[0].playerId;
-
-                if (playerWon)
-                    yield return StartCoroutine(backendClient.ReportBattleComplete(storyPlayerId));
-                else
-                    Debug.Log("[Timeline] Story battle not won — no progress reported.");
-
-                yield return StartCoroutine(backendClient.ReportResult(
-                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId));
-            }
-            else
-            {
-                yield return StartCoroutine(backendClient.ReportResult(
-                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId));
-            }
+            Debug.LogError("[Timeline] No backend client — match result can't be reported.");
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+                NetworkManager.Singleton.Shutdown();
+            yield break;
         }
 
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-            NetworkManager.Singleton.Shutdown();
+        if (backendClient.Mode == "story")
+        {
+            // Player is always team 0 in story mode. Player wins if AI team (1) is wiped and winner is player
+            bool playerWon = winnerId == teams[0].playerId && team1Units == 0 && team0Units > 0;
+            string storyPlayerId = teams[0].playerId;
 
-        if (isPvE)
-            Application.Quit();
+            if (playerWon)
+                yield return StartCoroutine(backendClient.ReportBattleComplete(storyPlayerId));
+            else
+                Debug.Log("[Timeline] Story battle not won — no progress reported.");
+        }
+
+        backendClient.ReportResult(
+            winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId);
     }
 
 }
