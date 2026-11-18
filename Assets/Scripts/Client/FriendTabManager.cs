@@ -23,8 +23,10 @@ public class FriendTabManager : MonoBehaviour
     [Header("Navigation Sub-Tabs")]
     [SerializeField] private Button friendsTabButton;
     [SerializeField] private Button requestsTabButton;
+    [SerializeField] private Button searchTabButton;
     [SerializeField] private GameObject friendsView;
     [SerializeField] private GameObject requestsView;
+    [SerializeField] private GameObject searchView;
 
     [Header("Friend List UI")]
     [SerializeField] private Transform friendsContainer;
@@ -38,7 +40,13 @@ public class FriendTabManager : MonoBehaviour
     [SerializeField] private GameObject requestsBadge;
     [SerializeField] private TMP_Text requestsBadgeCountText;
 
-    [Header("Add Friend UI")]
+    [Header("Search Friend UI")]
+    [SerializeField] private TMP_InputField searchInput;
+    [SerializeField] private Transform searchContainer;
+    [SerializeField] private TMP_Text searchStatusText;
+    [SerializeField] private TMP_Text emptySearchText;
+
+    [Header("Add Friend UI (Legacy/Optional)")]
     [SerializeField] private TMP_InputField addFriendInput;
     [SerializeField] private Button addFriendButton;
     [SerializeField] private TMP_Text addFriendStatusText;
@@ -55,6 +63,9 @@ public class FriendTabManager : MonoBehaviour
     private readonly Dictionary<string, FriendProfile> friendsCache = new();
     private readonly Dictionary<string, GameObject> friendItemViews = new();
     private readonly List<GameObject> requestItemViews = new();
+    private readonly List<GameObject> searchItemViews = new();
+
+    private Coroutine searchDebounceCoroutine;
 
     // Pending removal — stored while waiting for player to confirm
     private string pendingRemovePlayerId;
@@ -70,6 +81,7 @@ public class FriendTabManager : MonoBehaviour
         Instance = this;
 
         EnsureLobbyHubClient();
+        InitializeSearchTabUI();
 
         if (openButton != null) openButton.onClick.AddListener(Open);
         if (closeButton != null) closeButton.onClick.AddListener(Close);
@@ -77,6 +89,9 @@ public class FriendTabManager : MonoBehaviour
 
         if (friendsTabButton != null) friendsTabButton.onClick.AddListener(SwitchToFriendsTab);
         if (requestsTabButton != null) requestsTabButton.onClick.AddListener(SwitchToRequestsTab);
+        if (searchTabButton != null) searchTabButton.onClick.AddListener(SwitchToSearchTab);
+
+        if (searchInput != null) searchInput.onValueChanged.AddListener(OnSearchInputChanged);
 
         if (confirmYesButton != null) confirmYesButton.onClick.AddListener(OnConfirmYes);
         if (confirmNoButton  != null) confirmNoButton.onClick.AddListener(OnConfirmNo);
@@ -108,6 +123,78 @@ public class FriendTabManager : MonoBehaviour
         }
     }
 
+    private void InitializeSearchTabUI()
+    {
+        // 1. Setup Search Tab Button if missing
+        if (searchTabButton == null && requestsTabButton != null)
+        {
+            var btnObj = Instantiate(requestsTabButton.gameObject, requestsTabButton.transform.parent);
+            btnObj.name = "SearchButton";
+
+            var rt = btnObj.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                // Place it right next to RequestsButton
+                rt.anchoredPosition = new Vector2(283.92f, rt.anchoredPosition.y);
+            }
+
+            // Remove any request notification badge on the cloned button
+            var badge = btnObj.transform.Find("HasRequest");
+            if (badge != null) Destroy(badge.gameObject);
+
+            var label = btnObj.GetComponentInChildren<TMP_Text>();
+            if (label != null) label.text = "Search";
+
+            searchTabButton = btnObj.GetComponent<Button>();
+        }
+
+        // 2. Setup Search View & Container if missing
+        if (searchView == null && friendsView != null)
+        {
+            var viewObj = Instantiate(friendsView, friendsView.transform.parent);
+            viewObj.name = "SearchView";
+            searchView = viewObj;
+
+            var scroll = viewObj.GetComponent<ScrollRect>();
+            if (scroll != null && scroll.content != null)
+            {
+                searchContainer = scroll.content;
+                for (int i = searchContainer.childCount - 1; i >= 0; i--)
+                {
+                    Destroy(searchContainer.GetChild(i).gameObject);
+                }
+            }
+
+            emptySearchText = viewObj.GetComponentInChildren<TMP_Text>();
+            if (emptySearchText != null)
+            {
+                emptySearchText.text = "Type a username or ID to search";
+                emptySearchText.gameObject.SetActive(true);
+            }
+
+            searchView.SetActive(false);
+        }
+
+        // 3. Setup Search Input
+        if (searchInput == null && addFriendInput != null)
+        {
+            searchInput = addFriendInput;
+            var inputRt = searchInput.GetComponent<RectTransform>();
+            if (inputRt != null)
+            {
+                inputRt.anchoredPosition = new Vector2(0f, 350f);
+                inputRt.sizeDelta = new Vector2(600f, 50f);
+            }
+
+            var placeholder = searchInput.placeholder as TMP_Text;
+            if (placeholder != null) placeholder.text = "Search by username or ID...";
+        }
+
+        // 4. Hide legacy add button & status
+        if (addFriendButton != null) addFriendButton.gameObject.SetActive(false);
+        if (addFriendStatusText != null) addFriendStatusText.gameObject.SetActive(false);
+    }
+
     void Start()
     {
         EnsureLobbyHubClient();
@@ -137,6 +224,9 @@ public class FriendTabManager : MonoBehaviour
 
         if (friendsTabButton != null) friendsTabButton.onClick.RemoveListener(SwitchToFriendsTab);
         if (requestsTabButton != null) requestsTabButton.onClick.RemoveListener(SwitchToRequestsTab);
+        if (searchTabButton != null) searchTabButton.onClick.RemoveListener(SwitchToSearchTab);
+
+        if (searchInput != null) searchInput.onValueChanged.RemoveListener(OnSearchInputChanged);
 
         if (confirmYesButton != null) confirmYesButton.onClick.RemoveListener(OnConfirmYes);
         if (confirmNoButton  != null) confirmNoButton.onClick.RemoveListener(OnConfirmNo);
@@ -192,13 +282,39 @@ public class FriendTabManager : MonoBehaviour
     {
         if (friendsView != null) friendsView.SetActive(true);
         if (requestsView != null) requestsView.SetActive(false);
+        if (searchView != null) searchView.SetActive(false);
+        if (searchInput != null) searchInput.gameObject.SetActive(false);
     }
 
     public void SwitchToRequestsTab()
     {
         if (friendsView != null) friendsView.SetActive(false);
         if (requestsView != null) requestsView.SetActive(true);
+        if (searchView != null) searchView.SetActive(false);
+        if (searchInput != null) searchInput.gameObject.SetActive(false);
         StartCoroutine(FetchPendingRequestsList());
+    }
+
+    public void SwitchToSearchTab()
+    {
+        if (friendsView != null) friendsView.SetActive(false);
+        if (requestsView != null) requestsView.SetActive(false);
+        if (searchView != null) searchView.SetActive(true);
+        if (searchInput != null) searchInput.gameObject.SetActive(true);
+
+        if (searchInput != null && !string.IsNullOrWhiteSpace(searchInput.text))
+        {
+            OnSearchInputChanged(searchInput.text);
+        }
+        else
+        {
+            ClearSearchResults();
+            if (emptySearchText != null)
+            {
+                emptySearchText.text = "Type a username or ID to search";
+                emptySearchText.gameObject.SetActive(true);
+            }
+        }
     }
 
     // -------------------------------------------------------
@@ -432,6 +548,247 @@ public class FriendTabManager : MonoBehaviour
         {
             declineBtn.onClick.RemoveAllListeners();
             declineBtn.onClick.AddListener(() => StartCoroutine(DeclineFriendRequest(req.requestId)));
+        }
+    }
+
+    // -------------------------------------------------------
+    // UI Rendering: Search Results
+    // -------------------------------------------------------
+
+    private void OnSearchInputChanged(string text)
+    {
+        if (searchDebounceCoroutine != null)
+        {
+            StopCoroutine(searchDebounceCoroutine);
+            searchDebounceCoroutine = null;
+        }
+
+        string trimmed = text?.Trim() ?? string.Empty;
+        if (trimmed.Length < 2)
+        {
+            ClearSearchResults();
+            if (emptySearchText != null)
+            {
+                emptySearchText.text = trimmed.Length == 0
+                    ? "Type a username or ID to search"
+                    : "Type at least 2 characters...";
+                emptySearchText.gameObject.SetActive(true);
+            }
+            if (searchStatusText != null) searchStatusText.text = string.Empty;
+            return;
+        }
+
+        searchDebounceCoroutine = StartCoroutine(DebounceSearchRoutine(trimmed));
+    }
+
+    private IEnumerator DebounceSearchRoutine(string query)
+    {
+        yield return new WaitForSeconds(0.35f);
+        yield return StartCoroutine(PerformSearch(query));
+    }
+
+    private void ClearSearchResults()
+    {
+        foreach (var view in searchItemViews)
+        {
+            if (view != null) Destroy(view);
+        }
+        searchItemViews.Clear();
+    }
+
+    private IEnumerator PerformSearch(string query)
+    {
+        if (searchStatusText != null)
+        {
+            searchStatusText.text = "Searching...";
+            searchStatusText.color = Color.white;
+        }
+        if (emptySearchText != null) emptySearchText.gameObject.SetActive(false);
+
+        string encoded = UnityWebRequest.EscapeURL(query);
+        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/friends/search?q={encoded}&limit=10");
+        config.SetHeaders(req, PlayerSession.Token);
+
+        yield return req.SendWebRequest();
+
+        if (searchStatusText != null) searchStatusText.text = string.Empty;
+
+        if (req.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"[FriendTabManager] Search failed ({req.responseCode}): {req.error}");
+            ClearSearchResults();
+            if (emptySearchText != null)
+            {
+                emptySearchText.text = "Search failed. Please try again.";
+                emptySearchText.gameObject.SetActive(true);
+            }
+            yield break;
+        }
+
+        string raw = req.downloadHandler.text;
+        string json = $"{{\"results\":{raw}}}";
+        var wrapper = JsonUtility.FromJson<SearchResultsWrapper>(json);
+
+        RebuildSearchResultsView(wrapper?.results);
+    }
+
+    private void RebuildSearchResultsView(SearchPlayerResultItem[] results)
+    {
+        ClearSearchResults();
+
+        var container = searchContainer != null ? searchContainer : friendsContainer;
+        if (container == null) return;
+
+        if (results == null || results.Length == 0)
+        {
+            if (emptySearchText != null)
+            {
+                emptySearchText.text = "No players found";
+                emptySearchText.gameObject.SetActive(true);
+            }
+            return;
+        }
+
+        if (emptySearchText != null) emptySearchText.gameObject.SetActive(false);
+
+        var prefab = friendItemPrefab != null ? friendItemPrefab : requestItemPrefab;
+        if (prefab == null) return;
+
+        foreach (var item in results)
+        {
+            CreateSearchResultItemView(item, container, prefab);
+        }
+    }
+
+    private void CreateSearchResultItemView(SearchPlayerResultItem player, Transform container, GameObject prefab)
+    {
+        var itemObj = Instantiate(prefab, container);
+        searchItemViews.Add(itemObj);
+
+        var nameText = itemObj.transform.Find("NameText")?.GetComponent<TMP_Text>();
+        var levelText = itemObj.transform.Find("LevelText")?.GetComponent<TMP_Text>();
+
+        if (nameText != null) nameText.text = player.username;
+        if (levelText != null) levelText.text = $"Lv.{player.level}";
+
+        var statusDot = itemObj.transform.Find("StatusDot")?.GetComponent<Image>();
+        var statusLabel = itemObj.transform.Find("StatusText")?.GetComponent<TMP_Text>();
+
+        if (statusDot != null)
+        {
+            if (player.status == "in_match")
+                statusDot.color = Color.yellow;
+            else if (player.isOnline)
+                statusDot.color = Color.green;
+            else
+                statusDot.color = Color.gray;
+        }
+
+        if (statusLabel != null)
+        {
+            if (player.status == "in_match") statusLabel.text = "In Battle";
+            else if (player.isOnline) statusLabel.text = "Online";
+            else statusLabel.text = "Offline";
+        }
+
+        // Hide unwanted buttons from template
+        var removeBtn = itemObj.transform.Find("RemoveButton");
+        if (removeBtn != null) removeBtn.gameObject.SetActive(false);
+
+        var chatBtn = itemObj.transform.Find("CHatButton");
+        if (chatBtn != null) chatBtn.gameObject.SetActive(false);
+
+        var declineBtn = itemObj.transform.Find("DeclineButton");
+        if (declineBtn != null) declineBtn.gameObject.SetActive(false);
+
+        // Find primary action button (ChallengeButton in FriendItem or AcceptButton in FriendRequest)
+        Button actionButton = null;
+        TMP_Text actionBtnText = null;
+
+        var challengeBtn = itemObj.transform.Find("ChallengeButton")?.GetComponent<Button>();
+        var acceptBtn = itemObj.transform.Find("AcceptButton")?.GetComponent<Button>();
+
+        if (challengeBtn != null)
+        {
+            actionButton = challengeBtn;
+            actionBtnText = challengeBtn.GetComponentInChildren<TMP_Text>();
+        }
+        else if (acceptBtn != null)
+        {
+            actionButton = acceptBtn;
+            actionBtnText = acceptBtn.GetComponentInChildren<TMP_Text>();
+        }
+
+        if (actionButton != null)
+        {
+            actionButton.gameObject.SetActive(true);
+            actionButton.onClick.RemoveAllListeners();
+
+            switch (player.relationship)
+            {
+                case "friend":
+                    if (actionBtnText != null) actionBtnText.text = "Friends";
+                    actionButton.interactable = false;
+                    break;
+
+                case "pending_sent":
+                    if (actionBtnText != null) actionBtnText.text = "Pending";
+                    actionButton.interactable = false;
+                    break;
+
+                case "pending_received":
+                    if (actionBtnText != null) actionBtnText.text = "Accept";
+                    actionButton.interactable = true;
+                    actionButton.onClick.AddListener(() =>
+                    {
+                        StartCoroutine(SendFriendRequest(player.playerId, actionButton, actionBtnText));
+                    });
+                    break;
+
+                default: // "none"
+                    if (actionBtnText != null) actionBtnText.text = "+ Add";
+                    actionButton.interactable = true;
+                    actionButton.onClick.AddListener(() =>
+                    {
+                        StartCoroutine(SendFriendRequest(player.playerId, actionButton, actionBtnText));
+                    });
+                    break;
+            }
+        }
+    }
+
+    private IEnumerator SendFriendRequest(string targetPlayerId, Button actionBtn, TMP_Text actionBtnText)
+    {
+        if (actionBtn != null) actionBtn.interactable = false;
+        if (actionBtnText != null) actionBtnText.text = "...";
+
+        string json = $"{{\"targetUsernameOrId\":\"{targetPlayerId}\"}}";
+        using var req = new UnityWebRequest($"{config.backendUrl}/api/friends/request", "POST");
+        req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        config.SetHeaders(req, PlayerSession.Token);
+
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.Success)
+        {
+            string resp = req.downloadHandler?.text ?? "";
+            bool accepted = resp.Contains("request_accepted");
+            Debug.Log($"[FriendTabManager] Friend request sent to {targetPlayerId}. Response: {resp}");
+            if (actionBtnText != null) actionBtnText.text = accepted ? "Friends" : "Pending";
+            if (actionBtn != null) actionBtn.interactable = false;
+            if (accepted)
+            {
+                StartCoroutine(FetchFriendsList());
+            }
+        }
+        else
+        {
+            string rawErr = req.downloadHandler?.text;
+            Debug.LogError($"[FriendTabManager] Friend request to {targetPlayerId} failed: {rawErr ?? req.error}");
+            if (actionBtnText != null) actionBtnText.text = "+ Add";
+            if (actionBtn != null) actionBtn.interactable = true;
         }
     }
 
@@ -757,5 +1114,22 @@ public class FriendTabManager : MonoBehaviour
         public string senderPlayerId;
         public string senderUsername;
         public int senderLevel;
+    }
+
+    [Serializable]
+    private class SearchResultsWrapper
+    {
+        public SearchPlayerResultItem[] results;
+    }
+
+    [Serializable]
+    public class SearchPlayerResultItem
+    {
+        public string playerId;
+        public string username;
+        public int level;
+        public string relationship; // "none", "friend", "pending_sent", "pending_received"
+        public bool isOnline;
+        public string status;
     }
 }
