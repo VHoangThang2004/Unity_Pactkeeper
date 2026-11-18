@@ -44,16 +44,27 @@ MonoBehaviour:
     damageReduction: 0
   aiUnits:
   - uId: 3
-    passiveSkillId: -1
-    movementSkillId: -1
-    weaponSkillId: -1
-    classSkillId: -1
+    passiveSkillId: 5003
+    movementSkillId: 1003
+    weaponSkillId: 2003
+    classSkillId: 3003
     trinketSkillId: -1
-    maxHP: 3
-    currentHP: 3
+    maxHP: 6
+    currentHP: 6
     maxSkillPoint: 3
     currentSkillPoint: 0
     speed: 100
     damageMultiplier: 100
     damageReduction: 0
-  alwaysWait: 1
+  alwaysWait: 0
+  aiMode: 1
+  behaviorProfile: 1
+  scriptedActions:
+  - instantIndex: 8
+    unitSlotIndex: 0
+    skillSlot: 0
+    hasCustomTarget: 0
+    customTargetCell: {x: 0, y: 0}
+  challengeRules:
+    maxInstantsLimit: 0
+    maxAllyDeathsAllowed: -1

@@ -14,6 +14,7 @@ using UnityEngine;
 public class ClientController : MonoBehaviour, ISyncedBridgeClient
 {
     public event System.Action OnMatchReady;
+    public event System.Action<bool, string, int, int> OnStoryMatchEndedEvent;
     public bool IsMatchReady { get; private set; }
 
     public SyncedBridge bridge;
@@ -341,6 +342,12 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     public void OnUnitSpawned(UnitData unitData)
     {
         // Ignored — ClientSpawner handles unit sync via token system
+    }
+
+    public void OnStoryMatchEnded(bool playerWon, string failReason, int instantsUsed, int unitsLost)
+    {
+        Debug.Log($"[ClientController] Story match ended — playerWon={playerWon}, reason='{failReason}', instants={instantsUsed}, lost={unitsLost}");
+        OnStoryMatchEndedEvent?.Invoke(playerWon, failReason, instantsUsed, unitsLost);
     }
 
 }

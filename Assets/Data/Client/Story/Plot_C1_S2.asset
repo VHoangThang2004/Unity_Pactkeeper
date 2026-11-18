@@ -171,11 +171,17 @@ MonoBehaviour:
     text: Confirm the Piercing Shot!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: The Bastion endures and advances! Full tactical command is now yours -
+      finish the remaining defender cleanly.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: Three shafts, zero wasted motion. No fortress wall can shelter a foe from
-      a disciplined eye.
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

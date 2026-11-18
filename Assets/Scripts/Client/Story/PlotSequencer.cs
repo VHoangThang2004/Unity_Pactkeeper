@@ -51,6 +51,7 @@ public class PlotSequencer : MonoBehaviour
     private int _currentIndex = 0;
     private bool _waitingForInput = false;
     private System.Action _onComplete;
+    private System.Action _onReleasedToFreePlay;
 
     private TutorialTarget _guidedDragSourceTarget;
     private UnitContainer _guidedDragSourceContainer;
@@ -501,9 +502,13 @@ public class PlotSequencer : MonoBehaviour
     private System.Collections.Generic.Queue<PlotEntry> _pendingPlots;
     private bool _plotRunning = false;
 
-    public void StartPlotWithTriggers(System.Collections.Generic.List<PlotEntry> plots, System.Action onComplete = null)
+    public void StartPlotWithTriggers(
+        System.Collections.Generic.List<PlotEntry> plots,
+        System.Action onComplete = null,
+        System.Action onReleasedToFreePlay = null)
     {
         _onComplete = onComplete;
+        _onReleasedToFreePlay = onReleasedToFreePlay;
         _pendingPlots = new System.Collections.Generic.Queue<PlotEntry>(plots);
         PlotDirector.OnTrigger -= HandleTrigger;
         PlotDirector.OnTrigger += HandleTrigger;
@@ -560,7 +565,14 @@ public class PlotSequencer : MonoBehaviour
                 HasShownChapter0IntroSlides = false;
 
             yield return StartCoroutine(RunNode(node));
-            blockerPanel.SetActive(true);
+            if (node.type == PlotNodeType.ReleaseToFreePlay)
+            {
+                _currentIndex++;
+                continue;
+            }
+
+            if (!node.isNonBlockingTip && !TutorialContext.IsFreePlayBattle)
+                blockerPanel.SetActive(true);
             bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
                              (_currentIndex + 1 < plot.nodes.Count) &&
                              (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
@@ -588,7 +600,14 @@ public class PlotSequencer : MonoBehaviour
                 HasShownChapter0IntroSlides = false;
 
             yield return StartCoroutine(RunNode(node));
-            blockerPanel.SetActive(true);
+            if (node.type == PlotNodeType.ReleaseToFreePlay)
+            {
+                _currentIndex++;
+                continue;
+            }
+
+            if (!node.isNonBlockingTip && !TutorialContext.IsFreePlayBattle)
+                blockerPanel.SetActive(true);
             bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
                              (_currentIndex + 1 < plot.nodes.Count) &&
                              (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
@@ -602,7 +621,8 @@ public class PlotSequencer : MonoBehaviour
 
     IEnumerator RunNode(PlotNode node)
     {
-        if (ContainsInteractiveBattleNodes(plot) || matchSession != null || FindAnyObjectByType<ClientMatchSession>() != null)
+        bool skipStableWait = node.isNonBlockingTip || node.type == PlotNodeType.ReleaseToFreePlay;
+        if (!skipStableWait && (ContainsInteractiveBattleNodes(plot) || matchSession != null || FindAnyObjectByType<ClientMatchSession>() != null))
         {
             yield return StartCoroutine(WaitForBattleUIStable());
         }
@@ -648,6 +668,10 @@ public class PlotSequencer : MonoBehaviour
             case PlotNodeType.CompleteAndExit:
                 yield return StartCoroutine(RunCompleteAndExit(node));
                 yield break;
+
+            case PlotNodeType.ReleaseToFreePlay:
+                yield return StartCoroutine(RunReleaseToFreePlay(node));
+                break;
         }
     }
 
@@ -659,6 +683,21 @@ public class PlotSequencer : MonoBehaviour
     {
         HideAll();
         ShowSlideIfPresent(node);
+
+        if (node.isNonBlockingTip)
+        {
+            if (textBoxPanel != null)
+            {
+                textBoxPanel.SetActive(true);
+                if (dialogueText != null)
+                    dialogueText.text = node.text;
+            }
+            float tipDuration = node.delay > 0f ? node.delay : 4f;
+            yield return new WaitForSeconds(tipDuration);
+            HideAll();
+            yield break;
+        }
+
         if (nextButton != null)
         {
             var nbImg = nextButton.GetComponent<Image>();
@@ -1500,6 +1539,28 @@ public class PlotSequencer : MonoBehaviour
     {
         HideAll();
         yield return new WaitForSeconds(node.delay);
+    }
+
+    // -------------------------------------------------------
+    // ReleaseToFreePlay - hand full tactical control to player vs AI
+    // -------------------------------------------------------
+
+    IEnumerator RunReleaseToFreePlay(PlotNode node)
+    {
+        HideAll();
+
+        if (!string.IsNullOrEmpty(node.text) && textBoxPanel != null && dialogueText != null)
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+            float showDuration = node.delay > 0f ? node.delay : 3.5f;
+            yield return new WaitForSeconds(showDuration);
+            HideAll();
+        }
+
+        TutorialContext.ReleaseToFreePlay();
+        Debug.Log("[PlotSequencer] Tutorial released control to free tactical combat vs AI.");
+        _onReleasedToFreePlay?.Invoke();
     }
 
     // -------------------------------------------------------

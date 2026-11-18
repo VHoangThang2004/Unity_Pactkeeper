@@ -195,6 +195,10 @@ MonoBehaviour:
   plots:
   - plot: {fileID: 11400000, guid: d1000000f3524f41ac5e440000000302, type: 2}
     startTrigger: 
+  - plot: {fileID: 11400000, guid: d1000000e0ea4c01a000000000000001, type: 2}
+    startTrigger: EnemyActed
+  - plot: {fileID: 11400000, guid: d1000000e0ea4c01a000000000000002, type: 2}
+    startTrigger: AllyLowHP
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
   tutorialTrigger: {fileID: 2127351881}
   additiveBattleSceneName: 5_ClientMatch

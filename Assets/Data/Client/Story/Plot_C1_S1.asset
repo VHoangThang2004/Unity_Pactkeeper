@@ -159,11 +159,17 @@ MonoBehaviour:
     text: Confirm! Both queued strikes will now crash down in sequence!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: The enemy survived the opening clash and is fighting back! Full tactical
+      command is yours - defeat the raider to claim victory.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: Shield in front, steel on the flank - that is the Iron Vanguard! Onward
-      to the ridge.
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

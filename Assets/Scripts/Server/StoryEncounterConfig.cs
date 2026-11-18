@@ -1,15 +1,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StoryAIMode
+{
+    AlwaysWait = 0,            // Default for legacy scripted tutorials (C0_S1..C3_S2)
+    ScriptedThenTactical = 1,  // Hybrid: scripted opening steps, then Tactical AI
+    Tactical = 2               // Full Tactical AI from Instant 0
+}
+
+public enum AIBehaviorProfile
+{
+    Balanced = 0,
+    Aggressive = 1,
+    Defensive = 2,
+    Support = 3
+}
+
+[System.Serializable]
+public class ScriptedAIAction
+{
+    [Tooltip("Instant at which this scripted AI command triggers.")]
+    public int instantIndex;
+
+    [Tooltip("Index in aiUnits (-1 = first ready AI unit).")]
+    public int unitSlotIndex = 0;
+
+    [Tooltip("Which skill slot to execute (None = AI Wait for this turn).")]
+    public SkillSlot skillSlot = SkillSlot.None;
+
+    [Tooltip("If true, targets customTargetCell; otherwise picks best valid cell for that skill.")]
+    public bool hasCustomTarget = false;
+    public Vector2Int customTargetCell;
+}
+
+[System.Serializable]
+public class ChallengeRules
+{
+    [Tooltip("Optional max instant limit for this encounter (0 = use MatchConfig.maxInstant).")]
+    public int maxInstantsLimit = 0;
+
+    [Tooltip("Max ally deaths allowed (-1 = unlimited, 0 = no allies may fall).")]
+    public int maxAllyDeathsAllowed = -1;
+}
+
 /// <summary>
-/// Defines both teams' loadouts for a specific story battle scene.
+/// Defines both teams' loadouts and AI/challenge behavior for a story battle scene.
 /// Asset name convention: matches the scene it serves, e.g. "Encounter_C0_S1".
-/// One asset per (chapterId, sceneId) battle scene.
-///
-/// playerUnits: only used for scenes where the real player has no configured
-/// loadout yet (e.g. Chapter 0 Scene 1 — brand new player, no owned units).
-/// Leave empty for later story scenes that should use the player's real,
-/// backend-fetched loadout instead.
 /// </summary>
 [CreateAssetMenu(fileName = "Encounter_C0_S0", menuName = "SRPG/Story Encounter Config")]
 public class StoryEncounterConfig : ScriptableObject
@@ -17,26 +53,43 @@ public class StoryEncounterConfig : ScriptableObject
     [Header("Identity")]
     public int chapterId;
     public int sceneId;
-    
+
     [Header("Map")]
     [Tooltip("The mapId from MapRegistry to use for this encounter. If empty, falls back to default.")]
     public string mapId;
 
     [Header("Player Team (optional)")]
     [Tooltip("If non-empty, the server uses this preset loadout for the player " +
-             "instead of fetching from the backend. Used for Chapter 0 Scene 1 " +
-             "where the player has no configured units yet. Leave empty for " +
-             "scenes that should use the player's real loadout.")]
+             "instead of fetching from the backend. Leave empty for " +
+             "scenes that should use the player's real loadout (triggers PrepPhase).")]
     public List<StoryUnitEntry> playerUnits = new();
 
     [Header("AI Team")]
     [Tooltip("Units the AI team spawns with. Same shape as a real player's loadout.")]
     public List<StoryUnitEntry> aiUnits = new();
 
-    [Header("Behaviour")]
-    [Tooltip("If true, the AI always chooses Wait regardless of board state. " +
-             "Used for early mechanics tutorials where the player should not be threatened.")]
+    [Header("AI Behaviour")]
+    [Tooltip("Legacy toggle kept for backward compatibility with existing Encounter assets.")]
     public bool alwaysWait = true;
+
+    [Tooltip("AlwaysWait (0) preserves existing scripted tutorials. Use ScriptedThenTactical for Hybrid, or Tactical for Challenge.")]
+    public StoryAIMode aiMode = StoryAIMode.AlwaysWait;
+
+    public AIBehaviorProfile behaviorProfile = AIBehaviorProfile.Balanced;
+
+    [Tooltip("Scripted opening commands executed before switching to Tactical AI (used when aiMode == ScriptedThenTactical).")]
+    public List<ScriptedAIAction> scriptedActions = new();
+
+    [Header("Challenge Win/Fail Rules (Optional)")]
+    public ChallengeRules challengeRules = new();
+
+    public StoryAIMode GetEffectiveAIMode()
+    {
+        if (aiMode != StoryAIMode.AlwaysWait)
+            return aiMode;
+
+        return alwaysWait ? StoryAIMode.AlwaysWait : StoryAIMode.Tactical;
+    }
 
     public bool HasPresetPlayerLoadout => playerUnits != null && playerUnits.Count > 0;
 

@@ -7,11 +7,12 @@ public enum PlotNodeType
     GuidedRightClick,   // Highlight a real UI button, player MUST right-click it to advance
     GuidedCellClick,    // Highlight a world-space grid cell, player MUST click it to advance
     AutoAdvance,        // No input - auto-moves to next node after a delay
-    CompleteAndExit,     // Final button - marks story progress complete and reloads main menu
+    CompleteAndExit,    // Final button - marks story progress complete and reloads main menu
     GuidedLeftClick,    // Special case of GuidedClick that involves the extended button component
     InspectCellClick,   // Highlight a world-space grid cell, fires HandleTileClick and advances immediately (inspect / view loadout, no isTargetLocked required)
     GuidedDrag,         // Highlight a draggable UI target, player starts dragging (or clicks) to advance
     GuidedDrop,         // Highlight a drop destination UI target, player drops the dragged item (or clicks) to advance
+    ReleaseToFreePlay,  // End guided tutorial blocking and hand control to free tactical combat vs AI
 }
 
 [System.Serializable]
@@ -23,6 +24,9 @@ public class PlotNode
     [Header("TextBox / GuidedClick")]
     [TextArea(2, 6)]
     public string text;
+
+    [Tooltip("When true on TextBox, shows dialogue as a non-blocking tip banner without pausing or blocking player input.")]
+    public bool isNonBlockingTip = false;
 
     [Header("GuidedClick / CompleteAndExit")]
     public string tutorialTargetId;       // Matches TutorialTarget.targetId in the additive scene

@@ -185,11 +185,17 @@ MonoBehaviour:
     text: Confirm the final cleave!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: Now lead the squad yourself! Keep your Physician safe, sustain your Warrior,
+      and eliminate the enemy.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: Time itself bends to a true healer's pulse. Press on - ancient relics await
-      inspection.
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

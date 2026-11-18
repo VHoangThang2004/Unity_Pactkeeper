@@ -25,5 +25,6 @@ public interface ISyncedBridgeClient
     void OnSnapshotReceived(SessionSnapshotData before, ResolveData resolve, SecretData secret, DecisionRequestData decision, int token);
     void OnPrepInfo(string mapId, int teamId, float secondsLeft);
     void OnPrepEnded();
+    void OnStoryMatchEnded(bool playerWon, string failReason, int instantsUsed, int unitsLost);
     void OnBridgeReady(SyncedBridge bridge);
 }
