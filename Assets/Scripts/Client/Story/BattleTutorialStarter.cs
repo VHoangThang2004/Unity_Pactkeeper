@@ -234,13 +234,13 @@ public class BattleTutorialStarter : MonoBehaviour
 
         int chapterId = ResolveChapterId();
         int sceneId = ResolveSceneId();
-        bool forceCleanReset = !PlayerSession.IsAutoResumed;
+        bool forceCleanReset = true;
         bool waitForReset = false;
         int tokenBeforeReset = controller?.session != null ? controller.session.CurrentToken : -1;
 
         if (sceneId >= 1 && controller != null && controller.bridge != null)
         {
-            waitForReset = forceCleanReset || IsClientSnapshotDirtyForScene(chapterId, sceneId);
+            waitForReset = IsClientSnapshotDirtyForScene(chapterId, sceneId);
             controller.bridge.AdvanceTutorialPhaseServerRpc(sceneId, forceCleanReset);
         }
 

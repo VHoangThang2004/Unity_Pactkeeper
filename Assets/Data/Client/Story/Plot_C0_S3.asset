@@ -22,7 +22,7 @@ MonoBehaviour:
     delay: 2
     targetWaitTimeout: 10
   - type: 0
-    text: Both warriors stand ready at Step 0, and your conserved SP is full, Varek. Let us finish this ambusher!
+    text: The Paladin's cleave left the ambusher wounded at 3/4 HP, and our Assassin at (-2, 0) has banked SP for Limit Break! Let us bound twice onto the high row (1, 1) to trigger Ambush (2x damage) and finish him!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -34,20 +34,19 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Leap forward to (0, -1) to close the gap.
+    text: Leap forward from (-2, 0) to (0, -1) to begin closing the gap.
     tutorialTargetId: 
     targetCell: {x: 0, y: -1}
     delay: 0
     targetWaitTimeout: 10
   - type: 1
-    text: Confirm your first bound.
+    text: Confirm her first bound.
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
     delay: 2.5
     targetWaitTimeout: 10
   - type: 1
-    text: A unit can normally move only once per Instant - unless it shatters its
-      own limit. Select your Assassin again.
+    text: A unit can normally move only once per Instant - unless it shatters its own limit. Select your Assassin again.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -59,8 +58,7 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Spending 1 SP on Limit Break! immediately refreshes your Movement Skill
-      within the same Instant!
+    text: Spending 1 SP on Limit Break! immediately refreshes your Movement Skill within the same Instant!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

@@ -916,6 +916,14 @@ public class PlotSequencer : MonoBehaviour
         HideAll();
         blockerPanel.SetActive(true);
 
+        if (interactionSystem != null && interactionSystem.stateMachine != null &&
+            interactionSystem.stateMachine.currentState is not UnitSelectedState &&
+            matchSession != null && matchSession.ownedReadyUnitIds != null && matchSession.ownedReadyUnitIds.Count > 0)
+        {
+            int uId = matchSession.selectedUnitId != -1 ? matchSession.selectedUnitId : matchSession.ownedReadyUnitIds[0];
+            interactionSystem.stateMachine.GoToUnitSelected(uId);
+        }
+
         if (!string.IsNullOrEmpty(node.text))
         {
             textBoxPanel.SetActive(true);

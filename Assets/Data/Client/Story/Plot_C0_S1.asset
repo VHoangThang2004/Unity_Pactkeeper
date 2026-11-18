@@ -24,38 +24,6 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 0
-    text: Endless war has bled the realm dry, and a brutal ambush just slaughtered half your squad. Though unarmed, you—Tactician Varek—refuse to flee.
-    tutorialTargetId: 
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-    slideId: bg_c0_ambush
-    slideSprite: {fileID: 0}
-  - type: 0
-    text: At death's door, the Heavenly Eye opens above, freezing the falling blades. It offers a Pact: command time itself in exchange for ending this war.
-    tutorialTargetId: 
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-    slideId: bg_c0_heavenly_eye
-    slideSprite: {fileID: 0}
-  - type: 0
-    text: You accept the oath and awaken as a Pactkeeper. From the sky above, your gaze now halts time at critical moments to issue absolute commands.
-    tutorialTargetId: 
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-    slideId: bg_c0_pactkeeper_awaken
-    slideSprite: {fileID: 0}
-  - type: 0
-    text: Your surviving vanguard, Commander Reinhardt, rallies beside you against the remaining ambushers. Open the Heavenly Eye—it is time to test your newfound power!
-    tutorialTargetId: 
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-    slideId: bg_c0_reinhardt_briefing
-    slideSprite: {fileID: 0}
-  - type: 0
     text: Commander Reinhardt here—stay sharp, Varek! Shift your gaze through the Heavenly Eye using W, A, S, D and the Mouse Wheel to survey the ambush.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
@@ -88,9 +56,9 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 3
-    text: Move our Assassin into an L-shaped flanking stance at (0, -1) to stay out of the ambusher's direct line of attack.
+    text: Move our Assassin in an L-shaped bound from (-3, -2) to (-2, 0) to close in on the ambusher while staying out of reach.
     tutorialTargetId: 
-    targetCell: {x: 0, y: -1}
+    targetCell: {x: -2, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
     slideId: 
@@ -104,7 +72,7 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 1
-    text: Movement is Instant, so your turn remains active—but rushing in now wastes SP and exposes her to a lethal counterattack. Press Wait to hold position and bait the enemy forward!
+    text: Movement is Instant, so your turn stays open after stepping once. Since we are safely out of the enemy's reach at (-2, 0), press Wait to end your turn and bank SP!
     tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
     delay: 1
@@ -120,7 +88,7 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 0
-    text: The cautious ambusher held his ground too. Through the Heavenly Eye's foresight, let us check if our blade can reach him from here.
+    text: The ambusher held his ground and wasted his turn! Now let us check if our blade can reach him from (-2, 0).
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -144,7 +112,7 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 0
-    text: "The Heavenly Eye reveals the truth: Dagger Thrust only strikes 1 tile ahead. The enemy at (1, 0) stands completely outside our reach."
+    text: "The Heavenly Eye reveals the truth: Dagger Thrust only strikes 1 tile ahead. From (-2, 0), the enemy at (1, 0) stands outside our reach."
     tutorialTargetId: InspectPanel
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -160,7 +128,7 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 1
-    text: Swinging now would waste SP on thin air and leave our Assassin defenseless. Press Wait to conserve SP and lure the enemy straight into our kill zone!
+    text: Attacking from an off-row would strike thin air and waste precious SP. Press Wait to stock more SP while my heavy Paladin catches up to Step 0!
     tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -168,7 +136,7 @@ MonoBehaviour:
     slideId: 
     slideSprite: {fileID: 0}
   - type: 5
-    text: Patience wins wars, Varek—the enemy took the bait! As my heavy vanguard reinforces the line, prepare to strike in the next Instant.
+    text: Discipline wins wars, Varek! Your Assassin's SP is banked, and my heavy Paladin has just reached Step 0 to reinforce the line!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
