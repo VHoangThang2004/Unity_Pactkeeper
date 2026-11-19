@@ -194,9 +194,18 @@ public class UnitConfigManager : MonoBehaviour
             Debug.LogError($"[UnitConfig] FetchUnitConfig: {request.error} {request}");
             yield break;
         }
-        Debug.Log($"[UnitConfig] FetchUnitConfig: {request.downloadHandler.text}");
         CurrentUnit = JsonUtility.FromJson<UnitConfigDto>(request.downloadHandler.text);
         RecalculateStats();
+        if (CurrentStats != null)
+        {
+            Debug.Log(
+                "[UnitConfig] Stats\n" +
+                $"HP: {CurrentStats.maxHP}\n" +
+                $"DMG: {CurrentStats.damageMultiplier}%\n" +
+                $"SP: {CurrentStats.maxSkillPoint}\n" +
+                $"SPD: {CurrentStats.speed}\n" +
+                $"DMG Reduction: {CurrentStats.damageReduction}%");
+        }
 
         var prefab = unitPrefabRegistry.Get(CurrentUnit.uId);
         Sprite portrait = prefab != null ? prefab.GetComponent<ClientUnit>()?.unitImg : null;

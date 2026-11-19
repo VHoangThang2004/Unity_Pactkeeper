@@ -1,0 +1,285 @@
+fileFormatVersion: 2
+guid: bf391c866a8d93b479122900e1100e9b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4559530049518978681
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_0"
+  - first:
+      213: -5706211864355660347
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_1"
+  - first:
+      213: 8857189475625099540
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_2"
+  - first:
+      213: -3624906928945722476
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_3"
+  - first:
+      213: 1405080631116837639
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_4"
+  - first:
+      213: -6187130338532478486
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_5"
+  - first:
+      213: 3353126805570255662
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_6"
+  - first:
+      213: 3815925396348221622
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_7"
+  - first:
+      213: -2624400696266624106
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_8"
+  - first:
+      213: -3309120756085752121
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_9"
+  - first:
+      213: 6051169218179773101
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_10"
+  - first:
+      213: 8070134845496943777
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_11"
+  - first:
+      213: -3206327899506423046
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_12"
+  - first:
+      213: 5492721293077589067
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_13"
+  - first:
+      213: 7449326158638236744
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_14"
+  - first:
+      213: -4524575853037218836
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_15"
+  - first:
+      213: -3181351322244366686
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_16"
+  - first:
+      213: 3396240813675306293
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_17"
+  - first:
+      213: -5472882478663565456
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_18"
+  - first:
+      213: -1468079889154365864
+    second: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_19"
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_0"
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 167
+        width: 862
+        height: 711
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 789b3bfc39b49b0c0800000000000000
+      internalID: -4559530049518978681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_2"
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 142
+        width: 549
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41166f296ee0bea70800000000000000
+      internalID: 8857189475625099540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_3"
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 324
+        width: 541
+        height: 155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49b865c8a5eb1bdc0800000000000000
+      internalID: -3624906928945722476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_4"
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 525
+        width: 654
+        height: 326
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 703308ab369df7310800000000000000
+      internalID: 1405080631116837639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 19dcb0f540372ee4d987dbab59d3c0da
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_0": -4559530049518978681
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_1": -5706211864355660347
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_10": 6051169218179773101
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_11": 8070134845496943777
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_12": -3206327899506423046
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_13": 5492721293077589067
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_14": 7449326158638236744
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_15": -4524575853037218836
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_16": -3181351322244366686
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_17": 3396240813675306293
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_18": -5472882478663565456
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_19": -1468079889154365864
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_2": 8857189475625099540
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_3": -3624906928945722476
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_4": 1405080631116837639
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_5": -6187130338532478486
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_6": 3353126805570255662
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_7": 3815925396348221622
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_8": -2624400696266624106
+      "B\u1ED9 giao di\u1EC7n th\u1EA5t b\u1EA1i RPG pixel-art_9": -3309120756085752121
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

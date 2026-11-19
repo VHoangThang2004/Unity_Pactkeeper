@@ -1,0 +1,319 @@
+fileFormatVersion: 2
+guid: 05b480accc20397478983511b1b67c0f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3154572032268045140
+    second: DefeatPanel_UI_0
+  - first:
+      213: -3487120085270771219
+    second: DefeatPanel_UI_1
+  - first:
+      213: -251475089929551142
+    second: DefeatPanel_UI_2
+  - first:
+      213: -5782852731245048190
+    second: DefeatPanel_UI_3
+  - first:
+      213: -1817925761014404438
+    second: DefeatPanel_UI_4
+  - first:
+      213: -7141999016669732981
+    second: DefeatPanel_UI_5
+  - first:
+      213: -6206916410919208087
+    second: DefeatPanel_UI_6
+  - first:
+      213: -2905355940005861055
+    second: DefeatPanel_UI_7
+  - first:
+      213: -6434665572203913278
+    second: DefeatPanel_UI_8
+  - first:
+      213: 656245372471960153
+    second: DefeatPanel_UI_9
+  - first:
+      213: 2225977849724443677
+    second: DefeatPanel_UI_10
+  - first:
+      213: 5980463363994208394
+    second: DefeatPanel_UI_11
+  - first:
+      213: 5646245227444063391
+    second: DefeatPanel_UI_12
+  - first:
+      213: -3333212221682138288
+    second: DefeatPanel_UI_13
+  - first:
+      213: 5837042922963755289
+    second: DefeatPanel_UI_14
+  - first:
+      213: 2976933988359215157
+    second: DefeatPanel_UI_15
+  - first:
+      213: -4466508631896723025
+    second: DefeatPanel_UI_16
+  - first:
+      213: -3665126986003580732
+    second: DefeatPanel_UI_17
+  - first:
+      213: -8732519308793729396
+    second: DefeatPanel_UI_18
+  - first:
+      213: 3044342715029379178
+    second: DefeatPanel_UI_19
+  - first:
+      213: 6306980997852161113
+    second: DefeatPanel_UI_20
+  - first:
+      213: 627720140955084254
+    second: DefeatPanel_UI_21
+  - first:
+      213: -4503273850460735288
+    second: DefeatPanel_UI_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DefeatPanel_UI_0
+      rect:
+        serializedVersion: 2
+        x: 705
+        y: 924
+        width: 999
+        height: 417
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45b08b9bc8a47cb20800000000000000
+      internalID: 3154572032268045140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DefeatPanel_UI_19
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 448
+        width: 782
+        height: 226
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a68dfd7d19daf3a20800000000000000
+      internalID: 3044342715029379178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DefeatPanel_UI_20
+      rect:
+        serializedVersion: 2
+        x: 1122
+        y: 499
+        width: 159
+        height: 119
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 954ed1e3dc5e68750800000000000000
+      internalID: 6306980997852161113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DefeatPanel_UI_21
+      rect:
+        serializedVersion: 2
+        x: 1401
+        y: 443
+        width: 752
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed56cf3742c16b800800000000000000
+      internalID: 627720140955084254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DefeatPanel_UI_22
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 61
+        width: 1152
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c87bf8da482181c0800000000000000
+      internalID: -4503273850460735288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 43570585fc89aae49b17ca6529312d4a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      DefeatPanel_UI_0: 3154572032268045140
+      DefeatPanel_UI_1: -3487120085270771219
+      DefeatPanel_UI_10: 2225977849724443677
+      DefeatPanel_UI_11: 5980463363994208394
+      DefeatPanel_UI_12: 5646245227444063391
+      DefeatPanel_UI_13: -3333212221682138288
+      DefeatPanel_UI_14: 5837042922963755289
+      DefeatPanel_UI_15: 2976933988359215157
+      DefeatPanel_UI_16: -4466508631896723025
+      DefeatPanel_UI_17: -3665126986003580732
+      DefeatPanel_UI_18: -8732519308793729396
+      DefeatPanel_UI_19: 3044342715029379178
+      DefeatPanel_UI_2: -251475089929551142
+      DefeatPanel_UI_20: 6306980997852161113
+      DefeatPanel_UI_21: 627720140955084254
+      DefeatPanel_UI_22: -4503273850460735288
+      DefeatPanel_UI_3: -5782852731245048190
+      DefeatPanel_UI_4: -1817925761014404438
+      DefeatPanel_UI_5: -7141999016669732981
+      DefeatPanel_UI_6: -6206916410919208087
+      DefeatPanel_UI_7: -2905355940005861055
+      DefeatPanel_UI_8: -6434665572203913278
+      DefeatPanel_UI_9: 656245372471960153
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

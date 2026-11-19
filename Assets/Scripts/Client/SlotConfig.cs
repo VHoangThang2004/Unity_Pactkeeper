@@ -236,7 +236,7 @@ public class SlotConfig : MonoBehaviour
         {
             CloseAll();
             onUnequip();
-        });
+        }, true);
     }
 
     // -------------------------------------------------------

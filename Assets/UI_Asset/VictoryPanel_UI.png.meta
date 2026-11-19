@@ -1,0 +1,389 @@
+fileFormatVersion: 2
+guid: 6863a1a354e923c49ab5bd0346c8359f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3607116069109721850
+    second: VictoryPanel_UI_0
+  - first:
+      213: 4430026711659723760
+    second: VictoryPanel_UI_1
+  - first:
+      213: -2230659881093513031
+    second: VictoryPanel_UI_2
+  - first:
+      213: 7896975507060974047
+    second: VictoryPanel_UI_3
+  - first:
+      213: -6730656594933428990
+    second: VictoryPanel_UI_4
+  - first:
+      213: -8228562690188505557
+    second: VictoryPanel_UI_5
+  - first:
+      213: -466751844977529458
+    second: VictoryPanel_UI_6
+  - first:
+      213: 4863785829821854091
+    second: VictoryPanel_UI_7
+  - first:
+      213: 6707531559001279612
+    second: VictoryPanel_UI_8
+  - first:
+      213: -7701974505551694480
+    second: VictoryPanel_UI_9
+  - first:
+      213: -1254419310360951689
+    second: VictoryPanel_UI_10
+  - first:
+      213: -2249133015520031692
+    second: VictoryPanel_UI_11
+  - first:
+      213: 4066164755511949624
+    second: VictoryPanel_UI_12
+  - first:
+      213: 9044930684784771941
+    second: VictoryPanel_UI_13
+  - first:
+      213: -7412881584731529950
+    second: VictoryPanel_UI_14
+  - first:
+      213: 3703488241309292194
+    second: VictoryPanel_UI_15
+  - first:
+      213: -6092447418846168584
+    second: VictoryPanel_UI_16
+  - first:
+      213: 5596781041008402686
+    second: VictoryPanel_UI_17
+  - first:
+      213: 4499290304215241287
+    second: VictoryPanel_UI_18
+  - first:
+      213: -3675181625016478384
+    second: VictoryPanel_UI_19
+  - first:
+      213: 1920887111228950566
+    second: VictoryPanel_UI_20
+  - first:
+      213: -3071535171961237860
+    second: VictoryPanel_UI_21
+  - first:
+      213: 5634398464233963141
+    second: VictoryPanel_UI_22
+  - first:
+      213: -5941011795611695497
+    second: VictoryPanel_UI_23
+  - first:
+      213: 7320875416712084531
+    second: VictoryPanel_UI_24
+  - first:
+      213: -5337568589664773860
+    second: VictoryPanel_UI_25
+  - first:
+      213: -6102594294276505578
+    second: VictoryPanel_UI_26
+  - first:
+      213: -7104371535079090573
+    second: VictoryPanel_UI_27
+  - first:
+      213: 8427188489004094857
+    second: VictoryPanel_UI_28
+  - first:
+      213: 7465348058764929327
+    second: VictoryPanel_UI_29
+  - first:
+      213: 4638765647972558049
+    second: VictoryPanel_UI_30
+  - first:
+      213: -8754610730642234128
+    second: VictoryPanel_UI_31
+  - first:
+      213: -7673539624929665369
+    second: VictoryPanel_UI_32
+  - first:
+      213: -2884291091251462291
+    second: VictoryPanel_UI_33
+  - first:
+      213: 9109372928566997567
+    second: VictoryPanel_UI_34
+  - first:
+      213: -1563814331866106043
+    second: VictoryPanel_UI_35
+  - first:
+      213: 5771094257656956601
+    second: VictoryPanel_UI_36
+  - first:
+      213: 5468813528932592458
+    second: VictoryPanel_UI_37
+  - first:
+      213: -5546129134986973188
+    second: VictoryPanel_UI_38
+  - first:
+      213: -7620808819957654787
+    second: VictoryPanel_UI_39
+  - first:
+      213: -3618840508853382613
+    second: VictoryPanel_UI_40
+  - first:
+      213: 7732753738591794029
+    second: VictoryPanel_UI_41
+  - first:
+      213: -7376880695966888263
+    second: VictoryPanel_UI_42
+  - first:
+      213: 404139875678804322
+    second: VictoryPanel_UI_43
+  - first:
+      213: -6168684015128859230
+    second: VictoryPanel_UI_44
+  - first:
+      213: 1934118587850898204
+    second: VictoryPanel_UI_45
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: VictoryPanel_UI_9
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 911
+        width: 1084
+        height: 430
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 075f9777ef61d1590800000000000000
+      internalID: -7701974505551694480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VictoryPanel_UI_42
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 443
+        width: 789
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9be0576671e00a990800000000000000
+      internalID: -7376880695966888263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VictoryPanel_UI_44
+      rect:
+        serializedVersion: 2
+        x: 1401
+        y: 443
+        width: 750
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ad2d92429e646aa0800000000000000
+      internalID: -6168684015128859230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VictoryPanel_UI_45
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 61
+        width: 1151
+        height: 175
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1b3556bb9e57da10800000000000000
+      internalID: 1934118587850898204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ed58fc1934bb0124abae0e8f665ea51f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      VictoryPanel_UI_0: 3607116069109721850
+      VictoryPanel_UI_1: 4430026711659723760
+      VictoryPanel_UI_10: -1254419310360951689
+      VictoryPanel_UI_11: -2249133015520031692
+      VictoryPanel_UI_12: 4066164755511949624
+      VictoryPanel_UI_13: 9044930684784771941
+      VictoryPanel_UI_14: -7412881584731529950
+      VictoryPanel_UI_15: 3703488241309292194
+      VictoryPanel_UI_16: -6092447418846168584
+      VictoryPanel_UI_17: 5596781041008402686
+      VictoryPanel_UI_18: 4499290304215241287
+      VictoryPanel_UI_19: -3675181625016478384
+      VictoryPanel_UI_2: -2230659881093513031
+      VictoryPanel_UI_20: 1920887111228950566
+      VictoryPanel_UI_21: -3071535171961237860
+      VictoryPanel_UI_22: 5634398464233963141
+      VictoryPanel_UI_23: -5941011795611695497
+      VictoryPanel_UI_24: 7320875416712084531
+      VictoryPanel_UI_25: -5337568589664773860
+      VictoryPanel_UI_26: -6102594294276505578
+      VictoryPanel_UI_27: -7104371535079090573
+      VictoryPanel_UI_28: 8427188489004094857
+      VictoryPanel_UI_29: 7465348058764929327
+      VictoryPanel_UI_3: 7896975507060974047
+      VictoryPanel_UI_30: 4638765647972558049
+      VictoryPanel_UI_31: -8754610730642234128
+      VictoryPanel_UI_32: -7673539624929665369
+      VictoryPanel_UI_33: -2884291091251462291
+      VictoryPanel_UI_34: 9109372928566997567
+      VictoryPanel_UI_35: -1563814331866106043
+      VictoryPanel_UI_36: 5771094257656956601
+      VictoryPanel_UI_37: 5468813528932592458
+      VictoryPanel_UI_38: -5546129134986973188
+      VictoryPanel_UI_39: -7620808819957654787
+      VictoryPanel_UI_4: -6730656594933428990
+      VictoryPanel_UI_40: -3618840508853382613
+      VictoryPanel_UI_41: 7732753738591794029
+      VictoryPanel_UI_42: -7376880695966888263
+      VictoryPanel_UI_43: 404139875678804322
+      VictoryPanel_UI_44: -6168684015128859230
+      VictoryPanel_UI_45: 1934118587850898204
+      VictoryPanel_UI_5: -8228562690188505557
+      VictoryPanel_UI_6: -466751844977529458
+      VictoryPanel_UI_7: 4863785829821854091
+      VictoryPanel_UI_8: 6707531559001279612
+      VictoryPanel_UI_9: -7701974505551694480
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

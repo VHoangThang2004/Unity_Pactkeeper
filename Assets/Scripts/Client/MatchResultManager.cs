@@ -15,9 +15,12 @@ public class MatchResultManager : MonoBehaviour
 
     [Header("UI")]
     public TMP_Text resultText;
-    [SerializeField] private Image backgroundImage;
+    [SerializeField] private RectTransform resultContentPanel;
+    [SerializeField] private Image winLoseImage;
     [SerializeField] private Sprite victoryBackground;
     [SerializeField] private Sprite defeatBackground;
+    [SerializeField] private float slideDistance = 700f;
+    [SerializeField] private float slideDuration = 0.45f;
 
     // Readable by UI scripts after OnResultLoaded fires
     public bool ResultLoaded { get; private set; }
@@ -30,7 +33,35 @@ public class MatchResultManager : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(PlayEntrance());
         StartCoroutine(FetchResultLoop());
+    }
+
+    IEnumerator PlayEntrance()
+    {
+        Vector2 panelRest = resultContentPanel != null ? resultContentPanel.anchoredPosition : Vector2.zero;
+        Vector2 imageRest = winLoseImage != null ? winLoseImage.rectTransform.anchoredPosition : Vector2.zero;
+        float elapsed = 0f;
+
+        while (elapsed < slideDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float remain = 1f - Mathf.SmoothStep(0f, 1f, elapsed / slideDuration);
+            if (resultContentPanel != null)
+                resultContentPanel.anchoredPosition = panelRest + new Vector2(0f, -slideDistance * remain);
+            if (winLoseImage != null)
+            {
+                float panelShift = resultContentPanel != null ? -slideDistance * remain : 0f;
+                float imageShift = slideDistance * remain;
+                winLoseImage.rectTransform.anchoredPosition = imageRest + new Vector2(0f, imageShift - panelShift);
+            }
+            yield return null;
+        }
+
+        if (resultContentPanel != null)
+            resultContentPanel.anchoredPosition = panelRest;
+        if (winLoseImage != null)
+            winLoseImage.rectTransform.anchoredPosition = imageRest;
     }
 
     IEnumerator FetchResultLoop()
@@ -93,7 +124,11 @@ public class MatchResultManager : MonoBehaviour
         if (string.IsNullOrEmpty(PlayerSession.PlayerId))
             Debug.LogError("[MatchResult] PlayerSession.PlayerId is EMPTY — IsWinner will be incorrect!");
 
-        ApplyResultBackground(IsWinner);
+        bool iForfeited = IsForfeit && (
+            (!string.IsNullOrEmpty(ForfeitPlayerId) && ForfeitPlayerId == PlayerSession.PlayerId)
+            || (string.IsNullOrEmpty(ForfeitPlayerId) && !IsWinner));
+        bool showVictory = IsForfeit ? !iForfeited : IsWinner;
+        ApplyWinLoseImage(showVictory);
 
         if (resultText != null)
         {
@@ -104,10 +139,6 @@ public class MatchResultManager : MonoBehaviour
             }
             else if (IsForfeit)
             {
-                // forfeitPlayerId = player who forfeited (loser)
-                // IsWinner = true  → opponent forfeited → I win
-                // IsWinner = false → I forfeited → I lose
-                bool iForfeited = !IsWinner;
                 resultText.text = iForfeited
                     ? $"Defeat\nYou forfeited ({TotalInstants} instants)"
                     : $"Victory\nOpponent forfeited ({TotalInstants} instants)";
@@ -121,17 +152,17 @@ public class MatchResultManager : MonoBehaviour
         OnResultLoaded();
     }
 
-    void ApplyResultBackground(bool isWinner)
+    void ApplyWinLoseImage(bool isWinner)
     {
-        if (backgroundImage == null) return;
+        if (winLoseImage == null) return;
 
         Sprite sprite = isWinner ? victoryBackground : defeatBackground;
         if (sprite == null) return;
 
-        backgroundImage.sprite = sprite;
-        backgroundImage.color = Color.white;
-        backgroundImage.preserveAspect = false;
-        backgroundImage.type = Image.Type.Simple;
+        winLoseImage.sprite = sprite;
+        winLoseImage.color = Color.white;
+        winLoseImage.preserveAspect = false;
+        winLoseImage.type = Image.Type.Simple;
     }
 
     protected virtual void OnResultLoaded() { }
