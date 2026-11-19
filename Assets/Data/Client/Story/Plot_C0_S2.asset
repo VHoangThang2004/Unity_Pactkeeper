@@ -21,103 +21,133 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 2
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Welcome back. I have deployed a heavy vanguard alongside your Assassin.
-      True commanders fight as a unit.
+    text: A newly recruited Paladin joins our Assassin at Step 0, frozen in time by the Heavenly Eye. Command both warriors as one, Varek!
     tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Select your Paladin from the Ready Bar.
+    text: Select your Paladin on the Ready Bar to lead the assault.
     tutorialTargetId: Unit2
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 3
-    text: March him forward into striking position at (0, 1).
+    text: March the Paladin to (0, 1) to corner the ambusher in a diagonal crossfire within axe range.
     tutorialTargetId: 
     targetCell: {x: 0, y: 1}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Confirm movement.
+    text: Confirm the Paladin's advance.
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
     delay: 2.5
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Movement is Instant - he can still act. Select the Paladin again.
+    text: Movement is an Instant action, so time remains frozen for his attack. Select the Paladin again.
     tutorialTargetId: Unit2
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 6
-    text: Prepare to heave that heavy axe. Left-click his Weapon Skill.
+    text: Left-click his Weapon Skill (Axe Swing) to ready a heavy cleave.
     tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 3
-    text: Aim directly at the enemy tile (1, 0).
+    text: Lock onto the ambusher at (1, 0) now trapped inside our kill zone.
     tutorialTargetId: 
     targetCell: {x: 1, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Commit the strike.
+    text: Confirm the strike command.
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
     delay: 1.5
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Notice that? The command is locked in, yet no blow has fallen. Let us inspect
-      why.
+    text: Notice how your command is locked in, yet the axe has not fallen? Use the Heavenly Eye to inspect why.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 7
-    text: Click the Paladin on the board at (0, 1) to view his loadout.
+    text: Left-click the Paladin on the board at (0, 1) to view his combat readout.
     tutorialTargetId: 
     targetCell: {x: 0, y: 1}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 2
-    text: Right-click his Weapon Skill to inspect its timing.
+    text: Right-click his Weapon Skill to inspect its execution timing.
     tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Look closely at the Skill Type - every weapon strike is Non-Instant (Delayed).
+    text: "Look at the Skill Type: every weapon attack is Non-Instant (Delayed)."
     tutorialTargetId: STYPE
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Heavy steel takes momentum. All Non-Instant strikes unleash together at
-      the end of the Paused Instant, ordered by Speed.
+    text: While time is frozen, Non-Instant strikes queue up and unleash together once the Instant closes, ordered by unit Speed.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Close the Inspect panel.
+    text: Click Cancel to close the Inspect panel.
     tutorialTargetId: CancelButton
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Press Wait to close the Instant and watch the delayed cleave crash down!
+    text: Time stays frozen until every warrior at Step 0 has acted. Have our Assassin press Wait to save her SP—closing the Instant so the Paladin's queued axe crashes down!
     tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 5
-    text: Well struck. Master the delay between intention and impact, and no foe
-      can evade you.
+    text: A crushing blow, Varek—the ambusher is wounded down to 3/4 HP! With our Assassin's SP charged, let us unleash Limit Break! and Ambush in the next Instant.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}

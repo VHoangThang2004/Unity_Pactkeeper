@@ -53,7 +53,8 @@ public class ServerTimelineManager : MonoBehaviour
     private int Token = 0;
     public int CurrentToken => Token;
     private float _matchStartTime = 0f;
-    private const float MAX_MATCH_DURATION = 3600f; // 60 minutes
+    // 55 min: must report before the backend's 60-min record limit (counted from record creation, i.e. incl. lobby + prep)
+    private const float MAX_MATCH_DURATION = 3300f;
     private const float DISCONNECT_TIMEOUT = 60f;   // 60s after all clients disconnect
 
     // -------------------------------------------------------
@@ -108,7 +109,10 @@ public class ServerTimelineManager : MonoBehaviour
             team.Overtime = (int)session.matchConfig.overtimePerTeam;
 
         if (session.backendClient != null && session.backendClient.Mode == "story")
+        {
             isPvE = true;
+            winCondition = WinCondition.EliminateAll;
+        }
 
         session.FlaggedTeamId = isPvE ? 0 : session.GetOtherTeamId(0);
 
@@ -155,12 +159,23 @@ public class ServerTimelineManager : MonoBehaviour
     IEnumerator TimelineLoop(int gen)
     {
         List<TeamData> teams = session.GetAllTeamData();
+        var activeEncounter = isPvE ? session.GetStoryEncounter() : null;
+        int effectiveMaxInstant = (activeEncounter?.challengeRules != null && activeEncounter.challengeRules.maxInstantsLimit > 0)
+            ? Mathf.Min(session.matchConfig.maxInstant, activeEncounter.challengeRules.maxInstantsLimit)
+            : session.matchConfig.maxInstant;
 
-        while (session.CurrentInstant <= session.matchConfig.maxInstant)
+        while (session.CurrentInstant <= effectiveMaxInstant)
         {
             if (gen != timelineGenerationId) yield break;
             TransitionTo(ServerSessionState.Flowing);
             session.CurrentTeamTurnId = -1;
+
+            // Check challenge ally-loss fail condition early
+            if (IsChallengeAllyDeathExceeded(activeEncounter, teams, out string earlyFailReason))
+            {
+                yield return StartCoroutine(EndMatch(forcedWinnerId: teams[1].playerId, forcedFailReason: earlyFailReason));
+                yield break;
+            }
 
             AllRegenSP();
             actionRecord.Clear();
@@ -253,7 +268,7 @@ public class ServerTimelineManager : MonoBehaviour
         PackFinal();
         BroadcastSnapshot();
         Debug.Log("[Timeline] Match ended — max instant reached.");
-        yield return StartCoroutine(EndMatch());
+        yield return StartCoroutine(EndMatch(forcedFailReason: $"Turn limit reached ({effectiveMaxInstant} Instants)."));
     }
 
     // -------------------------------------------------------
@@ -322,7 +337,8 @@ public class ServerTimelineManager : MonoBehaviour
 
     IEnumerator WaitForDecision(int team, int gen)
     {
-        yield return new WaitForSeconds(2f);
+        float decisionDelay = (isPvE && team == 1) ? 0.7f : 2f;
+        yield return new WaitForSeconds(decisionDelay);
         if (gen != timelineGenerationId) yield break;
         List<TeamData> teams = session.GetAllTeamData();
         pendingDecision = null;
@@ -568,7 +584,7 @@ public class ServerTimelineManager : MonoBehaviour
     // Handler (called by SyncedBridge)
     // -------------------------------------------------------
 
-    public void HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillcardId, int clientToken)
+    public bool HandleDecision(ulong senderClientId, int unitId, Vector3Int target, DecisionType decisionType, int skillcardId, int clientToken)
     {
         int senderTeamId = session.GetTeamNumberByClientId(senderClientId);
         Debug.Log($"[Server] Decision received: client={senderClientId} teamId = {senderTeamId} unit={unitId} target={target} type={decisionType} skill={skillcardId}");
@@ -577,21 +593,21 @@ public class ServerTimelineManager : MonoBehaviour
         {
             Debug.LogWarning($"[Timeline] Token mismatch (client={clientToken} server={Token}) — resyncing.");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
 
         if (session.TimelineState != ServerSessionState.DecisionWaiting || !waitingForDecision)
         {
             Debug.LogWarning($"[Timeline] Wrong state ({session.TimelineState}) — ignored.");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
 
         if (senderTeamId != session.CurrentTeamTurnId)
         {
             Debug.LogWarning($"[Timeline] Team {senderTeamId} sent but team {session.CurrentTeamTurnId}'s turn — ignored.");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
 
         if (unitId == -1)
@@ -600,14 +616,14 @@ public class ServerTimelineManager : MonoBehaviour
             waitingForDecision = false;
             Debug.Log($"[Timeline] Team {senderTeamId} chose wait.");
             // session.AddLog($"Team {senderTeam} — wait."); // truncated (log later in decision loop)
-            return;
+            return true;
         }
 
         if (!session.ReadyUnitIds.Contains(unitId))
         {
             Debug.LogWarning($"[Server] Unit {unitId} not in readyUnitIds");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
 
         var unit = session.GetUnitByUnitId(unitId);
@@ -615,21 +631,21 @@ public class ServerTimelineManager : MonoBehaviour
         {
             Debug.LogWarning($"[Server] Unit {unitId} not found");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
 
         if (session.GetTeamIdByUnitId(unitId) != senderTeamId)
         {
             Debug.LogWarning($"[Server] Unit {unitId} not owned by team {senderTeamId}");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
         SkillDefinition skillDef = session.skillLibrary.Get(skillcardId);
         if (skillDef == null && decisionType != DecisionType.Wait)
         {
             Debug.LogWarning($"[Server] SkillDefinition {skillcardId} not found");
             SendSnapshotToClient(senderClientId);
-            return;
+            return false;
         }
         if (skillDef != null)
         {
@@ -638,13 +654,13 @@ public class ServerTimelineManager : MonoBehaviour
             {
                 Debug.LogWarning($"[Server] Invalid skill usage: unit={unitId} skill={skillcardId}");
                 SendSnapshotToClient(senderClientId);
-                return;
+                return false;
             }
             if (!session.IsValidSkillTarget(unit, skillcardId, target))
             {
                 Debug.LogWarning($"[Server] Invalid skill/target: unit={unitId} skill={skillcardId} target={target}");
                 SendSnapshotToClient(senderClientId);
-                return;
+                return false;
             }
         }
 
@@ -656,6 +672,7 @@ public class ServerTimelineManager : MonoBehaviour
         pendingDecision = (unitId, unit.CurrentCell, target, decisionType, skillcardId);
         waitingForDecision = false;
         Debug.Log($"[Server] Decision accepted: unit={unitId} target={target}");
+        return true;
     }
 
     // Read-only state ServerAIController polls to know when it's the AI's turn.
@@ -960,14 +977,14 @@ public class ServerTimelineManager : MonoBehaviour
         }
     }
 
-    // Cancel match if running longer than 60 minutes
+    // End the match once it has run MAX_MATCH_DURATION
     IEnumerator MatchTimeoutWatchdog()
     {
         while (session.TimelineState != ServerSessionState.Finished)
         {
             if (Time.time - _matchStartTime >= MAX_MATCH_DURATION)
             {
-                Debug.Log("[Timeline] Match exceeded 60 minutes — ending match.");
+                Debug.Log($"[Timeline] Match exceeded {MAX_MATCH_DURATION / 60f:0} minutes — ending match.");
                 yield return StartCoroutine(EndMatch());
                 yield break;
             }
@@ -1027,13 +1044,35 @@ public class ServerTimelineManager : MonoBehaviour
         StartCoroutine(EndMatch(winnerId, isForfeit: true, forfeitPlayerId: forfeitPlayerId));
     }
 
-    IEnumerator EndMatch(string forcedWinnerId = null, bool isForfeit = false, string forfeitPlayerId = null)
+    private bool IsChallengeAllyDeathExceeded(StoryEncounterConfig encounter, List<TeamData> teams, out string reason)
+    {
+        reason = null;
+        if (encounter?.challengeRules == null || encounter.challengeRules.maxAllyDeathsAllowed < 0)
+            return false;
+        if (teams == null || teams.Count == 0)
+            return false;
+
+        int initialAllies = session.GetTeamLoadoutDataByTeamId(teams[0].teamId)?.Units?.Count ?? 0;
+        int alliesLost = Mathf.Max(0, initialAllies - teams[0].unitIds.Count);
+        if (alliesLost > encounter.challengeRules.maxAllyDeathsAllowed)
+        {
+            reason = encounter.challengeRules.maxAllyDeathsAllowed == 0
+                ? "Challenge failed: an ally unit fell in battle."
+                : $"Challenge failed: more than {encounter.challengeRules.maxAllyDeathsAllowed} ally units fell.";
+            return true;
+        }
+        return false;
+    }
+
+    IEnumerator EndMatch(string forcedWinnerId = null, bool isForfeit = false, string forfeitPlayerId = null, string forcedFailReason = null)
     {
         TransitionTo(ServerSessionState.Finished);
 
         var teams = session.GetAllTeamData();
         int team0Units = teams[0].unitIds.Count;
         int team1Units = teams[1].unitIds.Count;
+        int totalTeam0 = session.GetTeamLoadoutDataByTeamId(teams[0].teamId)?.Units?.Count ?? 0;
+        int alliesLost = Mathf.Max(0, totalTeam0 - team0Units);
 
         string winnerId = forcedWinnerId;
         if (string.IsNullOrEmpty(winnerId))
@@ -1065,7 +1104,7 @@ public class ServerTimelineManager : MonoBehaviour
             {
                 playerId = teams[0].playerId,
                 unitsAlive = team0Units,
-                totalUnits = session.GetTeamLoadoutDataByTeamId(teams[0].teamId)?.Units?.Count ?? 0
+                totalUnits = totalTeam0
             },
             new AfterMatchPlayerReport
             {
@@ -1075,36 +1114,47 @@ public class ServerTimelineManager : MonoBehaviour
             }
         };
 
-        // Notify backend before shutting down
+        // Report to the backend. The server never quits itself — ReportResult shuts the network down,
+        // reports, and waits for the backend to stop this process.
         var backendClient = session.backendClient;
-        if (backendClient != null)
+        if (backendClient == null)
         {
-            if (backendClient.Mode == "story")
+            Debug.LogError("[Timeline] No backend client — match result can't be reported.");
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+                NetworkManager.Singleton.Shutdown();
+            yield break;
+        }
+
+        if (backendClient.Mode == "story")
+        {
+            // Player is always team 0 in story mode. Player wins if AI team (1) is wiped and winner is player
+            bool challengeFailed = !string.IsNullOrEmpty(forcedFailReason);
+            bool playerWon = !challengeFailed && winnerId == teams[0].playerId && team1Units == 0 && team0Units > 0;
+            string storyPlayerId = teams[0].playerId;
+
+            string failReason = forcedFailReason;
+            if (!playerWon && string.IsNullOrEmpty(failReason))
             {
-                // Player is always team 0 in story mode. Player wins if AI team (1) is wiped and winner is player
-                bool playerWon = winnerId == teams[0].playerId && team1Units == 0 && team0Units > 0;
-                string storyPlayerId = teams[0].playerId;
-
-                if (playerWon)
-                    yield return StartCoroutine(backendClient.ReportBattleComplete(storyPlayerId));
-                else
-                    Debug.Log("[Timeline] Story battle not won — no progress reported.");
-
-                yield return StartCoroutine(backendClient.ReportResult(
-                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId));
+                if (isForfeit) failReason = "You forfeited the battle.";
+                else if (team0Units == 0) failReason = "All of your warriors fell in battle.";
+                else failReason = "Failed to defeat all enemies in time.";
             }
+
+            if (playerWon)
+                yield return StartCoroutine(backendClient.ReportBattleComplete(storyPlayerId));
             else
+                Debug.Log($"[Timeline] Story battle not won ({failReason}) — no progress reported.");
+
+            if (bridge != null && NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
             {
-                yield return StartCoroutine(backendClient.ReportResult(
-                    winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId));
+                bridge.StoryMatchEndedClientRpc(playerWon, failReason ?? string.Empty, session.CurrentInstant, alliesLost);
+                // Grace window so client finishes resolving the killing blow & receives outcome RPC before transport teardown
+                yield return new WaitForSeconds(1.5f);
             }
         }
 
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
-            NetworkManager.Singleton.Shutdown();
-
-        if (isPvE)
-            Application.Quit();
+        backendClient.ReportResult(
+            winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId);
     }
 
 }

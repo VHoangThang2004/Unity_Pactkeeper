@@ -166,11 +166,17 @@ MonoBehaviour:
     text: Confirm! Let blade and axe execute the judgment together!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: Halfway broken, the Corrupt Tactician fights back with full Arsenal! Finish
+      him within 50 Instants with at most 1 ally lost.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: Four hearts of damage in a single breath! You have mastered every law of
-      the Pact - go forth and conquer the arena!
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

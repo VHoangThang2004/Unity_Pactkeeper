@@ -58,15 +58,9 @@ public class LobbyManager : MonoBehaviour
         {
             Debug.LogError($"[Lobby] Timeout — only {playerCount}/{requiredPlayers} connected.");
             matchStarted = true;
-            StartCoroutine(TimeoutSequence());
+            // Never quits: the backend stops this process once the cancel report lands
+            backendClient.EndMatch($"lobby timeout — {playerCount}/{requiredPlayers} players connected after {elapsed:0}s");
         }
-    }
-
-    IEnumerator TimeoutSequence()
-    {
-        NetworkManager.Singleton.Shutdown();
-        yield return StartCoroutine(backendClient.ReportCancelled());
-        Application.Quit(); // if the report didn't land, the backend reaper sees the dead process and ends the match
     }
 
     bool IsServer() =>

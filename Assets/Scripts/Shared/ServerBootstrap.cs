@@ -51,8 +51,13 @@ public class ServerBootstrap : MonoBehaviour
 
         if (!success)
         {
-            Debug.LogError("❌ Failed to start server! Quitting — the backend sees the process gone and ends the match.");
-            Application.Quit(1);
+            // Never quit: report the match cancelled and let the backend stop this process
+            Debug.LogError($"[Bootstrap] Failed to start server on port {port} — cancelling the match.");
+            IMatchEnder backendClient = null;
+            foreach (var behaviour in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+                if (behaviour is IMatchEnder ender) { backendClient = ender; break; }
+            if (backendClient != null) backendClient.EndMatch($"failed to start server on port {port}");
+            else Debug.LogError("[Bootstrap] No ServerBackendClient in scene — can't report; the backend's 60-min limit will clean up.");
             return;
         }
 

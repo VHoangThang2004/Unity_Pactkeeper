@@ -122,11 +122,17 @@ MonoBehaviour:
     text: Confirm and sweep both flanks at once!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: Both ambushers survived your opening Thorns! Command the Druid freely to
+      outmaneuver and defeat them both.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: The forest answers those who command space. Prepare yourself, Varek - the
-      Corrupt Tactician awaits.
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

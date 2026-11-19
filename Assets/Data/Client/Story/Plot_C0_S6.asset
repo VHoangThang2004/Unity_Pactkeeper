@@ -16,28 +16,25 @@ MonoBehaviour:
   sceneId: 6
   nodes:
   - type: 0
-    text: This is the armory and the secret dossier of each unit.
+    text: This is the Unit Configuration chamber, where you attune each warrior's class, relics, and skills.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: Check the HP, Speed, and Step stats carefully. You can't put someone who
-      is completely drained of stamina on the front line.
+    text: Review HP, Speed, and SP capacity carefully. Higher Speed determines who strikes first when delayed attacks resolve.
     tutorialTargetId: StatPanel
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: Heading into battle without equipping your skills is tantamount to throwing
-      your life away. Remember that well.
+    text: Always verify your Movement, Weapon, Class, and Trinket skills here before marching to the front.
     tutorialTargetId: SkillSlots
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 5
-    text: I have nothing left to teach you. Return to the main hall - the real battle
-      is only just beginning!
+    text: Your awakening is complete, Pactkeeper Varek. Return to the Sanctum—the war for the realm begins now!
     tutorialTargetId: MainMenuButton
     targetCell: {x: 0, y: 0}
     delay: 3

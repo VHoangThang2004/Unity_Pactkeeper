@@ -51,12 +51,23 @@ public class PlotSequencer : MonoBehaviour
     private int _currentIndex = 0;
     private bool _waitingForInput = false;
     private System.Action _onComplete;
+    private System.Action _onReleasedToFreePlay;
 
     private TutorialTarget _guidedDragSourceTarget;
     private UnitContainer _guidedDragSourceContainer;
     private UnitListDragHandler _guidedDragHandler;
     private bool _guidedDragInProgress;
     private bool _guidedDropCompleted;
+
+    private GameObject _slideOverlayRoot;
+    private Image _slideBackdropImage;
+    private TMP_Text _slidePlaceholderLabel;
+
+    /// <summary>
+    /// Set to true when C0_S0 has just played the 4-slide Visual Novel intro in this session
+    /// so C0_S1 does not repeat the same 4 slides back-to-back.
+    /// </summary>
+    public static bool HasShownChapter0IntroSlides { get; set; } = false;
 
     void Awake()
     {
@@ -491,9 +502,13 @@ public class PlotSequencer : MonoBehaviour
     private System.Collections.Generic.Queue<PlotEntry> _pendingPlots;
     private bool _plotRunning = false;
 
-    public void StartPlotWithTriggers(System.Collections.Generic.List<PlotEntry> plots, System.Action onComplete = null)
+    public void StartPlotWithTriggers(
+        System.Collections.Generic.List<PlotEntry> plots,
+        System.Action onComplete = null,
+        System.Action onReleasedToFreePlay = null)
     {
         _onComplete = onComplete;
+        _onReleasedToFreePlay = onReleasedToFreePlay;
         _pendingPlots = new System.Collections.Generic.Queue<PlotEntry>(plots);
         PlotDirector.OnTrigger -= HandleTrigger;
         PlotDirector.OnTrigger += HandleTrigger;
@@ -541,8 +556,23 @@ public class PlotSequencer : MonoBehaviour
         while (_currentIndex < plot.nodes.Count)
         {
             PlotNode node = plot.nodes[_currentIndex];
+            if (!string.IsNullOrEmpty(node.slideId) && HasShownChapter0IntroSlides)
+            {
+                _currentIndex++;
+                continue;
+            }
+            if (string.IsNullOrEmpty(node.slideId) && node.type != PlotNodeType.AutoAdvance)
+                HasShownChapter0IntroSlides = false;
+
             yield return StartCoroutine(RunNode(node));
-            blockerPanel.SetActive(true);
+            if (node.type == PlotNodeType.ReleaseToFreePlay)
+            {
+                _currentIndex++;
+                continue;
+            }
+
+            if (!node.isNonBlockingTip && !TutorialContext.IsFreePlayBattle)
+                blockerPanel.SetActive(true);
             bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
                              (_currentIndex + 1 < plot.nodes.Count) &&
                              (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
@@ -561,8 +591,23 @@ public class PlotSequencer : MonoBehaviour
         while (_currentIndex < plot.nodes.Count)
         {
             var node = plot.nodes[_currentIndex];
+            if (!string.IsNullOrEmpty(node.slideId) && HasShownChapter0IntroSlides)
+            {
+                _currentIndex++;
+                continue;
+            }
+            if (string.IsNullOrEmpty(node.slideId) && node.type != PlotNodeType.AutoAdvance)
+                HasShownChapter0IntroSlides = false;
+
             yield return StartCoroutine(RunNode(node));
-            blockerPanel.SetActive(true);
+            if (node.type == PlotNodeType.ReleaseToFreePlay)
+            {
+                _currentIndex++;
+                continue;
+            }
+
+            if (!node.isNonBlockingTip && !TutorialContext.IsFreePlayBattle)
+                blockerPanel.SetActive(true);
             bool skipDelay = (node.type == PlotNodeType.GuidedDrag) &&
                              (_currentIndex + 1 < plot.nodes.Count) &&
                              (plot.nodes[_currentIndex + 1].type == PlotNodeType.GuidedDrop);
@@ -576,7 +621,8 @@ public class PlotSequencer : MonoBehaviour
 
     IEnumerator RunNode(PlotNode node)
     {
-        if (ContainsInteractiveBattleNodes(plot) || matchSession != null || FindAnyObjectByType<ClientMatchSession>() != null)
+        bool skipStableWait = node.isNonBlockingTip || node.type == PlotNodeType.ReleaseToFreePlay;
+        if (!skipStableWait && (ContainsInteractiveBattleNodes(plot) || matchSession != null || FindAnyObjectByType<ClientMatchSession>() != null))
         {
             yield return StartCoroutine(WaitForBattleUIStable());
         }
@@ -622,6 +668,10 @@ public class PlotSequencer : MonoBehaviour
             case PlotNodeType.CompleteAndExit:
                 yield return StartCoroutine(RunCompleteAndExit(node));
                 yield break;
+
+            case PlotNodeType.ReleaseToFreePlay:
+                yield return StartCoroutine(RunReleaseToFreePlay(node));
+                break;
         }
     }
 
@@ -632,6 +682,22 @@ public class PlotSequencer : MonoBehaviour
     IEnumerator RunTextBox(PlotNode node)
     {
         HideAll();
+        ShowSlideIfPresent(node);
+
+        if (node.isNonBlockingTip)
+        {
+            if (textBoxPanel != null)
+            {
+                textBoxPanel.SetActive(true);
+                if (dialogueText != null)
+                    dialogueText.text = node.text;
+            }
+            float tipDuration = node.delay > 0f ? node.delay : 4f;
+            yield return new WaitForSeconds(tipDuration);
+            HideAll();
+            yield break;
+        }
+
         if (nextButton != null)
         {
             var nbImg = nextButton.GetComponent<Image>();
@@ -888,6 +954,14 @@ public class PlotSequencer : MonoBehaviour
         EnsureBattleReferences();
         HideAll();
         blockerPanel.SetActive(true);
+
+        if (interactionSystem != null && interactionSystem.stateMachine != null &&
+            interactionSystem.stateMachine.currentState is not UnitSelectedState &&
+            matchSession != null && matchSession.ownedReadyUnitIds != null && matchSession.ownedReadyUnitIds.Count > 0)
+        {
+            int uId = matchSession.selectedUnitId != -1 ? matchSession.selectedUnitId : matchSession.ownedReadyUnitIds[0];
+            interactionSystem.stateMachine.GoToUnitSelected(uId);
+        }
 
         if (!string.IsNullOrEmpty(node.text))
         {
@@ -1468,6 +1542,28 @@ public class PlotSequencer : MonoBehaviour
     }
 
     // -------------------------------------------------------
+    // ReleaseToFreePlay - hand full tactical control to player vs AI
+    // -------------------------------------------------------
+
+    IEnumerator RunReleaseToFreePlay(PlotNode node)
+    {
+        HideAll();
+
+        if (!string.IsNullOrEmpty(node.text) && textBoxPanel != null && dialogueText != null)
+        {
+            textBoxPanel.SetActive(true);
+            dialogueText.text = node.text;
+            float showDuration = node.delay > 0f ? node.delay : 3.5f;
+            yield return new WaitForSeconds(showDuration);
+            HideAll();
+        }
+
+        TutorialContext.ReleaseToFreePlay();
+        Debug.Log("[PlotSequencer] Tutorial released control to free tactical combat vs AI.");
+        _onReleasedToFreePlay?.Invoke();
+    }
+
+    // -------------------------------------------------------
     // Helpers
     // -------------------------------------------------------
 
@@ -1600,6 +1696,88 @@ public class PlotSequencer : MonoBehaviour
         if (blockerPanel != null) blockerPanel.SetActive(false);
         if (tutorialButton != null) tutorialButton.SetActive(false);
         if (highlighter != null) highlighter.SetActive(false);
+        if (_slideOverlayRoot != null) _slideOverlayRoot.SetActive(false);
+    }
+
+    private void ShowSlideIfPresent(PlotNode node)
+    {
+        if (node == null || (string.IsNullOrEmpty(node.slideId) && node.slideSprite == null))
+        {
+            if (_slideOverlayRoot != null) _slideOverlayRoot.SetActive(false);
+            return;
+        }
+
+        EnsureSlideOverlayCreated();
+        if (_slideOverlayRoot == null) return;
+
+        Sprite resolvedSprite = node.slideSprite;
+        if (resolvedSprite == null && !string.IsNullOrEmpty(node.slideId))
+        {
+            resolvedSprite = Resources.Load<Sprite>($"StorySlides/{node.slideId}")
+                          ?? Resources.Load<Sprite>(node.slideId);
+        }
+
+        if (_slideBackdropImage != null)
+        {
+            _slideBackdropImage.sprite = resolvedSprite;
+            _slideBackdropImage.color = resolvedSprite != null
+                ? Color.white
+                : new Color(0.06f, 0.05f, 0.09f, 0.94f);
+            _slideBackdropImage.preserveAspect = false;
+        }
+
+        if (_slidePlaceholderLabel != null)
+        {
+            bool showPlaceholder = resolvedSprite == null && !string.IsNullOrEmpty(node.slideId);
+            _slidePlaceholderLabel.gameObject.SetActive(showPlaceholder);
+            if (showPlaceholder)
+            {
+                _slidePlaceholderLabel.text = $"[ Illustration Placeholder: {node.slideId} ]";
+            }
+        }
+
+        _slideOverlayRoot.SetActive(true);
+    }
+
+    private void EnsureSlideOverlayCreated()
+    {
+        if (_slideOverlayRoot != null) return;
+
+        Transform parentCanvasTransform = textBoxPanel != null ? textBoxPanel.transform.parent : transform;
+        _slideOverlayRoot = new GameObject("VN_SlideOverlay", typeof(RectTransform), typeof(Canvas), typeof(CanvasRenderer), typeof(Image));
+        _slideOverlayRoot.transform.SetParent(parentCanvasTransform, false);
+
+        var rt = _slideOverlayRoot.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+
+        var slideCanvas = _slideOverlayRoot.GetComponent<Canvas>();
+        slideCanvas.overrideSorting = true;
+        slideCanvas.sortingOrder = 1001;
+
+        _slideBackdropImage = _slideOverlayRoot.GetComponent<Image>();
+        _slideBackdropImage.raycastTarget = false;
+        _slideBackdropImage.color = new Color(0.06f, 0.05f, 0.09f, 0.94f);
+
+        var labelObj = new GameObject("SlidePlaceholderLabel", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        labelObj.transform.SetParent(_slideOverlayRoot.transform, false);
+        var labelRt = labelObj.GetComponent<RectTransform>();
+        labelRt.anchorMin = new Vector2(0.5f, 0.62f);
+        labelRt.anchorMax = new Vector2(0.5f, 0.62f);
+        labelRt.sizeDelta = new Vector2(900f, 80f);
+        labelRt.anchoredPosition = Vector2.zero;
+
+        _slidePlaceholderLabel = labelObj.GetComponent<TextMeshProUGUI>();
+        if (dialogueText != null && dialogueText.font != null)
+            _slidePlaceholderLabel.font = dialogueText.font;
+        _slidePlaceholderLabel.fontSize = 26f;
+        _slidePlaceholderLabel.alignment = TextAlignmentOptions.Center;
+        _slidePlaceholderLabel.color = new Color(0.85f, 0.76f, 0.55f, 0.85f);
+        _slidePlaceholderLabel.raycastTarget = false;
+
+        _slideOverlayRoot.SetActive(false);
     }
 
     public void ButtonDebugger()

@@ -21,102 +21,125 @@ MonoBehaviour:
     targetCell: {x: 0, y: 0}
     delay: 2
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Welcome to the proving grounds, Pactkeeper. I am Commander Reinhardt. Use
-      W, A, S, D and the mouse wheel to survey the arena.
+    text: Commander Reinhardt here—stay sharp, Varek! Shift your gaze through the Heavenly Eye using W, A, S, D and the Mouse Wheel to survey the ambush.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Eyes on the Ready Bar at the top. Your Assassin has reached Step 0 and
-      awaits your command.
+    text: Watch the Ready Bar above. The instant our Assassin reaches Step 0, the Heavenly Eye freezes time and awaits your telepathic command.
     tutorialTargetId: OwnedReadyBar
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Select your Assassin.
+    text: Select our Assassin on the Ready Bar to link your mind with hers.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Notice that glowing Eye symbol? Real time has come to a halt. While the
-      Eye remains open, the battlefield bends to your will.
+    text: See that glowing Heavenly Eye icon? Time is completely frozen—while the Eye stays open, you may plan and issue commands freely.
     tutorialTargetId: YourEye
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 3
-    text: Advance your Assassin into an L-shaped flanking stance at (0, -1). Never
-      leave yourself exposed.
+    text: Move our Assassin in an L-shaped bound from (-3, -2) to (-2, 0) to close in on the ambusher while staying out of reach.
     tutorialTargetId: 
-    targetCell: {x: 0, y: -1}
+    targetCell: {x: -2, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Confirm your movement.
+    text: Confirm her movement command.
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
     delay: 1.5
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Clean footwork. Movement is an Instant action, so your turn is still active.
-      Press Wait - those who bide their time survive.
+    text: Movement is Instant, so your turn stays open after stepping once. Since we are safely out of the enemy's reach at (-2, 0), press Wait to end your turn and bank SP!
     tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
     delay: 1
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 4
     text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 7
     targetWaitTimeout: 15
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: I intentionally yielded my turn as well. Only a fool lunges blindly when
-      the quarry stands out of reach.
+    text: The ambusher held his ground and wasted his turn! Now let us check if our blade can reach him from (-2, 0).
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Select your Assassin once more.
+    text: Select our Assassin again at Step 0.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0.5
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 2
-    text: Blades do not swing themselves. Right-click your Weapon Skill to inspect
-      its reach.
+    text: Right-click her Weapon Skill (Dagger Thrust) to inspect its attack range and SP cost.
     tutorialTargetId: WSKILL
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 0
-    text: Study the Inspect panel carefully - range, SP cost, and damage. Never swing
-      steel at thin air.
+    text: "The Heavenly Eye reveals the truth: Dagger Thrust only strikes 1 tile ahead. From (-2, 0), the enemy at (1, 0) stands outside our reach."
     tutorialTargetId: InspectPanel
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: Close the Inspect panel.
+    text: Click Cancel to close the Inspect panel.
     tutorialTargetId: CancelButton
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 1
-    text: The distance is still too wide. Press Wait and let your enemy walk into
-      the trap.
+    text: Attacking from an off-row would strike thin air and waste precious SP. Press Wait to stock more SP while my heavy Paladin catches up to Step 0!
     tutorialTargetId: WaitButton
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}
   - type: 5
-    text: Discipline before bloodshed. That concludes your first lesson, Pactkeeper.
+    text: Discipline wins wars, Varek! Your Assassin's SP is banked, and my heavy Paladin has just reached Step 0 to reinforce the line!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
+    slideId: 
+    slideSprite: {fileID: 0}

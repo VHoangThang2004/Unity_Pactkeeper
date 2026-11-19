@@ -49,7 +49,7 @@ MonoBehaviour:
     weaponSkillId: -1
     classSkillId: -1
     trinketSkillId: -1
-    maxHP: 3
+    maxHP: 4
     currentHP: 3
     maxSkillPoint: 3
     currentSkillPoint: 0

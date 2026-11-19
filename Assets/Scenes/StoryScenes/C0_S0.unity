@@ -777,6 +777,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Client::C0_S0
   config: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
+  nameInputField: {fileID: 532989605}
+  confirmButton: {fileID: 1645258022}
+  feedbackText: {fileID: 0}
+  bg_c0_ambush: {fileID: 4466513504102076713, guid: 1c49bacfbf04bfd45b1aee68b630e235, type: 3}
+  bg_c0_heavenly_eye: {fileID: 9118483607616130038, guid: 65cd8ab2e5fc4dc4199c9e0a329b411a, type: 3}
+  bg_c0_pactkeeper_awaken: {fileID: -8768084463297996650, guid: 8de385d5b1996844780ab32aafaffe2f, type: 3}
+  bg_c0_reinhardt_briefing: {fileID: 3898050941544553927, guid: 49824a166ca7c4449b1befa177bba40b, type: 3}
 --- !u!4 &1473669005
 Transform:
   m_ObjectHideFlags: 0
@@ -1008,7 +1015,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CONFIRM
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

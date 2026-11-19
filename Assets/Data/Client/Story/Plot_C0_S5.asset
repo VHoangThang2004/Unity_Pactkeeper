@@ -16,37 +16,37 @@ MonoBehaviour:
   sceneId: 5
   nodes:
   - type: 0
-    text: The battlefield is no place for the lone wolf.
+    text: Even with the Heavenly Eye, a Pactkeeper cannot march into war with an incomplete formation.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: You need to bring along people you can trust. Just look at this empty lineup.
+    text: Look at our active Combat Lineup—the ambush left open slots in our vanguard that must be reinforced.
     tutorialTargetId: C0S3_0
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 8
-    text: Choose the person to whom you entrust your life.
+    text: Drag a reserve warrior from the roster below to bind them into your active squad.
     tutorialTargetId: C0S3_2
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 9
-    text: Add another unit to the team.
+    text: Drop the warrior into the open formation slot to complete our vanguard.
     tutorialTargetId: C0S3_1
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: A good lineup determines 50% of the victory before any blood is even shed.
+    text: Well formed, Varek. A balanced 3-unit formation is half the victory before the Heavenly Eye even opens.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: Now, we need to inspect their equipment.
+    text: Now let us inspect a warrior's armaments and combat skills before our next campaign.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 3

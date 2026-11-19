@@ -162,11 +162,17 @@ MonoBehaviour:
     text: Confirm! Watch all three blades and arrows converge in a single Instant!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: The Iron Warlord still stands! Take full command and defeat him within
+      45 Instants while losing at most 1 ally.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: One shove turned an untouchable warlord into ashes. Chapter 1 is yours,
-      Pactkeeper!
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

@@ -7,7 +7,8 @@ public class ClientMenuReturner : MonoBehaviour
     [SerializeField] private SceneConfig sceneConfig;
     void Start()
     {
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnDisconnected;
+        if (NetworkManager.Singleton != null)
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnDisconnected;
     }
 
     void OnDestroy()
@@ -18,12 +19,21 @@ public class ClientMenuReturner : MonoBehaviour
 
     private void OnDisconnected(ulong clientId)
     {
-        if (TutorialContext.IsActive)
-        {
-            Debug.Log("[Client] Disconnected during active tutorial — tutorial overlay handles scene transition.");
-            return;
-        }
         if (NetworkManager.Singleton != null && clientId != NetworkManager.Singleton.LocalClientId) return;
+
+        // If a story overlay (Scripted, Hybrid, or Challenge) is present, let BattleTutorialStarter
+        // route Victory/Defeat/Retry cleanly without kicking into PvP MatchResultScene.
+        if (TutorialContext.IsActive || TutorialContext.IsFreePlayBattle || TutorialContext.HasBattleEnded)
+        {
+            var starter = FindAnyObjectByType<BattleTutorialStarter>();
+            if (starter != null)
+            {
+                Debug.Log("[ClientMenuReturner] Disconnected during story battle — delegating to BattleTutorialStarter.");
+                starter.HandleUnexpectedDisconnect();
+                return;
+            }
+        }
+
         Debug.Log("[Client] Disconnected — returning to match result.");
         SceneManager.LoadScene(sceneConfig.matchResultScene);
     }

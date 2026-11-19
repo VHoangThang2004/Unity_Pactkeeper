@@ -175,11 +175,17 @@ MonoBehaviour:
     text: Confirm! Arrow and axe fall together!
     tutorialTargetId: ConfirmButton
     targetCell: {x: 0, y: 0}
+    delay: 3
+    targetWaitTimeout: 10
+  - type: 0
+    text: The Sentinel rallies! Use your relics and positioning freely to finish the
+      duel and clear Chapter 2.
+    tutorialTargetId: 
+    targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
-  - type: 5
-    text: Relics mastered, Chapter 2 complete! Ahead lies the Emerald Sanctum - and
-      the final trial of the Pact.
+  - type: 10
+    text: 
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

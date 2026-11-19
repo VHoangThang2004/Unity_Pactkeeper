@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -77,7 +78,7 @@ public class AfterMatchPlayerReport
     public int totalUnits;
 }
 
-public class ServerBackendClient : MonoBehaviour
+public class ServerBackendClient : MonoBehaviour, IMatchEnder
 {
     [Header("Config")]
     [SerializeField] private BackendConfig config;
@@ -107,6 +108,8 @@ public class ServerBackendClient : MonoBehaviour
 
     void Start()
     {
+        Debug.Log($"[ServerBackendClient] Process PID={System.Diagnostics.Process.GetCurrentProcess().Id} " +
+                  $"backend={config.backendUrl} args='{System.Environment.CommandLine}'");
         StartCoroutine(FetchMatchData());
     }
 
@@ -135,9 +138,10 @@ public class ServerBackendClient : MonoBehaviour
         }
 
         yield return StartCoroutine(Login());
+        StartCoroutine(HeartbeatLoop()); // until the backend kills this process — also while ending/idle
         if (string.IsNullOrEmpty(ServerToken))
         {
-            yield return StartCoroutine(QuitMatchServer("could not log in to the backend"));
+            EndMatch("startup failed: could not log in to the backend");
             yield break;
         }
 
@@ -146,7 +150,7 @@ public class ServerBackendClient : MonoBehaviour
         yield return StartCoroutine(FetchMatchInfo(() => gotInfo = true));
         if (!gotInfo)
         {
-            yield return StartCoroutine(QuitMatchServer("could not fetch match info"));
+            EndMatch("startup failed: could not fetch match info");
             yield break;
         }
 
@@ -165,22 +169,12 @@ public class ServerBackendClient : MonoBehaviour
         yield return StartCoroutine(FetchLoadouts());
         if (LoadoutResponse == null)
         {
-            yield return StartCoroutine(QuitMatchServer("could not fetch loadouts"));
+            EndMatch("startup failed: could not fetch loadouts");
             yield break;
         }
 
         IsReady = true;
         Debug.Log($"[ServerBackendClient] Ready. Mode={Mode}");
-    }
-
-    // A match server that can't talk to the backend can't run a match: nobody passes verify-player and no
-    // result can be reported. Exit instead of holding the port — the backend reaper ends the match within ~30s.
-    IEnumerator QuitMatchServer(string reason)
-    {
-        Debug.LogError($"[ServerBackendClient] Startup failed ({reason}) — quitting.");
-        if (!string.IsNullOrEmpty(ServerToken))
-            yield return StartCoroutine(ReportCancelled());
-        Application.Quit(1);
     }
 
     // -------------------------------------------------------
@@ -283,6 +277,19 @@ public class ServerBackendClient : MonoBehaviour
     // Calls back with the backend-verified playerId, or null if the token is invalid or not a player of this match.
     public IEnumerator VerifyPlayer(string playerToken, System.Action<string> done)
     {
+        // A player can connect before this server's own login finished — calling now would send no token (401).
+        // Wait a little; the whole approval must stay under NGO's ~10s pending-connection timeout.
+        float waitStart = Time.realtimeSinceStartup;
+        while (string.IsNullOrEmpty(ServerToken) && Time.realtimeSinceStartup - waitStart < 5f)
+            yield return null;
+        if (string.IsNullOrEmpty(ServerToken))
+        {
+            Debug.LogWarning("[ServerBackendClient] verify-player: server not logged in to the backend yet — " +
+                             "rejecting for now, the client's retry will try again.");
+            done(null);
+            yield break;
+        }
+
         byte[] body = System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(new VerifyPlayerRequest { token = playerToken }));
 
         using var request = new UnityWebRequest($"{config.backendUrl}/api/match/{MatchId}/verify-player", "POST");
@@ -290,7 +297,7 @@ public class ServerBackendClient : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         config.SetHeaders(request, ServerToken);
-        request.timeout = 5;
+        request.timeout = 4;
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -307,19 +314,69 @@ public class ServerBackendClient : MonoBehaviour
     [System.Serializable] private class VerifyPlayerResponse { public string playerId; }
 
     // -------------------------------------------------------
-    // Report
+    // Heartbeat — tells the backend "this server is alive and its main thread is running".
+    // The backend ends a match with no heartbeat for 2.5 min (crashed / hung server), so one lost beat is fine:
+    // no retries here, the next beat is the retry.
     // -------------------------------------------------------
 
-    public IEnumerator ReportCancelled()
+    const float HeartbeatIntervalSeconds = 60f;
+
+    IEnumerator HeartbeatLoop()
     {
-        Debug.Log($"[ServerBackendClient] Reporting cancelled for match {MatchId}");
-        yield return StartCoroutine(ReportStatus("cancelled", null));
+        bool warnedNoRecord = false;
+        while (true)
+        {
+            // Token missing (startup login failed) or rejected (401 below) — get a new one; ReportStatus may too
+            if (string.IsNullOrEmpty(ServerToken))
+                yield return StartCoroutine(Login());
+
+            if (!string.IsNullOrEmpty(ServerToken))
+            {
+                string phase = IsEnding ? "ending" : UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                byte[] body = System.Text.Encoding.UTF8.GetBytes(JsonUtility.ToJson(new HeartbeatRequest { phase = phase }));
+
+                using var request = new UnityWebRequest($"{config.backendUrl}/api/match/{MatchId}/heartbeat", "POST");
+                request.uploadHandler = new UploadHandlerRaw(body);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+                config.SetHeaders(request, ServerToken);
+                request.timeout = 10;
+                yield return request.SendWebRequest();
+
+                if (request.responseCode == 401)
+                    ServerToken = string.Empty;
+                else if (request.responseCode == 404 && !warnedNoRecord)
+                {
+                    warnedNoRecord = true;
+                    Debug.LogWarning($"[ServerBackendClient] Heartbeat: match record {MatchId} is gone — " +
+                                     "waiting for the backend to stop this server.");
+                }
+                else if (request.result != UnityWebRequest.Result.Success && request.responseCode != 404)
+                    Debug.LogWarning($"[ServerBackendClient] Heartbeat failed ({phase}): {request.responseCode} {request.error}");
+            }
+
+            yield return new WaitForSecondsRealtime(HeartbeatIntervalSeconds);
+        }
     }
 
-    public IEnumerator ReportResult(string winnerId, int durationSeconds, int totalInstants, AfterMatchPlayerReport[] afterMatchTeamData, bool isForfeit = false, string forfeitPlayerId = null)
+    [System.Serializable] private class HeartbeatRequest { public string phase; }
+
+    // -------------------------------------------------------
+    // End of life — a match server NEVER quits itself: only the backend has cleanup authority.
+    // It reports its final status, then idles until the backend stops the process:
+    //   report accepted          → backend kills it right away
+    //   record already gone (404) → backend kills it as an orphan within seconds
+    //   backend unreachable      → keeps retrying; if it never comes back, the backend's 60-min limit ends it
+    // -------------------------------------------------------
+
+    public bool IsEnding { get; private set; }
+
+    // Any failure / timeout / abort path: the match is cancelled
+    public void EndMatch(string reason) => EndMatch(reason, "cancelled", null);
+
+    public void ReportResult(string winnerId, int durationSeconds, int totalInstants, AfterMatchPlayerReport[] afterMatchTeamData, bool isForfeit = false, string forfeitPlayerId = null)
     {
-        Debug.Log($"[ServerBackendClient] Reporting result for match {MatchId} — winner: {winnerId}, isForfeit: {isForfeit}");
-        yield return StartCoroutine(ReportStatus("completed", new MatchReportResult
+        EndMatch($"match finished — winner={winnerId} isForfeit={isForfeit}", "completed", new MatchReportResult
         {
             winnerId = winnerId,
             durationSeconds = durationSeconds,
@@ -327,7 +384,46 @@ public class ServerBackendClient : MonoBehaviour
             isForfeit = isForfeit,
             forfeitPlayerId = forfeitPlayerId ?? string.Empty,
             afterMatchTeamData = afterMatchTeamData
-        }));
+        });
+    }
+
+    void EndMatch(string reason, string status, MatchReportResult result)
+    {
+        if (IsEnding)
+        {
+            Debug.LogWarning($"[ServerBackendClient][END] Ignored second end request ('{reason}') — already ending.");
+            return;
+        }
+        IsEnding = true;
+        Debug.Log($"[ServerBackendClient][END] match={MatchId} status={status} reason={reason} " +
+                  $"uptime={Time.realtimeSinceStartup:0}s");
+        // Runs on this DontDestroyOnLoad object, so a scene change can't cut the report short
+        StartCoroutine(EndSequence(reason, status, result));
+    }
+
+    IEnumerator EndSequence(string reason, string status, MatchReportResult result)
+    {
+        // Let the last RPCs (match end screen etc.) reach the clients before closing the transport
+        yield return new WaitForSecondsRealtime(2f);
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            NetworkManager.Singleton.Shutdown();
+            Debug.Log("[ServerBackendClient][END] Network shut down — clients disconnected.");
+        }
+
+        if (string.IsNullOrEmpty(MatchId))
+            Debug.Log("[ServerBackendClient][END] No matchId (dev run) — nothing to report.");
+        else
+            yield return StartCoroutine(ReportStatus(status, result));
+
+        float idleSince = Time.realtimeSinceStartup;
+        while (true)
+        {
+            yield return new WaitForSecondsRealtime(60f);
+            Debug.LogWarning($"[ServerBackendClient][END] Still alive, waiting for the backend to stop this server — " +
+                             $"match={MatchId} reason={reason} waited={Time.realtimeSinceStartup - idleSince:0}s " +
+                             $"PID={System.Diagnostics.Process.GetCurrentProcess().Id}");
+        }
     }
 
     // Story mode only — notifies backend the player won a story battle scene.
@@ -340,58 +436,102 @@ public class ServerBackendClient : MonoBehaviour
         string json = $"{{\"playerId\":\"{playerId}\",\"chapterId\":{ChapterId},\"sceneId\":{SceneId}}}";
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
 
-        using var request = new UnityWebRequest(
-            $"{config.backendUrl}/api/story/progress/battle-complete", "POST");
-        request.uploadHandler = new UploadHandlerRaw(body);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-        config.SetHeaders(request, ServerToken);
+        // Retried: the backend ignores a repeat for an already-completed scene, so resending is safe
+        bool ok = false;
+        long failCode = 0;
+        yield return StartCoroutine(SendWithRetry("Report battle complete", () =>
+        {
+            var request = new UnityWebRequest($"{config.backendUrl}/api/story/progress/battle-complete", "POST");
+            request.uploadHandler = new UploadHandlerRaw(body);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+            config.SetHeaders(request, ServerToken);
+            return request;
+        }, _ => ok = true, attempts: 8, timeoutSeconds: 30, onGiveUp: code => failCode = code));
 
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-            Debug.LogError($"[ServerBackendClient] Failed to report battle complete: {request.error}");
-        else
-            Debug.Log("[ServerBackendClient] Battle complete reported successfully.");
+        if (ok) Debug.Log($"[ServerBackendClient] Battle complete reported for player {playerId}.");
+        else Debug.LogError($"[ServerBackendClient] Battle complete NOT recorded for player {playerId} " +
+                            $"chapter={ChapterId} scene={SceneId} (last HTTP {failCode}) — story progress lost.");
     }
 
+    // Retries until the backend gives a definitive answer. Safe to repeat: the backend applies only the
+    // first report of a match (the rest get "already_reported").
     IEnumerator ReportStatus(string status, MatchReportResult result)
     {
         string json = result != null
             ? $"{{\"status\":\"{status}\",\"result\":{JsonUtility.ToJson(result)}}}"
             : $"{{\"status\":\"{status}\"}}";
-
         byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+        Debug.Log($"[ServerBackendClient] Reporting '{status}' for match {MatchId}: {json}");
 
-        // Safe to retry: the backend applies only the first report of a match (later ones get "already_reported").
-        // ~8 tries over ~1 min of backoff covers a backend restart; the backend kills this process once it's done.
-        // A 401 means our token is no longer accepted (JWT key rotated, backend restarted with a new key, expiry):
-        // log in again once and resend — still safe, thanks to the backend's one-report-per-match claim.
-        bool reported = false;
-        for (int pass = 1; pass <= 2 && !reported; pass++)
+        float start = Time.realtimeSinceStartup;
+        for (int attempt = 1; ; attempt++)
         {
-            long failCode = 0;
-            yield return StartCoroutine(SendWithRetry($"Report {status}", () =>
+            float elapsed = Time.realtimeSinceStartup - start;
+
+            // No token (startup login failed, or the last one was rejected) — try to get one first
+            if (string.IsNullOrEmpty(ServerToken))
+                yield return StartCoroutine(Login());
+
+            if (string.IsNullOrEmpty(ServerToken))
             {
-                var request = new UnityWebRequest($"{config.backendUrl}/api/match/{MatchId}/status", "PATCH");
+                Debug.LogWarning($"[ServerBackendClient] Report '{status}' attempt {attempt} ({elapsed:0}s): " +
+                                 "can't log in to the backend — retrying.");
+            }
+            else
+            {
+                using var request = new UnityWebRequest($"{config.backendUrl}/api/match/{MatchId}/status", "PATCH");
                 request.uploadHandler = new UploadHandlerRaw(body);
                 request.downloadHandler = new DownloadHandlerBuffer();
                 request.SetRequestHeader("Content-Type", "application/json");
-                config.SetHeaders(request, ServerToken); // read per attempt, so a fresh token is used after re-login
-                return request;
-            }, _ => reported = true, attempts: 8, timeoutSeconds: 30, onGiveUp: code => failCode = code));
+                config.SetHeaders(request, ServerToken);
+                request.timeout = 30;
+                yield return request.SendWebRequest();
 
-            if (reported || failCode != 401 || pass == 2) break;
+                long code = request.responseCode;
+                string response = Truncate(request.downloadHandler?.text);
 
-            Debug.LogWarning("[ServerBackendClient] Report rejected with 401 — logging in again.");
-            ServerToken = string.Empty;
-            yield return StartCoroutine(Login());
-            if (string.IsNullOrEmpty(ServerToken)) break;
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    Debug.Log($"[ServerBackendClient] Report '{status}' accepted (attempt {attempt}, {elapsed:0}s): " +
+                              $"{code} {response}");
+                    yield break;
+                }
+
+                if (code == 404)
+                {
+                    Debug.LogError($"[ServerBackendClient] Report '{status}' → 404: match record {MatchId} no longer " +
+                                   "exists on the backend — RESULT NOT RECORDED. Something removed the record before " +
+                                   "the match ended (admin end-all, 60-min limit, or another backend sharing the DB). " +
+                                   "The backend will stop this server as an orphan.");
+                    yield break;
+                }
+
+                if (code == 401)
+                {
+                    Debug.LogWarning($"[ServerBackendClient] Report '{status}' attempt {attempt}: 401 — token rejected, " +
+                                     "logging in again.");
+                    ServerToken = string.Empty;
+                }
+                else if (code >= 400 && code < 500 && code != 408 && code != 429)
+                {
+                    Debug.LogError($"[ServerBackendClient] Report '{status}' rejected with {code} (not retryable) — " +
+                                   $"RESULT NOT RECORDED. Response: {response}");
+                    yield break;
+                }
+                else
+                {
+                    Debug.LogWarning($"[ServerBackendClient] Report '{status}' attempt {attempt} ({elapsed:0}s) failed: " +
+                                     $"{code} {request.error} {response} — retrying.");
+                }
+            }
+
+            yield return new WaitForSecondsRealtime(Mathf.Min(attempt * 2f, 30f));
         }
-
-        if (reported) Debug.Log($"[ServerBackendClient] Status reported: {status}");
-        else Debug.LogError($"[ServerBackendClient] Gave up reporting status '{status}' — result is lost.");
     }
+
+    static string Truncate(string s, int max = 300) =>
+        string.IsNullOrEmpty(s) ? string.Empty : (s.Length <= max ? s : s.Substring(0, max) + "…");
 
     [System.Serializable]
     private class MatchReportResult

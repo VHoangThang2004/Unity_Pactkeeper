@@ -104,4 +104,10 @@ public class SyncedBridge : NetworkBehaviour
     {
         client?.OnSnapshotReceived(before, resolve, secret, decision, token);
     }
+
+    [ClientRpc]
+    public void StoryMatchEndedClientRpc(bool playerWon, string failReason, int instantsUsed, int unitsLost)
+    {
+        client?.OnStoryMatchEnded(playerWon, failReason, instantsUsed, unitsLost);
+    }
 }
