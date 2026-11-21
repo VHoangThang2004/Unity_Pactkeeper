@@ -364,11 +364,14 @@ public class ServerAIController : MonoBehaviour
         if (effect is DamageEffectServerBase dmgEffect)
             return ScoreAttackCell(unit, skill, dmgEffect, targetCell, profile);
 
-        // 3. Healing scoring
-        if (effect is NormalHealEffectServer || effect is TriageEffectServer)
+        // 3. Healing & Triage scoring
+        if (effect is NormalHealEffectServer)
             return ScoreHealCell(unit, effect, targetCell, profile);
 
-        // 4. Guard / Swap / Pull / Push / Buffs
+        if (effect is TriageEffectServer)
+            return ScoreTriageCell(unit, targetCell);
+
+        // 4. Guard / Swap / Pull / Push / Assassin Limit Break / Buffs
         if (effect is GuardEffectServer)
         {
             var ally = session.GetUnitAt(targetCell);
@@ -376,22 +379,218 @@ public class ServerAIController : MonoBehaviour
             return ally.CurrentHP < unit.CurrentHP && ally.CurrentHP <= 2 ? 45f : -1f;
         }
 
-        if (effect is PullEffectServer || effect is PushEffectServer)
-        {
-            var hit = session.GetUnitAt(targetCell);
-            if (hit != null && session.GetTeamIdByUnitId(hit.Id) != AI_TEAM_ID)
-                return 35f;
-            return -1f;
-        }
+        if (effect is PushEffectServer)
+            return ScorePushCell(unit, targetCell);
+
+        if (effect is PullEffectServer)
+            return ScorePullCell(unit, targetCell);
+
+        if (effect is ClassSkillAssasinEffectServer)
+            return ScoreAssassinLimitBreak(unit);
 
         if (effect is ApplyBuffEffectServer)
-        {
-            // Only self-buff if an enemy is reasonably close and we have SP to spare
-            int minDist = GetNearestEnemyDistance(unit.CurrentCell);
-            return minDist <= 3 ? 25f : -1f;
-        }
+            return ScoreBuffSkill(unit, skill);
 
         return -1f;
+    }
+
+    private float ScoreBuffSkill(UnitData unit, SkillDefinition skill)
+    {
+        bool canAttackNow = HasValidAttackTargetRightNow(unit);
+        bool alreadyMoved = _movesUsed.TryGetValue(unit.Id, out int moves) && moves >= 1;
+        bool alreadyAttacked = _nonInstantUsed.TryGetValue(unit.Id, out int attacks) && attacks >= 1;
+
+        if (alreadyAttacked)
+            return -1f;
+
+        // 4003 Turbo! (+1 horizontal/vertical movement reach):
+        // Never use when already in attack range, after moving, or when normal movement already reaches an attack cell.
+        if (skill.skillId == 4003)
+        {
+            if (canAttackNow || alreadyMoved || CanAnyCurrentMoveReachAttack(unit))
+                return -1f;
+
+            int minDist = GetNearestEnemyDistance(unit.CurrentCell);
+            return (minDist > 1 && minDist <= 4) ? 60f : -1f;
+        }
+
+        // 4002 Far Sight! (+1 horizontal weapon reach) & 4004 Sharp sight! (+1 vertical weapon reach):
+        // Only use when NOT currently able to attack, AND the +1 reach immediately puts an enemy in weapon sights right now.
+        if (skill.skillId == 4002 || skill.skillId == 4004)
+        {
+            if (canAttackNow)
+                return -1f;
+
+            return WouldRangeBuffEnableImmediateHit(unit, skill.skillId) ? 95f : -1f;
+        }
+
+        // 3004 Focused aim (+1 damage and +1 weapon reach in all directions):
+        if (canAttackNow || WouldRangeBuffEnableImmediateHit(unit, skill.skillId))
+            return 220f;
+
+        return -1f;
+    }
+
+    private bool CanAnyCurrentMoveReachAttack(UnitData unit)
+    {
+        if (unit.MovementSkillId <= 0 || unit.SkillPatterns == null)
+            return false;
+
+        for (int i = 0; i < unit.SkillPatterns.Length; i++)
+        {
+            if (unit.SkillPatterns[i].SkillId != unit.MovementSkillId) continue;
+            var cells = unit.SkillPatterns[i].TargetCells;
+            if (cells == null) break;
+            for (int c = 0; c < cells.Length; c++)
+            {
+                if (cells[c].z != 1) continue;
+                Vector3Int dest = new Vector3Int(cells[c].x, cells[c].y, 0);
+                if (CountWeaponTargetsFromCell(unit, dest) > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private bool WouldRangeBuffEnableImmediateHit(UnitData unit, int buffSkillId)
+    {
+        if (unit.WeaponSkillId <= 0 || session.skillLibrary == null || session.Map == null)
+            return false;
+
+        SkillDefinition weapon = session.skillLibrary.Get(unit.WeaponSkillId);
+        if (weapon == null)
+            return false;
+
+        List<Vector2Int> baseOffsets = GetEffectiveWeaponOffsets(unit, weapon);
+        if (baseOffsets.Count == 0)
+            return false;
+
+        int maxAbsX = 0;
+        int maxAbsY = 0;
+        for (int i = 0; i < baseOffsets.Count; i++)
+        {
+            if (Mathf.Abs(baseOffsets[i].x) > maxAbsX) maxAbsX = Mathf.Abs(baseOffsets[i].x);
+            if (Mathf.Abs(baseOffsets[i].y) > maxAbsY) maxAbsY = Mathf.Abs(baseOffsets[i].y);
+        }
+
+        bool extendX = buffSkillId == 4002 || buffSkillId == 3004;
+        bool extendY = buffSkillId == 4004 || buffSkillId == 3004;
+
+        for (int i = 0; i < baseOffsets.Count; i++)
+        {
+            Vector2Int off = baseOffsets[i];
+            if (extendX && maxAbsX > 0 && Mathf.Abs(off.x) == maxAbsX)
+            {
+                int stepX = off.x > 0 ? 1 : -1;
+                Vector3Int extCell = new Vector3Int(unit.CurrentCell.x + off.x + stepX, unit.CurrentCell.y + off.y, 0);
+                if (HasEnemyAtWalkableCell(extCell))
+                    return true;
+            }
+            if (extendY && maxAbsY > 0 && Mathf.Abs(off.y) == maxAbsY)
+            {
+                int stepY = off.y > 0 ? 1 : -1;
+                Vector3Int extCell = new Vector3Int(unit.CurrentCell.x + off.x, unit.CurrentCell.y + off.y + stepY, 0);
+                if (HasEnemyAtWalkableCell(extCell))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool HasEnemyAtWalkableCell(Vector3Int cell)
+    {
+        if (session.Map == null || !session.Map.IsWalkable(cell.x, cell.y))
+            return false;
+        var occ = session.GetUnitAt(cell);
+        return occ != null && session.GetTeamIdByUnitId(occ.Id) != AI_TEAM_ID;
+    }
+
+    private float ScoreTriageCell(UnitData unit, Vector3Int targetCell)
+    {
+        var ally = session.GetUnitAt(targetCell);
+        if (ally == null || ally.Id == unit.Id || session.GetTeamIdByUnitId(ally.Id) != AI_TEAM_ID)
+            return -1f;
+
+        if (ally.CurrentStep <= 0)
+            return -1f;
+
+        return 50f + ally.CurrentStep * 5f;
+    }
+
+    private float ScorePushCell(UnitData unit, Vector3Int targetCell)
+    {
+        var hit = session.GetUnitAt(targetCell);
+        if (hit == null || session.GetTeamIdByUnitId(hit.Id) == AI_TEAM_ID)
+            return -1f;
+
+        Vector3Int pushedCell = OffsetRecalculator.RecalculateNewTargetCell(unit.CurrentCell, targetCell, targetCell);
+        if (session.Map == null || !session.Map.IsWalkable(pushedCell.x, pushedCell.y) || session.GetUnitAt(pushedCell) != null)
+            return -1f;
+
+        bool canHitNow = CanWeaponHitSpecificCell(unit, unit.CurrentCell, targetCell);
+        bool canHitAfter = CanWeaponHitSpecificCell(unit, unit.CurrentCell, pushedCell);
+
+        // Never push an enemy out of our own weapon reach
+        if (canHitNow && !canHitAfter)
+            return -1f;
+
+        // High priority if pushing moves the enemy out of our blind spot into our weapon reach
+        if (!canHitNow && canHitAfter)
+            return 55f;
+
+        return 30f;
+    }
+
+    private float ScorePullCell(UnitData unit, Vector3Int targetCell)
+    {
+        var hit = session.GetUnitAt(targetCell);
+        if (hit == null || session.GetTeamIdByUnitId(hit.Id) == AI_TEAM_ID)
+            return -1f;
+
+        if (!CanPullTargetCloser(unit.CurrentCell, targetCell))
+            return -1f;
+
+        return 40f;
+    }
+
+    private bool CanPullTargetCloser(Vector3Int sourceCell, Vector3Int targetCell)
+    {
+        if (session.Map == null) return false;
+        Vector2 toSource = new Vector2(sourceCell.x - targetCell.x, sourceCell.y - targetCell.y);
+        if (toSource == Vector2.zero) return false;
+
+        float startDist = Vector3Int.Distance(targetCell, sourceCell);
+        Vector3Int[] dirs =
+        {
+            new(1, 0, 0), new(-1, 0, 0), new(0, 1, 0), new(0, -1, 0),
+            new(1, 1, 0), new(1, -1, 0), new(-1, 1, 0), new(-1, -1, 0)
+        };
+
+        for (int i = 0; i < dirs.Length; i++)
+        {
+            Vector3Int next = targetCell + dirs[i];
+            if (next == sourceCell) continue;
+            if (!session.Map.IsWalkable(next.x, next.y)) continue;
+            if (session.GetUnitAt(next) != null) continue;
+
+            Vector2 toNext = new Vector2(dirs[i].x, dirs[i].y);
+            if (Vector2.Angle(toSource, toNext) < 45f && Vector3Int.Distance(next, sourceCell) < startDist)
+                return true;
+        }
+
+        return false;
+    }
+
+    private float ScoreAssassinLimitBreak(UnitData unit)
+    {
+        if (!_movesUsed.TryGetValue(unit.Id, out int moves) || moves < 1)
+            return -1f;
+
+        if (HasValidAttackTargetRightNow(unit))
+            return -1f;
+
+        return GetNearestEnemyDistance(unit.CurrentCell) < int.MaxValue ? 50f : -1f;
     }
 
     private float ScoreAttackCell(UnitData unit, SkillDefinition skill, DamageEffectServerBase dmgEffect, Vector3Int targetCell, AIBehaviorProfile profile)
@@ -469,22 +668,40 @@ public class ServerAIController : MonoBehaviour
         if (currentDist == int.MaxValue || nextDist == int.MaxValue)
             return -1f;
 
-        // If unit can already attack an enemy from its current position, don't waste an action moving needlessly
+        // Priority #1 is Attack: if unit can already attack an enemy from its current position, don't move away
         if (HasValidAttackTargetRightNow(unit))
             return -5f;
 
-        float score = 0f;
+        // Priority #2 is Move: since unit CANNOT attack from its current cell, any valid move cell starts with a positive base score
+        // so the AI always repositions instead of skipping its turn (SendWait).
+        float score = 40f;
 
-        if (profile == AIBehaviorProfile.Defensive)
+        // Top move priority: stepping directly into a cell from which our weapon can hit an enemy right now
+        int hitsFromDest = CountWeaponTargetsFromCell(unit, destCell);
+        if (hitsFromDest > 0)
+            score += 120f + hitsFromDest * 20f;
+
+        // Second move priority: reduce Manhattan distance to the nearest valid weapon-firing cell around any enemy
+        int curAttackDist = GetMinDistToAnyWeaponAttackCell(unit, unit.CurrentCell);
+        int nextAttackDist = GetMinDistToAnyWeaponAttackCell(unit, destCell);
+        if (curAttackDist < int.MaxValue && nextAttackDist < int.MaxValue)
+            score += (curAttackDist - nextAttackDist) * 20f;
+
+        // Third move priority: distance / kiting adjustment
+        if (unit.UId == 4)
         {
-            // Keep safe range (~2-3 cells) rather than rushing into melee
-            int idealDist = unit.UId == 4 ? 3 : 2;
-            score = (Mathf.Abs(currentDist - idealDist) - Mathf.Abs(nextDist - idealDist)) * 18f;
+            // Archer (Bow minimum range = 2): kite out of melee blind spot (dist 1 -> dist 2)
+            if (currentDist == 1 && nextDist >= 2)
+                score += 15f;
+            score += (Mathf.Abs(currentDist - 2) - Mathf.Abs(nextDist - 2)) * 8f;
+        }
+        else if (profile == AIBehaviorProfile.Defensive && unit.UId == 6)
+        {
+            score += (Mathf.Abs(currentDist - 2) - Mathf.Abs(nextDist - 2)) * 8f;
         }
         else
         {
-            // Advance toward nearest player unit
-            score = (currentDist - nextDist) * 20f;
+            score += (currentDist - nextDist) * 10f;
         }
 
         // Assassin prefers landing above an enemy (higher Y) to trigger Ambush next
@@ -495,8 +712,131 @@ public class ServerAIController : MonoBehaviour
                 score += 12f;
         }
 
-        // Slight tie-breaker so moving closer beats standing idle when out of range
-        return score > 0f ? score + 5f : -1f;
+        // Never return <= 0 when the unit cannot attack from its current cell — guarantee Movement beats Wait!
+        return Mathf.Max(5f, score);
+    }
+
+    private int GetMinDistToAnyWeaponAttackCell(UnitData unit, Vector3Int fromCell)
+    {
+        if (unit.WeaponSkillId <= 0 || session.skillLibrary == null || session.Map == null)
+            return int.MaxValue;
+
+        var playerTeam = session.GetTeamDataByTeamId(0);
+        if (playerTeam == null || playerTeam.unitIds == null || playerTeam.unitIds.Count == 0)
+            return int.MaxValue;
+
+        SkillDefinition weapon = session.skillLibrary.Get(unit.WeaponSkillId);
+        if (weapon == null)
+            return int.MaxValue;
+
+        List<Vector2Int> offsets = GetEffectiveWeaponOffsets(unit, weapon);
+        if (offsets.Count == 0)
+            return int.MaxValue;
+
+        int bestDist = int.MaxValue;
+        for (int e = 0; e < playerTeam.unitIds.Count; e++)
+        {
+            var enemy = session.GetUnitByUnitId(playerTeam.unitIds[e]);
+            if (enemy == null) continue;
+
+            for (int i = 0; i < offsets.Count; i++)
+            {
+                // If AI stands at attackOrigin, weapon offset[i] lands on enemy.CurrentCell
+                Vector3Int attackOrigin = new Vector3Int(
+                    enemy.CurrentCell.x - offsets[i].x,
+                    enemy.CurrentCell.y - offsets[i].y,
+                    0);
+
+                if (!session.Map.IsWalkable(attackOrigin.x, attackOrigin.y))
+                    continue;
+
+                var occ = session.GetUnitAt(attackOrigin);
+                if (occ != null && occ.Id != unit.Id)
+                    continue;
+
+                int d = Mathf.Abs(attackOrigin.x - fromCell.x) + Mathf.Abs(attackOrigin.y - fromCell.y);
+                if (d < bestDist)
+                    bestDist = d;
+            }
+        }
+
+        return bestDist;
+    }
+
+    private int CountWeaponTargetsFromCell(UnitData unit, Vector3Int originCell)
+    {
+        if (unit.WeaponSkillId <= 0 || session.skillLibrary == null || session.Map == null)
+            return 0;
+
+        SkillDefinition weapon = session.skillLibrary.Get(unit.WeaponSkillId);
+        if (weapon == null)
+            return 0;
+
+        List<Vector2Int> offsets = GetEffectiveWeaponOffsets(unit, weapon);
+        int enemiesInReach = 0;
+
+        for (int i = 0; i < offsets.Count; i++)
+        {
+            Vector3Int candidateTarget = new Vector3Int(originCell.x + offsets[i].x, originCell.y + offsets[i].y, 0);
+            if (!session.Map.IsWalkable(candidateTarget.x, candidateTarget.y))
+                continue;
+
+            var occ = session.GetUnitAt(candidateTarget);
+            if (occ != null && session.GetTeamIdByUnitId(occ.Id) != AI_TEAM_ID)
+                enemiesInReach++;
+        }
+
+        return enemiesInReach;
+    }
+
+    private bool CanWeaponHitSpecificCell(UnitData unit, Vector3Int originCell, Vector3Int enemyCell)
+    {
+        if (unit.WeaponSkillId <= 0 || session.skillLibrary == null)
+            return false;
+
+        SkillDefinition weapon = session.skillLibrary.Get(unit.WeaponSkillId);
+        if (weapon == null)
+            return false;
+
+        List<Vector2Int> offsets = GetEffectiveWeaponOffsets(unit, weapon);
+        for (int i = 0; i < offsets.Count; i++)
+        {
+            if (originCell.x + offsets[i].x == enemyCell.x && originCell.y + offsets[i].y == enemyCell.y)
+                return true;
+        }
+
+        return false;
+    }
+
+    private List<Vector2Int> GetEffectiveWeaponOffsets(UnitData unit, SkillDefinition weapon)
+    {
+        var offsets = new List<Vector2Int>();
+        if (weapon.targetPattern?.cells != null)
+        {
+            for (int i = 0; i < weapon.targetPattern.cells.Length; i++)
+                offsets.Add(weapon.targetPattern.cells[i]);
+        }
+
+        // Include any active pattern-extension buffs (e.g., Far Sight / Steady Aim) from unit.SkillPatterns
+        if (unit.SkillPatterns != null)
+        {
+            for (int i = 0; i < unit.SkillPatterns.Length; i++)
+            {
+                if (unit.SkillPatterns[i].SkillId != unit.WeaponSkillId || unit.SkillPatterns[i].TargetCells == null)
+                    continue;
+
+                var cells = unit.SkillPatterns[i].TargetCells;
+                for (int c = 0; c < cells.Length; c++)
+                {
+                    var rel = new Vector2Int(cells[c].x - unit.CurrentCell.x, cells[c].y - unit.CurrentCell.y);
+                    if (!offsets.Contains(rel))
+                        offsets.Add(rel);
+                }
+                break;
+            }
+        }
+
+        return offsets;
     }
 
     private bool HasValidAttackTargetRightNow(UnitData unit)
@@ -558,7 +898,17 @@ public class ServerAIController : MonoBehaviour
         else if (slot == SkillSlot.Weapon)
             _nonInstantUsed[unitId] = (_nonInstantUsed.TryGetValue(unitId, out int w) ? w : 0) + 1;
         else if (slot == SkillSlot.Class || slot == SkillSlot.Trinket)
+        {
             _utilityUsed[unitId] = (_utilityUsed.TryGetValue(unitId, out int u) ? u : 0) + 1;
+
+            // Assassin's Limit Break (3001) resets Movement usage for this Instant
+            if (skillDef.effectIds != null && skillDef.effectIds.Length > 0 &&
+                session.effectRegistry != null &&
+                session.effectRegistry.Get(skillDef.effectIds[0]) is ClassSkillAssasinEffectServer)
+            {
+                _movesUsed[unitId] = 0;
+            }
+        }
 
         Debug.Log($"[ServerAI] Action #{_actionsThisInstant}: unit={unitId} skill={skillDef.skillId} ({skillDef.skillName}) target={targetCell}");
         bool accepted = timeline.HandleDecision(

@@ -21,6 +21,14 @@ public class ClientMenuReturner : MonoBehaviour
     {
         if (NetworkManager.Singleton != null && clientId != NetworkManager.Singleton.LocalClientId) return;
 
+        // Ignore disconnects fired while ClientController.ConnectWithRetry() is still retrying initial UDP handshake
+        var clientController = FindAnyObjectByType<ClientController>();
+        if (clientController != null && clientController.IsConnecting)
+        {
+            Debug.Log("[ClientMenuReturner] Ignoring disconnect while ClientController is still retrying initial connection.");
+            return;
+        }
+
         // If a story overlay (Scripted, Hybrid, or Challenge) is present, let BattleTutorialStarter
         // route Victory/Defeat/Retry cleanly without kicking into PvP MatchResultScene.
         if (TutorialContext.IsActive || TutorialContext.IsFreePlayBattle || TutorialContext.HasBattleEnded)

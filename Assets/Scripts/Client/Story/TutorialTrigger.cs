@@ -35,8 +35,8 @@ public class TutorialTrigger : MonoBehaviour
         if (interactionSystem == null)
             interactionSystem = FindAnyObjectByType<ClientInteractionSystem>();
 
-        // Detect whether the enemy team performed an action during the resolving phase
-        if (!_firedEnemyActed && session.LastResolve.HasResolve && session.LastResolve.ResolveResults != null)
+        // Detect whether the enemy team performed an action during the resolving phase (only during Free Play)
+        if (TutorialContext.IsFreePlayBattle && !_firedEnemyActed && session.LastResolve.HasResolve && session.LastResolve.ResolveResults != null)
         {
             foreach (var res in session.LastResolve.ResolveResults)
             {
@@ -65,32 +65,36 @@ public class TutorialTrigger : MonoBehaviour
             PlotDirector.Trigger("PlayerTurn");
         }
 
-        // "EnemyActed" - fires once after an enemy unit acts and control settles back cleanly
-        if (!_firedEnemyActed && _sawEnemyActionInResolve && session.Timeline.isPaused && session.IsMyTurn())
+        // Reactive coaching triggers only fire once the stage has entered Free Play
+        if (TutorialContext.IsFreePlayBattle)
         {
-            _firedEnemyActed = true;
-            PlotDirector.Trigger("EnemyActed");
-        }
-
-        // "AllyLowHP" & "AllyFallen" - reactive combat triggers for Hybrid/Challenge tips
-        if (ownedTeam != null && ownedTeam.unitIds != null)
-        {
-            if (!_firedAllyFallen && _initialAllyCount > 0 && ownedTeam.unitIds.Count < _initialAllyCount)
+            // "EnemyActed" - fires once after an enemy unit acts and control settles back cleanly
+            if (!_firedEnemyActed && _sawEnemyActionInResolve && session.Timeline.isPaused && session.IsMyTurn())
             {
-                _firedAllyFallen = true;
-                PlotDirector.Trigger("AllyFallen");
+                _firedEnemyActed = true;
+                PlotDirector.Trigger("EnemyActed");
             }
 
-            if (!_firedAllyLowHP)
+            // "AllyLowHP" & "AllyFallen" - reactive combat triggers for Hybrid/Challenge tips
+            if (ownedTeam != null && ownedTeam.unitIds != null)
             {
-                for (int i = 0; i < ownedTeam.unitIds.Count; i++)
+                if (!_firedAllyFallen && _initialAllyCount > 0 && ownedTeam.unitIds.Count < _initialAllyCount)
                 {
-                    var unit = session.GetUnitDataById(ownedTeam.unitIds[i]);
-                    if (unit != null && unit.MaxHP > 1 && unit.CurrentHP > 0 && unit.CurrentHP <= 1)
+                    _firedAllyFallen = true;
+                    PlotDirector.Trigger("AllyFallen");
+                }
+
+                if (!_firedAllyLowHP)
+                {
+                    for (int i = 0; i < ownedTeam.unitIds.Count; i++)
                     {
-                        _firedAllyLowHP = true;
-                        PlotDirector.Trigger("AllyLowHP");
-                        break;
+                        var unit = session.GetUnitDataById(ownedTeam.unitIds[i]);
+                        if (unit != null && unit.MaxHP > 1 && unit.CurrentHP > 0 && unit.CurrentHP <= 1)
+                        {
+                            _firedAllyLowHP = true;
+                            PlotDirector.Trigger("AllyLowHP");
+                            break;
+                        }
                     }
                 }
             }

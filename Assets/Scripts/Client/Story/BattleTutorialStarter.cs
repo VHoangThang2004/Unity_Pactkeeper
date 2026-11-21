@@ -495,6 +495,13 @@ public class BattleTutorialStarter : MonoBehaviour
     {
         if (_outcomeHandled || _isTransitioning) return;
 
+        // Never show DEFEAT overlay for disconnects that happen during initial connection retries before match starts
+        if (controller == null || controller.IsConnecting || !controller.IsMatchReady)
+        {
+            Debug.Log("[BattleTutorialStarter] Ignoring disconnect before match is ready (initial connection retry).");
+            return;
+        }
+
         // If server already reported scripted victory and PlotSequencer is still showing the final CompleteAndExit text,
         // do nothing — the player's click on CompleteAndExit will perform HTTP CompleteAndAdvance.
         if (_serverConfirmedScriptedVictory && TutorialContext.IsActive && !TutorialContext.IsFreePlayBattle)
@@ -681,11 +688,14 @@ public class BattleTutorialStarter : MonoBehaviour
 
     private IEnumerator ShutdownNetworkIfListening()
     {
-        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        var nm = NetworkManager.Singleton;
+        if (nm != null)
         {
-            NetworkManager.Singleton.Shutdown();
+            if (nm.IsListening)
+                nm.Shutdown();
+
             float wait = 0f;
-            while (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && wait < 2f)
+            while (nm != null && (nm.IsListening || nm.ShutdownInProgress) && wait < 2f)
             {
                 wait += Time.unscaledDeltaTime;
                 yield return null;

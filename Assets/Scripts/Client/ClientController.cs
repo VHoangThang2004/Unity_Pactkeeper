@@ -16,6 +16,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     public event System.Action OnMatchReady;
     public event System.Action<bool, string, int, int> OnStoryMatchEndedEvent;
     public bool IsMatchReady { get; private set; }
+    public bool IsConnecting { get; private set; }
 
     public SyncedBridge bridge;
 
@@ -72,8 +73,8 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     }
 
     [Header("Connection Retry")]
-    [Tooltip("Total StartClient attempts before giving up (the dedicated server needs 1-3s to boot and open its UDP port).")]
-    [SerializeField] private int connectMaxAttempts = 4;
+    [Tooltip("Total StartClient attempts before giving up (with WebSockets/TCP, ECONNREFUSED fails immediately while the dedicated server is booting).")]
+    [SerializeField] private int connectMaxAttempts = 8;
     [Tooltip("Seconds to wait for the SyncedBridge to spawn after each StartClient attempt.")]
     [SerializeField] private float connectAttemptTimeout = 6f;
     [SerializeField] private float connectRetryDelay = 1.5f;
@@ -85,6 +86,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     /// </summary>
     IEnumerator ConnectWithRetry()
     {
+        IsConnecting = true;
         for (int attempt = 1; attempt <= connectMaxAttempts; attempt++)
         {
             if (attempt > 1)
@@ -92,11 +94,13 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
                 scene.loadingScreen.Show($"Connecting to server... (retry {attempt - 1}/{connectMaxAttempts - 1})");
 
                 var nm = NetworkManager.Singleton;
-                if (nm != null && nm.IsListening)
+                if (nm != null)
                 {
-                    nm.Shutdown();
+                    if (nm.IsListening)
+                        nm.Shutdown();
+
                     float shutdownWait = 0f;
-                    while (nm != null && nm.IsListening && shutdownWait < 2f)
+                    while (nm != null && (nm.IsListening || nm.ShutdownInProgress) && shutdownWait < 2f)
                     {
                         shutdownWait += Time.unscaledDeltaTime;
                         yield return null;
@@ -105,7 +109,12 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
                 yield return new WaitForSecondsRealtime(connectRetryDelay);
             }
 
-            ConnectToServer();
+            bool started = ConnectToServer();
+            if (!started)
+            {
+                Debug.LogWarning($"[ClientController] Connect attempt {attempt}/{connectMaxAttempts} failed to start client (transport/shutdown busy).");
+                continue;
+            }
 
             float waited = 0f;
             while (bridge == null && waited < connectAttemptTimeout)
@@ -116,9 +125,15 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
                 yield return null;
             }
 
-            if (bridge != null) yield break; // OnBridgeReady took over
+            if (bridge != null)
+            {
+                IsConnecting = false;
+                yield break; // OnBridgeReady took over
+            }
             Debug.LogWarning($"[ClientController] Connect attempt {attempt}/{connectMaxAttempts} failed.");
         }
+
+        IsConnecting = false;
 
         Debug.LogError("[ClientController] Could not reach the battle server - leaving the match.");
         scene.loadingScreen.Show("Cannot reach the battle server. Returning...");
@@ -153,6 +168,7 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     public void OnBridgeReady(SyncedBridge bridge)
     {
         this.bridge = bridge;
+        IsConnecting = false;
         scene.loadingScreen.Show("Loading...");
         StartCoroutine(ClientGuard());
         StartCoroutine(InitSequence());
