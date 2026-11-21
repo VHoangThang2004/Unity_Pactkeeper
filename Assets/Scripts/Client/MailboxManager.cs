@@ -86,7 +86,7 @@ public class MailboxManager : MonoBehaviour
         notifications.Clear();
 
         // Fetch notifications
-        using var request = UnityWebRequest.Get($"{config.backendUrl}/api/Notification");
+        using var request = UnityWebRequest.Get($"{config.backendUrl}/api/game-notification");
         config.SetHeaders(request, PlayerSession.Token);
         yield return request.SendWebRequest();
 
@@ -176,7 +176,7 @@ public class MailboxManager : MonoBehaviour
     public IEnumerator MarkAsRead(string notificationId)
     {
         using var request = UnityWebRequest.PostWwwForm(
-            $"{config.backendUrl}/api/Notification/{notificationId}/read", "");
+            $"{config.backendUrl}/api/game-notification/{notificationId}/read", "");
         config.SetHeaders(request, PlayerSession.Token);
         yield return request.SendWebRequest();
 
@@ -194,7 +194,7 @@ public class MailboxManager : MonoBehaviour
     IEnumerator ReadAllCoroutine()
     {
         using var request = UnityWebRequest.PostWwwForm(
-            $"{config.backendUrl}/api/Notification/read-all", "");
+            $"{config.backendUrl}/api/game-notification/read-all", "");
         config.SetHeaders(request, PlayerSession.Token);
         yield return request.SendWebRequest();
 

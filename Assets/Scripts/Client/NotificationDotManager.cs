@@ -153,7 +153,7 @@ public class NotificationDotManager : MonoBehaviour
 
     IEnumerator CheckMailbox()
     {
-        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/Notification");
+        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/game-notification");
         config.SetHeaders(req, PlayerSession.Token);
         yield return req.SendWebRequest();
 
