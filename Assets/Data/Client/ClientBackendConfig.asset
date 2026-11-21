@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ClientBackendConfig
   m_EditorClassIdentifier: Assembly-CSharp::BackendConfig
   backendUrl: http://srpg-backend.duckdns.org:5276
-  gameServerIp: 116.193.73.128
+  gameServerIp: 103.121.90.103
   gameServerPort: 7777

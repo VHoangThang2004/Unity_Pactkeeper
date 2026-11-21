@@ -31640,6 +31640,7 @@ MonoBehaviour:
   requestsBadgeCountText: {fileID: 3410950777265366090}
   searchInput: {fileID: 848181815480274788}
   searchContainer: {fileID: 577622850}
+  searchItemPrefab: {fileID: 7592504145714199944, guid: 4000c46b39f14f6a8c798cc1f231ac1a, type: 3}
   searchStatusText: {fileID: 0}
   emptySearchText: {fileID: 1121358916}
   addFriendInput: {fileID: 848181815480274788}

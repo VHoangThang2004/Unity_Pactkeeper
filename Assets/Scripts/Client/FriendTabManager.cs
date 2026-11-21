@@ -43,6 +43,7 @@ public class FriendTabManager : MonoBehaviour
     [Header("Search Friend UI")]
     [SerializeField] private TMP_InputField searchInput;
     [SerializeField] private Transform searchContainer;
+    [SerializeField] private GameObject searchItemPrefab;
     [SerializeField] private TMP_Text searchStatusText;
     [SerializeField] private TMP_Text emptySearchText;
 
@@ -651,7 +652,7 @@ public class FriendTabManager : MonoBehaviour
 
         if (emptySearchText != null) emptySearchText.gameObject.SetActive(false);
 
-        var prefab = friendItemPrefab != null ? friendItemPrefab : requestItemPrefab;
+        var prefab = searchItemPrefab != null ? searchItemPrefab : (requestItemPrefab != null ? requestItemPrefab : friendItemPrefab);
         if (prefab == null) return;
 
         foreach (var item in results)
@@ -701,22 +702,28 @@ public class FriendTabManager : MonoBehaviour
         var declineBtn = itemObj.transform.Find("DeclineButton");
         if (declineBtn != null) declineBtn.gameObject.SetActive(false);
 
-        // Find primary action button (ChallengeButton in FriendItem or AcceptButton in FriendRequest)
+        // Find primary action button (ActionButton in FriendSearchRequest, or AcceptButton / ChallengeButton)
         Button actionButton = null;
         TMP_Text actionBtnText = null;
 
-        var challengeBtn = itemObj.transform.Find("ChallengeButton")?.GetComponent<Button>();
+        var actionBtn = itemObj.transform.Find("ActionButton")?.GetComponent<Button>();
         var acceptBtn = itemObj.transform.Find("AcceptButton")?.GetComponent<Button>();
+        var challengeBtn = itemObj.transform.Find("ChallengeButton")?.GetComponent<Button>();
 
-        if (challengeBtn != null)
+        if (actionBtn != null)
         {
-            actionButton = challengeBtn;
-            actionBtnText = challengeBtn.GetComponentInChildren<TMP_Text>();
+            actionButton = actionBtn;
+            actionBtnText = actionBtn.GetComponentInChildren<TMP_Text>();
         }
         else if (acceptBtn != null)
         {
             actionButton = acceptBtn;
             actionBtnText = acceptBtn.GetComponentInChildren<TMP_Text>();
+        }
+        else if (challengeBtn != null)
+        {
+            actionButton = challengeBtn;
+            actionBtnText = challengeBtn.GetComponentInChildren<TMP_Text>();
         }
 
         if (actionButton != null)
@@ -727,12 +734,12 @@ public class FriendTabManager : MonoBehaviour
             switch (player.relationship)
             {
                 case "friend":
-                    if (actionBtnText != null) actionBtnText.text = "Friends";
+                    if (actionBtnText != null) actionBtnText.text = "Friended";
                     actionButton.interactable = false;
                     break;
 
                 case "pending_sent":
-                    if (actionBtnText != null) actionBtnText.text = "Pending";
+                    if (actionBtnText != null) actionBtnText.text = "Sent";
                     actionButton.interactable = false;
                     break;
 
@@ -746,7 +753,7 @@ public class FriendTabManager : MonoBehaviour
                     break;
 
                 default: // "none"
-                    if (actionBtnText != null) actionBtnText.text = "+ Add";
+                    if (actionBtnText != null) actionBtnText.text = "Add Friend";
                     actionButton.interactable = true;
                     actionButton.onClick.AddListener(() =>
                     {
@@ -776,7 +783,7 @@ public class FriendTabManager : MonoBehaviour
             string resp = req.downloadHandler?.text ?? "";
             bool accepted = resp.Contains("request_accepted");
             Debug.Log($"[FriendTabManager] Friend request sent to {targetPlayerId}. Response: {resp}");
-            if (actionBtnText != null) actionBtnText.text = accepted ? "Friends" : "Pending";
+            if (actionBtnText != null) actionBtnText.text = accepted ? "Friended" : "Sent";
             if (actionBtn != null) actionBtn.interactable = false;
             if (accepted)
             {
@@ -787,7 +794,7 @@ public class FriendTabManager : MonoBehaviour
         {
             string rawErr = req.downloadHandler?.text;
             Debug.LogError($"[FriendTabManager] Friend request to {targetPlayerId} failed: {rawErr ?? req.error}");
-            if (actionBtnText != null) actionBtnText.text = "+ Add";
+            if (actionBtnText != null) actionBtnText.text = "Add Friend";
             if (actionBtn != null) actionBtn.interactable = true;
         }
     }
