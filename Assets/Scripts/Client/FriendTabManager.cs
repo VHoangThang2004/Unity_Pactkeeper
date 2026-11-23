@@ -13,6 +13,7 @@ public class FriendTabManager : MonoBehaviour
 
     [Header("Configuration")]
     [SerializeField] private BackendConfig config;
+    [SerializeField] private SceneConfig sceneConfig;
 
     [Header("Panel / Sidebar Drawer")]
     [SerializeField] private GameObject panel;
@@ -438,6 +439,15 @@ public class FriendTabManager : MonoBehaviour
 
         UpdateFriendItemView(itemObj, friend);
 
+        // Chat button — opens 14_Chat with this friend pre-selected
+        var chatBtn = itemObj.transform.Find("CHatButton")?.GetComponent<Button>();
+        if (chatBtn != null)
+        {
+            chatBtn.gameObject.SetActive(true);
+            chatBtn.onClick.RemoveAllListeners();
+            chatBtn.onClick.AddListener(() => OpenChatWithFriend(friend));
+        }
+
         // Remove friend button — opens confirm panel first
         var removeBtn = itemObj.transform.Find("RemoveButton")?.GetComponent<Button>();
         if (removeBtn != null)
@@ -445,6 +455,14 @@ public class FriendTabManager : MonoBehaviour
             removeBtn.onClick.RemoveAllListeners();
             removeBtn.onClick.AddListener(() => ShowConfirmPanel(friend.playerId, friend.username));
         }
+    }
+
+    private void OpenChatWithFriend(FriendProfile friend)
+    {
+        ChatManager.PendingTargetFriendId = friend.playerId;
+        ChatManager.PendingTargetFriendUsername = friend.username;
+        string targetScene = sceneConfig != null ? sceneConfig.chatScene : "14_Chat";
+        UnityEngine.SceneManagement.SceneManager.LoadScene(targetScene);
     }
 
     private void UpdateFriendItemView(GameObject itemObj, FriendProfile friend)

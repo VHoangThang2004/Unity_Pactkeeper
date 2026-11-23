@@ -1,34 +1,21 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Prefab script cho một bubble tin nhắn trong right panel của chat.
+/// Prefab script for message bubbles in the chat right panel.
 ///
-/// Hỗ trợ 2 layout:
-///   - Player message  : bubble bên phải, màu xanh/tím
-///   - Admin message   : bubble bên trái, màu xám
-///
-/// Prefab hierarchy gợi ý:
-///   ChatMessageItem
-///   ├── PlayerBubble        (active khi sender = "user")
-///   │   ├── BubbleBackground (Image)
-///   │   ├── MessageText      (TMP_Text)
-///   │   └── TimeText         (TMP_Text)
-///   └── AdminBubble         (active khi sender = "admin")
-///       ├── SenderNameText   (TMP_Text) — "Keeper of Records"
-///       ├── BubbleBackground (Image)
-///       ├── MessageText      (TMP_Text)
-///       └── TimeText         (TMP_Text)
+/// Layout:
+///   - My message     : right side bubble (playerBubble)
+///   - Friend message : left side bubble (adminBubble / otherBubble)
 /// </summary>
 public class ChatMessageItem : MonoBehaviour
 {
-    [Header("Player Bubble (sender = user, right side)")]
+    [Header("My Message Bubble (right side)")]
     [SerializeField] private GameObject playerBubble;
     [SerializeField] private TMP_Text   playerMessageText;
     [SerializeField] private TMP_Text   playerTimeText;
 
-    [Header("Admin Bubble (sender = admin, left side)")]
+    [Header("Friend Message Bubble (left side)")]
     [SerializeField] private GameObject adminBubble;
     [SerializeField] private TMP_Text   adminSenderNameText;
     [SerializeField] private TMP_Text   adminMessageText;
@@ -36,23 +23,23 @@ public class ChatMessageItem : MonoBehaviour
 
     // ── Setup ─────────────────────────────────────────────────────────────────
 
-    public void Setup(ChatManager.SupportMessageDto msg)
+    public void Setup(DirectChatMessageDto msg)
     {
-        bool isPlayer = msg.sender == "user";
+        bool isMyMessage = msg.senderId == PlayerSession.PlayerId;
 
-        if (playerBubble != null) playerBubble.SetActive(isPlayer);
-        if (adminBubble  != null) adminBubble.SetActive(!isPlayer);
+        if (playerBubble != null) playerBubble.SetActive(isMyMessage);
+        if (adminBubble  != null) adminBubble.SetActive(!isMyMessage);
 
         string timeStr = FormatTime(msg.createdAt);
 
-        if (isPlayer)
+        if (isMyMessage)
         {
             if (playerMessageText != null) playerMessageText.text = msg.text;
             if (playerTimeText    != null) playerTimeText.text    = timeStr;
         }
         else
         {
-            if (adminSenderNameText != null) adminSenderNameText.text = msg.senderName;
+            if (adminSenderNameText != null) adminSenderNameText.text = msg.senderUsername;
             if (adminMessageText    != null) adminMessageText.text    = msg.text;
             if (adminTimeText       != null) adminTimeText.text       = timeStr;
         }
@@ -70,7 +57,6 @@ public class ChatMessageItem : MonoBehaviour
                 out var dt))
         {
             var local = dt.ToLocalTime();
-            // Nếu cùng ngày hôm nay → chỉ hiện giờ:phút, ngược lại hiện ngày/tháng
             return local.Date == System.DateTime.Today
                 ? local.ToString("HH:mm")
                 : local.ToString("dd/MM HH:mm");

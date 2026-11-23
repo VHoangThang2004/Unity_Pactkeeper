@@ -46,6 +46,7 @@ public class LobbyHubClient : MonoBehaviour
     public event Action<string> OnFriendRequestReceived;
     public event Action<string> OnFriendRequestAccepted;
     public event Action<string> OnFriendRemoved;
+    public event Action<DirectChatMessageDto> OnDirectMessageReceived;
 
     private ClientWebSocket webSocket;
     private CancellationTokenSource cts;
@@ -317,6 +318,19 @@ public class LobbyHubClient : MonoBehaviour
 
                 case "FriendRemoved":
                     mainThreadQueue.Enqueue(() => OnFriendRemoved?.Invoke("removed"));
+                    break;
+
+                case "ReceiveDirectMessage":
+                    int msgIdx = json.IndexOf("\"arguments\":[", StringComparison.Ordinal);
+                    if (msgIdx >= 0)
+                    {
+                        string argObj = ExtractFirstJsonObject(json, msgIdx + 12);
+                        if (!string.IsNullOrEmpty(argObj))
+                        {
+                            var chatMsg = JsonUtility.FromJson<DirectChatMessageDto>(argObj);
+                            mainThreadQueue.Enqueue(() => OnDirectMessageReceived?.Invoke(chatMsg));
+                        }
+                    }
                     break;
             }
         }

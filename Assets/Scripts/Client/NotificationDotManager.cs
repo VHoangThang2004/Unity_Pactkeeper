@@ -45,9 +45,6 @@ public class NotificationDotManager : MonoBehaviour
     [System.Serializable] private class ShopStub           { public string id; }
     [System.Serializable] private class ShopWrapper        { public ShopStub[] items; }
 
-    [System.Serializable] private class SupportMsgDto      { public string sender; public string createdAt; }
-    [System.Serializable] private class SupportMsgWrapper  { public SupportMsgDto[] items; }
-
     [System.Serializable] private class FriendRequestStub  { public string requestId; }
     [System.Serializable] private class FriendRequestWrapper{ public FriendRequestStub[] items; }
 
@@ -69,6 +66,7 @@ public class NotificationDotManager : MonoBehaviour
         if (LobbyHubClient.Instance != null)
         {
             LobbyHubClient.Instance.OnFriendRequestReceived += OnFriendRequestReceived;
+            LobbyHubClient.Instance.OnDirectMessageReceived += OnDirectMessageReceived;
         }
     }
 
@@ -77,6 +75,7 @@ public class NotificationDotManager : MonoBehaviour
         if (LobbyHubClient.Instance != null)
         {
             LobbyHubClient.Instance.OnFriendRequestReceived -= OnFriendRequestReceived;
+            LobbyHubClient.Instance.OnDirectMessageReceived -= OnDirectMessageReceived;
         }
     }
 
@@ -149,6 +148,9 @@ public class NotificationDotManager : MonoBehaviour
     // Được gọi ngay khi có friend request mới qua SignalR (không cần chờ polling)
     private void OnFriendRequestReceived(string _) => SetDot(friendDot, true);
 
+    // Được gọi ngay khi có tin nhắn trực tiếp mới qua SignalR (không cần chờ polling)
+    private void OnDirectMessageReceived(DirectChatMessageDto _) => SetDot(chatDot, true);
+
     // ── Check coroutines ──────────────────────────────────────────────────────
 
     IEnumerator CheckMailbox()
@@ -214,51 +216,15 @@ public class NotificationDotManager : MonoBehaviour
 
     IEnumerator CheckChat()
     {
-        // Chỉ check cho Player — Admin không cần dot này
-        if (PlayerSession.IsAdmin) yield break;
-
-        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/support/chat");
+        using var req = UnityWebRequest.Get($"{config.backendUrl}/api/chat/unread-count");
         config.SetHeaders(req, PlayerSession.Token);
         yield return req.SendWebRequest();
 
         if (req.result != UnityWebRequest.Result.Success) yield break;
 
-        var wrapper = JsonUtility.FromJson<SupportMsgWrapper>(
-            "{\"items\":" + req.downloadHandler.text + "}");
-
-        if (wrapper?.items == null || wrapper.items.Length == 0)
-        {
-            SetDot(chatDot, false);
-            yield break;
-        }
-
-        // Dot bật nếu có tin nhắn từ admin mới hơn lần cuối player mở Chat
-        string lastSeenStr = PlayerPrefs.GetString(KeyChat, string.Empty);
-        bool hasNewAdminMsg = false;
-
-        if (!string.IsNullOrEmpty(lastSeenStr) &&
-            System.DateTime.TryParse(lastSeenStr, null,
-                System.Globalization.DateTimeStyles.RoundtripKind,
-                out var lastSeen))
-        {
-            foreach (var m in wrapper.items)
-            {
-                if (m.sender != "admin") continue;
-                if (string.IsNullOrEmpty(m.createdAt)) continue;
-                if (System.DateTime.TryParse(m.createdAt, null,
-                        System.Globalization.DateTimeStyles.RoundtripKind,
-                        out var created))
-                    if (created > lastSeen) { hasNewAdminMsg = true; break; }
-            }
-        }
-        else
-        {
-            // Chưa từng mở Chat — dot bật nếu admin đã từng nhắn
-            foreach (var m in wrapper.items)
-                if (m.sender == "admin") { hasNewAdminMsg = true; break; }
-        }
-
-        SetDot(chatDot, hasNewAdminMsg);
+        var res = JsonUtility.FromJson<DirectChatUnreadCountResponse>(req.downloadHandler.text);
+        bool hasUnread = res != null && res.totalUnreadCount > 0;
+        SetDot(chatDot, hasUnread);
     }
 
     IEnumerator CheckFriend()

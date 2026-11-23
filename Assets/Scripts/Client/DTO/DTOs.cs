@@ -314,3 +314,57 @@ public class LeaderboardResponse
     public LeaderboardEntryDto[] items;
     public LeaderboardEntryDto currentPlayer;
 }
+
+// -------------------------------------------------------
+// Direct Player-to-Player Chat
+// -------------------------------------------------------
+
+[System.Serializable]
+public class DirectChatMessageDto
+{
+    public string id;
+    public string senderId;
+    public string senderUsername;
+    public string receiverId;
+    public string text;
+    public bool isRead;
+    public string createdAt;
+}
+
+[System.Serializable]
+public class DirectChatConversationDto
+{
+    public string friendPlayerId;
+    public string friendUsername;
+    public int friendLevel;
+    public bool isOnline;
+    public string status; // "idle", "in_match", "offline"
+    public string latestMessageText;
+    public string latestMessageTime;
+    public int unreadCount;
+}
+
+[System.Serializable]
+public class DirectChatSendRequest
+{
+    public string receiverId;
+    public string text;
+}
+
+[System.Serializable]
+public class DirectChatUnreadCountResponse
+{
+    public int totalUnreadCount;
+}
+
+[System.Serializable]
+public class DirectChatMessageListWrapper
+{
+    public DirectChatMessageDto[] items;
+}
+
+[System.Serializable]
+public class DirectChatConversationListWrapper
+{
+    public DirectChatConversationDto[] items;
+}

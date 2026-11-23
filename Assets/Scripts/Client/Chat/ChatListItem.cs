@@ -3,17 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Prefab script cho một entry trong left panel (danh sách conversation).
-///
-/// Với player: chỉ có 1 entry duy nhất — cuộc hội thoại với "Keeper of Records".
-/// Với admin:  mỗi entry là 1 player khác nhau (ActiveChatPlayerDto).
-///
-/// Prefab hierarchy gợi ý:
-///   ChatListItem
-///   ├── SelectedBackground   (Image — hiện khi item đang được chọn)
-///   ├── AvatarImage          (Image — optional, có thể bỏ qua)
-///   ├── SenderNameText       (TMP_Text — tên người gửi / player)
-///   └── LastMessageText      (TMP_Text — preview tin nhắn gần nhất)
+/// Prefab script for conversation entries in the chat left panel.
 /// </summary>
 public class ChatListItem : MonoBehaviour
 {
@@ -22,29 +12,46 @@ public class ChatListItem : MonoBehaviour
     [SerializeField] private TMP_Text   senderNameText;
     [SerializeField] private TMP_Text   lastMessageText;
 
-    // ── Runtime ───────────────────────────────────────────────────────────────
-
     private System.Action _onClick;
-    private UnityEngine.UI.Button _button;
+    private Button _button;
 
-    // ── Setup ─────────────────────────────────────────────────────────────────
+    public string FriendPlayerId { get; private set; } = string.Empty;
 
-    /// <summary>Dùng cho player — entry duy nhất "Support".</summary>
-    public void SetupAsSupport(string lastMessage, System.Action onClick)
+    /// <summary>Sets up the list item as a friend conversation.</summary>
+    public void SetupAsFriend(DirectChatConversationDto conv, System.Action onClick)
     {
-        if (senderNameText  != null) senderNameText.text  = "Keeper of Records";
-        if (lastMessageText != null) lastMessageText.text = lastMessage;
+        FriendPlayerId = conv.friendPlayerId;
+
+        UpdateDisplay(
+            conv.friendUsername,
+            conv.isOnline,
+            conv.status,
+            conv.latestMessageText,
+            conv.unreadCount
+        );
+
         SetSelected(false);
         WireClick(onClick);
     }
 
-    /// <summary>Dùng cho admin — mỗi player là 1 entry.</summary>
-    public void SetupAsPlayer(ChatManager.ActiveChatPlayerDto player, System.Action onClick)
+    public void UpdateDisplay(string username, bool isOnline, string status, string latestMessage, int unreadCount)
     {
-        if (senderNameText  != null) senderNameText.text  = player.playerName;
-        if (lastMessageText != null) lastMessageText.text = player.latestMessageText;
-        SetSelected(false);
-        WireClick(onClick);
+        if (senderNameText != null)
+        {
+            string statusTag = isOnline
+                ? (status == "in_match" ? " <color=#FFCC00>[Battle]</color>" : " <color=#00FF66>[Online]</color>")
+                : " <color=#888888>[Offline]</color>";
+
+            string unreadTag = unreadCount > 0 ? $" <color=#FF4444>({unreadCount})</color>" : "";
+            senderNameText.text = $"{username}{statusTag}{unreadTag}";
+        }
+
+        if (lastMessageText != null)
+        {
+            lastMessageText.text = string.IsNullOrEmpty(latestMessage)
+                ? "No messages yet"
+                : latestMessage;
+        }
     }
 
     public void SetSelected(bool selected)
@@ -53,14 +60,12 @@ public class ChatListItem : MonoBehaviour
             selectedBackground.SetActive(selected);
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
     void WireClick(System.Action onClick)
     {
         _onClick = onClick;
 
-        _button = GetComponent<UnityEngine.UI.Button>();
-        if (_button == null) _button = gameObject.AddComponent<UnityEngine.UI.Button>();
+        _button = GetComponent<Button>();
+        if (_button == null) _button = gameObject.AddComponent<Button>();
 
         _button.onClick.RemoveAllListeners();
         _button.onClick.AddListener(() => _onClick?.Invoke());
