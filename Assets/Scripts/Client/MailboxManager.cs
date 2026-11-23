@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -34,8 +36,25 @@ public class MailboxManager : MonoBehaviour
     [Header("Empty State")]
     [SerializeField] private GameObject emptyStatePanel;
 
-    private List<NotificationDto> notifications = new List<NotificationDto>();
-    private NotificationItem selectedItem = null;
+    [Header("Filters")]
+    [SerializeField] private Button allButton;
+    [SerializeField] private Button systemButton;
+    [SerializeField] private Button noticeButton;
+
+    [Header("Type Icons")]
+    [SerializeField] private NotificationTypeIcon[] typeIcons;
+
+    static readonly Color32 ActiveFilterColor = new Color32(0xA9, 0xA9, 0xA9, 0xFF);
+
+    enum MailFilter { All, System, Notice }
+
+    readonly List<NotificationDto> notifications = new List<NotificationDto>();
+    readonly List<NotificationItem> spawnedItems = new List<NotificationItem>();
+    NotificationItem selectedItem;
+    MailFilter filter = MailFilter.All;
+    Color allDefaultColor = Color.white;
+    Color systemDefaultColor = Color.white;
+    Color noticeDefaultColor = Color.white;
 
     void Awake()
     {
@@ -43,6 +62,11 @@ public class MailboxManager : MonoBehaviour
             closeButton.onClick.AddListener(Close);
         if (readAllButton != null)
             readAllButton.onClick.AddListener(ReadAll);
+
+        PrepareFilterButton(allButton, MailFilter.All, ref allDefaultColor);
+        PrepareFilterButton(systemButton, MailFilter.System, ref systemDefaultColor);
+        PrepareFilterButton(noticeButton, MailFilter.Notice, ref noticeDefaultColor);
+        ApplyFilterColors();
 
         HidePanel();
         HideDetailPanel();
@@ -54,6 +78,12 @@ public class MailboxManager : MonoBehaviour
             closeButton.onClick.RemoveListener(Close);
         if (readAllButton != null)
             readAllButton.onClick.RemoveListener(ReadAll);
+        if (allButton != null)
+            allButton.onClick.RemoveAllListeners();
+        if (systemButton != null)
+            systemButton.onClick.RemoveAllListeners();
+        if (noticeButton != null)
+            noticeButton.onClick.RemoveAllListeners();
     }
 
     public void Open()
@@ -61,6 +91,8 @@ public class MailboxManager : MonoBehaviour
         this.OpenPanel(panel);
         HideDetailPanel();
         selectedItem = null;
+        filter = MailFilter.All;
+        ApplyFilterColors();
         StartCoroutine(LoadNotifications());
     }
 
@@ -98,23 +130,14 @@ public class MailboxManager : MonoBehaviour
         }
 
         var wrapper = JsonUtility.FromJson<NotificationArrayWrapper>("{\"items\":" + request.downloadHandler.text + "}");
-        if (wrapper.items != null)
-            notifications.AddRange(wrapper.items);
-
-        // Spawn notification items
-        foreach (var notification in notifications)
+        if (wrapper != null && wrapper.items != null)
         {
-            var item = Instantiate(notificationItemPrefab, notificationListContainer);
-            var itemScript = item.GetComponent<NotificationItem>();
-            if (itemScript != null)
-                itemScript.Setup(notification, this);
+            foreach (var notification in wrapper.items)
+                notification.ApplyReadState();
+            notifications.AddRange(wrapper.items);
         }
 
-        // Show/hide empty state
-        if (notifications.Count == 0)
-            ShowEmptyState();
-        else
-            HideEmptyState();
+        RebuildList();
     }
 
     public void OnNotificationSelected(NotificationItem item, NotificationDto notification)
@@ -130,11 +153,12 @@ public class MailboxManager : MonoBehaviour
         // Show detail
         ShowNotificationDetail(notification);
 
-        // Mark as read
         if (!notification.isRead)
         {
-            StartCoroutine(MarkAsRead(notification.id));
             notification.isRead = true;
+            notification.read = true;
+            item.ApplyReadVisual();
+            StartCoroutine(MarkAsRead(notification.id));
         }
     }
 
@@ -155,22 +179,47 @@ public class MailboxManager : MonoBehaviour
             detailMessageText.text = notification.message;
 
         if (detailTimeText != null)
-            detailTimeText.text = FormatTime(notification.createdAt);
+            detailTimeText.text = FormatDetailTime(notification.createdAt);
 
         if (detailTypeIcon != null)
-            SetDetailTypeIcon(notification.type);
+        {
+            Sprite icon = IconFor(notification.type);
+            detailTypeIcon.sprite = icon;
+            detailTypeIcon.enabled = icon != null;
+        }
     }
 
-    void SetDetailTypeIcon(string type)
+    public static string FormatListDate(string createdAt)
     {
-        // TODO: Set icon sprite based on type
-        // Similar to NotificationItem.SetTypeIcon
+        return TryParseTime(createdAt, out var time)
+            ? time.ToLocalTime().ToString("MM/dd", CultureInfo.InvariantCulture)
+            : createdAt;
     }
 
-    string FormatTime(string createdAt)
+    static string FormatDetailTime(string createdAt)
     {
-        // TODO: Parse and format the time string
-        return createdAt;
+        return TryParseTime(createdAt, out var time)
+            ? time.ToLocalTime().ToString("MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture)
+            : createdAt;
+    }
+
+    static bool TryParseTime(string createdAt, out DateTime time)
+    {
+        return DateTime.TryParse(createdAt, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out time);
+    }
+
+    public Sprite IconFor(string type)
+    {
+        if (typeIcons == null || string.IsNullOrEmpty(type))
+            return null;
+
+        foreach (var entry in typeIcons)
+        {
+            if (entry != null && string.Equals(entry.type, type, StringComparison.OrdinalIgnoreCase))
+                return entry.icon;
+        }
+
+        return null;
     }
 
     public IEnumerator MarkAsRead(string notificationId)
@@ -208,9 +257,11 @@ public class MailboxManager : MonoBehaviour
         foreach (var notification in notifications)
         {
             notification.isRead = true;
+            notification.read = true;
         }
 
-        // Note: Unread indicator removed from NotificationItem, so no UI update needed here
+        foreach (var item in spawnedItems)
+            item.ApplyReadVisual();
     }
 
     void HidePanel()
@@ -238,9 +289,104 @@ public class MailboxManager : MonoBehaviour
             emptyStatePanel.SetActive(false);
     }
 
+    void PrepareFilterButton(Button button, MailFilter value, ref Color defaultColor)
+    {
+        if (button == null)
+            return;
+
+        button.transition = Selectable.Transition.None;
+        Image image = button.targetGraphic as Image;
+        if (image != null)
+            defaultColor = image.color;
+
+        MailFilter captured = value;
+        button.onClick.AddListener(() => SetFilter(captured));
+    }
+
+    void SetFilter(MailFilter value)
+    {
+        filter = value;
+        ApplyFilterColors();
+        selectedItem = null;
+        HideDetailPanel();
+        RebuildList();
+    }
+
+    void ApplyFilterColors()
+    {
+        SetFilterColor(allButton, filter == MailFilter.All ? ActiveFilterColor : allDefaultColor);
+        SetFilterColor(systemButton, filter == MailFilter.System ? ActiveFilterColor : systemDefaultColor);
+        SetFilterColor(noticeButton, filter == MailFilter.Notice ? ActiveFilterColor : noticeDefaultColor);
+    }
+
+    static void SetFilterColor(Button button, Color color)
+    {
+        if (button == null)
+            return;
+
+        Image image = button.targetGraphic as Image;
+        if (image != null)
+            image.color = color;
+    }
+
+    void RebuildList()
+    {
+        spawnedItems.Clear();
+        if (notificationListContainer != null)
+        {
+            foreach (Transform child in notificationListContainer)
+                Destroy(child.gameObject);
+        }
+
+        int shown = 0;
+        foreach (var notification in notifications)
+        {
+            if (!PassesFilter(notification))
+                continue;
+
+            shown++;
+            if (notificationItemPrefab == null || notificationListContainer == null)
+                continue;
+
+            var item = Instantiate(notificationItemPrefab, notificationListContainer);
+            var itemScript = item.GetComponent<NotificationItem>();
+            if (itemScript == null)
+                continue;
+
+            itemScript.Setup(notification, this, IconFor(notification.type));
+            spawnedItems.Add(itemScript);
+        }
+
+        if (shown == 0)
+            ShowEmptyState();
+        else
+            HideEmptyState();
+    }
+
+    bool PassesFilter(NotificationDto notification)
+    {
+        if (filter == MailFilter.All)
+            return true;
+
+        string type = notification.type ?? string.Empty;
+        if (filter == MailFilter.System)
+            return type.Equals("System", StringComparison.OrdinalIgnoreCase)
+                || type.Equals("Maintenance", StringComparison.OrdinalIgnoreCase);
+
+        return type.Equals("Announcement", StringComparison.OrdinalIgnoreCase)
+            || type.Equals("MatchResult", StringComparison.OrdinalIgnoreCase);
+    }
+
     [System.Serializable]
     private class NotificationArrayWrapper
     {
         public NotificationDto[] items;
     }
+}
+
+[System.Serializable]
+public class NotificationTypeIcon
+{
+    public string type;
+    public Sprite icon;
 }

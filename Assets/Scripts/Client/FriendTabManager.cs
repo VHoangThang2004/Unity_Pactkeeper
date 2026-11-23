@@ -744,6 +744,9 @@ public class FriendTabManager : MonoBehaviour
             actionBtnText = challengeBtn.GetComponentInChildren<TMP_Text>();
         }
 
+        var friendedMark = itemObj.transform.Find("Friended");
+        if (friendedMark != null) friendedMark.gameObject.SetActive(false);
+
         if (actionButton != null)
         {
             actionButton.gameObject.SetActive(true);
@@ -752,8 +755,8 @@ public class FriendTabManager : MonoBehaviour
             switch (player.relationship)
             {
                 case "friend":
-                    if (actionBtnText != null) actionBtnText.text = "Friended";
-                    actionButton.interactable = false;
+                    actionButton.gameObject.SetActive(false);
+                    if (friendedMark != null) friendedMark.gameObject.SetActive(true);
                     break;
 
                 case "pending_sent":
@@ -801,8 +804,17 @@ public class FriendTabManager : MonoBehaviour
             string resp = req.downloadHandler?.text ?? "";
             bool accepted = resp.Contains("request_accepted");
             Debug.Log($"[FriendTabManager] Friend request sent to {targetPlayerId}. Response: {resp}");
-            if (actionBtnText != null) actionBtnText.text = accepted ? "Friended" : "Sent";
-            if (actionBtn != null) actionBtn.interactable = false;
+            if (accepted)
+            {
+                if (actionBtn != null) actionBtn.gameObject.SetActive(false);
+                var friendedMark = actionBtn != null ? actionBtn.transform.parent.Find("Friended") : null;
+                if (friendedMark != null) friendedMark.gameObject.SetActive(true);
+            }
+            else
+            {
+                if (actionBtnText != null) actionBtnText.text = "Sent";
+                if (actionBtn != null) actionBtn.interactable = false;
+            }
             if (accepted)
             {
                 StartCoroutine(FetchFriendsList());

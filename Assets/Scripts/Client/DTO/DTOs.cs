@@ -253,12 +253,18 @@ public class BannerDropRatesDto
 public class NotificationDto
 {
     public string id;
-    public string type; // "GachaReward", "MatchResult", "StoryProgress", "System", "FriendRequest"
+    public string type;
     public string title;
     public string message;
+    public bool read;
     public bool isRead;
     public string createdAt;
     public NotificationDataDto data;
+
+    public void ApplyReadState()
+    {
+        isRead = isRead || read;
+    }
 }
 
 [System.Serializable]
@@ -314,7 +320,6 @@ public class LeaderboardResponse
     public LeaderboardEntryDto[] items;
     public LeaderboardEntryDto currentPlayer;
 }
-
 // -------------------------------------------------------
 // Direct Player-to-Player Chat
 // -------------------------------------------------------

@@ -3,31 +3,62 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Individual notification item in the mailbox list.
-/// Only displays message text in the left panel.
-/// Setup UI in the Inspector.
+/// One row in the mailbox list.
 /// </summary>
 public class NotificationItem : MonoBehaviour
 {
+    static readonly Color32 ReadColor = new Color32(0xA9, 0xA9, 0xA9, 0xFF);
+
     [Header("UI Elements")]
     [SerializeField] private TMP_Text messageText;
+    [SerializeField] private TMP_Text timeText;
+    [SerializeField] private Image iconType;
     [SerializeField] private Image selectedBackground;
 
     private NotificationDto notification;
     private MailboxManager mailboxManager;
+    private Color defaultBackgroundColor = Color.white;
 
-    public void Setup(NotificationDto notification, MailboxManager mailboxManager)
+    void Awake()
+    {
+        if (selectedBackground != null)
+            defaultBackgroundColor = selectedBackground.color;
+    }
+
+    public void Setup(NotificationDto notification, MailboxManager mailboxManager, Sprite typeIcon)
     {
         this.notification = notification;
         this.mailboxManager = mailboxManager;
 
-        // Set message text only
         if (messageText != null)
-            messageText.text = notification.message;
+        {
+            if (string.IsNullOrEmpty(notification.title))
+                messageText.text = notification.message;
+            else
+                messageText.text = notification.title + "\n" + notification.message;
+        }
 
-        // Set selected background
+        if (timeText != null)
+            timeText.text = MailboxManager.FormatListDate(notification.createdAt);
+
+        if (iconType != null)
+        {
+            iconType.sprite = typeIcon;
+            iconType.enabled = typeIcon != null;
+        }
+
         if (selectedBackground != null)
-            selectedBackground.gameObject.SetActive(false);
+            selectedBackground.gameObject.SetActive(true);
+
+        ApplyReadVisual();
+    }
+
+    public void ApplyReadVisual()
+    {
+        if (selectedBackground == null || notification == null)
+            return;
+
+        selectedBackground.color = notification.isRead ? ReadColor : defaultBackgroundColor;
     }
 
     public void OnClick()
@@ -40,7 +71,6 @@ public class NotificationItem : MonoBehaviour
 
     public void SetSelected(bool isSelected)
     {
-        if (selectedBackground != null)
-            selectedBackground.gameObject.SetActive(isSelected);
+        ApplyReadVisual();
     }
 }
