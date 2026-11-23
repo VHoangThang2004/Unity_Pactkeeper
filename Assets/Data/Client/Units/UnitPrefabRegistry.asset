@@ -31,3 +31,6 @@ MonoBehaviour:
   - uId: 6
     unitName: Druid
     prefab: {fileID: 7328345900343870533, guid: 2d0804a17ced1e04c9709d72d11345b5, type: 3}
+  - uId: 7
+    unitName: Slayer
+    prefab: {fileID: 7328345900343870533, guid: 5194c14873a147e4082b08e1d15bdb08, type: 3}
