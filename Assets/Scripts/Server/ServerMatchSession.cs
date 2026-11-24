@@ -534,11 +534,15 @@ public class ServerMatchSession : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(playerId))
         {
+            // Newest connection wins (Netcode clientIds only increase) — a stale duplicate
+            // connection of the same player must not keep the team.
+            ulong newest = NO_CLIENT_ID;
             foreach (var clientId in candidates)
             {
-                if (MatchIdentityRegistry.GetPlayerId(clientId) == playerId)
-                    return clientId;
+                if (MatchIdentityRegistry.GetPlayerId(clientId) == playerId && (newest == NO_CLIENT_ID || clientId > newest))
+                    newest = clientId;
             }
+            if (newest != NO_CLIENT_ID) return newest;
             // Never hand the team to someone else's connection (or to clientId 0 = the server itself)
             Debug.LogWarning($"[MatchSession] No client connected for playerId={playerId} — team left unbound until they connect.");
             return NO_CLIENT_ID;
@@ -564,7 +568,7 @@ public class ServerMatchSession : MonoBehaviour
     }
     public TeamData GetTeamByPlayerId(string playerId)
     {
-        return teams.Find(t => t.playerId == playerId);
+        return teams?.Find(t => t.playerId == playerId); // teams is null until prep ends
     }
 
     public int GetTeamNumberByClientId(ulong clientId)

@@ -118,7 +118,7 @@ public class UnitSelectedState : IInteractionState
     {
         Debug.Log($"[UnitSelected] Spamming decision to server: unitId={unitId}, cell={cell}, type={type}, skillId={skillId}, token={token}");
         const float timeout = 2.5f;
-        const float interval = 0.1f; // set to 0 for true every-frame spam
+        const float interval = 1f; // server latches early decisions; this is only a slow fallback (TCP/WebSocket)
 
         float elapsed = 0f;
 

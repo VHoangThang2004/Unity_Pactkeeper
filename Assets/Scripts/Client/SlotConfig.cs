@@ -310,7 +310,7 @@ public class SlotConfig : MonoBehaviour
                             if (effect0 != null)
                             {
                                 string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
+                                AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, aoetype);
                                 AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                             }
                         }
@@ -353,7 +353,7 @@ public class SlotConfig : MonoBehaviour
                             if (effect0 != null)
                             {
                                 string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
+                                AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, aoetype);
                                 AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                             }
                         }
@@ -406,7 +406,7 @@ public class SlotConfig : MonoBehaviour
                                 if (effect0 != null)
                                 {
                                     string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                    AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
+                                    AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, aoetype);
                                     AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                                 }
                             }
@@ -461,7 +461,7 @@ public class SlotConfig : MonoBehaviour
                                 if (effect0 != null)
                                 {
                                     string aoetype = effect0.isAoePatternFixed ? "Fixed" : "Flexible";
-                                    AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, tptype);
+                                    AoePatternType.text = Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.AoePatternFormat, aoetype);
                                     AoePatternInfo?.Init(effect0.aoePattern.cells.ToList(), false);
                                 }
                             }

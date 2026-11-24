@@ -17,4 +17,6 @@ MonoBehaviour:
   baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1
+  instantType: 1
   buffEffectIds: 
+  descriptionOverride: 'This unit takes all of the ally''s remaining steps; the ally becomes <u>ready</u> immediately.'

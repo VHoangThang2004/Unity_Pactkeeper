@@ -16,5 +16,5 @@ MonoBehaviour:
   resolveDuration: 2
   baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
-  isAoePatternFixed: 1
+  isAoePatternFixed: 0
   healSfx: {fileID: 8300000, guid: 344f97449c2ea7644888b0b2e58a2677, type: 3}

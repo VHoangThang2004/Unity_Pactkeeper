@@ -16,6 +16,6 @@ MonoBehaviour:
   resolveDuration: 1.5
   baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
-  isAoePatternFixed: 1
+  isAoePatternFixed: 0
   sourceVFXname: SpellSourceVFX
   targetVFXname: ThornTargetVFX

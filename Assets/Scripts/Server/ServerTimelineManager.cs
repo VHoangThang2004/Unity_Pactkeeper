@@ -43,6 +43,7 @@ public class ServerTimelineManager : MonoBehaviour
     private Coroutine timelineLoopCoroutine;
     private int timelineGenerationId = 0;
     private bool waitingForDecision = false;
+    private bool acceptingDecision = false; // opens before decisionDelay so early decisions are latched, not rejected
     private bool lastDecisionResolved = false;
     private (int unitId, Vector3Int sourceCell, Vector3Int targetCell, DecisionType decisionType, int skillCardId)? pendingDecision = null;
 
@@ -338,12 +339,14 @@ public class ServerTimelineManager : MonoBehaviour
     IEnumerator WaitForDecision(int team, int gen)
     {
         float decisionDelay = (isPvE && team == 1) ? 0.7f : 2f;
+        // Open the window BEFORE the delay: a decision sent during it is latched (no client spam needed)
+        pendingDecision = null;
+        acceptingDecision = true;
+        session.CurrentTeamTurnId = team;
         yield return new WaitForSeconds(decisionDelay);
         if (gen != timelineGenerationId) yield break;
         List<TeamData> teams = session.GetAllTeamData();
-        pendingDecision = null;
-        waitingForDecision = true;
-        session.CurrentTeamTurnId = team;
+        waitingForDecision = acceptingDecision; // already decided during the delay => skip the wait (timer never ticks)
 
         while (waitingForDecision && (teams[team].WaitDuration > 0 || teams[team].Overtime > 0))
         {
@@ -352,6 +355,7 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
         waitingForDecision = false;
+        acceptingDecision = false;
         if (gen != timelineGenerationId) yield break;
 
         if (pendingDecision == null)
@@ -447,6 +451,8 @@ public class ServerTimelineManager : MonoBehaviour
         session.RecordSkillUsage(unitId, skillCardId);
         var actingUnit = session.GetUnitByUnitId(unitId);
         if (actingUnit != null)
+            LogTeamCommand(team, actingUnit, skillDef, targetCell);
+        if (actingUnit != null)
         {
             actingUnit.CurrentSkillPoint = Mathf.Max(0, actingUnit.CurrentSkillPoint - skillDef.skillPointCost);
             actingUnit.NextStepMultiplier += skillDef.stepCostMultiplier;
@@ -454,10 +460,7 @@ public class ServerTimelineManager : MonoBehaviour
             actingUnit.NextStep = Mathf.Max(0, Mathf.RoundToInt(actingUnit.CurrentStepBase * actingUnit.NextStepMultiplier));
         }
         if (removeFromRQ)
-        {
             session.ReadyUnitIds.Remove(unitId);
-            TeamHasReady(session.GetTeamByUnitId(unitId).teamId);
-        }
 
         // Post command timing
         if (actingUnit != null)
@@ -471,6 +474,11 @@ public class ServerTimelineManager : MonoBehaviour
                 TargetCell = targetCell,
             });
         }
+
+        // Checked after the command hook (Triage/passives may re-add ready units).
+        // Empty ready queue => team auto-waits; last log line tells the client to close that eye.
+        if (removeFromRQ && !TeamHasReady(team))
+            LogTeamWait(team);
 
         // Atomic full pack write
         PackResolve(snapshotBefore, new ResolveData
@@ -596,17 +604,16 @@ public class ServerTimelineManager : MonoBehaviour
             return false;
         }
 
-        if (session.TimelineState != ServerSessionState.DecisionWaiting || !waitingForDecision)
+        // Token matched above => sender already has the latest snapshot; duplicates are just dropped (no resync spam)
+        if (session.TimelineState != ServerSessionState.DecisionWaiting || !acceptingDecision)
         {
             Debug.LogWarning($"[Timeline] Wrong state ({session.TimelineState}) — ignored.");
-            SendSnapshotToClient(senderClientId);
             return false;
         }
 
         if (senderTeamId != session.CurrentTeamTurnId)
         {
             Debug.LogWarning($"[Timeline] Team {senderTeamId} sent but team {session.CurrentTeamTurnId}'s turn — ignored.");
-            SendSnapshotToClient(senderClientId);
             return false;
         }
 
@@ -614,6 +621,7 @@ public class ServerTimelineManager : MonoBehaviour
         {
             pendingDecision = null;
             waitingForDecision = false;
+            acceptingDecision = false;
             Debug.Log($"[Timeline] Team {senderTeamId} chose wait.");
             // session.AddLog($"Team {senderTeam} — wait."); // truncated (log later in decision loop)
             return true;
@@ -664,13 +672,10 @@ public class ServerTimelineManager : MonoBehaviour
             }
         }
 
-        //Logs the decision
-        LogTeamCommand(senderTeamId, unit, skillDef, target);
-
-
-
+        // Command is logged in ResolveDecisionEffects, only once it actually resolves
         pendingDecision = (unitId, unit.CurrentCell, target, decisionType, skillcardId);
         waitingForDecision = false;
+        acceptingDecision = false;
         Debug.Log($"[Server] Decision accepted: unit={unitId} target={target}");
         return true;
     }
@@ -845,6 +850,7 @@ public class ServerTimelineManager : MonoBehaviour
         timelineLoopCoroutine = null;
 
         waitingForDecision = false;
+        acceptingDecision = false;
         pendingDecision = null;
         lastDecisionResolved = false;
 

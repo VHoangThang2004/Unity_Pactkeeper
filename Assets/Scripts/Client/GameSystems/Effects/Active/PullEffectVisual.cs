@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PullEffectVisual", menuName = "SRPG/Effects/Client/PullEffect")]
 public class PullEffectVisual : ClientActiveEffectBase
 {
-    public override InstantType InstantType => InstantType.HalfInstant;
+    public override InstantType InstantType => InstantType.Instant;
     public override string GetDescription(UnitData unit,ClientEffectRegistry effectRegistry)
     {
         return " Pull the selected enemy target.";

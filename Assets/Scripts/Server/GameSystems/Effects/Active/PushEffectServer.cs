@@ -26,12 +26,9 @@ public class PushEffectServer : ServerActiveEffectBase
             return new ResolveResult { EffectId = -1 };
         }
         Vector3Int targetNewCell = OffsetRecalculator.RecalculateNewTargetCell(sourceCell, targetCell, targetCell);
-        if (session.GetUnitAt(targetNewCell) != null || !session.Map.IsWalkable(targetNewCell.x, targetNewCell.y))
-        {
-            Debug.LogError($"[PushEffect] Not valid cell!");
-            return new ResolveResult { EffectId = -1 };
-        }
-        targetUnit.CurrentCell = targetNewCell;
+        // Blocked push still resolves (target stays put) — SP spent, animation plays
+        if (session.GetUnitAt(targetNewCell) == null && session.Map.IsWalkable(targetNewCell.x, targetNewCell.y))
+            targetUnit.CurrentCell = targetNewCell;
 
         return new ResolveResult
         {

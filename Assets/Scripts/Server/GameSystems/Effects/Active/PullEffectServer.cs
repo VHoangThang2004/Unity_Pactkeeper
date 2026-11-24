@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PullEffectServer", menuName = "SRPG/Effects/Server/PullEffect")]
 public class PullEffectServer : ServerActiveEffectBase
 {
-    public override InstantType InstantType => InstantType.HalfInstant;
+    public override InstantType InstantType => InstantType.Instant;
     public override EffectType EffectType => EffectType.Move;
 
     public override ResolveResult Apply(
@@ -64,9 +64,7 @@ public class PullEffectServer : ServerActiveEffectBase
             }
         }
 
-        if (bestCell == from)
-            return new ResolveResult { EffectId = -1 };
-
+        // Blocked pull still resolves (target stays put) — SP spent, passive triggers, animation plays
         targetUnit.CurrentCell = bestCell;
 
         return new ResolveResult

@@ -11,6 +11,7 @@ public struct SecretData : INetworkSerializable
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
+        Data ??= string.Empty; // default(SecretData) has null Data — Netcode throws on null strings
         serializer.SerializeValue(ref Data);
     }
 }

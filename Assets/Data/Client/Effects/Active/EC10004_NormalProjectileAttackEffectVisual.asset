@@ -16,7 +16,7 @@ MonoBehaviour:
   resolveDuration: 2
   baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
-  isAoePatternFixed: 1
+  isAoePatternFixed: 0
   sourceVFXname: ArrowSourceVFX
   targetVFXname: ArrowTargetVFX
   shootSfx: {fileID: 8300000, guid: 1d85542c1c700f540ac8b4879c7e061d, type: 3}

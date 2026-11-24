@@ -4,10 +4,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ApplyBuffEffectVisual", menuName = "SRPG/Effects/Client/ApplyBuffEffect")]
 public class ApplyBuffEffectVisual : ClientActiveEffectBase
 {
-    public override InstantType InstantType => InstantType.Instant;
+    [SerializeField] private InstantType instantType = InstantType.Instant; // must match the server effect (Triage = HalfInstant)
+    public override InstantType InstantType => instantType;
     public int[] buffEffectIds;
+    [TextArea] public string descriptionOverride; // for buff-type effects with no buff list (e.g. Triage)
     public override string GetDescription(UnitData unit, ClientEffectRegistry effectRegistry)
     {
+        if (!string.IsNullOrEmpty(descriptionOverride)) return descriptionOverride;
         string description = "Apply buff(s) to the target:";
         foreach (int eId in buffEffectIds)
         {
