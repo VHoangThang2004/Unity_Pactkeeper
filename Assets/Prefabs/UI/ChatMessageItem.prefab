@@ -327,10 +327,10 @@ MonoBehaviour:
   playerBubble: {fileID: 7616612337785355050}
   playerMessageText: {fileID: 8568852148672036318}
   playerTimeText: {fileID: 5341787400334120034}
-  adminBubble: {fileID: 5018146168429353949}
-  adminSenderNameText: {fileID: 7285278875402243894}
-  adminMessageText: {fileID: 7237377261904494079}
-  adminTimeText: {fileID: 5150759210824906982}
+  friendBubble: {fileID: 5018146168429353949}
+  friendSenderNameText: {fileID: 7285278875402243894}
+  friendMessageText: {fileID: 7237377261904494079}
+  friendTimeText: {fileID: 5150759210824906982}
 --- !u!1 &4402232517956630511
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,7 +620,7 @@ GameObject:
   - component: {fileID: 1495878773375729989}
   - component: {fileID: 7622922357202982538}
   m_Layer: 5
-  m_Name: AdminBubble
+  m_Name: FriendBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

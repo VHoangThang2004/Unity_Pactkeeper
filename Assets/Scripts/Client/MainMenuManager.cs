@@ -25,7 +25,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private MatchmodeMenuManager matchmodeMenuManager;
     [SerializeField] private ProfileTabManager profileTab;
     [SerializeField] private MailboxManager mailboxManager;
-    [SerializeField] private SettingsManager settingsManager;
+    [SerializeField] private SettingRemakeManager settingsManager;
     [SerializeField] private ShopTabManager shopTabManager;
     [SerializeField] private TopUpManager topUpManager;
     [SerializeField] private FriendTabManager friendTabManager;

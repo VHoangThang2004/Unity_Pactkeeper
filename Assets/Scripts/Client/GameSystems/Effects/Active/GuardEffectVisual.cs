@@ -41,7 +41,7 @@ public class GuardEffectVisual : ClientActiveEffectBase
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / resolveDuration;
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration);
             sourceSceneUnit.transform.position = Vector3.Lerp(sourceStart, targetStart, t);
             targetSceneUnit.transform.position = Vector3.Lerp(targetStart, sourceStart, t);
             yield return null;

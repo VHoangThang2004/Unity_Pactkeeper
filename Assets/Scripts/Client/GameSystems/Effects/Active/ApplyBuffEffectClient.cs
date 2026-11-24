@@ -37,7 +37,7 @@ public class ApplyBuffEffectVisual : ClientActiveEffectBase
             sceneUnit.VFXAnimator.Play("SpellSourceVFX", 0, 0f);
 
         }
-        yield return new WaitForSeconds(resolveDuration);
+        yield return new WaitForSeconds(UnitAnimationSpeed.Duration(resolveDuration));
         if (sceneUnit.VFXAnimator != null)
         {
             sceneUnit.VFXAnimator.SetBool("IsIdling", true);

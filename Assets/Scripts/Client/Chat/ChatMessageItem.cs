@@ -6,7 +6,7 @@ using TMPro;
 ///
 /// Layout:
 ///   - My message     : right side bubble (playerBubble)
-///   - Friend message : left side bubble (adminBubble / otherBubble)
+///   - Friend message : left side bubble
 /// </summary>
 public class ChatMessageItem : MonoBehaviour
 {
@@ -16,19 +16,19 @@ public class ChatMessageItem : MonoBehaviour
     [SerializeField] private TMP_Text   playerTimeText;
 
     [Header("Friend Message Bubble (left side)")]
-    [SerializeField] private GameObject adminBubble;
-    [SerializeField] private TMP_Text   adminSenderNameText;
-    [SerializeField] private TMP_Text   adminMessageText;
-    [SerializeField] private TMP_Text   adminTimeText;
-
-    // ── Setup ─────────────────────────────────────────────────────────────────
+    [SerializeField] private GameObject friendBubble;
+    [SerializeField] private TMP_Text   friendSenderNameText;
+    [SerializeField] private TMP_Text   friendMessageText;
+    [SerializeField] private TMP_Text   friendTimeText;
 
     public void Setup(DirectChatMessageDto msg)
     {
-        bool isMyMessage = msg.senderId == PlayerSession.PlayerId;
+        bool isMyMessage = msg.senderId == PlayerSession.PlayerId
+            || (!string.IsNullOrEmpty(msg.senderUsername)
+                && msg.senderUsername == PlayerSession.Username);
 
         if (playerBubble != null) playerBubble.SetActive(isMyMessage);
-        if (adminBubble  != null) adminBubble.SetActive(!isMyMessage);
+        if (friendBubble != null) friendBubble.SetActive(!isMyMessage);
 
         string timeStr = FormatTime(msg.createdAt);
 
@@ -39,9 +39,9 @@ public class ChatMessageItem : MonoBehaviour
         }
         else
         {
-            if (adminSenderNameText != null) adminSenderNameText.text = msg.senderUsername;
-            if (adminMessageText    != null) adminMessageText.text    = msg.text;
-            if (adminTimeText       != null) adminTimeText.text       = timeStr;
+            if (friendSenderNameText != null) friendSenderNameText.text = msg.senderUsername;
+            if (friendMessageText    != null) friendMessageText.text    = msg.text;
+            if (friendTimeText       != null) friendTimeText.text       = timeStr;
         }
     }
 

@@ -46,7 +46,7 @@ public class MoveEffectVisual : ClientActiveEffectBase
         while (t < 1f)
         {
             if (!sceneUnit.isResolvingAnimation) yield break;
-            t += Time.deltaTime / resolveDuration;
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration);
             sceneUnit.transform.position = Vector3.Lerp(start, end, t);
             yield return null;
         }

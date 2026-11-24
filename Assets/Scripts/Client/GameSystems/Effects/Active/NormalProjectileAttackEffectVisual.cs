@@ -53,7 +53,7 @@ public class NormalProjectileAttackEffectVisual : ClientActiveEffectBase
         float shotStart = Time.time;
         yield return scene.vfx.Play(sourceVFXname, startPos, sourceFlip);
         float animLength = Time.time - shotStart;
-        yield return new WaitForSeconds(MathF.Max(resolveDuration - animLength * 2, 0)); // same pacing as before
+        yield return new WaitForSeconds(MathF.Max(UnitAnimationSpeed.Duration(resolveDuration) - animLength * 2, 0));
 
         if (AudioManager.Instance != null && impactSfx != null)
             AudioManager.Instance.PlaySFX(impactSfx);

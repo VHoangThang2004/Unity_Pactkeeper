@@ -38,7 +38,7 @@ public class PullEffectVisual : ClientActiveEffectBase
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / (resolveDuration * 0.2f);
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration * 0.2f);
             scene.ropeLine.SetPositions(
                 sourceSceneUnit.transform.position,
                 Vector3.Lerp(sourceSceneUnit.transform.position, targetStartPos, t));
@@ -51,13 +51,13 @@ public class PullEffectVisual : ClientActiveEffectBase
         scene.StartCoroutine(PlayBindedVFX(targetSceneUnit));
 
 
-        yield return new WaitForSeconds(resolveDuration * 0.4f);
+        yield return new WaitForSeconds(UnitAnimationSpeed.Duration(resolveDuration * 0.4f));
 
         // 3. Move target toward source
         t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / (resolveDuration * 0.4f);
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration * 0.4f);
             targetSceneUnit.transform.position = Vector3.Lerp(targetStartPos, targetEndPos, t);
             scene.ropeLine.SetPositions(
                 sourceSceneUnit.transform.position,
@@ -78,7 +78,7 @@ public class PullEffectVisual : ClientActiveEffectBase
             targetUnit.VFXAnimator.SetBool("IsIdling", false);
             targetUnit.VFXAnimator.Play("BindedVFX", 0, 0f);
         }
-        yield return new WaitForSeconds(resolveDuration * 0.8f);
+        yield return new WaitForSeconds(UnitAnimationSpeed.Duration(resolveDuration * 0.8f));
         if (targetUnit.VFXAnimator != null)
         {
             targetUnit.VFXAnimator.Play("NoEffect", 0, 0f);

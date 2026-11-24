@@ -59,7 +59,7 @@ public class NormalAttackEffectVisual : ClientActiveEffectBase
             sceneUnit.VFXAnimator.SetBool("IsIdling", false);
         }
 
-        float half = resolveDuration * 0.5f;
+        float half = UnitAnimationSpeed.Duration(resolveDuration * 0.5f);
 
         // Move toward target
         float t = 0f;

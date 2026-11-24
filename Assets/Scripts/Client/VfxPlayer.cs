@@ -32,12 +32,14 @@ public class VfxPlayer : MonoBehaviour
 
         Animator anim = go.GetComponentInChildren<Animator>();
         anim.Rebind();
+        anim.speed = UnitAnimationSpeed.Multiplier;
         anim.SetBool("IsIdling", false);
         setup?.Invoke(anim);
         anim.Play(state, 0, 0f);
 
         yield return null; // let the animator enter the state before reading its length
-        yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+        float length = anim.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(length / Mathf.Max(0.01f, anim.speed));
 
         go.SetActive(false);
         pool.Push(go);

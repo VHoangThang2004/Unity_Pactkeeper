@@ -440,7 +440,7 @@ public class FriendTabManager : MonoBehaviour
         UpdateFriendItemView(itemObj, friend);
 
         // Chat button — opens 14_Chat with this friend pre-selected
-        var chatBtn = itemObj.transform.Find("CHatButton")?.GetComponent<Button>();
+        var chatBtn = FindNamedButton(itemObj.transform, "chatbutton");
         if (chatBtn != null)
         {
             chatBtn.gameObject.SetActive(true);
@@ -455,6 +455,16 @@ public class FriendTabManager : MonoBehaviour
             removeBtn.onClick.RemoveAllListeners();
             removeBtn.onClick.AddListener(() => ShowConfirmPanel(friend.playerId, friend.username));
         }
+    }
+
+    private static Button FindNamedButton(Transform root, string name)
+    {
+        foreach (var button in root.GetComponentsInChildren<Button>(true))
+        {
+            if (string.Equals(button.gameObject.name, name, System.StringComparison.OrdinalIgnoreCase))
+                return button;
+        }
+        return null;
     }
 
     private void OpenChatWithFriend(FriendProfile friend)

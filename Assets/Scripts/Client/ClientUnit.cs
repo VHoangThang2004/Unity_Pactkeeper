@@ -67,6 +67,26 @@ public class ClientUnit : MonoBehaviour
         SyncPositionToCurrentSession();
 
         StartCoroutine(AutoUpdate());
+        ApplyAnimationSpeed();
+    }
+
+    void OnEnable()
+    {
+        UnitAnimationSpeed.Changed += ApplyAnimationSpeed;
+        ApplyAnimationSpeed();
+    }
+
+    void OnDisable()
+    {
+        UnitAnimationSpeed.Changed -= ApplyAnimationSpeed;
+    }
+
+    public void ApplyAnimationSpeed()
+    {
+        if (UnitAnimator != null)
+            UnitAnimator.speed = UnitAnimationSpeed.Multiplier;
+        if (VFXAnimator != null)
+            VFXAnimator.speed = UnitAnimationSpeed.Multiplier;
     }
 
     IEnumerator AutoUpdate()

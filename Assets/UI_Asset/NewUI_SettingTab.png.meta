@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4a2fee3a9eff0cf4d84b880f602fd3a6
+guid: 6d82965bf6426a545966cd000bbc384b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8221009633070779243
-    second: MatchResultVitory_0
+      213: -1135000411898808502
+    second: NewUI_SettingTab_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MatchResultVitory_0
+      name: NewUI_SettingTab_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 805
+        x: 17
+        y: 42
+        width: 398
+        height: 280
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b6b8f3a54b4e61270800000000000000
-      internalID: 8221009633070779243
+      spriteID: a4779dc832baf30f0800000000000000
+      internalID: -1135000411898808502
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 9a8e18b1839cd024997079e14cd464e2
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      MatchResultVitory_0: 8221009633070779243
+      NewUI_SettingTab_0: -1135000411898808502
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

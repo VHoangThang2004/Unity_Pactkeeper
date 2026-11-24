@@ -39,9 +39,9 @@ public class PushEffectVisual : ClientActiveEffectBase
         Vector3 dir = (targetStartPos - sourceStartPos).normalized;
         Vector3 midPos = targetStartPos - dir * stopDistance;
         yield return sourceToTarget(sourceSceneUnit, sourceStartPos, targetStartPos);
-        yield return new WaitForSeconds(resolveDuration * 0.1f);
+        yield return new WaitForSeconds(UnitAnimationSpeed.Duration(resolveDuration * 0.1f));
         scene.StartCoroutine(targetToNewPos(targetSceneUnit, targetStartPos, scene.movableTilemap.GetCellCenterWorld(postTargetData.CurrentCell)));
-        yield return new WaitForSeconds(resolveDuration * 0.1f);
+        yield return new WaitForSeconds(UnitAnimationSpeed.Duration(resolveDuration * 0.1f));
         yield return sourceToSource(sourceSceneUnit, midPos, sourceStartPos);
 
 
@@ -63,7 +63,7 @@ public class PushEffectVisual : ClientActiveEffectBase
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / (resolveDuration * 0.4f);
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration * 0.4f);
             sourceUnit.transform.position = Vector3.Lerp(startPos, midPos, t);
             yield return null;
         }
@@ -74,7 +74,7 @@ public class PushEffectVisual : ClientActiveEffectBase
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / (resolveDuration * 0.4f);
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration * 0.4f);
             targetUnit.transform.position = Vector3.Lerp(startPos, endPos, t);
             yield return null;
         }
@@ -86,7 +86,7 @@ public class PushEffectVisual : ClientActiveEffectBase
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / (resolveDuration * 0.4f);
+            t += Time.deltaTime / UnitAnimationSpeed.Duration(resolveDuration * 0.4f);
             sourceUnit.transform.position = Vector3.Lerp(midPos, startPos, t);
             yield return null;
         }
