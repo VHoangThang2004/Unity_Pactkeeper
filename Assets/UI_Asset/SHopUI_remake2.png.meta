@@ -1,0 +1,1023 @@
+fileFormatVersion: 2
+guid: 722d193a5123ea74abd259aace92e013
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7992446609355494620
+    second: SHopUI_remake2_0
+  - first:
+      213: -4319015579469635665
+    second: SHopUI_remake2_1
+  - first:
+      213: 8672819381928183621
+    second: SHopUI_remake2_2
+  - first:
+      213: 7581595676805220677
+    second: SHopUI_remake2_3
+  - first:
+      213: 5241278217395478009
+    second: SHopUI_remake2_4
+  - first:
+      213: -6676975121359181876
+    second: SHopUI_remake2_5
+  - first:
+      213: -6326072420079893571
+    second: SHopUI_remake2_6
+  - first:
+      213: -4715299997376515481
+    second: SHopUI_remake2_7
+  - first:
+      213: 7554689672045904199
+    second: SHopUI_remake2_8
+  - first:
+      213: 2602609379506297062
+    second: SHopUI_remake2_9
+  - first:
+      213: -4544631472430981833
+    second: SHopUI_remake2_10
+  - first:
+      213: 666698650948969903
+    second: SHopUI_remake2_11
+  - first:
+      213: 3182931111312851517
+    second: SHopUI_remake2_12
+  - first:
+      213: 6159763454448483861
+    second: SHopUI_remake2_13
+  - first:
+      213: 7192455393862186931
+    second: SHopUI_remake2_14
+  - first:
+      213: 5276774754465714294
+    second: SHopUI_remake2_15
+  - first:
+      213: 6048597221265469397
+    second: SHopUI_remake2_16
+  - first:
+      213: -816810753763537660
+    second: SHopUI_remake2_17
+  - first:
+      213: -4150117624180733538
+    second: SHopUI_remake2_18
+  - first:
+      213: -3544569291158802891
+    second: SHopUI_remake2_19
+  - first:
+      213: -4136387053785212078
+    second: SHopUI_remake2_20
+  - first:
+      213: 249231964502800156
+    second: SHopUI_remake2_21
+  - first:
+      213: -1508470070826550149
+    second: SHopUI_remake2_22
+  - first:
+      213: -1692203029518384748
+    second: SHopUI_remake2_23
+  - first:
+      213: -6732105571106581324
+    second: SHopUI_remake2_24
+  - first:
+      213: -4826298611020965620
+    second: SHopUI_remake2_25
+  - first:
+      213: -3040338537135610094
+    second: SHopUI_remake2_26
+  - first:
+      213: -199406021499906849
+    second: SHopUI_remake2_27
+  - first:
+      213: 1954344845118203272
+    second: SHopUI_remake2_28
+  - first:
+      213: 8988983963108919705
+    second: SHopUI_remake2_29
+  - first:
+      213: -4488831964809786866
+    second: SHopUI_remake2_30
+  - first:
+      213: 156103624246861162
+    second: SHopUI_remake2_31
+  - first:
+      213: 5937941260228923633
+    second: SHopUI_remake2_32
+  - first:
+      213: -7458284674421351427
+    second: SHopUI_remake2_33
+  - first:
+      213: 150685653384905272
+    second: SHopUI_remake2_34
+  - first:
+      213: -6921960431251027105
+    second: SHopUI_remake2_35
+  - first:
+      213: -3599457746182046404
+    second: SHopUI_remake2_36
+  - first:
+      213: -1350629218456380886
+    second: SHopUI_remake2_37
+  - first:
+      213: 3822527630561553338
+    second: SHopUI_remake2_38
+  - first:
+      213: 5245907492052344287
+    second: SHopUI_remake2_39
+  - first:
+      213: 4948494933586675398
+    second: SHopUI_remake2_40
+  - first:
+      213: -7116706581844716013
+    second: SHopUI_remake2_41
+  - first:
+      213: 4198879520904399397
+    second: SHopUI_remake2_42
+  - first:
+      213: -4966575632656804349
+    second: SHopUI_remake2_43
+  - first:
+      213: 6799229115032481672
+    second: SHopUI_remake2_44
+  - first:
+      213: -6466360374321543450
+    second: SHopUI_remake2_45
+  - first:
+      213: -4087414981134488491
+    second: SHopUI_remake2_46
+  - first:
+      213: -3480959837272781148
+    second: SHopUI_remake2_47
+  - first:
+      213: -7509067313696204849
+    second: SHopUI_remake2_48
+  - first:
+      213: 2755748429820550923
+    second: SHopUI_remake2_49
+  - first:
+      213: 2751955987232926870
+    second: SHopUI_remake2_50
+  - first:
+      213: -4684906861380818458
+    second: SHopUI_remake2_51
+  - first:
+      213: -7743269739633974229
+    second: SHopUI_remake2_52
+  - first:
+      213: 6970657516360544286
+    second: SHopUI_remake2_53
+  - first:
+      213: -9181211080654170295
+    second: SHopUI_remake2_54
+  - first:
+      213: -7841229318498365249
+    second: SHopUI_remake2_55
+  - first:
+      213: -5966265863518451746
+    second: SHopUI_remake2_56
+  - first:
+      213: -9121695929682361573
+    second: SHopUI_remake2_57
+  - first:
+      213: 4229648831330188698
+    second: SHopUI_remake2_58
+  - first:
+      213: -6341638234302605498
+    second: SHopUI_remake2_59
+  - first:
+      213: -3872012434167865666
+    second: SHopUI_remake2_60
+  - first:
+      213: -7075491967386222263
+    second: SHopUI_remake2_61
+  - first:
+      213: 4255213702571744164
+    second: SHopUI_remake2_62
+  - first:
+      213: 3496135062020461578
+    second: SHopUI_remake2_63
+  - first:
+      213: 6329268625648614634
+    second: SHopUI_remake2_64
+  - first:
+      213: 6825875711337335650
+    second: SHopUI_remake2_65
+  - first:
+      213: 1234075446448346880
+    second: SHopUI_remake2_66
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SHopUI_remake2_0
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 943
+        width: 1484
+        height: 1041
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42b27139720251190800000000000000
+      internalID: -7992446609355494620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_1
+      rect:
+        serializedVersion: 2
+        x: 1918
+        y: 1394
+        width: 67
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faf955ea636cf04c0800000000000000
+      internalID: -4319015579469635665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_2
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 892
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 547c3fcf64b0c5870800000000000000
+      internalID: 8672819381928183621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_3
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 469
+        width: 323
+        height: 434
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549cc9a591d373960800000000000000
+      internalID: 7581595676805220677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_4
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 465
+        width: 320
+        height: 438
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fd99dce4c2ccb840800000000000000
+      internalID: 5241278217395478009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_5
+      rect:
+        serializedVersion: 2
+        x: 1206
+        y: 747
+        width: 179
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc7e345d08e9653a0800000000000000
+      internalID: -6676975121359181876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_7
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 742
+        width: 279
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 762f8f692a3ef8eb0800000000000000
+      internalID: -4715299997376515481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_8
+      rect:
+        serializedVersion: 2
+        x: 1486
+        y: 736
+        width: 190
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 741cb92fa36a7d860800000000000000
+      internalID: 7554689672045904199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_9
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 743
+        width: 187
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e8929201735e1420800000000000000
+      internalID: 2602609379506297062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_10
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 605
+        width: 279
+        height: 113
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73dd0ba11c93ee0c0800000000000000
+      internalID: -4544631472430981833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_21
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 464
+        width: 277
+        height: 119
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c17bcd6b623757300800000000000000
+      internalID: 249231964502800156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_22
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 491
+        width: 109
+        height: 147
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7c331a7676d01be0800000000000000
+      internalID: -1508470070826550149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_23
+      rect:
+        serializedVersion: 2
+        x: 1495
+        y: 498
+        width: 164
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49187b17f461488e0800000000000000
+      internalID: -1692203029518384748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_24
+      rect:
+        serializedVersion: 2
+        x: 1751
+        y: 490
+        width: 218
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b493cbb6a1c292a0800000000000000
+      internalID: -6732105571106581324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_25
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 330
+        width: 279
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c09522eebfa850db0800000000000000
+      internalID: -4826298611020965620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_37
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 322
+        width: 242
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2ad4aab1e9914de0800000000000000
+      internalID: -1350629218456380886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_38
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 321
+        width: 238
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abbacbb90a85c0530800000000000000
+      internalID: 3822527630561553338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_39
+      rect:
+        serializedVersion: 2
+        x: 1199
+        y: 324
+        width: 65
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdd175ce1153dc840800000000000000
+      internalID: 5245907492052344287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_40
+      rect:
+        serializedVersion: 2
+        x: 1302
+        y: 316
+        width: 66
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c601418ce59ca440800000000000000
+      internalID: 4948494933586675398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_41
+      rect:
+        serializedVersion: 2
+        x: 1407
+        y: 318
+        width: 67
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 316167ad1116c3d90800000000000000
+      internalID: -7116706581844716013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_42
+      rect:
+        serializedVersion: 2
+        x: 1511
+        y: 318
+        width: 70
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52a4b2a7daa654a30800000000000000
+      internalID: 4198879520904399397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_43
+      rect:
+        serializedVersion: 2
+        x: 1614
+        y: 318
+        width: 75
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3065161b6cd231bb0800000000000000
+      internalID: -4966575632656804349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_44
+      rect:
+        serializedVersion: 2
+        x: 1727
+        y: 330
+        width: 40
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88f21043bd6bb5e50800000000000000
+      internalID: 6799229115032481672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_45
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 188
+        width: 279
+        height: 119
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e607e2ff7fd246a0800000000000000
+      internalID: -6466360374321543450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_46
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 153
+        width: 561
+        height: 119
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55c6edf0bb59647c0800000000000000
+      internalID: -4087414981134488491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_47
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 157
+        width: 408
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ae44fd887521bfc0800000000000000
+      internalID: -3480959837272781148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_48
+      rect:
+        serializedVersion: 2
+        x: 1519
+        y: 156
+        width: 324
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc714ac101f6ac790800000000000000
+      internalID: -7509067313696204849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_49
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 53
+        width: 279
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0f5bc9a8926e3620800000000000000
+      internalID: 2755748429820550923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SHopUI_remake2_50
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 24
+        width: 757
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69c2780d369e03620800000000000000
+      internalID: 2751955987232926870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: b1a6322548abed74e97adf841ddf0c4a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SHopUI_remake2_0: -7992446609355494620
+      SHopUI_remake2_1: -4319015579469635665
+      SHopUI_remake2_10: -4544631472430981833
+      SHopUI_remake2_11: 666698650948969903
+      SHopUI_remake2_12: 3182931111312851517
+      SHopUI_remake2_13: 6159763454448483861
+      SHopUI_remake2_14: 7192455393862186931
+      SHopUI_remake2_15: 5276774754465714294
+      SHopUI_remake2_16: 6048597221265469397
+      SHopUI_remake2_17: -816810753763537660
+      SHopUI_remake2_18: -4150117624180733538
+      SHopUI_remake2_19: -3544569291158802891
+      SHopUI_remake2_2: 8672819381928183621
+      SHopUI_remake2_20: -4136387053785212078
+      SHopUI_remake2_21: 249231964502800156
+      SHopUI_remake2_22: -1508470070826550149
+      SHopUI_remake2_23: -1692203029518384748
+      SHopUI_remake2_24: -6732105571106581324
+      SHopUI_remake2_25: -4826298611020965620
+      SHopUI_remake2_26: -3040338537135610094
+      SHopUI_remake2_27: -199406021499906849
+      SHopUI_remake2_28: 1954344845118203272
+      SHopUI_remake2_29: 8988983963108919705
+      SHopUI_remake2_3: 7581595676805220677
+      SHopUI_remake2_30: -4488831964809786866
+      SHopUI_remake2_31: 156103624246861162
+      SHopUI_remake2_32: 5937941260228923633
+      SHopUI_remake2_33: -7458284674421351427
+      SHopUI_remake2_34: 150685653384905272
+      SHopUI_remake2_35: -6921960431251027105
+      SHopUI_remake2_36: -3599457746182046404
+      SHopUI_remake2_37: -1350629218456380886
+      SHopUI_remake2_38: 3822527630561553338
+      SHopUI_remake2_39: 5245907492052344287
+      SHopUI_remake2_4: 5241278217395478009
+      SHopUI_remake2_40: 4948494933586675398
+      SHopUI_remake2_41: -7116706581844716013
+      SHopUI_remake2_42: 4198879520904399397
+      SHopUI_remake2_43: -4966575632656804349
+      SHopUI_remake2_44: 6799229115032481672
+      SHopUI_remake2_45: -6466360374321543450
+      SHopUI_remake2_46: -4087414981134488491
+      SHopUI_remake2_47: -3480959837272781148
+      SHopUI_remake2_48: -7509067313696204849
+      SHopUI_remake2_49: 2755748429820550923
+      SHopUI_remake2_5: -6676975121359181876
+      SHopUI_remake2_50: 2751955987232926870
+      SHopUI_remake2_51: -4684906861380818458
+      SHopUI_remake2_52: -7743269739633974229
+      SHopUI_remake2_53: 6970657516360544286
+      SHopUI_remake2_54: -9181211080654170295
+      SHopUI_remake2_55: -7841229318498365249
+      SHopUI_remake2_56: -5966265863518451746
+      SHopUI_remake2_57: -9121695929682361573
+      SHopUI_remake2_58: 4229648831330188698
+      SHopUI_remake2_59: -6341638234302605498
+      SHopUI_remake2_6: -6326072420079893571
+      SHopUI_remake2_60: -3872012434167865666
+      SHopUI_remake2_61: -7075491967386222263
+      SHopUI_remake2_62: 4255213702571744164
+      SHopUI_remake2_63: 3496135062020461578
+      SHopUI_remake2_64: 6329268625648614634
+      SHopUI_remake2_65: 6825875711337335650
+      SHopUI_remake2_66: 1234075446448346880
+      SHopUI_remake2_7: -4715299997376515481
+      SHopUI_remake2_8: 7554689672045904199
+      SHopUI_remake2_9: 2602609379506297062
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

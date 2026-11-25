@@ -1,0 +1,1389 @@
+fileFormatVersion: 2
+guid: c96b445295074964095eb9c54abbaa81
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -578834940828100713
+    second: ShopUI_remake1-removebg-preview_0
+  - first:
+      213: -8361282536357807662
+    second: ShopUI_remake1-removebg-preview_1
+  - first:
+      213: 7838597116784042728
+    second: ShopUI_remake1-removebg-preview_2
+  - first:
+      213: 3103833244256928855
+    second: ShopUI_remake1-removebg-preview_3
+  - first:
+      213: 8940027862490485492
+    second: ShopUI_remake1-removebg-preview_4
+  - first:
+      213: 6291195093654665791
+    second: ShopUI_remake1-removebg-preview_5
+  - first:
+      213: -1535869740591493675
+    second: ShopUI_remake1-removebg-preview_6
+  - first:
+      213: 6683012008792711343
+    second: ShopUI_remake1-removebg-preview_7
+  - first:
+      213: -6298309133649036050
+    second: ShopUI_remake1-removebg-preview_8
+  - first:
+      213: 3176427851086909084
+    second: ShopUI_remake1-removebg-preview_9
+  - first:
+      213: -6032710482270646950
+    second: ShopUI_remake1-removebg-preview_10
+  - first:
+      213: 7438524054087758430
+    second: ShopUI_remake1-removebg-preview_11
+  - first:
+      213: 6447313703515580276
+    second: ShopUI_remake1-removebg-preview_12
+  - first:
+      213: 2918013881542197158
+    second: ShopUI_remake1-removebg-preview_13
+  - first:
+      213: 5165517073678585107
+    second: ShopUI_remake1-removebg-preview_14
+  - first:
+      213: 3839509930304315653
+    second: ShopUI_remake1-removebg-preview_15
+  - first:
+      213: -3448123778520371031
+    second: ShopUI_remake1-removebg-preview_16
+  - first:
+      213: 7484281738484262654
+    second: ShopUI_remake1-removebg-preview_17
+  - first:
+      213: 7309303338997555464
+    second: ShopUI_remake1-removebg-preview_18
+  - first:
+      213: -6921918116181070483
+    second: ShopUI_remake1-removebg-preview_19
+  - first:
+      213: 5989458756478236973
+    second: ShopUI_remake1-removebg-preview_20
+  - first:
+      213: -3644446084254128256
+    second: ShopUI_remake1-removebg-preview_21
+  - first:
+      213: -511355256475301677
+    second: ShopUI_remake1-removebg-preview_22
+  - first:
+      213: 274995757066057789
+    second: ShopUI_remake1-removebg-preview_23
+  - first:
+      213: -74641276464474695
+    second: ShopUI_remake1-removebg-preview_24
+  - first:
+      213: -360970469970139621
+    second: ShopUI_remake1-removebg-preview_25
+  - first:
+      213: -7345616088998880250
+    second: ShopUI_remake1-removebg-preview_26
+  - first:
+      213: -5552008498298551898
+    second: ShopUI_remake1-removebg-preview_27
+  - first:
+      213: -1133631219508522821
+    second: ShopUI_remake1-removebg-preview_28
+  - first:
+      213: 6598056911241177780
+    second: ShopUI_remake1-removebg-preview_29
+  - first:
+      213: -7675995472579759594
+    second: ShopUI_remake1-removebg-preview_30
+  - first:
+      213: -7255176046629757488
+    second: ShopUI_remake1-removebg-preview_31
+  - first:
+      213: -8382091178819365089
+    second: ShopUI_remake1-removebg-preview_32
+  - first:
+      213: -201449328536367786
+    second: ShopUI_remake1-removebg-preview_33
+  - first:
+      213: -5603314315234414301
+    second: ShopUI_remake1-removebg-preview_34
+  - first:
+      213: -3925038274948384858
+    second: ShopUI_remake1-removebg-preview_35
+  - first:
+      213: 1229955237553947910
+    second: ShopUI_remake1-removebg-preview_36
+  - first:
+      213: -2937510508141557657
+    second: ShopUI_remake1-removebg-preview_37
+  - first:
+      213: 6051476544907263933
+    second: ShopUI_remake1-removebg-preview_38
+  - first:
+      213: -4810840786352255526
+    second: ShopUI_remake1-removebg-preview_39
+  - first:
+      213: 1274412834187700454
+    second: ShopUI_remake1-removebg-preview_40
+  - first:
+      213: -535292931415910059
+    second: ShopUI_remake1-removebg-preview_41
+  - first:
+      213: 3551991642133788220
+    second: ShopUI_remake1-removebg-preview_42
+  - first:
+      213: 2969563687033102864
+    second: ShopUI_remake1-removebg-preview_43
+  - first:
+      213: -6851483878559517878
+    second: ShopUI_remake1-removebg-preview_44
+  - first:
+      213: 3169076711413465794
+    second: ShopUI_remake1-removebg-preview_45
+  - first:
+      213: -1893491652841059341
+    second: ShopUI_remake1-removebg-preview_46
+  - first:
+      213: -1057824965805083112
+    second: ShopUI_remake1-removebg-preview_47
+  - first:
+      213: 4500742667101680177
+    second: ShopUI_remake1-removebg-preview_48
+  - first:
+      213: -5231028662588880170
+    second: ShopUI_remake1-removebg-preview_49
+  - first:
+      213: -3871121611130391262
+    second: ShopUI_remake1-removebg-preview_50
+  - first:
+      213: -8029386829757787756
+    second: ShopUI_remake1-removebg-preview_51
+  - first:
+      213: -8837385492273692730
+    second: ShopUI_remake1-removebg-preview_52
+  - first:
+      213: 7285459524526617502
+    second: ShopUI_remake1-removebg-preview_53
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_0
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 228
+        width: 179
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7975b5820b097f7f0800000000000000
+      internalID: -578834940828100713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_1
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 338
+        width: 25
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d937b945d1c6fb80800000000000000
+      internalID: -8361282536357807662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_2
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 343
+        width: 74
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e2605b0c8a48cc60800000000000000
+      internalID: 7838597116784042728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_3
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 288
+        width: 95
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7548bfd04e7031b20800000000000000
+      internalID: 3103833244256928855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_4
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 230
+        width: 174
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f217d189fb511c70800000000000000
+      internalID: 8940027862490485492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_5
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 263
+        width: 79
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3a77f10b90de4750800000000000000
+      internalID: 6291195093654665791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_6
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 316
+        width: 13
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ddc5cabb9e7faae0800000000000000
+      internalID: -1535869740591493675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_7
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 290
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa062cd8304debc50800000000000000
+      internalID: 6683012008792711343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_8
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 290
+        width: 30
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eec304b7639e798a0800000000000000
+      internalID: -6298309133649036050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_9
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 240
+        width: 174
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9e41b61d40f41c20800000000000000
+      internalID: 3176427851086909084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_10
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 187
+        width: 35
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5d8b7f67c1874ca0800000000000000
+      internalID: -6032710482270646950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_11
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 182
+        width: 86
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5279195732fa3760800000000000000
+      internalID: 7438524054087758430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_12
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 190
+        width: 150
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 477ed8d67a5797950800000000000000
+      internalID: 6447313703515580276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_13
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 195
+        width: 98
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6af3bfa3a2ede7820800000000000000
+      internalID: 2918013881542197158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_14
+      rect:
+        serializedVersion: 2
+        x: 473
+        y: 195
+        width: 95
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31dc3d1196a9fa740800000000000000
+      internalID: 5165517073678585107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_15
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 200
+        width: 74
+        height: 25
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 501af5360fda84530800000000000000
+      internalID: 3839509930304315653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_16
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 137
+        width: 86
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a037bf31bdc520d0800000000000000
+      internalID: -3448123778520371031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_17
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 139
+        width: 86
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef62c4576928dd760800000000000000
+      internalID: 7484281738484262654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_18
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 135
+        width: 114
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 801a68419acdf6560800000000000000
+      internalID: 7309303338997555464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_19
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 138
+        width: 155
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6dafa0b52860ff90800000000000000
+      internalID: -6921918116181070483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_20
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 150
+        width: 21
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d29fcb86105de1350800000000000000
+      internalID: 5989458756478236973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_21
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 149
+        width: 22
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08728f078935c6dc0800000000000000
+      internalID: -3644446084254128256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_22
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 94
+        width: 91
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d8c2cf7a1d47e8f0800000000000000
+      internalID: -511355256475301677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_23
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 99
+        width: 35
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3879ae1f2bf0d300800000000000000
+      internalID: 274995757066057789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_24
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 123
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b5d0ce8722d6fef0800000000000000
+      internalID: -74641276464474695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_25
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 103
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b16260325439dfaf0800000000000000
+      internalID: -360970469970139621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_28
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 102
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb0d6ee79688440f0800000000000000
+      internalID: -1133631219508522821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_30
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 101
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 612706f69c2697590800000000000000
+      internalID: -7675995472579759594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_31
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 51
+        width: 86
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ddd5bd33df605b90800000000000000
+      internalID: -7255176046629757488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_32
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 66
+        width: 42
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f17598bab74dcab80800000000000000
+      internalID: -8382091178819365089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_33
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 66
+        width: 41
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65d495c27ee443df0800000000000000
+      internalID: -201449328536367786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_34
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 66
+        width: 42
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 321779361570d32b0800000000000000
+      internalID: -5603314315234414301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_35
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 67
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a7b3e31c767789c0800000000000000
+      internalID: -3925038274948384858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_37
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 66
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 768ce36a1cddb37d0800000000000000
+      internalID: -2937510508141557657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_39
+      rect:
+        serializedVersion: 2
+        x: 474
+        y: 66
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: add43823bc57c3db0800000000000000
+      internalID: -4810840786352255526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_41
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 65
+        width: 88
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5595d2c3ae14298f0800000000000000
+      internalID: -535292931415910059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_42
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 7
+        width: 85
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c367a8a44953b4130800000000000000
+      internalID: 3551991642133788220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_43
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 10
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 012e18f9072063920800000000000000
+      internalID: 2969563687033102864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_44
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 45
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a43f42296b3aae0a0800000000000000
+      internalID: -6851483878559517878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_45
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 13
+        width: 47
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c243c18a72dafb20800000000000000
+      internalID: 3169076711413465794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_46
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 14
+        width: 46
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fbcd37bf57f8b5e0800000000000000
+      internalID: -1893491652841059341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_47
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 13
+        width: 29
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 816f5a65cc9d151f0800000000000000
+      internalID: -1057824965805083112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_48
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 13
+        width: 46
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1323a0a1c99d57e30800000000000000
+      internalID: 4500742667101680177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_49
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 11
+        width: 43
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dac0848527a767b0800000000000000
+      internalID: -5231028662588880170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_50
+      rect:
+        serializedVersion: 2
+        x: 453
+        y: 10
+        width: 66
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2253c3e9763074ac0800000000000000
+      internalID: -3871121611130391262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_51
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 14
+        width: 44
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49156184833e19090800000000000000
+      internalID: -8029386829757787756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_52
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 12
+        width: 33
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cff5dd97bc4b5580800000000000000
+      internalID: -8837385492273692730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopUI_remake1-removebg-preview_53
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 12
+        width: 33
+        height: 39
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9335e866d62b1560800000000000000
+      internalID: 7285459524526617502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: b225e39d8fe92984f8edfaa685fdf70a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ShopUI_remake1-removebg-preview_0: -578834940828100713
+      ShopUI_remake1-removebg-preview_1: -8361282536357807662
+      ShopUI_remake1-removebg-preview_10: -6032710482270646950
+      ShopUI_remake1-removebg-preview_11: 7438524054087758430
+      ShopUI_remake1-removebg-preview_12: 6447313703515580276
+      ShopUI_remake1-removebg-preview_13: 2918013881542197158
+      ShopUI_remake1-removebg-preview_14: 5165517073678585107
+      ShopUI_remake1-removebg-preview_15: 3839509930304315653
+      ShopUI_remake1-removebg-preview_16: -3448123778520371031
+      ShopUI_remake1-removebg-preview_17: 7484281738484262654
+      ShopUI_remake1-removebg-preview_18: 7309303338997555464
+      ShopUI_remake1-removebg-preview_19: -6921918116181070483
+      ShopUI_remake1-removebg-preview_2: 7838597116784042728
+      ShopUI_remake1-removebg-preview_20: 5989458756478236973
+      ShopUI_remake1-removebg-preview_21: -3644446084254128256
+      ShopUI_remake1-removebg-preview_22: -511355256475301677
+      ShopUI_remake1-removebg-preview_23: 274995757066057789
+      ShopUI_remake1-removebg-preview_24: -74641276464474695
+      ShopUI_remake1-removebg-preview_25: -360970469970139621
+      ShopUI_remake1-removebg-preview_26: -7345616088998880250
+      ShopUI_remake1-removebg-preview_27: -5552008498298551898
+      ShopUI_remake1-removebg-preview_28: -1133631219508522821
+      ShopUI_remake1-removebg-preview_29: 6598056911241177780
+      ShopUI_remake1-removebg-preview_3: 3103833244256928855
+      ShopUI_remake1-removebg-preview_30: -7675995472579759594
+      ShopUI_remake1-removebg-preview_31: -7255176046629757488
+      ShopUI_remake1-removebg-preview_32: -8382091178819365089
+      ShopUI_remake1-removebg-preview_33: -201449328536367786
+      ShopUI_remake1-removebg-preview_34: -5603314315234414301
+      ShopUI_remake1-removebg-preview_35: -3925038274948384858
+      ShopUI_remake1-removebg-preview_36: 1229955237553947910
+      ShopUI_remake1-removebg-preview_37: -2937510508141557657
+      ShopUI_remake1-removebg-preview_38: 6051476544907263933
+      ShopUI_remake1-removebg-preview_39: -4810840786352255526
+      ShopUI_remake1-removebg-preview_4: 8940027862490485492
+      ShopUI_remake1-removebg-preview_40: 1274412834187700454
+      ShopUI_remake1-removebg-preview_41: -535292931415910059
+      ShopUI_remake1-removebg-preview_42: 3551991642133788220
+      ShopUI_remake1-removebg-preview_43: 2969563687033102864
+      ShopUI_remake1-removebg-preview_44: -6851483878559517878
+      ShopUI_remake1-removebg-preview_45: 3169076711413465794
+      ShopUI_remake1-removebg-preview_46: -1893491652841059341
+      ShopUI_remake1-removebg-preview_47: -1057824965805083112
+      ShopUI_remake1-removebg-preview_48: 4500742667101680177
+      ShopUI_remake1-removebg-preview_49: -5231028662588880170
+      ShopUI_remake1-removebg-preview_5: 6291195093654665791
+      ShopUI_remake1-removebg-preview_50: -3871121611130391262
+      ShopUI_remake1-removebg-preview_51: -8029386829757787756
+      ShopUI_remake1-removebg-preview_52: -8837385492273692730
+      ShopUI_remake1-removebg-preview_53: 7285459524526617502
+      ShopUI_remake1-removebg-preview_6: -1535869740591493675
+      ShopUI_remake1-removebg-preview_7: 6683012008792711343
+      ShopUI_remake1-removebg-preview_8: -6298309133649036050
+      ShopUI_remake1-removebg-preview_9: 3176427851086909084
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

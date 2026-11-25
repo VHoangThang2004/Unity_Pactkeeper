@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e7504509d52f63e43a4e30126261a98c
+guid: 47346fe625c6bd846a3dadc12f07b858
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9162672249858808034
-    second: Shop_Tab_Limited-Photoroom_0
+      213: -2586589207850397093
+    second: Vs_UI_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Shop_Tab_Limited-Photoroom_0
+      name: Vs_UI_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2400
-        height: 1340
+        x: 31
+        y: 63
+        width: 301
+        height: 231
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2e8d9268dd9582f70800000000000000
-      internalID: 9162672249858808034
+      spriteID: b52d73ed1d69a1cd0800000000000000
+      internalID: -2586589207850397093
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Shop_Tab_Limited-Photoroom_0: 9162672249858808034
+      Vs_UI_0: -2586589207850397093
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

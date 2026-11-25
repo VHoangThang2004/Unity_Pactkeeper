@@ -138,8 +138,7 @@ public class SettingRemakeManager : MonoBehaviour
 
     public void Open()
     {
-        if (outsideClick != null)
-            outsideClick.SetActive(true);
+        SetOutsideClick(true);
         this.OpenPanel(panel);
         LoadSettings();
         ShowAudio();
@@ -149,8 +148,7 @@ public class SettingRemakeManager : MonoBehaviour
     {
         if (settingsChanged)
             SaveSettings();
-        if (outsideClick != null)
-            outsideClick.SetActive(false);
+        SetOutsideClick(false);
         HideConfirm();
         this.ClosePanel(panel);
     }
@@ -431,7 +429,24 @@ public class SettingRemakeManager : MonoBehaviour
         button.transition = Selectable.Transition.None;
         button.onClick.AddListener(Close);
 
+        CanvasGroup group = outsideClick.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.blocksRaycasts = false;
+        group.interactable = false;
+
         outsideClick.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
-        outsideClick.SetActive(false);
+    }
+
+    void SetOutsideClick(bool open)
+    {
+        if (outsideClick == null || panel == null)
+            return;
+
+        outsideClick.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
+        CanvasGroup group = outsideClick.GetComponent<CanvasGroup>();
+        if (group == null)
+            return;
+        group.blocksRaycasts = open;
+        group.interactable = open;
     }
 }

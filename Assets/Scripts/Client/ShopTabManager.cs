@@ -5,14 +5,6 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Shop Tab manager — layout theo sketch:
-///   Left  : danh sách shop (ShopListPanel)
-///   Center: grid items của shop đang chọn (ItemGridPanel)
-///   Right : chi tiết item đang chọn + nút Mua (DetailPanel)
-///   Bottom: gem balance + reset-period timer
-///   Popup : confirm purchase + result
-/// </summary>
 public class ShopTabManager : MonoBehaviour
 {
     // ── DTOs ─────────────────────────────────────────────────────────────────
@@ -96,10 +88,6 @@ public class ShopTabManager : MonoBehaviour
     [SerializeField] private ClassDefinitionRegistry   classRegistry;
     [SerializeField] private UnitPrefabRegistry        unitPrefabRegistry;
 
-    [Tooltip("Sprites assigned per shop index (0, 1, 2…). Cycles if shops > sprites.")]
-    [SerializeField] private Sprite[] shopBackgroundSprites;
-    [SerializeField] private Image    backgroundImage;
-
     [Tooltip("Default / gem icon.")]
     [SerializeField] private Sprite gemDefaultSprite;
 
@@ -107,38 +95,32 @@ public class ShopTabManager : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private Button     closeButton;
 
+    const int MaxShopButtons = 4;
+
+    [Header("Shop Tag")]
+    [SerializeField] private Image  shopTag;
+    [SerializeField] private Sprite standardTagSprite;
+    [SerializeField] private Sprite limitedTagSprite;
+
     [Header("Left — Shop List")]
     [SerializeField] private Transform  shopListContainer;
-    [SerializeField] private GameObject shopButtonPrefab;   // Prefab: Button + TMP_Text child
+    [SerializeField] private GameObject shopButtonPrefab;
 
     [Header("Center — Item Grid")]
     [SerializeField] private Transform  itemGridContainer;
     [SerializeField] private GameObject shopItemPrefab;
     [SerializeField] private GameObject itemEmptyState;
-    [SerializeField] private TMP_Text   shopNameText;
-    [SerializeField] private TMP_Text   shopDescriptionText;
 
     [Header("Pagination — Item Grid")]
-    [SerializeField] private int      itemsPerPage   = 8;  // 2 rows × 4 cols
+    [SerializeField] private int      itemsPerPage   = 8;
     [SerializeField] private Button   itemPrevButton;
     [SerializeField] private Button   itemNextButton;
     [SerializeField] private TMP_Text itemPageLabel;
 
-    [Header("Right — Item Detail")]
-    [SerializeField] private GameObject detailPanel;
-    [SerializeField] private GameObject detailEmptyState;
-    [SerializeField] private Image      detailRewardIcon;
-    [SerializeField] private Image      detailRewardFrame;
-    [SerializeField] private TMP_Text   detailRewardNameText;
-    [SerializeField] private TMP_Text   detailPriceText;
-    [SerializeField] private TMP_Text   detailLimitText;     // "Remaining: 2 / 5"
-    [SerializeField] private TMP_Text   detailRewardTierText; // "Tier 2"
-    [SerializeField] private Button     buyButton;
-    [SerializeField] private TMP_Text   buyButtonText;
-
     [Header("Bottom Bar")]
     [SerializeField] private TMP_Text   gemBalanceText;
-    [SerializeField] private TMP_Text   resetPeriodText;     // "Resets: Daily" / expiry countdown
+    [SerializeField] private TMP_Text   resetPeriodText;
+    [SerializeField] private TMP_Text   shopDescriptionText;
 
     [Header("Confirm Popup")]
     [SerializeField] private GameObject confirmPopup;
@@ -153,7 +135,10 @@ public class ShopTabManager : MonoBehaviour
 
     // ── Runtime ───────────────────────────────────────────────────────────────
 
+    private readonly ScrollingText descriptionScroll = new ScrollingText();
+    private GameObject outsideClick;
     private List<PlayerShopDto> allShops       = new();
+    private readonly List<ShopListButton> shopButtons = new();
     private PlayerShopDto       selectedShop;
     private PlayerShopItemDto   selectedItem;
     private ShopItemEntry       selectedEntry;
@@ -171,9 +156,19 @@ public class ShopTabManager : MonoBehaviour
         if (itemPrevButton   != null) itemPrevButton.onClick.AddListener(ItemPrevPage);
         if (itemNextButton   != null) itemNextButton.onClick.AddListener(ItemNextPage);
 
+        EnsureOutsideClick();
         HidePanel();
-        HideDetailPanel();
         HidePopups();
+    }
+
+    void Update()
+    {
+        descriptionScroll.Tick();
+    }
+
+    void LateUpdate()
+    {
+        descriptionScroll.LateTick();
     }
 
     void OnDestroy()
@@ -195,18 +190,19 @@ public class ShopTabManager : MonoBehaviour
         classRegistry?.Init();
         unitPrefabRegistry?.Init();
 
-        HideDetailPanel();
         HidePopups();
         selectedShop  = null;
         selectedItem  = null;
         selectedEntry = null;
 
+        SetOutsideClick(true);
         this.OpenPanel(panel);
         StartCoroutine(LoadShopsCoroutine());
     }
 
     public void Close()
     {
+        SetOutsideClick(false);
         this.ClosePanel(panel);
         HidePopups();
         ClearShopList();
@@ -215,13 +211,18 @@ public class ShopTabManager : MonoBehaviour
 
     // ── Called by ShopItemEntry ───────────────────────────────────────────────
 
-    public void OnItemSelected(ShopItemEntry entry, PlayerShopItemDto item)
+    public void RequestPurchase(ShopItemEntry entry, PlayerShopItemDto item)
     {
-        if (selectedEntry != null) selectedEntry.SetSelected(false);
+        if (item == null || selectedShop == null)
+            return;
+
+        bool soldOut = item.HasPurchaseLimit && item.HasRemainingPurchases && item.remainingPurchases <= 0;
+        if (soldOut)
+            return;
+
         selectedEntry = entry;
         selectedItem  = item;
-        selectedEntry.SetSelected(true);
-        ShowItemDetail(item);
+        OnClickBuy();
     }
 
     // ── Data loading ──────────────────────────────────────────────────────────
@@ -249,6 +250,10 @@ public class ShopTabManager : MonoBehaviour
         if (wrapper.items != null)
             allShops.AddRange(wrapper.items);
 
+        allShops.Sort((a, b) => a.displayOrder.CompareTo(b.displayOrder));
+        if (allShops.Count > MaxShopButtons)
+            allShops.RemoveRange(MaxShopButtons, allShops.Count - MaxShopButtons);
+
         RefreshGemBalance();
         RenderShopList();
 
@@ -262,19 +267,21 @@ public class ShopTabManager : MonoBehaviour
     void RenderShopList()
     {
         ClearShopList();
-        if (allShops.Count == 0) return;
+        if (allShops.Count == 0 || shopButtonPrefab == null || shopListContainer == null)
+            return;
 
-        for (int i = 0; i < allShops.Count; i++)
+        int count = Mathf.Min(MaxShopButtons, allShops.Count);
+        for (int i = 0; i < count; i++)
         {
             int idx = i;
             var shop = allShops[i];
-
             var btnObj = Instantiate(shopButtonPrefab, shopListContainer);
-            var btn    = btnObj.GetComponent<Button>();
-            var lbl    = btnObj.GetComponentInChildren<TMP_Text>();
-
-            if (lbl != null) lbl.text = shop.name;
-            if (btn != null) btn.onClick.AddListener(() => SelectShop(shop, idx));
+            btnObj.SetActive(true);
+            var view = btnObj.GetComponent<ShopListButton>();
+            if (view == null)
+                view = btnObj.AddComponent<ShopListButton>();
+            view.Setup(shop, idx, () => SelectShop(allShops[idx], idx));
+            shopButtons.Add(view);
         }
     }
 
@@ -283,22 +290,43 @@ public class ShopTabManager : MonoBehaviour
         selectedShop = shop;
         selectedItem  = null;
         selectedEntry = null;
-        HideDetailPanel();
 
-        // Background swap
-        if (backgroundImage != null && shopBackgroundSprites != null && shopBackgroundSprites.Length > 0)
-            backgroundImage.sprite = shopBackgroundSprites[index % shopBackgroundSprites.Length];
+        for (int i = 0; i < shopButtons.Count; i++)
+        {
+            if (shopButtons[i] != null)
+                shopButtons[i].SetSelected(i == index);
+        }
 
-        // Shop header
-        if (shopNameText        != null) shopNameText.text        = shop.name;
-        if (shopDescriptionText != null) shopDescriptionText.text = shop.description;
+        ApplyShopTag(shop);
 
-        // Reset period / expiry
         if (resetPeriodText != null)
-            resetPeriodText.text = BuildResetLabel(shop);
+            resetPeriodText.text = string.IsNullOrEmpty(shop.resetPeriod) ? string.Empty : shop.resetPeriod;
+
+        descriptionScroll.Play(shopDescriptionText, shop.description ?? string.Empty, 40f);
 
         currentItemPage = 0;
         RenderItemGrid(shop);
+    }
+
+    void ApplyShopTag(PlayerShopDto shop)
+    {
+        if (shopTag == null)
+            return;
+
+        bool limited = IsLimitedShop(shop);
+        Sprite sprite = limited ? limitedTagSprite : standardTagSprite;
+        if (sprite != null)
+            shopTag.sprite = sprite;
+        shopTag.enabled = sprite != null;
+    }
+
+    static bool IsLimitedShop(PlayerShopDto shop)
+    {
+        if (shop == null || string.IsNullOrEmpty(shop.expiryDate))
+            return false;
+        if (string.Equals(shop.resetPeriod, "Daily", System.StringComparison.OrdinalIgnoreCase))
+            return false;
+        return true;
     }
 
     // ── Item Grid (Center Panel) ──────────────────────────────────────────────
@@ -339,7 +367,6 @@ public class ShopTabManager : MonoBehaviour
         currentItemPage--;
         selectedItem  = null;
         selectedEntry = null;
-        HideDetailPanel();
         RenderItemGrid(selectedShop);
     }
 
@@ -351,72 +378,17 @@ public class ShopTabManager : MonoBehaviour
         currentItemPage++;
         selectedItem  = null;
         selectedEntry = null;
-        HideDetailPanel();
         RenderItemGrid(selectedShop);
     }
 
     void UpdateItemPageLabel(int current, int total)
     {
         if (itemPageLabel  != null)
-            itemPageLabel.text = total > 0 ? $"Page {current} / {total}" : string.Empty;
+            itemPageLabel.text = total > 0 ? $"{current}/{total}" : string.Empty;
         if (itemPrevButton != null)
             itemPrevButton.interactable = current > 1;
         if (itemNextButton != null)
             itemNextButton.interactable = current < total;
-    }
-
-    // ── Item Detail (Right Panel) ─────────────────────────────────────────────
-
-    void ShowItemDetail(PlayerShopItemDto item)
-    {
-        if (detailPanel      != null) detailPanel.SetActive(true);
-        if (detailEmptyState != null) detailEmptyState.SetActive(false);
-
-        // Icon + frame
-        ApplyRewardVisuals(item.reward, detailRewardIcon, detailRewardFrame);
-
-        // Name
-        if (detailRewardNameText != null)
-            detailRewardNameText.text = GetRewardName(item.reward);
-
-        // Price
-        if (detailPriceText != null)
-            detailPriceText.text = $"Price: {item.price} Gems";
-
-        // Tier
-        if (detailRewardTierText != null)
-            detailRewardTierText.text = $"Tier {item.rewardTier}";
-
-        // Limit
-        if (detailLimitText != null)
-        {
-            if (item.HasPurchaseLimit)
-            {
-                int rem = item.HasRemainingPurchases ? item.remainingPurchases : item.purchaseLimit;
-                detailLimitText.text = $"Remaining: {rem} / {item.purchaseLimit}";
-                detailLimitText.gameObject.SetActive(true);
-            }
-            else
-            {
-                detailLimitText.text = "No purchase limit";
-                detailLimitText.gameObject.SetActive(true);
-            }
-        }
-
-        // Buy button state
-        bool soldOut   = item.HasPurchaseLimit && item.HasRemainingPurchases && item.remainingPurchases <= 0;
-        bool canAfford = localGems >= item.price;
-        bool canBuy    = !soldOut && canAfford;
-
-        if (buyButton != null)
-            buyButton.interactable = canBuy;
-
-        if (buyButtonText != null)
-        {
-            if (soldOut)        buyButtonText.text = "Sold Out";
-            else if (!canAfford) buyButtonText.text = "Not Enough Gems";
-            else                buyButtonText.text = "Buy";
-        }
     }
 
     // ── Buy Flow ──────────────────────────────────────────────────────────────
@@ -448,8 +420,6 @@ public class ShopTabManager : MonoBehaviour
 
     IEnumerator PurchaseCoroutine(string shopId, PlayerShopItemDto item)
     {
-        if (buyButton != null) buyButton.interactable = false;
-
         var requestBody = new PurchaseRequestDto
         {
             shopId     = shopId,
@@ -470,7 +440,6 @@ public class ShopTabManager : MonoBehaviour
         {
             Debug.LogError($"[Shop] Purchase failed: {req.error}");
             ShowResult($"Purchase failed.\n{req.error}");
-            if (buyButton != null) buyButton.interactable = true;
             yield break;
         }
 
@@ -479,23 +448,19 @@ public class ShopTabManager : MonoBehaviour
         if (!response.success)
         {
             ShowResult("Purchase failed.");
-            if (buyButton != null) buyButton.interactable = true;
             yield break;
         }
 
         // ── Update local state ────────────────────────────────────────────────
         localGems = response.gemsRemaining;
-        if (gemBalanceText != null) gemBalanceText.text = $"{localGems} Gems";
+        if (gemBalanceText != null) gemBalanceText.text = localGems.ToString();
 
         // Update remaining on the item
         item.remainingPurchases = response.remainingPurchases;
         item.purchasedCount++;
 
-        // Refresh the selected entry card
-        selectedEntry?.RefreshLimit(response.remainingPurchases);
-
-        // Refresh detail panel
-        ShowItemDetail(item);
+        if (selectedEntry != null)
+            selectedEntry.RefreshLimit(response.remainingPurchases);
 
         // ── Build result message ──────────────────────────────────────────────
         string itemName = GetRewardName(response.reward);
@@ -618,58 +583,73 @@ public class ShopTabManager : MonoBehaviour
         }
 
         if (gemBalanceText != null)
-            gemBalanceText.text = $"{localGems} Gems";
-    }
-
-    static string BuildResetLabel(PlayerShopDto shop)
-    {
-        var sb = new System.Text.StringBuilder();
-
-        switch (shop.resetPeriod)
-        {
-            case "Daily":   sb.Append("Resets: Daily");   break;
-            case "Weekly":  sb.Append("Resets: Weekly");  break;
-            default:        sb.Append("One-time Shop");   break;
-        }
-
-        // Daily time window
-        if (!string.IsNullOrEmpty(shop.dailyStartTime) && !string.IsNullOrEmpty(shop.dailyEndTime))
-            sb.Append($"  |  Open {shop.dailyStartTime.Substring(0, 5)}–{shop.dailyEndTime.Substring(0, 5)} UTC");
-
-        // Expiry
-        if (!string.IsNullOrEmpty(shop.expiryDate) &&
-            System.DateTime.TryParse(shop.expiryDate, out var expiry))
-        {
-            var remaining = expiry - System.DateTime.UtcNow;
-            if (remaining.TotalSeconds > 0)
-            {
-                if (remaining.TotalDays >= 1)
-                    sb.Append($"  |  Expires in {(int)remaining.TotalDays}d {remaining.Hours}h");
-                else
-                    sb.Append($"  |  Expires in {remaining.Hours}h {remaining.Minutes}m");
-            }
-            else
-            {
-                sb.Append("  |  Expired");
-            }
-        }
-
-        return sb.ToString();
+            gemBalanceText.text = localGems.ToString();
     }
 
     // ── UI helpers ────────────────────────────────────────────────────────────
 
     void HidePanel()        { this.HidePanelImmediate(panel); }
-    void HideDetailPanel()
+
+    void EnsureOutsideClick()
     {
-        if (detailPanel      != null) detailPanel.SetActive(false);
-        if (detailEmptyState != null) detailEmptyState.SetActive(true);
+        if (outsideClick != null || panel == null || panel.transform.parent == null)
+            return;
+
+        outsideClick = new GameObject("ShopOutsideClick", typeof(RectTransform));
+        outsideClick.transform.SetParent(panel.transform.parent, false);
+
+        RectTransform rect = outsideClick.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = outsideClick.AddComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0f);
+
+        Button button = outsideClick.AddComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.onClick.AddListener(Close);
+
+        CanvasGroup group = outsideClick.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.blocksRaycasts = false;
+        group.interactable = false;
+
+        outsideClick.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
+    }
+
+    void SetOutsideClick(bool open)
+    {
+        if (outsideClick == null || panel == null)
+            return;
+
+        outsideClick.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
+        CanvasGroup group = outsideClick.GetComponent<CanvasGroup>();
+        if (group == null)
+            return;
+        group.blocksRaycasts = open;
+        group.interactable = open;
     }
     void HidePopups()
     {
         if (confirmPopup != null) confirmPopup.SetActive(false);
         if (resultPopup  != null) resultPopup.SetActive(false);
     }
-    void ClearShopList()  { foreach (Transform t in shopListContainer)  Destroy(t.gameObject); }
-    void ClearItemGrid()  { foreach (Transform t in itemGridContainer)  Destroy(t.gameObject); }
+    void ClearShopList()
+    {
+        shopButtons.Clear();
+        if (shopListContainer == null)
+            return;
+        for (int i = shopListContainer.childCount - 1; i >= 0; i--)
+            Destroy(shopListContainer.GetChild(i).gameObject);
+    }
+
+    void ClearItemGrid()
+    {
+        if (itemGridContainer == null)
+            return;
+        for (int i = itemGridContainer.childCount - 1; i >= 0; i--)
+            Destroy(itemGridContainer.GetChild(i).gameObject);
+    }
 }

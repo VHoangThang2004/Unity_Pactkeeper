@@ -25,7 +25,7 @@ public class ReportTabManager : MonoBehaviour
     [Header("Root Panel")]
     [SerializeField] private GameObject panel;
     [SerializeField] private Button     closeButton;    // optional — đặt nếu muốn nút X riêng
-    // Backdrop click-to-close được add runtime vào panel (không cần tạo trong Editor)
+    GameObject outsideClick;
 
     [Header("Button Panel — Policy Buttons")]
     [SerializeField] private Button termsOfServiceButton;
@@ -125,16 +125,7 @@ public class ReportTabManager : MonoBehaviour
 
     void Awake()
     {
-        // ── Backdrop: add Button thẳng vào rootPanel (giống MatchmodeMenuManager)
-        // Click vào vùng ngoài ButtonArea/ContentPanel → Close()
-        // ButtonArea và ContentPanel block raycast nên click vào đó không trigger
-        if (panel != null)
-        {
-            var backdropBtn = panel.GetComponent<Button>();
-            if (backdropBtn == null) backdropBtn = panel.AddComponent<Button>();
-            backdropBtn.transition = UnityEngine.UI.Selectable.Transition.None;
-            backdropBtn.onClick.AddListener(Close);
-        }
+        EnsureOutsideClick();
 
         // ── Backdrop: add Button vào contentPanel để click ngoài card đóng content
         if (contentPanel != null)
@@ -162,12 +153,6 @@ public class ReportTabManager : MonoBehaviour
 
     void OnDestroy()
     {
-        if (panel != null)
-        {
-            var backdropBtn = panel.GetComponent<Button>();
-            if (backdropBtn != null) backdropBtn.onClick.RemoveListener(Close);
-        }
-
         if (contentPanel != null)
         {
             var contentBackdropBtn = contentPanel.GetComponent<Button>();
@@ -189,14 +174,58 @@ public class ReportTabManager : MonoBehaviour
 
     public void Open()
     {
-        CloseContent(); // reset content panel on every open
+        CloseContent();
+        SetOutsideClick(true);
         this.OpenPanel(panel);
     }
 
     public void Close()
     {
         CloseContent();
+        SetOutsideClick(false);
         this.ClosePanel(panel);
+    }
+
+    void EnsureOutsideClick()
+    {
+        if (outsideClick != null || panel == null || panel.transform.parent == null)
+            return;
+
+        outsideClick = new GameObject("ReportOutsideClick", typeof(RectTransform));
+        outsideClick.transform.SetParent(panel.transform.parent, false);
+
+        RectTransform rect = outsideClick.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = outsideClick.AddComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0f);
+
+        Button button = outsideClick.AddComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.onClick.AddListener(Close);
+
+        CanvasGroup group = outsideClick.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.blocksRaycasts = false;
+        group.interactable = false;
+
+        outsideClick.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
+    }
+
+    void SetOutsideClick(bool open)
+    {
+        if (outsideClick == null || panel == null)
+            return;
+
+        outsideClick.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
+        CanvasGroup group = outsideClick.GetComponent<CanvasGroup>();
+        if (group == null)
+            return;
+        group.blocksRaycasts = open;
+        group.interactable = open;
     }
 
     void HidePanel()

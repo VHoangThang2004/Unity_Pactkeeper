@@ -1,75 +1,88 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Prefab script for a single item card in the shop grid.
-/// Pattern mirrors QuestItem / InventoryItem.
-/// </summary>
-public class ShopItemEntry : MonoBehaviour
+public class ShopItemEntry : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    static readonly Color32 HoverColor = new Color32(0xFF, 0xF9, 0xB4, 0xFF);
+
     [Header("UI Elements")]
     [SerializeField] private Image     rewardIcon;
-    [SerializeField] private Image     rewardFrame;        // Unit class frame overlay (active for Unit rewards only)
-    [SerializeField] private TMP_Text  rewardNameText;     // "Sharp Dagger" / "Gems" / "Druid"
-    [SerializeField] private TMP_Text  priceText;          // "160 💎"
-    [SerializeField] private TMP_Text  limitText;          // "2 left" / "Unlimited" — shown only when PurchaseLimit set
+    [SerializeField] private Image     rewardFrame;
+    [SerializeField] private TMP_Text  rewardNameText;
+    [SerializeField] private TMP_Text  priceText;
+    [SerializeField] private TMP_Text  limitText;
+    [SerializeField] private TMP_Text  tierText;
+    [SerializeField] private Image     cardImage;
     [SerializeField] private Image     selectedBackground;
-    [SerializeField] private Image     soldOutOverlay;     // semi-transparent overlay when RemainingPurchases == 0
+    [SerializeField] private Image     soldOutOverlay;
 
-    // ── Runtime ───────────────────────────────────────────────────────────────
+    ShopTabManager.PlayerShopItemDto itemData;
+    ShopTabManager manager;
+    Color normalColor = Color.white;
 
-    private ShopTabManager.PlayerShopItemDto itemData;
-    private ShopTabManager manager;
+    void Awake()
+    {
+        if (cardImage == null)
+            cardImage = GetComponent<Image>();
+        if (cardImage != null)
+            normalColor = cardImage.color;
 
-    // ── Setup ─────────────────────────────────────────────────────────────────
+        var button = GetComponent<Button>();
+        if (button != null)
+            button.transition = Selectable.Transition.None;
+    }
 
     public void Setup(ShopTabManager.PlayerShopItemDto data, ShopTabManager shopManager)
     {
         itemData = data;
         manager  = shopManager;
 
-        // Reward name
         if (rewardNameText != null)
             rewardNameText.text = shopManager.GetRewardName(data.reward);
 
-        // Price
         if (priceText != null)
-            priceText.text = $"{data.price} Gems";
+            priceText.text = data.price.ToString();
 
-        // Purchase limit label
-        if (limitText != null)
-        {
-            if (data.HasPurchaseLimit)
-            {
-                int rem = data.HasRemainingPurchases ? data.remainingPurchases : data.purchaseLimit;
-                limitText.text = rem > 0 ? $"{rem} left" : "Sold Out";
-                limitText.gameObject.SetActive(true);
-            }
-            else
-            {
-                limitText.text = "Unlimited";
-                limitText.gameObject.SetActive(true);
-            }
-        }
+        if (tierText != null)
+            tierText.text = data.rewardTier.ToString();
 
-        // Reward icon + frame
+        ApplyLimit();
         shopManager.ApplyRewardVisuals(data.reward, rewardIcon, rewardFrame);
 
-        // Sold-out overlay
-        bool soldOut = data.HasPurchaseLimit && data.HasRemainingPurchases && data.remainingPurchases <= 0;
+        bool soldOut = IsSoldOut();
         if (soldOutOverlay != null)
             soldOutOverlay.gameObject.SetActive(soldOut);
 
         SetSelected(false);
+        if (cardImage != null)
+            cardImage.color = normalColor;
     }
-
-    // ── Interaction ───────────────────────────────────────────────────────────
 
     public void OnClick()
     {
-        if (itemData == null || manager == null) return;
-        manager.OnItemSelected(this, itemData);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button != PointerEventData.InputButton.Left || eventData.clickCount < 2)
+            return;
+        if (itemData == null || manager == null || IsSoldOut())
+            return;
+        manager.RequestPurchase(this, itemData);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (cardImage != null)
+            cardImage.color = HoverColor;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (cardImage != null)
+            cardImage.color = normalColor;
     }
 
     public void SetSelected(bool selected)
@@ -78,19 +91,41 @@ public class ShopItemEntry : MonoBehaviour
             selectedBackground.gameObject.SetActive(selected);
     }
 
-    // ── Refresh after purchase ────────────────────────────────────────────────
-
     public void RefreshLimit(int remaining)
     {
         itemData.remainingPurchases = remaining;
+        if (itemData.HasPurchaseLimit && remaining >= 0)
+            itemData.purchasedCount = Mathf.Max(0, itemData.purchaseLimit - remaining);
 
-        if (limitText != null && itemData.HasPurchaseLimit)
-        {
-            limitText.text = remaining > 0 ? $"{remaining} left" : "Sold Out";
-        }
+        ApplyLimit();
 
-        bool soldOut = itemData.HasPurchaseLimit && remaining <= 0;
+        bool soldOut = itemData.HasPurchaseLimit && remaining >= 0 && remaining <= 0;
         if (soldOutOverlay != null)
             soldOutOverlay.gameObject.SetActive(soldOut);
+    }
+
+    void ApplyLimit()
+    {
+        if (limitText == null || itemData == null)
+            return;
+
+        if (!itemData.HasPurchaseLimit)
+        {
+            limitText.text = string.Empty;
+            return;
+        }
+
+        int purchased = itemData.purchasedCount;
+        if (itemData.HasRemainingPurchases)
+            purchased = Mathf.Max(0, itemData.purchaseLimit - itemData.remainingPurchases);
+        limitText.text = $"{purchased}/{itemData.purchaseLimit}";
+    }
+
+    bool IsSoldOut()
+    {
+        return itemData != null
+            && itemData.HasPurchaseLimit
+            && itemData.HasRemainingPurchases
+            && itemData.remainingPurchases <= 0;
     }
 }

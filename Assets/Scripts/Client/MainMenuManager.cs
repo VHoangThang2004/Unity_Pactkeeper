@@ -96,8 +96,7 @@ public class MainMenuManager : MonoBehaviour
                 if (match.mode == "pvp" || match.mode == "friendly" || match.mode == "ranked")
                 {
                     reconnectedToPvP = true;
-                    StartCoroutine(matchmakingManager.ShowMatchLoadingScreenAndLoad(
-                        match.player1Name, match.player2Name));
+                    StartCoroutine(matchmakingManager.ShowMatchLoadingScreenAndLoad(match));
                 }
                 // story: PlayerSession already populated by FetchCurrentMatch, flow continues
             },
