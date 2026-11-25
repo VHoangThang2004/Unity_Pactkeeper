@@ -25,9 +25,11 @@ public class BattleTutorialStarter : MonoBehaviour
     [SerializeField] private BackendConfig backendConfig;
 
     [Header("Outcome UI")]
+    [Tooltip("Prefab UI Canvas for the Victory overlay (Assets/Prefabs/UI/StoryWinOverlay.prefab).")]
+    [SerializeField] private StoryWinOverlayUI winOverlayPrefab;
     [Tooltip("Prefab UI Canvas for the Defeat overlay (Assets/Prefabs/UI/StoryDefeatOverlay.prefab).")]
     [SerializeField] private StoryDefeatOverlayUI defeatOverlayPrefab;
-    [Tooltip("Optional custom stage clear condition summary shown on StoryDefeatOverlay. Leave empty to auto-generate.")]
+    [Tooltip("Optional custom stage clear condition summary shown on StoryWinOverlay / StoryDefeatOverlay. Leave empty to auto-generate.")]
     [SerializeField] private string stageClearConditionText;
     [Tooltip("Max ally deaths allowed on this stage (-1 = no special cap, 1 = C1_S3/C3_S2, 2 = C4_S1). Leave -99 to auto-detect.")]
     [SerializeField] private int maxAllyDeathsAllowed = -99;
@@ -43,6 +45,7 @@ public class BattleTutorialStarter : MonoBehaviour
     private bool _usesServerVictoryOutcome = false;
 
     private GameObject _resultOverlayRoot;
+    private GameObject _winOverlayRoot;
 
     void Start()
     {
@@ -83,6 +86,8 @@ public class BattleTutorialStarter : MonoBehaviour
         TutorialContext.Reset();
         if (_resultOverlayRoot != null)
             Destroy(_resultOverlayRoot);
+        if (_winOverlayRoot != null)
+            Destroy(_winOverlayRoot);
     }
 
     private bool HasAnyPlotNodes()
@@ -431,8 +436,10 @@ public class BattleTutorialStarter : MonoBehaviour
             {
                 if (_outcomeHandled) return;
                 _outcomeHandled = true;
-                Debug.Log("[BattleTutorialStarter] Scripted tutorial plot complete - advancing to next scene.");
-                AdvanceAfterVictory();
+                TutorialContext.HasBattleEnded = true;
+                Debug.Log("[BattleTutorialStarter] Scripted tutorial plot complete - presenting Story Win Overlay.");
+                int curInstant = controller != null && controller.session != null ? controller.session.Timeline.currentInstant : 0;
+                ShowWinOverlay("Tactical training completed! Stage cleared.", curInstant, 0);
             },
             onReleasedToFreePlay: () =>
             {
@@ -494,7 +501,7 @@ public class BattleTutorialStarter : MonoBehaviour
         if (playerWon)
         {
             Debug.Log($"[BattleTutorialStarter] Victory settled! (Instants={instantsUsed}, Lost={unitsLost})");
-            AdvanceAfterVictory();
+            ShowWinOverlay("All enemies defeated! Stage cleared.", instantsUsed, unitsLost);
         }
         else
         {
@@ -575,8 +582,52 @@ public class BattleTutorialStarter : MonoBehaviour
     }
 
     // -------------------------------------------------------
-    // Runtime Defeat / Retry / Exit Overlay
+    // Runtime Victory & Defeat / Retry / Exit Overlays
     // -------------------------------------------------------
+
+    private void ShowWinOverlay(string subtitle, int instantsUsed, int unitsLost)
+    {
+        if (controller != null && controller.Scene != null && controller.Scene.loadingScreen != null)
+            controller.Scene.loadingScreen.Hide();
+
+        if (controller != null && controller.Scene != null && controller.Scene.clientInteractionSystem != null)
+        {
+            controller.Scene.clientInteractionSystem.StopDecisionSpam();
+            controller.Scene.clientInteractionSystem.ForceNoneState();
+        }
+
+        int maxInstants = ResolveMaxInstants();
+        int maxDeaths = ResolveMaxAllyDeathsAllowed();
+        string clearSummary = BuildClearConditionSummary(maxInstants, maxDeaths);
+
+        if (_winOverlayRoot != null)
+        {
+            var existingUi = _winOverlayRoot.GetComponent<StoryWinOverlayUI>();
+            if (existingUi != null)
+                existingUi.Show(subtitle, instantsUsed, unitsLost, OnWinContinueClicked, clearSummary, maxInstants, maxDeaths);
+            else
+                _winOverlayRoot.SetActive(true);
+            return;
+        }
+
+        if (winOverlayPrefab != null)
+        {
+            var instance = Instantiate(winOverlayPrefab);
+            _winOverlayRoot = instance.gameObject;
+            instance.Show(subtitle, instantsUsed, unitsLost, OnWinContinueClicked, clearSummary, maxInstants, maxDeaths);
+            return;
+        }
+
+        Debug.LogWarning("[BattleTutorialStarter] winOverlayPrefab is not assigned — advancing directly.");
+        AdvanceAfterVictory();
+    }
+
+    private void OnWinContinueClicked()
+    {
+        if (_winOverlayRoot != null)
+            _winOverlayRoot.SetActive(false);
+        AdvanceAfterVictory();
+    }
 
     private void ShowDefeatOverlay(string failReason, int instantsUsed, int unitsLost)
     {

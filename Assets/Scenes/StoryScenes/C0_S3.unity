@@ -196,6 +196,7 @@ MonoBehaviour:
   - plot: {fileID: 11400000, guid: 0e50c8e413f595945a8288a7ea4909da, type: 2}
     startTrigger: 
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
+  winOverlayPrefab: {fileID: 8200000006, guid: d1f0e00044444d446666000000000004, type: 3}
   defeatOverlayPrefab: {fileID: 8100000006, guid: d1f0e00022224b228888000000000002, type: 3}
   stageClearConditionText: 
   maxAllyDeathsAllowed: -1
@@ -1622,6 +1623,7 @@ MonoBehaviour:
   skipSceneButton: {fileID: 7700000014}
   exitToMapButton: {fileID: 7700000034}
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
+  winOverlayPrefab: {fileID: 8200000006, guid: d1f0e00044444d446666000000000004, type: 3}
   defeatOverlayPrefab: {fileID: 8100000006, guid: d1f0e00022224b228888000000000002, type: 3}
   stageClearConditionText: 
   maxAllyDeathsAllowed: -1
