@@ -22,16 +22,19 @@ MonoBehaviour:
     delay: 1
     targetWaitTimeout: 10
   - type: 0
-    text: 'Chapter 4 - Throne of the Eclipse: The Slayer Sovereign commands a full
-      tactical retinue — a Royal Guard Paladin, a Shadow Flanker Assassin, and a
-      Pact Cleric Physician.'
+    text: 'Chapter 4 - Throne of the Eclipse: The Slayer Sovereign stands flanked by
+      his Royal Guard Paladin and Shadow Flanker Assassin. His passive — The Berserker
+      — grants 1-Instant Hot Blooded lifesteal whenever he takes damage, and converts
+      every 2 Anger stacks into x2 Fury!'
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: 'Final Trial: Eliminate the Sovereign''s entire warband within 60 Instants
-      while losing at most 2 allies. Full command of the Vanguard is yours!'
+    text: 'Tactical Counter: Snipe from range or use Warrior''s Push! so his 1-Instant
+      Hot Blooded expires without hitting anyone, use Paladin''s Iron Body to cap
+      his Fury cleave to 1 damage, and chain x2 Momentum, Piercing Shot, and Triage!
+      to burst him down!'
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

@@ -22,15 +22,16 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: This is your final trial, Pactkeeper. The Corrupt Tactician cowers on the
-      far eastern edge at (3, 0) with 4 HP.
+    text: This is your final Chapter 3 trial, Pactkeeper. The Corrupt Tactician cowers
+      on the far eastern edge at (3, 0) with 8 HP.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: Unite every discipline you have forged - Half-Instant displacement, high-ground
-      Ambush, Trinket reach, and Momentum - to fell him in a single Instant!
+    text: Unite every discipline you have forged - Half-Instant Pull! (awakening Catastrophe
+      naturelle!), high-ground Ambush, Trinket reach, and Momentum - to shatter half
+      his health in a single Instant!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -169,8 +170,9 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: Halfway broken, the Corrupt Tactician fights back with full Arsenal! Finish
-      him within 50 Instants with at most 1 ally lost.
+    text: Halfway broken and surrounded, the Corrupt Tactician fights back with Steady
+      Aim and Piercing Shot — while your Druid holds Catastrophe naturelle! ready!
+      Finish him within 150 Instants with at most 1 ally lost.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0

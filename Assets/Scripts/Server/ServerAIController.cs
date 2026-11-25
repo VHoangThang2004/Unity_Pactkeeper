@@ -672,10 +672,7 @@ public class ServerAIController : MonoBehaviour
             }
 
             enemiesHit++;
-            int estDamage = Mathf.Max(1, Mathf.RoundToInt(dmgEffect.baseValue * (unit.DamageMultiplier / 100f)));
-            // Assassin Ambush bonus when attacking downward
-            if (unit.PassiveSkillId == 5001 && affected[i].y < unit.CurrentCell.y)
-                estDamage *= 2;
+            int estDamage = EstimateAttackDamage(unit, targetUnit, dmgEffect.baseValue, affected[i]);
 
             int queuedDmg = _queuedDamageByUnitId.TryGetValue(targetUnit.Id, out int q) ? q : 0;
             int remainingHP = targetUnit.CurrentHP - queuedDmg;
@@ -688,6 +685,8 @@ public class ServerAIController : MonoBehaviour
             }
 
             score += 60f + estDamage * 15f;
+            if (HasActiveEffect(unit.Id, 20019))
+                score += estDamage * 25f; // Slayer Hot Blooded: prioritize landing lifesteal/overheal hit before 1-instant buff expires
             if (queuedDmg > 0)
                 score += 45f; // Focus-fire bonus: coordinate with teammate to finish off the same target
 
@@ -1026,14 +1025,48 @@ public class ServerAIController : MonoBehaviour
                     if (hitUnit == null || session.GetTeamIdByUnitId(hitUnit.Id) == AI_TEAM_ID)
                         continue;
 
-                    int estDamage = Mathf.Max(1, Mathf.RoundToInt(dmgEffect.baseValue * (unit.DamageMultiplier / 100f)));
-                    if (unit.PassiveSkillId == 5001 && affected[i].y < unit.CurrentCell.y)
-                        estDamage *= 2;
+                    int estDamage = EstimateAttackDamage(unit, hitUnit, dmgEffect.baseValue, affected[i]);
 
                     _queuedDamageByUnitId[hitUnit.Id] = (_queuedDamageByUnitId.TryGetValue(hitUnit.Id, out int cur) ? cur : 0) + estDamage;
                 }
             }
         }
+    }
+
+    private int EstimateAttackDamage(UnitData attacker, UnitData defender, int baseValue, Vector3Int targetCell)
+    {
+        int estDamage = Mathf.Max(1, Mathf.RoundToInt(baseValue * (attacker.DamageMultiplier / 100f)));
+
+        // Assassin Ambush (5001) when attacking downward
+        if (attacker.PassiveSkillId == 5001 && targetCell.y < attacker.CurrentCell.y)
+            estDamage *= 2;
+
+        // Active x2 damage buffs: Momentum (20010), Critical Hit (20012), Piercing Shot (20015), Slayer Fury (20021)
+        if (HasActiveEffect(attacker.Id, 20010) ||
+            HasActiveEffect(attacker.Id, 20012) ||
+            HasActiveEffect(attacker.Id, 20015) ||
+            HasActiveEffect(attacker.Id, 20021))
+        {
+            estDamage *= 2;
+        }
+
+        // Tank Iron Body (20008) on defender caps incoming hit to 1 damage
+        if (defender != null && HasActiveEffect(defender.Id, 20008))
+            estDamage = Mathf.Min(estDamage, 1);
+
+        return estDamage;
+    }
+
+    private bool HasActiveEffect(int unitId, int effectId)
+    {
+        var active = session?.GetUnitActiveEffects(unitId);
+        if (active == null) return false;
+        for (int i = 0; i < active.Count; i++)
+        {
+            if (active[i]?.effect != null && active[i].effect.effectId == effectId && active[i].stacks > 0)
+                return true;
+        }
+        return false;
     }
 
     private bool BlocksReadyTeammateAttackOrigin(UnitData movingUnit, Vector3Int destCell)

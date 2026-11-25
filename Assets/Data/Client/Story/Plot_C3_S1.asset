@@ -42,8 +42,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 0
-    text: After casting Pull!, Nature's Force empowers your Druid's next Thorns Attack
-      to strike EVERY non-ally cell across her entire left-and-right weapon span!
+    text: After using her Class Skill (Pull!), Nature's Force grants 1 stack of Catastrophe
+      naturelle! - causing her next Thorns Attack! to target all enemies within reach!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -75,8 +75,8 @@ MonoBehaviour:
     targetWaitTimeout: 10
   - type: 0
     text: Pull! is a Half-Instant skill - for 1 SP, it immediately drags a distant
-      foe 2 or 3 tiles away right beside your Druid and awakens Nature's Force for
-      her next turn!
+      foe 2 or 3 tiles away right beside your Druid and grants Catastrophe naturelle!
+      for her next attack!
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
     targetWaitTimeout: 10
   - type: 1
     text: Both foes now stand inside your horizontal thorn span - at (-2, 0) and
-      (1, 0) - with Nature's Force glowing! Select your Druid.
+      (1, 0) - with Catastrophe naturelle! active! Select your Druid.
     tutorialTargetId: Unit1
     targetCell: {x: 0, y: 0}
     delay: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 3
-    text: Target (1, 0) - Nature's Force will lash every non-ally tile in range simultaneously!
+    text: Target (1, 0) - Catastrophe naturelle! will lash all enemies within reach simultaneously!
     tutorialTargetId: 
     targetCell: {x: 1, y: 0}
     delay: 0

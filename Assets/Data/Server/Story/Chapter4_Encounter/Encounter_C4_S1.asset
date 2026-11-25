@@ -21,12 +21,12 @@ MonoBehaviour:
     movementSkillId: 1002
     weaponSkillId: 2002
     classSkillId: 3002
-    trinketSkillId: -1
+    trinketSkillId: 4003
     maxHP: 6
     currentHP: 6
     maxSkillPoint: 3
-    currentSkillPoint: 0
-    speed: 110
+    currentSkillPoint: 1
+    speed: 115
     damageMultiplier: 100
     damageReduction: 0
     useCustomProfile: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
     currentHP: 5
     maxSkillPoint: 3
     currentSkillPoint: 1
-    speed: 115
+    speed: 120
     damageMultiplier: 100
     damageReduction: 0
     useCustomProfile: 0
@@ -57,8 +57,8 @@ MonoBehaviour:
     maxHP: 4
     currentHP: 4
     maxSkillPoint: 3
-    currentSkillPoint: 1
-    speed: 125
+    currentSkillPoint: 2
+    speed: 130
     damageMultiplier: 100
     damageReduction: 0
     useCustomProfile: 0
@@ -73,8 +73,8 @@ MonoBehaviour:
     maxHP: 4
     currentHP: 4
     maxSkillPoint: 4
-    currentSkillPoint: 0
-    speed: 120
+    currentSkillPoint: 2
+    speed: 125
     damageMultiplier: 100
     damageReduction: 0
     useCustomProfile: 0
@@ -82,13 +82,13 @@ MonoBehaviour:
     isBoss: 0
   aiUnits:
   - uId: 7
-    passiveSkillId: 5003
+    passiveSkillId: 5007
     movementSkillId: 1003
     weaponSkillId: 2003
     classSkillId: 3003
     trinketSkillId: -1
-    maxHP: 10
-    currentHP: 10
+    maxHP: 8
+    currentHP: 8
     maxSkillPoint: 3
     currentSkillPoint: 0
     speed: 95
@@ -128,22 +128,6 @@ MonoBehaviour:
     damageReduction: 0
     useCustomProfile: 1
     unitProfile: 1
-    isBoss: 0
-  - uId: 5
-    passiveSkillId: 5005
-    movementSkillId: 1005
-    weaponSkillId: 2005
-    classSkillId: -1
-    trinketSkillId: -1
-    maxHP: 2
-    currentHP: 2
-    maxSkillPoint: 3
-    currentSkillPoint: 0
-    speed: 90
-    damageMultiplier: 100
-    damageReduction: 0
-    useCustomProfile: 1
-    unitProfile: 3
     isBoss: 0
   alwaysWait: 0
   aiMode: 2

@@ -22,7 +22,7 @@ MonoBehaviour:
     delay: 1.5
     targetWaitTimeout: 10
   - type: 0
-    text: An Iron Warlord anchors the center at (0, 0) with 4 HP. Right now, neither
+    text: An Iron Warlord anchors the center at (0, 0) with 8 HP. Right now, neither
       your Archer at (1, -2) nor your Tank at (2, 0) can reach him.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
@@ -165,8 +165,8 @@ MonoBehaviour:
     delay: 3
     targetWaitTimeout: 10
   - type: 0
-    text: The Iron Warlord still stands! Take full command and defeat him within
-      45 Instants while losing at most 1 ally.
+    text: The Iron Warlord still stands and gains Iron Body whenever he acts! Take
+      full command and defeat him within 150 Instants while losing at most 1 ally.
     tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
