@@ -27,6 +27,10 @@ public class BattleTutorialStarter : MonoBehaviour
     [Header("Outcome UI")]
     [Tooltip("Prefab UI Canvas for the Defeat overlay (Assets/Prefabs/UI/StoryDefeatOverlay.prefab).")]
     [SerializeField] private StoryDefeatOverlayUI defeatOverlayPrefab;
+    [Tooltip("Optional custom stage clear condition summary shown on StoryDefeatOverlay. Leave empty to auto-generate.")]
+    [SerializeField] private string stageClearConditionText;
+    [Tooltip("Max ally deaths allowed on this stage (-1 = no special cap, 1 = C1_S3/C3_S2, 2 = C4_S1). Leave -99 to auto-detect.")]
+    [SerializeField] private int maxAllyDeathsAllowed = -99;
 
     private bool _tutorialStarted = false;
     private bool _outcomeHandled = false;
@@ -579,11 +583,15 @@ public class BattleTutorialStarter : MonoBehaviour
         if (controller != null && controller.Scene != null && controller.Scene.loadingScreen != null)
             controller.Scene.loadingScreen.Hide();
 
+        int maxInstants = ResolveMaxInstants();
+        int maxDeaths = ResolveMaxAllyDeathsAllowed();
+        string clearSummary = BuildClearConditionSummary(maxInstants, maxDeaths);
+
         if (_resultOverlayRoot != null)
         {
             var existingUi = _resultOverlayRoot.GetComponent<StoryDefeatOverlayUI>();
             if (existingUi != null)
-                existingUi.Show(failReason, instantsUsed, unitsLost, OnRetryClicked, OnExitToMapClicked);
+                existingUi.Show(failReason, instantsUsed, unitsLost, OnRetryClicked, OnExitToMapClicked, clearSummary, maxInstants, maxDeaths);
             else
                 _resultOverlayRoot.SetActive(true);
             return;
@@ -593,11 +601,49 @@ public class BattleTutorialStarter : MonoBehaviour
         {
             var instance = Instantiate(defeatOverlayPrefab);
             _resultOverlayRoot = instance.gameObject;
-            instance.Show(failReason, instantsUsed, unitsLost, OnRetryClicked, OnExitToMapClicked);
+            instance.Show(failReason, instantsUsed, unitsLost, OnRetryClicked, OnExitToMapClicked, clearSummary, maxInstants, maxDeaths);
             return;
         }
 
         Debug.LogError("[BattleTutorialStarter] defeatOverlayPrefab is not assigned! Assign StoryDefeatOverlay.prefab in Inspector.");
+    }
+
+    private int ResolveMaxInstants()
+    {
+        if (controller != null && controller.session != null && controller.session.Timeline.maxInstant > 0)
+            return controller.session.Timeline.maxInstant;
+        return 150;
+    }
+
+    private int ResolveMaxAllyDeathsAllowed()
+    {
+        if (maxAllyDeathsAllowed != -99)
+            return maxAllyDeathsAllowed;
+
+        int ch = _chapterId >= 0 ? _chapterId : ResolveChapterId();
+        int sc = _sceneId > 0 ? _sceneId : ResolveSceneId();
+        if ((ch == 1 && sc == 3) || (ch == 3 && sc == 2))
+            return 1;
+        if (ch == 4 && sc == 1)
+            return 2;
+        return -1;
+    }
+
+    private string BuildClearConditionSummary(int maxInstants, int maxDeaths)
+    {
+        if (!string.IsNullOrEmpty(stageClearConditionText))
+            return stageClearConditionText;
+
+        int ch = _chapterId >= 0 ? _chapterId : ResolveChapterId();
+        int sc = _sceneId > 0 ? _sceneId : ResolveSceneId();
+
+        if (ch == 4 && sc == 1)
+            return $"Clear Condition: Defeat Boss Slayer & all enemies  •  Max Allies Fallen: <= {maxDeaths}  •  Limit: {maxInstants} Instants";
+
+        if (maxDeaths >= 0)
+            return $"Clear Condition: Defeat all enemies  •  Max Allies Fallen: <= {maxDeaths}  •  Limit: {maxInstants} Instants";
+
+        return $"Clear Condition: Defeat all enemies within {maxInstants} Instants";
     }
 
     private void OnRetryClicked()

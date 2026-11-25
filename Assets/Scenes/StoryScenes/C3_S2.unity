@@ -201,6 +201,8 @@ MonoBehaviour:
     startTrigger: AllyLowHP
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
   defeatOverlayPrefab: {fileID: 8100000006, guid: d1f0e00022224b228888000000000002, type: 3}
+  stageClearConditionText: 
+  maxAllyDeathsAllowed: 1
   tutorialTrigger: {fileID: 2127351881}
   additiveBattleSceneName: 5_ClientMatch
 --- !u!114 &2127351881
@@ -1625,6 +1627,8 @@ MonoBehaviour:
   exitToMapButton: {fileID: 7700000034}
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
   defeatOverlayPrefab: {fileID: 8100000006, guid: d1f0e00022224b228888000000000002, type: 3}
+  stageClearConditionText: 
+  maxAllyDeathsAllowed: 1
   sequencer: {fileID: 2127351879}
   storyProgressSceneName: 10_StoryProgress
 --- !u!1 &7700000001
