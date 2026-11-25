@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3773bb1ba1303374ab88e5fd3f59d268, type: 3}
+  m_Name: ESP20019_HotBloodedBuff
+  m_EditorClassIdentifier: Server::HotBloodedBuff
+  effectId: 20019
+  resolveDuration: 0.6
+  baseValue: 1
+  aoePattern: {fileID: 0}
+  isAoePatternFixed: 0
+  isPermanent: 0
+  durationInstants: 1
+  maxStacks: 1
+  stacksLostPerInstant: 1
+  stacksLostOnTrigger: 1

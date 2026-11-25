@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c2e4b9a1d3f4e6a8b5c0d1e2f3a4b5c, type: 3}
+  m_Name: ECP_20019_HotBlooded_StatusEffectVisual
+  m_EditorClassIdentifier: Client::HotBloodedBuffVisual
+  effectId: 20019
+  resolveDuration: 0.6
+  baseValue: 1
+  aoePattern: {fileID: 0}
+  isAoePatternFixed: 0
+  statusIcon: {fileID: 3235260854780970834, guid: 3e168e05c76f897498d5af70eabbe286, type: 3}
+  statusName: Hot Blooded
+  isDebuff: 0
+  relatedEffectIds: 
+  description: After the dealing damage, recovers HP = damage dealt. Can overheal
+    to increase max HP.

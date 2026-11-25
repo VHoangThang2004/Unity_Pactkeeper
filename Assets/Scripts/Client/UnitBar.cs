@@ -14,9 +14,11 @@ public class UnitBar : MonoBehaviour
     [SerializeField] private GameObject barFillPrefab;
 
     private List<Image> fillImages = new List<Image>();
+    private BarType barType;
 
     public void Init(int maxValue, BarType type)
     {
+        barType = type;
         ClearFills();
         for (int i = 0; i < maxValue; i++)
         {
@@ -38,8 +40,9 @@ public class UnitBar : MonoBehaviour
         }
     }
 
-    public void UpdateValue(int currentValue)
+    public void UpdateValue(int currentValue, int maxValue)
     {
+        if (maxValue != fillImages.Count) Init(maxValue, barType); // max changed mid-match (e.g. Hot Blooded overheal)
         for (int i = 0; i < fillImages.Count; i++)
         {
             fillImages[i].enabled = i < currentValue;

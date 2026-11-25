@@ -88,6 +88,23 @@ public class ServerTimelineManager : MonoBehaviour
     /// <summary>
     /// Resolve broadcast — snapshotBefore captured before effects applied.
     /// </summary>
+    // Runs queued passive triggers (FIFO, including ones they queue) and appends their results right after the
+    // result that caused them; returns their server resolveDuration
+    float ResolveTriggers(List<ResolveResult> into)
+    {
+        float duration = 0f;
+        while (session.PendingTriggers.Count > 0)
+        {
+            var trigger = session.PendingTriggers[0];
+            session.PendingTriggers.RemoveAt(0);
+            var r = trigger();
+            if (r.EffectId == -1) continue;
+            into.Add(r);
+            duration += session.effectRegistry.Get(r.EffectId)?.resolveDuration ?? 0f;
+        }
+        return duration;
+    }
+
     void PackResolve(SessionSnapshotData snapshotBefore, ResolveData resolve)
     {
         UnitRecalculator.RecalculateAll(session);
@@ -184,6 +201,12 @@ public class ServerTimelineManager : MonoBehaviour
             AllRegenSP();
             actionRecord.Clear();
             effectRecord.Clear();
+            // ponytail: InstantStart/InstantEnd have no resolve pack, so triggers queued there are dropped; give them a PackResolve when a passive needs it
+            if (session.PendingTriggers.Count > 0)
+            {
+                Debug.LogWarning($"[Timeline] Dropping {session.PendingTriggers.Count} leftover passive trigger(s) — emitted outside a resolve batch.");
+                session.PendingTriggers.Clear();
+            }
             session.ResetInstantSkillUsage();
 
             // Tick
@@ -471,6 +494,7 @@ public class ServerTimelineManager : MonoBehaviour
                 }
                 actionResults.Add(result);
                 totalDuration += effect.resolveDuration;
+                totalDuration += ResolveTriggers(actionResults);
             }
         }
         lastDecisionResolved = true;
@@ -501,6 +525,7 @@ public class ServerTimelineManager : MonoBehaviour
                 SourceCell = sourceCell,
                 TargetCell = targetCell,
             });
+            totalDuration += ResolveTriggers(actionResults);
         }
 
         // Checked after the command hook (Triage/passives may re-add ready units).
@@ -512,8 +537,6 @@ public class ServerTimelineManager : MonoBehaviour
         PackResolve(snapshotBefore, new ResolveData
         {
             HasResolve = true,
-            SkillCardId = skillCardId,
-            decisionType = decisionType,
             ResolveResults = actionResults,
         });
         BroadcastSnapshot();
@@ -532,26 +555,7 @@ public class ServerTimelineManager : MonoBehaviour
         // Capture before state FIRST
         var snapshotBefore = GetSnapshot();
 
-        // Comparer must be pure: read the flag once, flip it once after sorting if it decided a tie
-        int flaggedTeam = session.FlaggedTeamId;
-        bool flagUsed = false;
-        effectRecord.Sort((a, b) =>
-        {
-            var unitA = session.GetUnitByUnitId(a.unitId);
-            var unitB = session.GetUnitByUnitId(b.unitId);
-
-            int speedCompare = (unitB?.Speed ?? 0).CompareTo(unitA?.Speed ?? 0);
-            if (speedCompare != 0) return speedCompare;
-
-            int teamA = session.GetTeamIdByUnitId(a.unitId);
-            int teamB = session.GetTeamIdByUnitId(b.unitId);
-            if (teamA == teamB) return a.unitId.CompareTo(b.unitId); // deterministic within a team
-
-            flagUsed = true;
-            return teamA == flaggedTeam ? -1 : 1;
-        });
-        if (flagUsed)
-            session.FlaggedTeamId = session.GetOtherTeamId(flaggedTeam);
+        // FIFO: effectRecord is appended in commit order (ResolveDecisionEffects), so no sort — first committed, first landed
 
         TransitionTo(ServerSessionState.Resolving);
 
@@ -567,6 +571,7 @@ public class ServerTimelineManager : MonoBehaviour
                 if (result.EffectId == -1) continue;
                 allResults.Add(result);
                 totalDuration += effect.resolveDuration;
+                totalDuration += ResolveTriggers(allResults);
             }
         }
 

@@ -5,18 +5,11 @@ using UnityEngine;
 public struct ResolveData : INetworkSerializable
 {
     public bool HasResolve;
-    public int SkillCardId;
-    public DecisionType decisionType;
-    public List<ResolveResult> ResolveResults;
+    public List<ResolveResult> ResolveResults; // provenance (effect, source unit) lives on each result, not the pack
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref HasResolve);
-        serializer.SerializeValue(ref SkillCardId);
-
-        byte decisionByte = (byte)decisionType;
-        serializer.SerializeValue(ref decisionByte);
-        decisionType = (DecisionType)decisionByte;
 
         if (serializer.IsReader)
         {

@@ -31,6 +31,12 @@ public class ServerMatchSession : MonoBehaviour
     [SerializeField] public SkillLibrary skillLibrary;
     [SerializeField] public ServerEffectRegistry effectRegistry;
     public List<EffectBase> GlobalActiveEffects { get; set; } = new List<EffectBase>(); public int[] GlobalActiveEffectIds = new int[0];
+
+    // Passive triggers: queued by hooks, run by ServerTimelineManager right after the result that caused them.
+    // Each changes state and returns its own result (own visual on the client); EffectId -1 = fizzled.
+    // Put the state change INSIDE the closure so the triggering result's snapshot doesn't already show it.
+    public readonly List<System.Func<ResolveResult>> PendingTriggers = new List<System.Func<ResolveResult>>();
+    public void Trigger(System.Func<ResolveResult> resolve) => PendingTriggers.Add(resolve);
     // private Dictionary<int, List<EffectBase>> unitActiveEffects = new Dictionary<int, List<EffectBase>>();
 
     private Dictionary<int, List<ActiveEffectInstance>> unitActiveEffects = new();

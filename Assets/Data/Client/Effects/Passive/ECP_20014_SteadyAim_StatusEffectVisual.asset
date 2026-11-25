@@ -21,4 +21,4 @@ MonoBehaviour:
   statusName: Steady Aim
   isDebuff: 0
   relatedEffectIds: 2f4e0000
-  description: Evert 2 stacks convert into 1 "Piercing shot"
+  description: Every 2 stacks convert into 1 "Piercing shot"

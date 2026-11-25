@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ES10009_ApplyBuff_FocusedAim_EffectServer
   m_EditorClassIdentifier: Assembly-CSharp::ApplyBuffEffectServer
   effectId: 10009
-  resolveDuration: 0.5
+  resolveDuration: 1
   baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1

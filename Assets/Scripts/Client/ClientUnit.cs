@@ -128,8 +128,8 @@ public class ClientUnit : MonoBehaviour
     {
         UnitData data = session.GetUnitDataById(unitId);
         if (data == null || hpBar == null) return;
-        hpBar.UpdateValue(data.CurrentHP);
-        spBar.UpdateValue(data.CurrentSkillPoint);
+        hpBar.UpdateValue(data.CurrentHP, data.MaxHP);
+        spBar.UpdateValue(data.CurrentSkillPoint, data.MaxSkillPoint);
     }
 
     public void UpdateStepUI()

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EC10009_ApplyBuff_FocusedAim_EffectVisual
   m_EditorClassIdentifier: Assembly-CSharp::ApplyBuffEffectVisual
   effectId: 10009
-  resolveDuration: 0
+  resolveDuration: 1
   baseValue: 1
   aoePattern: {fileID: 11400000, guid: 235115d99fd872246920fa802a38bf9f, type: 2}
   isAoePatternFixed: 1

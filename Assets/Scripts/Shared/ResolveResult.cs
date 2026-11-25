@@ -9,10 +9,12 @@ public struct ResolveResult : INetworkSerializable
     public Vector3Int SourceCell;
     public List<Vector3Int> TargetCells;
     public SessionSnapshotData Partial;
+    public int Value;                // effect-specific payload (Hot Blooded: overheal amount)
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref EffectId);
+        serializer.SerializeValue(ref Value);
         serializer.SerializeValue(ref SourceUnitId);
         serializer.SerializeValue(ref SourceCell);
 

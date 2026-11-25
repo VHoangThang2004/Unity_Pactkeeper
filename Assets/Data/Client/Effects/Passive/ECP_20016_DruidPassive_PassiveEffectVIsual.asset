@@ -17,7 +17,7 @@ MonoBehaviour:
   baseValue: 0
   aoePattern: {fileID: 0}
   isAoePatternFixed: 0
-  statusIcon: {fileID: 0}
+  statusIcon: {fileID: 8430780590730278528, guid: d9b3f8d4d9e58f94ab4a37469be11030, type: 3}
   statusName: Nature's Force
   isDebuff: 0
   relatedEffectIds: 314e0000
