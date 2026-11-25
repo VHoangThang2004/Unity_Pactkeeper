@@ -18,6 +18,9 @@ MonoBehaviour:
   originY: -3
   walkable: 010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101
   tilemapPrefab: {fileID: 2281257208084233617, guid: bf4d9cc545ba3d24282659f5488034b1, type: 3}
+  floorSpriteOverride: {fileID: -8602063486823849324, guid: 1134485ce314a8547ad8649fd06bca56, type: 3}
+  useFloorTint: 0
+  floorTint: {r: 1, g: 1, b: 1, a: 1}
   teamSpawns:
   - positions:
     - {x: -1, y: 0}

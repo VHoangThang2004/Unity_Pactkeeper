@@ -76,8 +76,8 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     [Tooltip("Total StartClient attempts before giving up (with WebSockets/TCP, ECONNREFUSED fails immediately while the dedicated server is booting).")]
     [SerializeField] private int connectMaxAttempts = 8;
     [Tooltip("Seconds to wait for the SyncedBridge to spawn after each StartClient attempt.")]
-    [SerializeField] private float connectAttemptTimeout = 6f;
-    [SerializeField] private float connectRetryDelay = 1.5f;
+    [SerializeField] private float connectAttemptTimeout = 4.5f;
+    [SerializeField] private float connectRetryDelay = 1.0f;
 
     /// <summary>
     /// Previously a single StartClient() call: if the freshly spawned server was not listening yet
@@ -232,6 +232,11 @@ public class ClientController : MonoBehaviour, ISyncedBridgeClient
     {
         while (!initPackageReceived)
         {
+            if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening || bridge == null || !bridge.IsSpawned)
+            {
+                Debug.LogWarning("[ClientController] Connection closed before initial state package arrived.");
+                yield break;
+            }
             bridge.RequestInitialStateServerRpc();
             yield return new WaitForSeconds(1f);
         }

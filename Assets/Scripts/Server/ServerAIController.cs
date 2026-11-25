@@ -20,6 +20,8 @@ public class ServerAIController : MonoBehaviour
     private readonly Dictionary<int, int> _movesUsed = new();
     private readonly Dictionary<int, int> _utilityUsed = new();
     private readonly Dictionary<int, int> _nonInstantUsed = new();
+    private readonly Dictionary<int, int> _queuedDamageByUnitId = new();
+    private readonly HashSet<Vector3Int> _queuedAttackTargetCells = new();
     private readonly HashSet<int> _executedScriptedIndices = new();
 
     public void StartAI()
@@ -80,6 +82,54 @@ public class ServerAIController : MonoBehaviour
         _movesUsed.Clear();
         _utilityUsed.Clear();
         _nonInstantUsed.Clear();
+        _queuedDamageByUnitId.Clear();
+        _queuedAttackTargetCells.Clear();
+    }
+
+    private int GetMaxActionsForCurrentInstant()
+    {
+        var aiTeam = session?.GetTeamDataByTeamId(AI_TEAM_ID);
+        int aiCount = aiTeam?.unitIds != null ? aiTeam.unitIds.Count : 1;
+        return Mathf.Clamp(Mathf.Max(MAX_ACTIONS_PER_INSTANT, aiCount * 4), 12, 24);
+    }
+
+    private StoryUnitEntry GetAIUnitEntry(UnitData unit)
+    {
+        if (unit == null || encounterConfig?.aiUnits == null || encounterConfig.aiUnits.Count == 0)
+            return null;
+
+        var aiTeam = session?.GetTeamDataByTeamId(AI_TEAM_ID);
+        if (aiTeam?.unitIds != null)
+        {
+            int slotIdx = aiTeam.unitIds.IndexOf(unit.Id);
+            if (slotIdx >= 0 && slotIdx < encounterConfig.aiUnits.Count)
+                return encounterConfig.aiUnits[slotIdx];
+        }
+
+        for (int i = 0; i < encounterConfig.aiUnits.Count; i++)
+        {
+            if (encounterConfig.aiUnits[i].uId == unit.UId)
+                return encounterConfig.aiUnits[i];
+        }
+
+        return null;
+    }
+
+    private AIBehaviorProfile GetEffectiveProfile(UnitData unit)
+    {
+        var entry = GetAIUnitEntry(unit);
+        if (entry != null && entry.useCustomProfile)
+            return entry.unitProfile;
+
+        return encounterConfig != null
+            ? encounterConfig.behaviorProfile
+            : AIBehaviorProfile.Balanced;
+    }
+
+    private bool IsBossUnit(UnitData unit)
+    {
+        var entry = GetAIUnitEntry(unit);
+        return entry != null && entry.isBoss;
     }
 
     void MakeDecision()
@@ -104,9 +154,10 @@ public class ServerAIController : MonoBehaviour
             return;
         }
 
-        if (_actionsThisInstant >= MAX_ACTIONS_PER_INSTANT)
+        int maxActionsBudget = GetMaxActionsForCurrentInstant();
+        if (_actionsThisInstant >= maxActionsBudget)
         {
-            Debug.LogWarning($"[ServerAI] Hit max actions budget ({MAX_ACTIONS_PER_INSTANT}) at Instant {session.CurrentInstant} — forcing Wait.");
+            Debug.LogWarning($"[ServerAI] Hit max actions budget ({maxActionsBudget}) at Instant {session.CurrentInstant} — forcing Wait.");
             SendWait();
             return;
         }
@@ -352,9 +403,7 @@ public class ServerAIController : MonoBehaviour
         if (effect == null)
             return -1f;
 
-        AIBehaviorProfile profile = encounterConfig != null
-            ? encounterConfig.behaviorProfile
-            : AIBehaviorProfile.Balanced;
+        AIBehaviorProfile profile = GetEffectiveProfile(unit);
 
         // 1. Movement scoring
         if (effect is MoveEffectServer)
@@ -376,7 +425,10 @@ public class ServerAIController : MonoBehaviour
         {
             var ally = session.GetUnitAt(targetCell);
             if (ally == null || ally.Id == unit.Id) return -1f;
-            return ally.CurrentHP < unit.CurrentHP && ally.CurrentHP <= 2 ? 45f : -1f;
+            if (ally.CurrentHP >= unit.CurrentHP) return -1f;
+            if (IsBossUnit(ally) && ally.CurrentHP <= 4)
+                return 115f;
+            return ally.CurrentHP <= 2 ? 65f : -1f;
         }
 
         if (effect is PushEffectServer)
@@ -515,7 +567,10 @@ public class ServerAIController : MonoBehaviour
         if (ally.CurrentStep <= 0)
             return -1f;
 
-        return 50f + ally.CurrentStep * 5f;
+        float score = 65f + ally.CurrentStep * 6f;
+        if (IsBossUnit(ally))
+            score += 65f;
+        return score;
     }
 
     private float ScorePushCell(UnitData unit, Vector3Int targetCell)
@@ -622,12 +677,25 @@ public class ServerAIController : MonoBehaviour
             if (unit.PassiveSkillId == 5001 && affected[i].y < unit.CurrentCell.y)
                 estDamage *= 2;
 
+            int queuedDmg = _queuedDamageByUnitId.TryGetValue(targetUnit.Id, out int q) ? q : 0;
+            int remainingHP = targetUnit.CurrentHP - queuedDmg;
+
+            if (remainingHP <= 0)
+            {
+                // Overkill penalty: teammate already queued lethal damage on this unit this Instant -> focus another target
+                score -= 90f;
+                continue;
+            }
+
             score += 60f + estDamage * 15f;
-            if (targetUnit.CurrentHP <= estDamage)
-                score += 120f; // Lethal bonus
+            if (queuedDmg > 0)
+                score += 45f; // Focus-fire bonus: coordinate with teammate to finish off the same target
+
+            if (remainingHP <= estDamage)
+                score += 120f; // Lethal bonus against remaining HP
 
             // Prefer weakening already damaged enemies
-            score += (targetUnit.MaxHP - targetUnit.CurrentHP) * 10f;
+            score += (targetUnit.MaxHP - remainingHP) * 10f;
         }
 
         if (enemiesHit == 0)
@@ -635,6 +703,8 @@ public class ServerAIController : MonoBehaviour
 
         if (profile == AIBehaviorProfile.Aggressive)
             score *= 1.15f;
+        if (IsBossUnit(unit))
+            score += 10f;
 
         return score - skill.skillPointCost * 5f;
     }
@@ -654,11 +724,15 @@ public class ServerAIController : MonoBehaviour
             if (ally == null || session.GetTeamIdByUnitId(ally.Id) != AI_TEAM_ID) continue;
             int missing = ally.MaxHP - ally.CurrentHP;
             if (missing > 0)
-                score += missing * 35f + (ally.CurrentHP == 1 ? 50f : 0f);
+            {
+                score += missing * 35f + (ally.CurrentHP <= 2 ? 50f : 0f);
+                if (IsBossUnit(ally))
+                    score += 40f;
+            }
         }
 
         if (score <= 0f) return -5f;
-        return profile == AIBehaviorProfile.Support ? score * 1.3f : score;
+        return profile == AIBehaviorProfile.Support ? score * 1.45f : score;
     }
 
     private float ScoreMoveCell(UnitData unit, Vector3Int destCell, AIBehaviorProfile profile)
@@ -675,6 +749,12 @@ public class ServerAIController : MonoBehaviour
         // Priority #2 is Move: since unit CANNOT attack from its current cell, any valid move cell starts with a positive base score
         // so the AI always repositions instead of skipping its turn (SendWait).
         float score = 40f;
+
+        // Squad lane awareness: avoid stepping into a cell a teammate is aiming at or blocking a ready teammate's sole firing spot
+        if (_queuedAttackTargetCells.Contains(destCell))
+            score -= 40f;
+        if (BlocksReadyTeammateAttackOrigin(unit, destCell))
+            score -= 35f;
 
         // Top move priority: stepping directly into a cell from which our weapon can hit an enemy right now
         int hitsFromDest = CountWeaponTargetsFromCell(unit, destCell);
@@ -924,7 +1004,57 @@ public class ServerAIController : MonoBehaviour
         {
             Debug.LogWarning($"[ServerAI] Decision rejected by HandleDecision (unit={unitId}, skill={skillDef.skillId}) — falling back to Wait.");
             SendWait();
+            return;
         }
+
+        // Track queued NonInstant damage for multi-unit Focus-Fire & Overkill avoidance within the same Instant
+        if (unit != null && skillDef.effectIds != null && skillDef.effectIds.Length > 0 && session.effectRegistry != null)
+        {
+            var effect = session.effectRegistry.Get(skillDef.effectIds[0]);
+            if (effect is DamageEffectServerBase dmgEffect)
+            {
+                _queuedAttackTargetCells.Add(targetCell);
+                List<Vector3Int> affected = dmgEffect.aoePattern != null
+                    ? PatternResolver.TranslateAoEPattern(dmgEffect.aoePattern, unit.CurrentCell, targetCell)
+                    : new List<Vector3Int> { targetCell };
+                if (affected == null || affected.Count == 0)
+                    affected = new List<Vector3Int> { targetCell };
+
+                for (int i = 0; i < affected.Count; i++)
+                {
+                    var hitUnit = session.GetUnitAt(affected[i]);
+                    if (hitUnit == null || session.GetTeamIdByUnitId(hitUnit.Id) == AI_TEAM_ID)
+                        continue;
+
+                    int estDamage = Mathf.Max(1, Mathf.RoundToInt(dmgEffect.baseValue * (unit.DamageMultiplier / 100f)));
+                    if (unit.PassiveSkillId == 5001 && affected[i].y < unit.CurrentCell.y)
+                        estDamage *= 2;
+
+                    _queuedDamageByUnitId[hitUnit.Id] = (_queuedDamageByUnitId.TryGetValue(hitUnit.Id, out int cur) ? cur : 0) + estDamage;
+                }
+            }
+        }
+    }
+
+    private bool BlocksReadyTeammateAttackOrigin(UnitData movingUnit, Vector3Int destCell)
+    {
+        var aiTeam = session?.GetTeamDataByTeamId(AI_TEAM_ID);
+        if (aiTeam?.unitIds == null) return false;
+
+        for (int i = 0; i < aiTeam.unitIds.Count; i++)
+        {
+            int allyId = aiTeam.unitIds[i];
+            if (allyId == movingUnit.Id || !session.ReadyUnitIds.Contains(allyId))
+                continue;
+
+            var ally = session.GetUnitByUnitId(allyId);
+            if (ally == null || HasValidAttackTargetRightNow(ally))
+                continue;
+
+            if (CountWeaponTargetsFromCell(ally, destCell) > 0)
+                return true;
+        }
+        return false;
     }
 
     void SendWait()

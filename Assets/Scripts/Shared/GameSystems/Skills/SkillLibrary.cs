@@ -27,6 +27,9 @@ public class SkillLibrary : ScriptableObject
 
     public SkillDefinition Get(int skillId)
     {
+        if (skillId <= 0)
+            return null;
+
         if (_lookup == null)
         {
             Debug.LogError("[SkillLibrary] Not initialized! Call Init() first.");

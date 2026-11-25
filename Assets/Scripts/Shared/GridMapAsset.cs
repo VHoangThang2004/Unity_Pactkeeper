@@ -18,6 +18,10 @@ public class GridMapAsset : ScriptableObject
     [Header("Visuals")]
     [Tooltip("Prefab containing the Grid with all Tilemap layers. Client instantiates this at match start.")]
     public GameObject tilemapPrefab;
+    [Tooltip("Optional override sprite for the 'floor' SpriteRenderer inside tilemapPrefab (used for per-chapter PvE themes).")]
+    public Sprite floorSpriteOverride;
+    public bool useFloorTint = false;
+    public Color floorTint = Color.white;
 
     [Header("Spawn Points (fill after baking)")]
     public TeamSpawnPoints[] teamSpawns;

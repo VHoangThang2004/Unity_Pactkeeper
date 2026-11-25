@@ -138,6 +138,16 @@ public class UnitSelectedState : IInteractionState
 
     public void OnDecision(int skillId)
     {
+        if (skillId <= 0) return;
+
+        SkillDefinition skill = scene.skillLibrary.Get(skillId);
+        if (skill != null && skill.targetPattern == null)
+        {
+            // Passive or non-targetable skill: show inspect panel instead of clearing active target patterns.
+            scene.visualController.ShowInspectPanel(true, skill);
+            return;
+        }
+
         session.currentSkillId = skillId;
         session.isTargetLocked = false;
         session.currentPreviewCell = default;
@@ -189,22 +199,20 @@ public class UnitSelectedState : IInteractionState
         if (unit == null) { Debug.LogWarning("[UnitSelected] unit null"); return; }
         if (unit.SkillPatterns == null) { Debug.LogWarning("[UnitSelected] SkillPatterns null"); return; }
 
-        Debug.Log($"[UnitSelected] Looking for skillId={session.currentSkillId}, patterns count={unit.SkillPatterns.Length}");
-        foreach (var o in unit.SkillPatterns)
-            Debug.Log($"[UnitSelected] Pattern entry — SkillId={o.SkillId}, TargetCells={o.TargetCells?.Length ?? 0}");
+        if (session.currentSkillId <= 0) return;
 
         foreach (var o in unit.SkillPatterns)
         {
             if (o.SkillId != session.currentSkillId) continue;
             if (o.TargetCells != null)
                 foreach (var cell in o.TargetCells)
-                {
                     session.CurrentTargetableCells.Add(cell);
-                    Debug.Log($"{cell}");
-                }
-            Debug.Log($"[UnitSelected] Loaded {session.CurrentTargetableCells.Count} targetable cells of skill [{session.currentSkillId}]");
             return;
         }
+
+        SkillDefinition currentDef = scene.skillLibrary.Get(session.currentSkillId);
+        if (currentDef != null && currentDef.targetPattern == null)
+            return; // Passive skill — intentionally has no target pattern
 
         Debug.LogWarning($"[UnitSelected] No pattern found for skillId={session.currentSkillId}");
     }

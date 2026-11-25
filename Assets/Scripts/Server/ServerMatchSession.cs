@@ -804,6 +804,18 @@ public class ServerMatchSession : MonoBehaviour
 
     }
 
+    public int GetEffectiveMaxInstant()
+    {
+        int baseMax = matchConfig != null ? matchConfig.maxInstant : 150;
+        if (backendClient != null && backendClient.Mode == "story")
+        {
+            var encounter = GetStoryEncounter();
+            if (encounter?.challengeRules != null && encounter.challengeRules.maxInstantsLimit > 0)
+                return Mathf.Min(baseMax, encounter.challengeRules.maxInstantsLimit);
+        }
+        return baseMax;
+    }
+
     // The one full-state builder: broadcasts (ServerTimelineManager.GetSnapshot) and kill results both use it
     public SessionSnapshotData FullSnapshot()
     {
@@ -815,7 +827,7 @@ public class ServerMatchSession : MonoBehaviour
             new TimelineData
             {
                 currentInstant = CurrentInstant,
-                maxInstant = matchConfig.maxInstant,
+                maxInstant = GetEffectiveMaxInstant(),
                 flag = FlaggedTeamId,
                 isPaused = TimelineState != ServerSessionState.Flowing,
                 consecutivePassInstants = ConsecutivePassInstants,

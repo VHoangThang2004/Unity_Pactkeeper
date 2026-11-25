@@ -73,6 +73,8 @@ public class BattleTutorialStarter : MonoBehaviour
         }
         PlotDirector.Clear();
         TutorialContext.Reset();
+        if (_resultOverlayRoot != null)
+            Destroy(_resultOverlayRoot);
     }
 
     private bool HasAnyPlotNodes()
@@ -454,6 +456,12 @@ public class BattleTutorialStarter : MonoBehaviour
         if (sequencer != null)
             sequencer.StopAllCoroutines();
 
+        if (controller != null && controller.Scene != null && controller.Scene.clientInteractionSystem != null)
+        {
+            controller.Scene.clientInteractionSystem.StopDecisionSpam();
+            controller.Scene.clientInteractionSystem.ForceNoneState();
+        }
+
         StartCoroutine(WaitForVisualsAndPresentOutcome(playerWon, failReason, instantsUsed, unitsLost));
     }
 
@@ -564,43 +572,53 @@ public class BattleTutorialStarter : MonoBehaviour
 
     private void ShowDefeatOverlay(string failReason, int instantsUsed, int unitsLost)
     {
+        if (controller != null && controller.Scene != null && controller.Scene.loadingScreen != null)
+            controller.Scene.loadingScreen.Hide();
+
         if (_resultOverlayRoot != null)
         {
             _resultOverlayRoot.SetActive(true);
             return;
         }
 
-        Canvas targetCanvas = FindAnyObjectByType<Canvas>();
-        if (targetCanvas == null)
-        {
-            var canvasGo = new GameObject("StoryOutcomeCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-            targetCanvas = canvasGo.GetComponent<Canvas>();
-            targetCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            targetCanvas.sortingOrder = 2000;
-        }
+        // Always create a dedicated ScreenSpaceOverlay root Canvas so FindAnyObjectByType<Canvas>()
+        // can never accidentally parent the Defeat overlay under a WorldSpace unit HP bar canvas
+        // or a hidden/scaled tutorial canvas.
+        _resultOverlayRoot = new GameObject(
+            "StoryDefeatOverlay",
+            typeof(Canvas),
+            typeof(CanvasScaler),
+            typeof(GraphicRaycaster));
+
+        var rootCanvas = _resultOverlayRoot.GetComponent<Canvas>();
+        rootCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        rootCanvas.sortingOrder = 5000;
+
+        var scaler = _resultOverlayRoot.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight = 0.5f;
 
         TMP_FontAsset sharedFont = null;
         var anyTmp = FindAnyObjectByType<TMP_Text>();
         if (anyTmp != null) sharedFont = anyTmp.font;
 
-        _resultOverlayRoot = new GameObject("StoryDefeatOverlay", typeof(RectTransform), typeof(Canvas), typeof(GraphicRaycaster), typeof(Image));
-        _resultOverlayRoot.transform.SetParent(targetCanvas.transform, false);
-        var rootCanvas = _resultOverlayRoot.GetComponent<Canvas>();
-        rootCanvas.overrideSorting = true;
-        rootCanvas.sortingOrder = 2000;
+        var backdropGo = new GameObject("Backdrop", typeof(RectTransform), typeof(Image));
+        backdropGo.transform.SetParent(_resultOverlayRoot.transform, false);
+        var backdropRt = backdropGo.GetComponent<RectTransform>();
+        backdropRt.anchorMin = Vector2.zero;
+        backdropRt.anchorMax = Vector2.one;
+        backdropRt.offsetMin = Vector2.zero;
+        backdropRt.offsetMax = Vector2.zero;
 
-        var rootRt = _resultOverlayRoot.GetComponent<RectTransform>();
-        rootRt.anchorMin = Vector2.zero;
-        rootRt.anchorMax = Vector2.one;
-        rootRt.offsetMin = Vector2.zero;
-        rootRt.offsetMax = Vector2.zero;
-
-        var bgImg = _resultOverlayRoot.GetComponent<Image>();
-        bgImg.color = new Color(0.03f, 0.03f, 0.06f, 0.82f);
+        var bgImg = backdropGo.GetComponent<Image>();
+        bgImg.color = new Color(0.03f, 0.03f, 0.06f, 0.84f);
+        bgImg.raycastTarget = true;
 
         // Card container
         var cardGo = new GameObject("DefeatCard", typeof(RectTransform), typeof(Image));
-        cardGo.transform.SetParent(_resultOverlayRoot.transform, false);
+        cardGo.transform.SetParent(backdropGo.transform, false);
         var cardRt = cardGo.GetComponent<RectTransform>();
         cardRt.anchorMin = new Vector2(0.5f, 0.5f);
         cardRt.anchorMax = new Vector2(0.5f, 0.5f);

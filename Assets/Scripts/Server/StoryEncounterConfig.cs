@@ -138,6 +138,13 @@ public class StoryUnitEntry
     public int damageMultiplier;
     public int damageReduction;
 
+    [Header("Multi-Unit AI Role Overrides (Optional)")]
+    [Tooltip("When true, overrides the encounter-level behaviorProfile with this unit's specific unitProfile.")]
+    public bool useCustomProfile = false;
+    public AIBehaviorProfile unitProfile = AIBehaviorProfile.Balanced;
+    [Tooltip("Marks this AI unit as a Boss/VIP so support & tank allies prioritize protecting/healing/Triaging it.")]
+    public bool isBoss = false;
+
     public int GetStartingHP() => currentHP > 0 ? Mathf.Min(currentHP, maxHP) : maxHP;
     public int GetStartingSP() => Mathf.Clamp(currentSkillPoint, 0, maxSkillPoint);
 

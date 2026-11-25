@@ -90,6 +90,9 @@ MonoBehaviour:
     m_path: Assets/Scenes/StoryScenes/C3_S2.unity
     m_guid: e1000000a3524a51bd4c550000000302
   - m_enabled: 1
+    m_path: Assets/Scenes/StoryScenes/C4_S1.unity
+    m_guid: e1000000a4514a51bd4c550000000401
+  - m_enabled: 1
     m_path: Assets/Scenes/10_StoryProgress.unity
     m_guid: ecd3501d18311d44a9a2dbcfbcb45f01
   - m_enabled: 1

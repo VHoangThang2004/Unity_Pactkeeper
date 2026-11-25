@@ -33,14 +33,23 @@ public class SkillSlotUI : MonoBehaviour
     public void OnSelect()
     {
         int skillId = GetSkillId();
-        if (skillId == -1) return;
+        if (skillId <= 0) return;
+
+        // Passive skills cannot be selected as active targeting actions; inspect them instead
+        // so the unit's active move/attack targeting range is preserved without warning spam.
+        if (slotType == SkillSlotType.UniquePassive)
+        {
+            OnInspect();
+            return;
+        }
+
         scene.clientInteractionSystem.HandleDecisionSelectSkill(skillId);
     }
 
     public void OnInspect()
     {
         int skillId = GetSkillId();
-        if (skillId == -1) return;
+        if (skillId <= 0) return;
         SkillDefinition skill = scene.skillLibrary.Get(skillId);
         if (skill == null) return;
         Debug.Log($"[Inspect] {skill.skillName} — {skill.skillPointCost} SP, x{skill.stepCostMultiplier} step");
@@ -52,6 +61,12 @@ public class SkillSlotUI : MonoBehaviour
     public void RefreshIcon()
     {
         int skillId = GetSkillId();
+        if (skillId <= 0)
+        {
+            icon.sprite = scene.visualController.noSkillIcon;
+            return;
+        }
+
         SkillDefinition skill = scene.skillLibrary.Get(skillId);
         if (skill != null) icon.sprite = skill.icon;
         else icon.sprite = scene.visualController.noSkillIcon;

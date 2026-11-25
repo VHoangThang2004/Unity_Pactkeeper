@@ -35,3 +35,5 @@ MonoBehaviour:
     asset: {fileID: 11400000, guid: b1000000c3514d218a7f220000000301, type: 2}
   - mapId: MD_PVE_C3S2
     asset: {fileID: 11400000, guid: b1000000c3524d218a7f220000000302, type: 2}
+  - mapId: MD_PVE_C4S1
+    asset: {fileID: 11400000, guid: b1000000c4514d218a7f220000000401, type: 2}

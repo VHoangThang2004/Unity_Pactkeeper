@@ -1598,7 +1598,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1696925142}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 616c23b89a2c44a883c458152940328a, type: 3}
+  m_Script: {fileID: 11500000, guid: c4cbcfda513a9b64b871ccd62c68c791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Client::TutorialReplayUIController
   replayBarRoot: {fileID: 7700000001}

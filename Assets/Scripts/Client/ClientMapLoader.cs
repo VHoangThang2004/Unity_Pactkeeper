@@ -51,6 +51,8 @@ public class ClientMapLoader : MonoBehaviour
         if (gameObject.scene.IsValid() && spawnedMap.scene != gameObject.scene)
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(spawnedMap, gameObject.scene);
 
+        ApplyMapVisualTheme(spawnedMap, session.MapAsset);
+
         var mapPrefab = spawnedMap.GetComponent<MapPrefab>();
         if (mapPrefab == null || mapPrefab.movableTilemap == null || mapPrefab.rangeTilemap == null)
         {
@@ -69,5 +71,40 @@ public class ClientMapLoader : MonoBehaviour
 
         onComplete(true);
         yield break;
+    }
+
+    private static void ApplyMapVisualTheme(GameObject mapRoot, GridMapAsset mapAsset)
+    {
+        if (mapRoot == null || mapAsset == null)
+            return;
+
+        if (mapAsset.floorSpriteOverride == null && !mapAsset.useFloorTint)
+            return;
+
+        Transform floorTransform = mapRoot.transform.Find("floor");
+        SpriteRenderer floorRenderer = floorTransform != null
+            ? floorTransform.GetComponent<SpriteRenderer>()
+            : null;
+
+        if (floorRenderer == null)
+        {
+            foreach (var sr in mapRoot.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                if (sr != null && sr.gameObject.name == "floor")
+                {
+                    floorRenderer = sr;
+                    break;
+                }
+            }
+        }
+
+        if (floorRenderer == null)
+            return;
+
+        if (mapAsset.floorSpriteOverride != null)
+            floorRenderer.sprite = mapAsset.floorSpriteOverride;
+
+        if (mapAsset.useFloorTint && mapAsset.floorTint.a > 0.01f)
+            floorRenderer.color = mapAsset.floorTint;
     }
 }

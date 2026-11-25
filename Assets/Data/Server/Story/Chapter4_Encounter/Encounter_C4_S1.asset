@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc7f8a15adfc504b8d9adedd4c5034a, type: 3}
+  m_Name: Encounter_C4_S1
+  m_EditorClassIdentifier: Server::StoryEncounterConfig
+  chapterId: 4
+  sceneId: 1
+  mapId: MD_PVE_C4S1
+  playerUnits:
+  - uId: 2
+    passiveSkillId: 5002
+    movementSkillId: 1002
+    weaponSkillId: 2002
+    classSkillId: 3002
+    trinketSkillId: -1
+    maxHP: 6
+    currentHP: 6
+    maxSkillPoint: 3
+    currentSkillPoint: 0
+    speed: 110
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 0
+    unitProfile: 0
+    isBoss: 0
+  - uId: 3
+    passiveSkillId: 5003
+    movementSkillId: 1003
+    weaponSkillId: 2003
+    classSkillId: 3003
+    trinketSkillId: 4003
+    maxHP: 5
+    currentHP: 5
+    maxSkillPoint: 3
+    currentSkillPoint: 1
+    speed: 115
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 0
+    unitProfile: 0
+    isBoss: 0
+  - uId: 4
+    passiveSkillId: 5004
+    movementSkillId: 1004
+    weaponSkillId: 2004
+    classSkillId: 3004
+    trinketSkillId: 4002
+    maxHP: 4
+    currentHP: 4
+    maxSkillPoint: 3
+    currentSkillPoint: 1
+    speed: 125
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 0
+    unitProfile: 0
+    isBoss: 0
+  - uId: 5
+    passiveSkillId: 5005
+    movementSkillId: 1005
+    weaponSkillId: 2005
+    classSkillId: 3005
+    trinketSkillId: -1
+    maxHP: 4
+    currentHP: 4
+    maxSkillPoint: 4
+    currentSkillPoint: 0
+    speed: 120
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 0
+    unitProfile: 0
+    isBoss: 0
+  aiUnits:
+  - uId: 7
+    passiveSkillId: 5003
+    movementSkillId: 1003
+    weaponSkillId: 2003
+    classSkillId: 3003
+    trinketSkillId: -1
+    maxHP: 10
+    currentHP: 10
+    maxSkillPoint: 3
+    currentSkillPoint: 0
+    speed: 95
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 1
+    unitProfile: 1
+    isBoss: 1
+  - uId: 2
+    passiveSkillId: 5002
+    movementSkillId: 1002
+    weaponSkillId: 2002
+    classSkillId: 3002
+    trinketSkillId: -1
+    maxHP: 4
+    currentHP: 4
+    maxSkillPoint: 3
+    currentSkillPoint: 0
+    speed: 105
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 1
+    unitProfile: 2
+    isBoss: 0
+  - uId: 1
+    passiveSkillId: 5001
+    movementSkillId: 1001
+    weaponSkillId: 2001
+    classSkillId: 3001
+    trinketSkillId: -1
+    maxHP: 3
+    currentHP: 3
+    maxSkillPoint: 3
+    currentSkillPoint: 0
+    speed: 120
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 1
+    unitProfile: 1
+    isBoss: 0
+  - uId: 5
+    passiveSkillId: 5005
+    movementSkillId: 1005
+    weaponSkillId: 2005
+    classSkillId: -1
+    trinketSkillId: -1
+    maxHP: 2
+    currentHP: 2
+    maxSkillPoint: 3
+    currentSkillPoint: 0
+    speed: 90
+    damageMultiplier: 100
+    damageReduction: 0
+    useCustomProfile: 1
+    unitProfile: 3
+    isBoss: 0
+  alwaysWait: 0
+  aiMode: 2
+  behaviorProfile: 0
+  scriptedActions: []
+  challengeRules:
+    maxInstantsLimit: 0
+    maxAllyDeathsAllowed: 2

@@ -161,9 +161,7 @@ public class ServerTimelineManager : MonoBehaviour
     {
         List<TeamData> teams = session.GetAllTeamData();
         var activeEncounter = isPvE ? session.GetStoryEncounter() : null;
-        int effectiveMaxInstant = (activeEncounter?.challengeRules != null && activeEncounter.challengeRules.maxInstantsLimit > 0)
-            ? Mathf.Min(session.matchConfig.maxInstant, activeEncounter.challengeRules.maxInstantsLimit)
-            : session.matchConfig.maxInstant;
+        int effectiveMaxInstant = session.GetEffectiveMaxInstant();
 
         while (session.CurrentInstant <= effectiveMaxInstant)
         {
@@ -171,7 +169,12 @@ public class ServerTimelineManager : MonoBehaviour
             TransitionTo(ServerSessionState.Flowing);
             session.CurrentTeamTurnId = -1;
 
-            // Check challenge ally-loss fail condition early
+            // Check elimination or challenge ally-loss fail condition immediately at instant start
+            if (HasTeamElimination())
+            {
+                yield return StartCoroutine(EndMatch());
+                yield break;
+            }
             if (IsChallengeAllyDeathExceeded(activeEncounter, teams, out string earlyFailReason))
             {
                 yield return StartCoroutine(EndMatch(forcedWinnerId: teams[1].playerId, forcedFailReason: earlyFailReason));
@@ -261,6 +264,18 @@ public class ServerTimelineManager : MonoBehaviour
             PackFinal();
             BroadcastSnapshot();
 
+            // End immediately if the resolve phase eliminated a team or exceeded ally loss limit
+            if (HasTeamElimination())
+            {
+                yield return StartCoroutine(EndMatch());
+                yield break;
+            }
+            if (IsChallengeAllyDeathExceeded(activeEncounter, teams, out string postResolveFailReason))
+            {
+                yield return StartCoroutine(EndMatch(forcedWinnerId: teams[1].playerId, forcedFailReason: postResolveFailReason));
+                yield break;
+            }
+
             session.CurrentInstant++;
             yield return new WaitForSeconds(session.matchConfig.instantDuration);
         }
@@ -270,6 +285,19 @@ public class ServerTimelineManager : MonoBehaviour
         BroadcastSnapshot();
         Debug.Log("[Timeline] Match ended — max instant reached.");
         yield return StartCoroutine(EndMatch(forcedFailReason: $"Turn limit reached ({effectiveMaxInstant} Instants)."));
+    }
+
+    private bool HasTeamElimination()
+    {
+        var allUnits = session.GetAllUnits();
+        if (allUnits == null || allUnits.Count == 0) return true;
+        int firstTeam = session.GetTeamIdByUnitId(allUnits[0].Id);
+        for (int i = 1; i < allUnits.Count; i++)
+        {
+            if (session.GetTeamIdByUnitId(allUnits[i].Id) != firstTeam)
+                return false;
+        }
+        return true;
     }
 
     // -------------------------------------------------------
@@ -798,7 +826,7 @@ public class ServerTimelineManager : MonoBehaviour
         bridge.BroadcastTimelineTickClientRpc(new TimelineData
         {
             currentInstant = session.CurrentInstant,
-            maxInstant = session.matchConfig.maxInstant,
+            maxInstant = session.GetEffectiveMaxInstant(),
             flag = session.FlaggedTeamId,
             isPaused = session.TimelineState != ServerSessionState.Flowing,
             consecutivePassInstants = session.ConsecutivePassInstants,
@@ -1072,6 +1100,11 @@ public class ServerTimelineManager : MonoBehaviour
 
     IEnumerator EndMatch(string forcedWinnerId = null, bool isForfeit = false, string forfeitPlayerId = null, string forcedFailReason = null)
     {
+        if (session.TimelineState == ServerSessionState.Finished)
+        {
+            Debug.Log("[Timeline] EndMatch ignored — match already finished.");
+            yield break;
+        }
         TransitionTo(ServerSessionState.Finished);
 
         var teams = session.GetAllTeamData();

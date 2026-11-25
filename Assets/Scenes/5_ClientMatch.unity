@@ -13296,9 +13296,9 @@ MonoBehaviour:
   sceneConfig: {fileID: 11400000, guid: e964c6cfcc43be044bad9428822562f3, type: 2}
   prep: {fileID: 433388440}
   battleBGM: {fileID: 8300000, guid: 6a10f70662079684f89701ba9edf53c8, type: 3}
-  connectMaxAttempts: 4
-  connectAttemptTimeout: 6
-  connectRetryDelay: 1.5
+  connectMaxAttempts: 8
+  connectAttemptTimeout: 4.5
+  connectRetryDelay: 1
 --- !u!114 &2127351869
 MonoBehaviour:
   m_ObjectHideFlags: 0

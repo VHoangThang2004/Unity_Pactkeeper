@@ -79,5 +79,5 @@ MonoBehaviour:
     hasCustomTarget: 0
     customTargetCell: {x: 0, y: 0}
   challengeRules:
-    maxInstantsLimit: 50
+    maxInstantsLimit: 0
     maxAllyDeathsAllowed: 1

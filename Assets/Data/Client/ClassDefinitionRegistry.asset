@@ -31,3 +31,6 @@ MonoBehaviour:
   - classId: 6
     fullFrameIcon: {fileID: 2592917414650656118, guid: 7bd9b601ad519264185e4b158f115b8c, type: 3}
     haflFrameIcon: {fileID: 7438272451936554909, guid: db74c44f6a49f8547b457616f01890b7, type: 3}
+  - classId: 7
+    fullFrameIcon: {fileID: -618440372702719621, guid: e402154e836b33f4c97dd9c05d04945f, type: 3}
+    haflFrameIcon: {fileID: -618440372702719621, guid: e402154e836b33f4c97dd9c05d04945f, type: 3}
