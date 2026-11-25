@@ -24,6 +24,10 @@ public class BattleTutorialStarter : MonoBehaviour
 
     [SerializeField] private BackendConfig backendConfig;
 
+    [Header("Outcome UI")]
+    [Tooltip("Prefab UI Canvas for the Defeat overlay (Assets/Prefabs/UI/StoryDefeatOverlay.prefab).")]
+    [SerializeField] private StoryDefeatOverlayUI defeatOverlayPrefab;
+
     private bool _tutorialStarted = false;
     private bool _outcomeHandled = false;
     private bool _isTransitioning = false;
@@ -577,117 +581,23 @@ public class BattleTutorialStarter : MonoBehaviour
 
         if (_resultOverlayRoot != null)
         {
-            _resultOverlayRoot.SetActive(true);
+            var existingUi = _resultOverlayRoot.GetComponent<StoryDefeatOverlayUI>();
+            if (existingUi != null)
+                existingUi.Show(failReason, instantsUsed, unitsLost, OnRetryClicked, OnExitToMapClicked);
+            else
+                _resultOverlayRoot.SetActive(true);
             return;
         }
 
-        // Always create a dedicated ScreenSpaceOverlay root Canvas so FindAnyObjectByType<Canvas>()
-        // can never accidentally parent the Defeat overlay under a WorldSpace unit HP bar canvas
-        // or a hidden/scaled tutorial canvas.
-        _resultOverlayRoot = new GameObject(
-            "StoryDefeatOverlay",
-            typeof(Canvas),
-            typeof(CanvasScaler),
-            typeof(GraphicRaycaster));
+        if (defeatOverlayPrefab != null)
+        {
+            var instance = Instantiate(defeatOverlayPrefab);
+            _resultOverlayRoot = instance.gameObject;
+            instance.Show(failReason, instantsUsed, unitsLost, OnRetryClicked, OnExitToMapClicked);
+            return;
+        }
 
-        var rootCanvas = _resultOverlayRoot.GetComponent<Canvas>();
-        rootCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        rootCanvas.sortingOrder = 5000;
-
-        var scaler = _resultOverlayRoot.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
-
-        TMP_FontAsset sharedFont = null;
-        var anyTmp = FindAnyObjectByType<TMP_Text>();
-        if (anyTmp != null) sharedFont = anyTmp.font;
-
-        var backdropGo = new GameObject("Backdrop", typeof(RectTransform), typeof(Image));
-        backdropGo.transform.SetParent(_resultOverlayRoot.transform, false);
-        var backdropRt = backdropGo.GetComponent<RectTransform>();
-        backdropRt.anchorMin = Vector2.zero;
-        backdropRt.anchorMax = Vector2.one;
-        backdropRt.offsetMin = Vector2.zero;
-        backdropRt.offsetMax = Vector2.zero;
-
-        var bgImg = backdropGo.GetComponent<Image>();
-        bgImg.color = new Color(0.03f, 0.03f, 0.06f, 0.84f);
-        bgImg.raycastTarget = true;
-
-        // Card container
-        var cardGo = new GameObject("DefeatCard", typeof(RectTransform), typeof(Image));
-        cardGo.transform.SetParent(backdropGo.transform, false);
-        var cardRt = cardGo.GetComponent<RectTransform>();
-        cardRt.anchorMin = new Vector2(0.5f, 0.5f);
-        cardRt.anchorMax = new Vector2(0.5f, 0.5f);
-        cardRt.sizeDelta = new Vector2(680f, 380f);
-        cardGo.GetComponent<Image>().color = new Color(0.11f, 0.09f, 0.14f, 0.98f);
-
-        CreateLabel(cardGo.transform, "Title", "DEFEAT", sharedFont, 46f, FontStyles.Bold,
-            new Color(0.95f, 0.35f, 0.35f, 1f), new Vector2(0f, 115f), new Vector2(600f, 70f));
-
-        string reasonDisplay = string.IsNullOrEmpty(failReason)
-            ? "Your squad could not overcome the enemy."
-            : failReason;
-        CreateLabel(cardGo.transform, "Reason", reasonDisplay, sharedFont, 24f, FontStyles.Normal,
-            new Color(0.92f, 0.92f, 0.95f, 1f), new Vector2(0f, 35f), new Vector2(600f, 80f));
-
-        CreateLabel(cardGo.transform, "Stats", $"Instants Elapsed: {instantsUsed}   |   Allies Fallen: {unitsLost}",
-            sharedFont, 20f, FontStyles.Normal, new Color(0.76f, 0.72f, 0.60f, 1f),
-            new Vector2(0f, -35f), new Vector2(600f, 40f));
-
-        CreateActionButton(cardGo.transform, "RetryButton", "RETRY", sharedFont,
-            new Color(0.24f, 0.48f, 0.28f, 1f), new Vector2(-145f, -120f), OnRetryClicked);
-
-        CreateActionButton(cardGo.transform, "ExitButton", "EXIT TO MAP", sharedFont,
-            new Color(0.42f, 0.18f, 0.18f, 1f), new Vector2(145f, -120f), OnExitToMapClicked);
-    }
-
-    private static TMP_Text CreateLabel(
-        Transform parent, string name, string text, TMP_FontAsset font,
-        float fontSize, FontStyles style, Color color, Vector2 pos, Vector2 size)
-    {
-        var go = new GameObject(name, typeof(RectTransform), typeof(TextMeshProUGUI));
-        go.transform.SetParent(parent, false);
-        var rt = go.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 0.5f);
-        rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = pos;
-        rt.sizeDelta = size;
-
-        var tmp = go.GetComponent<TextMeshProUGUI>();
-        if (font != null) tmp.font = font;
-        tmp.text = text;
-        tmp.fontSize = fontSize;
-        tmp.fontStyle = style;
-        tmp.color = color;
-        tmp.alignment = TextAlignmentOptions.Center;
-        tmp.textWrappingMode = TextWrappingModes.Normal;
-        tmp.raycastTarget = false;
-        return tmp;
-    }
-
-    private static Button CreateActionButton(
-        Transform parent, string name, string label, TMP_FontAsset font,
-        Color bgColor, Vector2 pos, UnityEngine.Events.UnityAction onClick)
-    {
-        var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
-        go.transform.SetParent(parent, false);
-        var rt = go.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 0.5f);
-        rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.anchoredPosition = pos;
-        rt.sizeDelta = new Vector2(230f, 64f);
-
-        go.GetComponent<Image>().color = bgColor;
-        var btn = go.GetComponent<Button>();
-        btn.onClick.AddListener(onClick);
-
-        CreateLabel(go.transform, "Label", label, font, 24f, FontStyles.Bold,
-            Color.white, Vector2.zero, new Vector2(210f, 54f));
-        return btn;
+        Debug.LogError("[BattleTutorialStarter] defeatOverlayPrefab is not assigned! Assign StoryDefeatOverlay.prefab in Inspector.");
     }
 
     private void OnRetryClicked()

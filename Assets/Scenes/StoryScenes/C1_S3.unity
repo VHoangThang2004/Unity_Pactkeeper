@@ -200,6 +200,7 @@ MonoBehaviour:
   - plot: {fileID: 11400000, guid: d1000000e0ea4c01a000000000000002, type: 2}
     startTrigger: AllyLowHP
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
+  defeatOverlayPrefab: {fileID: 8100000006, guid: d1f0e00022224b228888000000000002, type: 3}
   tutorialTrigger: {fileID: 2127351881}
   additiveBattleSceneName: 5_ClientMatch
 --- !u!114 &2127351881
@@ -1623,6 +1624,7 @@ MonoBehaviour:
   skipSceneButton: {fileID: 7700000014}
   exitToMapButton: {fileID: 7700000034}
   backendConfig: {fileID: 11400000, guid: 000ee043f2ee23945acc3b40c5e4c633, type: 2}
+  defeatOverlayPrefab: {fileID: 8100000006, guid: d1f0e00022224b228888000000000002, type: 3}
   sequencer: {fileID: 2127351879}
   storyProgressSceneName: 10_StoryProgress
 --- !u!1 &7700000001
