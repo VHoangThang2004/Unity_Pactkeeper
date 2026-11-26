@@ -145,6 +145,7 @@ public class ServerMatchSession : MonoBehaviour
     // -------------------------------------------------------
     public ServerSessionState TimelineState { get; set; } = ServerSessionState.None;
     public int CurrentInstant { get; set; } = 0;
+    public MatchStats Stats { get; } = new(); // one server process = one match, never reset
     public int ConsecutivePassInstants { get; set; } = 0;
     public int FlaggedTeamId { get; set; } = 0;
     public List<int> ReadyUnitIds { get; set; } = new List<int>();
@@ -763,6 +764,7 @@ public class ServerMatchSession : MonoBehaviour
     {
         var unit = GetUnitByUnitId(unitId);
         if (unit == null) return;
+        Stats.SkillUsed(this, unit, skillId);
 
         for (int i = 0; i < unit.SkillUsages.Length; i++)
         {

@@ -412,7 +412,10 @@ public class ServerTimelineManager : MonoBehaviour
         if (pendingDecision == null)
         {
             if (teams[team].WaitDuration <= 0 && teams[team].Overtime <= 0)
+            {
                 Debug.Log($"[Timeline] Team {team} timed out — auto-wait.");
+                session.Stats.Timeout(team);
+            }
             else
                 Debug.Log($"[Timeline] Team {team} decided to wait.");
 
@@ -1142,21 +1145,29 @@ public class ServerTimelineManager : MonoBehaviour
 
         Debug.Log($"[Timeline] Match ended — winner={winnerId} isForfeit={isForfeit}");
 
+        int totalTeam1 = session.GetTeamLoadoutDataByTeamId(teams[1].teamId)?.Units?.Count ?? 0;
         var afterMatchData = new AfterMatchPlayerReport[]
         {
             new AfterMatchPlayerReport
             {
                 playerId = teams[0].playerId,
                 unitsAlive = team0Units,
-                totalUnits = totalTeam0
+                totalUnits = totalTeam0,
+                unitsDefeated = Mathf.Max(0, totalTeam1 - team1Units),
+                loadout = LoadoutUnitReport.From(session.GetTeamLoadoutDataByTeamId(teams[0].teamId))
             },
             new AfterMatchPlayerReport
             {
                 playerId = teams[1].playerId,
                 unitsAlive = team1Units,
-                totalUnits = session.GetTeamLoadoutDataByTeamId(teams[1].teamId)?.Units?.Count ?? 0
+                totalUnits = totalTeam1,
+                unitsDefeated = alliesLost,
+                loadout = LoadoutUnitReport.From(session.GetTeamLoadoutDataByTeamId(teams[1].teamId))
             }
         };
+        session.Stats.FillReport(session, teams[0].teamId, afterMatchData[0]);
+        session.Stats.FillReport(session, teams[1].teamId, afterMatchData[1]);
+        int durationSeconds = Mathf.RoundToInt(Time.time - _matchStartTime);
 
         // Report to the backend. The server never quits itself — ReportResult shuts the network down,
         // reports, and waits for the backend to stop this process.
@@ -1198,7 +1209,7 @@ public class ServerTimelineManager : MonoBehaviour
         }
 
         backendClient.ReportResult(
-            winnerId, session.CurrentInstant, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId);
+            winnerId, durationSeconds, session.CurrentInstant, afterMatchData, isForfeit, forfeitPlayerId);
     }
 
 }

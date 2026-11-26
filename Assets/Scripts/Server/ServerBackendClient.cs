@@ -76,6 +76,56 @@ public class AfterMatchPlayerReport
     public string playerId;
     public int unitsAlive;
     public int totalUnits;
+    public int unitsDefeated;
+    public LoadoutUnitReport[] loadout;
+    public int damageDealt;
+    public int damageTaken;
+    public int healingDone;
+    public int timeouts;
+    public UnitStatsReport[] units;
+}
+
+[System.Serializable]
+public class UnitStatsReport
+{
+    public int uId;
+    public bool alive;
+    public int damageDealt;
+    public int damageTaken;
+    public int healingDone;
+    public int kills;
+    public int diedAtInstant;
+    public int killedByUId;
+    public SkillUseReport[] skillUses;
+}
+
+[System.Serializable]
+public class SkillUseReport
+{
+    public int skillId;
+    public int count;
+}
+
+[System.Serializable]
+public class LoadoutUnitReport
+{
+    public int uId;
+    public int passiveSkillId;
+    public int movementSkillId;
+    public int weaponSkillId;
+    public int classSkillId;
+    public int trinketSkillId;
+
+    public static LoadoutUnitReport[] From(TeamLoadout team) =>
+        team?.Units == null ? new LoadoutUnitReport[0] : team.Units.ConvertAll(u => new LoadoutUnitReport
+        {
+            uId = u.UId,
+            passiveSkillId = u.PassiveSkillId,
+            movementSkillId = u.MovementSkillId,
+            weaponSkillId = u.WeaponSkillId,
+            classSkillId = u.ClassSkillId,
+            trinketSkillId = u.TrinketSkillId
+        }).ToArray();
 }
 
 public class ServerBackendClient : MonoBehaviour, IMatchEnder

@@ -60,9 +60,12 @@ public static class DamagePipeline
     // Returns true if the target died
     public static bool Apply(ServerMatchSession session, ref DamageContext ctx)
     {
+        int dealt = System.Math.Min(ctx.Final, System.Math.Max(0, ctx.Target.CurrentHP)); // overkill doesn't count
         ctx.Target.CurrentHP -= ctx.Final;
         PassiveHooks.PostDamage(session, ctx); // before Kill, so the target's effects still exist
-        if (ctx.Target.CurrentHP > 0) return false;
+        bool killed = ctx.Target.CurrentHP <= 0;
+        session.Stats.Damage(session, ctx.Source, ctx.Target, dealt, killed); // before Kill removes the target's team
+        if (!killed) return false;
 
         session.Kill(ctx.Target.Id);
         return true;

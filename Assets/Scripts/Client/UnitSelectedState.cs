@@ -155,14 +155,12 @@ public class UnitSelectedState : IInteractionState
         Debug.Log($"[UnitSelected] OnDecision — switched to skillId={skillId}, targetable={session.CurrentTargetableCells.Count}");
         scene.visualController.UpdateVisualOnStateChange();
 
-        int targetable = 0;
-        foreach (Vector3Int cell in session.CurrentTargetableCells)
+        // Exactly one selectable (z == 1) cell → auto-lock it. Must click THAT cell, not list[0]:
+        // list[0] may be a z == 0 cell, and OnTileClick would then treat it as clicking the unit on it.
+        var selectable = session.CurrentTargetableCells.FindAll(c => c.z == 1);
+        if (selectable.Count == 1 && session.IsMyUnit(session.selectedUnitId))
         {
-            targetable += cell.z;
-        }
-        if (targetable == 1 && session.IsMyUnit(session.selectedUnitId))
-        {
-            OnTileClick(session.CurrentTargetableCells[0]);
+            OnTileClick(selectable[0]);
         }
     }
 

@@ -28,6 +28,7 @@ public static class HealPipeline
         int before = ctx.Target.CurrentHP;
         ctx.Target.CurrentHP = System.Math.Min(before + ctx.Amount, ctx.Target.MaxHP);
         ctx.Restored = ctx.Target.CurrentHP - before;
+        session.Stats.Heal(session, ctx.Source, ctx.Restored);
         PassiveHooks.HealDone(session, ctx);
     }
 }
