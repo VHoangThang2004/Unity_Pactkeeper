@@ -46,6 +46,7 @@ public class BattleTutorialStarter : MonoBehaviour
 
     private GameObject _resultOverlayRoot;
     private GameObject _winOverlayRoot;
+    private TutorialReplayUIController _replayUI;
 
     void Start()
     {
@@ -66,11 +67,11 @@ public class BattleTutorialStarter : MonoBehaviour
         if (sequencer != null)
             sequencer.SetAllowSkip(false);
 
-        var replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
-        if (replayUI == null)
-            replayUI = gameObject.AddComponent<TutorialReplayUIController>();
-        replayUI.ConfigureDependencies(backendConfig, sequencer);
-        replayUI.InitializeUI();
+        _replayUI = GetComponent<TutorialReplayUIController>() ?? FindAnyObjectByType<TutorialReplayUIController>();
+        if (_replayUI == null)
+            _replayUI = gameObject.AddComponent<TutorialReplayUIController>();
+        _replayUI.ConfigureDependencies(backendConfig, sequencer);
+        _replayUI.PrepareUI(deferUntilReady: true);
 
         StartCoroutine(InitBattleOverlayRoutine());
     }
@@ -415,6 +416,9 @@ public class BattleTutorialStarter : MonoBehaviour
             controller.session.ownedReadyUnitIds != null &&
             controller.session.ownedReadyUnitIds.Count > 0);
 
+        if (_replayUI != null)
+            _replayUI.NotifySceneReady();
+
         if (!_hasPlotSteps || sequencer == null)
         {
             Debug.Log("[BattleTutorialStarter] Challenge mode (no blocking plots) — entering free tactical combat.");
@@ -467,6 +471,8 @@ public class BattleTutorialStarter : MonoBehaviour
 
         _outcomeHandled = true;
         TutorialContext.HasBattleEnded = true;
+        if (_replayUI != null)
+            _replayUI.Hide();
 
         if (sequencer != null)
             sequencer.StopAllCoroutines();
@@ -587,6 +593,9 @@ public class BattleTutorialStarter : MonoBehaviour
 
     private void ShowWinOverlay(string subtitle, int instantsUsed, int unitsLost)
     {
+        if (_replayUI != null)
+            _replayUI.Hide();
+
         if (controller != null && controller.Scene != null && controller.Scene.loadingScreen != null)
             controller.Scene.loadingScreen.Hide();
 
@@ -631,6 +640,9 @@ public class BattleTutorialStarter : MonoBehaviour
 
     private void ShowDefeatOverlay(string failReason, int instantsUsed, int unitsLost)
     {
+        if (_replayUI != null)
+            _replayUI.Hide();
+
         if (controller != null && controller.Scene != null && controller.Scene.loadingScreen != null)
             controller.Scene.loadingScreen.Hide();
 

@@ -27,7 +27,7 @@ public class C0_S4_Manager : MonoBehaviour
         if (replayUI == null)
             replayUI = gameObject.AddComponent<TutorialReplayUIController>();
         replayUI.ConfigureDependencies(config, sequencer);
-        replayUI.InitializeUI();
+        replayUI.PrepareUI(deferUntilReady: true);
 
         // Fetch first unit in team loadout (fallback to existing selection or first owned unit)
         yield return StartCoroutine(FetchFirstUnitId(unitId =>
@@ -41,6 +41,7 @@ public class C0_S4_Manager : MonoBehaviour
         yield return SceneManager.LoadSceneAsync("8_UnitConfig", LoadSceneMode.Additive);
         yield return null;
         yield return null;
+        replayUI.NotifySceneReady();
 
         bool done = false;
         sequencer.StartPlot(() => done = true);

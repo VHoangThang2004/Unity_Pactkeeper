@@ -33,7 +33,7 @@ public class StorySceneWithAdditiveManager : MonoBehaviour
         if (replayUI == null)
             replayUI = gameObject.AddComponent<TutorialReplayUIController>();
         replayUI.ConfigureDependencies(config, sequencer);
-        replayUI.InitializeUI();
+        replayUI.PrepareUI(deferUntilReady: true);
 
         // Load 3_MainMenu additively - player sees the real menu underneath
         yield return SceneManager.LoadSceneAsync(additiveSceneName, LoadSceneMode.Additive);
@@ -41,6 +41,7 @@ public class StorySceneWithAdditiveManager : MonoBehaviour
         // Wait a frame for all Awake/Start/OnEnable calls in 3_MainMenu to complete
         yield return null;
         yield return null;
+        replayUI.NotifySceneReady();
 
         // Start the tutorial plot
         bool done = false;

@@ -6,6 +6,8 @@ public class LoadingScreen : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private TextMeshProUGUI loadingText;
 
+    public bool IsVisible => panel != null && panel.activeInHierarchy;
+
     public void Show(string message = null)
     {
         if (panel != null) panel.SetActive(true);

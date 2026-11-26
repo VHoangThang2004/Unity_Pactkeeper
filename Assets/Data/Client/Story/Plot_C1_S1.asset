@@ -62,14 +62,8 @@ MonoBehaviour:
     delay: 0
     targetWaitTimeout: 10
   - type: 6
-    text: Left-click Guard! to arm the swap.
+    text: Left-click Guard! to arm the swap onto your wounded Warrior at (0, 0).
     tutorialTargetId: CSKILL
-    targetCell: {x: 0, y: 0}
-    delay: 0
-    targetWaitTimeout: 10
-  - type: 3
-    text: Target your wounded Warrior at (0, 0) to trade positions.
-    tutorialTargetId: 
     targetCell: {x: 0, y: 0}
     delay: 0
     targetWaitTimeout: 10

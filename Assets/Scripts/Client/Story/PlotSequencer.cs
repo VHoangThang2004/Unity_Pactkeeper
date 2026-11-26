@@ -890,35 +890,9 @@ public class PlotSequencer : MonoBehaviour
 
         btn.onClick.AddListener(() =>
         {
-            // Fire the actual cell click in the game
-            if (interactionSystem != null && interactionSystem.stateMachine != null)
-            {
-                // Guard: If state machine is not in UnitSelectedState, do not advance
-                if (interactionSystem.stateMachine.currentState is not UnitSelectedState)
-                {
-                    Debug.LogWarning($"[PlotSequencer] GuidedCellClick on {node.targetCell} ignored - StateMachine is in {interactionSystem.stateMachine.currentState?.GetType().Name}, not UnitSelectedState.");
-                    if (matchSession != null && matchSession.ownedReadyUnitIds != null && matchSession.ownedReadyUnitIds.Count > 0)
-                    {
-                        int uId = matchSession.selectedUnitId != -1 ? matchSession.selectedUnitId : matchSession.ownedReadyUnitIds[0];
-                        interactionSystem.stateMachine.GoToUnitSelected(uId);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-
-                var targetCell = new Vector3Int(node.targetCell.x, node.targetCell.y, 0);
-                interactionSystem.stateMachine.OnTileHover(targetCell);
-                interactionSystem.HandleTileClick(targetCell);
-                interactionSystem.stateMachine.OnTileHover(targetCell);
-
-                if (matchSession != null && (!matchSession.isTargetLocked || matchSession.currentPreviewCell.x != node.targetCell.x || matchSession.currentPreviewCell.y != node.targetCell.y))
-                {
-                    Debug.LogWarning($"[PlotSequencer] GuidedCellClick on {targetCell} failed to lock target - remaining on current step.");
-                    return;
-                }
-            }
+            if (!_waitingForInput) return;
+            Debug.Log($"[PlotSequencer] GuidedLeftClick: button click on target '{node.tutorialTargetId}'");
+            target.ExtendedButton?.onLeftClick?.Invoke();
             _waitingForInput = false;
         });
 
@@ -954,6 +928,18 @@ public class PlotSequencer : MonoBehaviour
         EnsureBattleReferences();
         HideAll();
         blockerPanel.SetActive(true);
+
+        // If UnitSelectedState.OnDecision already auto-locked this exact single-target cell
+        // (e.g. self-buff Trinket/Class skills or single-ally Guard!/Heal!/Triage!), advance directly to Confirm.
+        if (matchSession != null &&
+            matchSession.isTargetLocked &&
+            matchSession.currentPreviewCell.x == node.targetCell.x &&
+            matchSession.currentPreviewCell.y == node.targetCell.y)
+        {
+            Debug.Log($"[PlotSequencer] GuidedCellClick on {node.targetCell} already auto-locked — advancing directly.");
+            HideAll();
+            yield break;
+        }
 
         if (interactionSystem != null && interactionSystem.stateMachine != null &&
             interactionSystem.stateMachine.currentState is not UnitSelectedState &&

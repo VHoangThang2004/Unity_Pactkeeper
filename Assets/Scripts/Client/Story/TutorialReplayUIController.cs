@@ -1,26 +1,26 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
-using TMPro;
 
 /// <summary>
-/// Manages the conditional "Skip Scene" and "Exit to Map" buttons during Story Battle tutorials.
-/// Strictly hidden when the player has not yet completed the current chapter (!PlayerSession.CanSkipOrExitStory).
-/// Automatically builds its UI bar on TutorialCanvas if replayBarRoot is not manually assigned in Inspector.
+/// Manages the conditional "Skip Scene" and "Exit to Map" buttons during Story replays.
+/// Strictly hidden when:
+/// - The player has not yet completed the current chapter (!PlayerSession.CanSkipOrExitStory) or is auto-resumed,
+/// - The PvE / additive scene is still loading or connecting ("Connecting to server..." / LoadingScreen active),
+/// - The battle has ended (Victory / Defeat overlay active) or a scene transition is in progress.
+/// Instantiates Assets/Prefabs/UI/ReplayBarPrefab.prefab as its single UI source of truth.
 /// </summary>
 public class TutorialReplayUIController : MonoBehaviour
 {
-    [Header("Replay Bar UI References")]
-    [SerializeField] private GameObject replayBarRoot;
-    [SerializeField] private Button     skipSceneButton;
-    [SerializeField] private Button     exitToMapButton;
+    [Header("Replay Bar Prefab")]
+    [Tooltip("Prefab UI Canvas containing Skip Scene & Exit to Map buttons (Assets/Prefabs/UI/ReplayBarPrefab.prefab).")]
+    [SerializeField] private StoryReplayBarUI replayBarPrefab;
 
     [Header("Dependencies")]
-    [SerializeField] private BackendConfig  backendConfig;
-    [SerializeField] private PlotSequencer  sequencer;
-    [SerializeField] private string         storyProgressSceneName = "10_StoryProgress";
+    [SerializeField] private BackendConfig backendConfig;
+    [SerializeField] private PlotSequencer sequencer;
+    [SerializeField] private string storyProgressSceneName = "10_StoryProgress";
 
     [Header("Seamless Skip")]
     [Tooltip("When ON and the next scene is also a battle of the same chapter, Skip Scene keeps the current " +
@@ -28,11 +28,18 @@ public class TutorialReplayUIController : MonoBehaviour
              "BattleTutorialStarter then calls AdvanceTutorialPhaseServerRpc(sceneId, forceCleanReset: true) " +
              "so the server reloads the StoryEncounterConfig in place (no new headless process). " +
              "Turn OFF to always spawn a fresh server per scene.")]
-    [SerializeField] private bool   seamlessSkip = false;
+    [SerializeField] private bool seamlessSkip = false;
     [SerializeField] private string battleSceneName = "5_ClientMatch";
+
+    private StoryReplayBarUI _replayBarInstance;
+    private LoadingScreen _cachedLoadingScreen;
+    private ClientController _cachedController;
 
     private bool _isTransitioning = false;
     private bool _initialized = false;
+    private bool _deferUntilReady = false;
+    private bool _sceneReady = false;
+    private bool _forceHidden = false;
 
     /// <summary>
     /// Replay controls are only legal when the player started this scene manually from the Story Map
@@ -50,25 +57,80 @@ public class TutorialReplayUIController : MonoBehaviour
             sequencer = plotSequencer;
     }
 
+    void Awake()
+    {
+        // Any scene driven by BattleTutorialStarter must wait until server connection & loading screen finish.
+        if (GetComponent<BattleTutorialStarter>() != null)
+            _deferUntilReady = true;
+    }
+
     void Start()
     {
         InitializeUI();
     }
 
+    void OnDestroy()
+    {
+        if (_replayBarInstance != null)
+            Destroy(_replayBarInstance.gameObject);
+    }
+
+    void LateUpdate()
+    {
+        if (_replayBarInstance == null) return;
+        RefreshVisibility();
+    }
+
+    /// <summary>
+    /// Prepares the Replay Bar prefab while optionally keeping it hidden until NotifySceneReady() is called
+    /// (used by PvE Battle scenes and additive UI tutorial scenes so buttons never float over loading screens).
+    /// </summary>
+    public void PrepareUI(bool deferUntilReady)
+    {
+        if (deferUntilReady)
+        {
+            _deferUntilReady = true;
+            _sceneReady = false;
+        }
+        InitializeUI();
+        RefreshVisibility();
+    }
+
+    public void NotifySceneReady()
+    {
+        _sceneReady = true;
+        _forceHidden = false;
+        InitializeUI();
+        RefreshVisibility();
+    }
+
+    public void Hide()
+    {
+        _forceHidden = true;
+        RefreshVisibility();
+    }
+
     public void InitializeUI()
     {
-        if (_initialized) return;
+        if (_initialized)
+        {
+            RefreshVisibility();
+            return;
+        }
         _initialized = true;
+
+        if (!_deferUntilReady)
+            _sceneReady = true;
 
         if (sequencer == null)
             sequencer = FindAnyObjectByType<PlotSequencer>();
 
-        bool canShow = ReplayControlsAllowed;
+        if (!ReplayControlsAllowed)
+            return;
 
-        if (!canShow)
+        if (replayBarPrefab == null)
         {
-            if (replayBarRoot != null)
-                replayBarRoot.SetActive(false);
+            Debug.LogWarning("[TutorialReplayUI] replayBarPrefab is not assigned! Assign Assets/Prefabs/UI/ReplayBarPrefab.prefab in Inspector.");
             return;
         }
 
@@ -77,111 +139,48 @@ public class TutorialReplayUIController : MonoBehaviour
         TryParseActiveScene(ref chapterId, ref currentSceneId);
         bool hasNextBattleInChapter = HasNextBattleSceneInChapter(chapterId, currentSceneId);
 
-        if (replayBarRoot == null)
-            BuildRuntimeReplayBar();
-
-        if (skipSceneButton != null)
-        {
-            skipSceneButton.onClick.RemoveAllListeners();
-            skipSceneButton.onClick.AddListener(OnSkipSceneClicked);
-            skipSceneButton.gameObject.SetActive(hasNextBattleInChapter);
-        }
-
-        if (exitToMapButton != null)
-        {
-            exitToMapButton.onClick.RemoveAllListeners();
-            exitToMapButton.onClick.AddListener(OnExitToMapClicked);
-        }
-
-        if (replayBarRoot != null)
-        {
-            ApplyReplayBarLayout(replayBarRoot.GetComponent<RectTransform>(), hasNextBattleInChapter);
-            replayBarRoot.SetActive(true);
-        }
+        _replayBarInstance = Instantiate(replayBarPrefab);
+        _replayBarInstance.Configure(hasNextBattleInChapter, OnSkipSceneClicked, OnExitToMapClicked);
+        RefreshVisibility();
     }
 
-    private void BuildRuntimeReplayBar()
+    private void RefreshVisibility()
     {
-        Transform parentTransform = null;
-        if (sequencer != null && sequencer.TextBoxPanel != null)
-            parentTransform = sequencer.TextBoxPanel.transform.parent;
+        if (_replayBarInstance == null) return;
 
-        if (parentTransform == null)
+        bool shouldShow =
+            ReplayControlsAllowed &&
+            _sceneReady &&
+            !_forceHidden &&
+            !_isTransitioning &&
+            !TutorialContext.HasBattleEnded &&
+            !IsLoadingInProgress();
+
+        _replayBarInstance.SetVisible(shouldShow);
+    }
+
+    private bool IsLoadingInProgress()
+    {
+        if (_cachedController == null && _deferUntilReady)
+            _cachedController = FindAnyObjectByType<ClientController>();
+
+        if (_cachedController != null)
         {
-            var tutorialCanvasObj = GameObject.Find("TutorialCanvas");
-            if (tutorialCanvasObj != null)
-                parentTransform = tutorialCanvasObj.transform;
+            if (_cachedController.IsConnecting || !_cachedController.IsMatchReady)
+                return true;
+
+            if (_cachedController.Scene != null &&
+                _cachedController.Scene.loadingScreen != null &&
+                _cachedController.Scene.loadingScreen.IsVisible)
+            {
+                return true;
+            }
         }
 
-        if (parentTransform == null)
-            return;
+        if (_cachedLoadingScreen == null)
+            _cachedLoadingScreen = FindAnyObjectByType<LoadingScreen>();
 
-        replayBarRoot = new GameObject("ReplayBarRoot", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Canvas), typeof(GraphicRaycaster), typeof(HorizontalLayoutGroup));
-        replayBarRoot.transform.SetParent(parentTransform, false);
-
-        var rect = replayBarRoot.GetComponent<RectTransform>();
-        ApplyReplayBarLayout(rect);
-
-        var bg = replayBarRoot.GetComponent<Image>();
-        bg.color = new Color(0.08f, 0.08f, 0.08f, 0.82f);
-
-        var subCanvas = replayBarRoot.GetComponent<Canvas>();
-        subCanvas.overrideSorting = true;
-        subCanvas.sortingOrder = 1020;
-
-        var hlg = replayBarRoot.GetComponent<HorizontalLayoutGroup>();
-        hlg.padding = new RectOffset(10, 10, 8, 8);
-        hlg.spacing = 12f;
-        hlg.childAlignment = TextAnchor.MiddleCenter;
-        hlg.childControlWidth = true;
-        hlg.childControlHeight = true;
-        hlg.childForceExpandWidth = true;
-        hlg.childForceExpandHeight = true;
-
-        skipSceneButton = CreateActionButton(replayBarRoot.transform, "SkipSceneButton", "Skip Scene", new Color(0.28f, 0.24f, 0.14f, 0.96f));
-        exitToMapButton = CreateActionButton(replayBarRoot.transform, "ExitToMapButton", "Exit to Map", new Color(0.42f, 0.16f, 0.14f, 0.96f));
-    }
-
-    private static void ApplyReplayBarLayout(RectTransform rect, bool hasSkipButton = true)
-    {
-        if (rect == null) return;
-        // Positioned on the right side directly below the "Your turn" / "Time is flowing" hanging sign
-        rect.anchorMin = new Vector2(1f, 1f);
-        rect.anchorMax = new Vector2(1f, 1f);
-        rect.pivot = new Vector2(1f, 1f);
-        rect.anchoredPosition = new Vector2(-24f, -215f);
-        rect.sizeDelta = new Vector2(hasSkipButton ? 380f : 190f, 60f);
-    }
-
-    private static Button CreateActionButton(Transform parent, string objectName, string labelText, Color bgColor)
-    {
-        var btnObj = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
-        btnObj.transform.SetParent(parent, false);
-
-        var img = btnObj.GetComponent<Image>();
-        img.color = bgColor;
-
-        var btn = btnObj.GetComponent<Button>();
-        btn.targetGraphic = img;
-
-        var textObj = new GameObject("Text (TMP)", typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
-        textObj.transform.SetParent(btnObj.transform, false);
-
-        var textRect = textObj.GetComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = new Vector2(6f, 4f);
-        textRect.offsetMax = new Vector2(-6f, -4f);
-
-        var tmp = textObj.GetComponent<TextMeshProUGUI>();
-        tmp.text = labelText;
-        tmp.fontSize = 20f;
-        tmp.fontStyle = FontStyles.Bold;
-        tmp.alignment = TextAlignmentOptions.Center;
-        tmp.color = Color.white;
-        tmp.raycastTarget = false;
-
-        return btn;
+        return _cachedLoadingScreen != null && _cachedLoadingScreen.IsVisible;
     }
 
     public void OnSkipSceneClicked()
@@ -200,6 +199,7 @@ public class TutorialReplayUIController : MonoBehaviour
     {
         _isTransitioning = true;
         SetButtonsInteractable(false);
+        RefreshVisibility();
 
         // Keep TutorialContext.IsActive = true while shutting down NetworkManager and terminating the old server
         // so ClientMenuReturner.OnDisconnected does not hijack the disconnect and load 6_MatchResult -> 3_MainMenu!
@@ -287,7 +287,6 @@ public class TutorialReplayUIController : MonoBehaviour
 
         var battleScene = SceneManager.GetSceneByName(battleSceneName);
         var currentScene = SceneManager.GetSceneByName(currentUnitySceneName);
-        // Only valid when the story scene is an additive overlay on top of the shared battle scene.
         if (!battleScene.isLoaded || !currentScene.isLoaded) return false;
 
         var controller = FindAnyObjectByType<ClientController>();
@@ -311,15 +310,12 @@ public class TutorialReplayUIController : MonoBehaviour
 
         private IEnumerator Swap(string currentSceneName, string nextSceneName, Scene battleScene)
         {
-            // An active scene must always exist: park it on the battle scene while the overlay is replaced.
             SceneManager.SetActiveScene(battleScene);
 
             var currentScene = SceneManager.GetSceneByName(currentSceneName);
             if (currentScene.isLoaded)
                 yield return SceneManager.UnloadSceneAsync(currentScene);
 
-            // sceneLoaded fires after Awake/OnEnable but before Start, so BattleTutorialStarter.Start sees the
-            // correct active scene name when it prefixes TutorialTarget ids (e.g. "C1S3_WSKILL").
             UnityEngine.Events.UnityAction<Scene, LoadSceneMode> onLoaded = (s, m) =>
             {
                 if (s.name == nextSceneName) SceneManager.SetActiveScene(s);
@@ -336,6 +332,7 @@ public class TutorialReplayUIController : MonoBehaviour
     {
         _isTransitioning = true;
         SetButtonsInteractable(false);
+        RefreshVisibility();
 
         // Keep TutorialContext.IsActive = true while shutting down NetworkManager and terminating the server
         // so ClientMenuReturner.OnDisconnected does not hijack the disconnect and load 6_MatchResult -> 3_MainMenu!
@@ -363,8 +360,8 @@ public class TutorialReplayUIController : MonoBehaviour
 
     private void SetButtonsInteractable(bool interactable)
     {
-        if (skipSceneButton != null) skipSceneButton.interactable = interactable;
-        if (exitToMapButton != null) exitToMapButton.interactable = interactable;
+        if (_replayBarInstance != null)
+            _replayBarInstance.SetButtonsInteractable(interactable);
     }
 
     private static void TryParseActiveScene(ref int chapterId, ref int sceneId)
@@ -399,6 +396,7 @@ public class TutorialReplayUIController : MonoBehaviour
             1 => sceneId >= 1 && sceneId <= 3,
             2 => sceneId >= 1 && sceneId <= 2,
             3 => sceneId >= 1 && sceneId <= 2,
+            4 => sceneId == 1,
             _ => false
         };
     }

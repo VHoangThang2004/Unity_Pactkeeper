@@ -100,6 +100,13 @@ public class ClientUnit : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             //emergency sync: stop all animations and starts brute sync
             //sync only once, so that the resolve from other place can take place smoothly and uninterrupted
+            if (session == null || scene == null || scene.movableTilemap == null)
+                continue;
+
+            UnitData currentData = session.GetUnitDataById(unitId);
+            if (currentData == null)
+                continue; // Unit was killed/removed from session snapshot; wait cleanly until ClientSpawner destroys this GameObject
+
             if (session.SyncState != SyncStateValue.Idle)
             {
                 if (!isAtBeforeSnapshot)
@@ -113,7 +120,7 @@ public class ClientUnit : MonoBehaviour
 
             isAtBeforeSnapshot = false; //gets here means syncing completed, flip this back so it can be reused in future syncs
             Vector3Int currentCellFromTransform = scene.movableTilemap.WorldToCell(transform.position);
-            if (currentCellFromTransform != session.GetUnitDataById(unitId).CurrentCell)
+            if (currentCellFromTransform != currentData.CurrentCell)
             {
                 SyncPositionToCurrentSession();
             }
@@ -148,7 +155,10 @@ public class ClientUnit : MonoBehaviour
 
     public void SyncPositionToCurrentSession()
     {
-        transform.position = scene.movableTilemap.GetCellCenterWorld(session.GetUnitDataById(unitId).CurrentCell);
+        if (session == null || scene == null || scene.movableTilemap == null) return;
+        UnitData data = session.GetUnitDataById(unitId);
+        if (data == null) return;
+        transform.position = scene.movableTilemap.GetCellCenterWorld(data.CurrentCell);
     }
     public void SyncPositionToTarget(Vector3Int cell)
     {

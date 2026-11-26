@@ -33,7 +33,7 @@ public class C0_S5_Manager : MonoBehaviour
         if (replayUI == null)
             replayUI = gameObject.AddComponent<TutorialReplayUIController>();
         replayUI.ConfigureDependencies(config, sequencer);
-        replayUI.InitializeUI();
+        replayUI.PrepareUI(deferUntilReady: true);
 
         // Load 7_UnitList additively - player sees the real unit list underneath
         yield return SceneManager.LoadSceneAsync(additiveSceneName, LoadSceneMode.Additive);
@@ -41,6 +41,7 @@ public class C0_S5_Manager : MonoBehaviour
         // Wait a frame for all Awake/Start/OnEnable calls in 7_UnitList to complete
         yield return null;
         yield return null;
+        replayUI.NotifySceneReady();
 
         // Start the tutorial plot
         bool done = false;
