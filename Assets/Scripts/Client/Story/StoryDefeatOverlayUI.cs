@@ -20,6 +20,14 @@ public class StoryDefeatOverlayUI : MonoBehaviour
     [SerializeField] private Button retryButton;
     [SerializeField] private Button exitButton;
 
+    [Header("Entrance")]
+    [SerializeField] private RectTransform resultContentPanel;
+    [SerializeField] private RectTransform winLoseImage;
+    [SerializeField] private float slideDistance = 700f;
+    [SerializeField] private float slideDuration = 0.45f;
+
+    Coroutine entrance;
+
     public void Show(
         string failReason,
         int instantsUsed,
@@ -31,6 +39,9 @@ public class StoryDefeatOverlayUI : MonoBehaviour
         int maxAllyDeathsAllowed = -1)
     {
         gameObject.SetActive(true);
+        if (entrance != null)
+            StopCoroutine(entrance);
+        entrance = StartCoroutine(ResultEntrance.Play(resultContentPanel, winLoseImage, slideDistance, slideDuration));
 
         if (titleText != null && string.IsNullOrEmpty(titleText.text))
             titleText.text = "DEFEAT";

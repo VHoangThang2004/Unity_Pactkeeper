@@ -13,6 +13,8 @@ public class GachaManager : MonoBehaviour
     [SerializeField] public BackendConfig clientBackendConfig;
     [SerializeField] public UnitPrefabRegistry unitPrefabRegistry;
     [SerializeField] public ClassDefinitionRegistry classLibrary;
+    [SerializeField] public SkillLibrary skillLibrary;
+    [SerializeField] public ClientEffectRegistry effectRegistry;
     [SerializeField] public WeaponDefinitionRegistry weaponRegistry;
     [SerializeField] public TrinketDefinitionRegistry trinketRegistry;
 
@@ -51,6 +53,14 @@ public class GachaManager : MonoBehaviour
     [Tooltip("Prefab UnitGachaPrefab mới dùng cho gacha results. Nếu để null sẽ fallback về unitContainerPrefab cũ.")]
     [SerializeField] public GameObject unitGachaPrefab;
 
+    [Header("Chest Animation")]
+    [SerializeField] private GachaChestAnimator chestAnimator;
+
+    [Header("Preview")]
+    [SerializeField] private GameObject previewPanel;
+    [SerializeField] private Button previewButton;
+    [SerializeField] private Transform previewContainer;
+
     [Header("Error Popup (Wired in Editor)")]
     [SerializeField] public GameObject errorPanel;
     [SerializeField] public TMP_Text errorText;
@@ -66,6 +76,11 @@ public class GachaManager : MonoBehaviour
 
     private List<WeaponDefinitionDto> weaponDefinitions = new List<WeaponDefinitionDto>();
     private List<TrinketDefinitionDto> trinketDefinitions = new List<TrinketDefinitionDto>();
+    private List<PreviewUnitDto> unitCatalog = new List<PreviewUnitDto>();
+    private List<PreviewClassDto> classCatalog = new List<PreviewClassDto>();
+    private GameObject unitDetailPanel;
+    private Image unitDetailPortrait;
+    private TextMeshProUGUI unitDetailBody;
 
     void Start()
     {
@@ -75,6 +90,8 @@ public class GachaManager : MonoBehaviour
         if (weaponRegistry != null) weaponRegistry.Init();
         if (trinketRegistry != null) trinketRegistry.Init();
         if (bannerRegistry != null) bannerRegistry.Init();
+        if (skillLibrary != null) skillLibrary.Init();
+        if (effectRegistry != null) effectRegistry.Init();
 
         // Try to capture font asset from the scene
         var existingText = FindAnyObjectByType<TMP_Text>();
@@ -82,6 +99,11 @@ public class GachaManager : MonoBehaviour
 
         // Setup UI panels dynamically as a fallback if not wired in Inspector
         SetupFallbacksIfNeeded();
+        EnsureChestAnimator();
+        if (previewPanel != null)
+            previewPanel.SetActive(false);
+        if (previewButton != null)
+            previewButton.onClick.AddListener(OnClickPreview);
 
         // Start initialization sequence
         StartCoroutine(InitSequence());
@@ -147,6 +169,7 @@ public class GachaManager : MonoBehaviour
 
         // 1. Fetch Weapon and Trinket definitions from the backend catalog
         yield return StartCoroutine(FetchCatalogDefinitions());
+        yield return StartCoroutine(FetchUnitCatalog());
 
         // 2. Fetch Player Profile to render starting gems balance
         yield return StartCoroutine(FetchPlayerProfile());
@@ -354,6 +377,305 @@ public class GachaManager : MonoBehaviour
                 }
             }
         }
+
+        if (previewPanel != null && previewPanel.activeSelf)
+            ShowPreviewUnits();
+    }
+
+    public void OnClickPreview()
+    {
+        if (previewPanel == null || selectedBanner == null)
+            return;
+        bool show = !previewPanel.activeSelf;
+        previewPanel.SetActive(show);
+        if (show)
+            ShowPreviewUnits();
+    }
+
+    void ShowPreviewUnits()
+    {
+        if (previewContainer == null || selectedBanner == null || selectedBanner.items == null)
+            return;
+
+        foreach (Transform child in previewContainer)
+            Destroy(child.gameObject);
+
+        bool limited = false;
+        var units = new List<BannerItemDto>();
+        var seen = new HashSet<int>();
+        foreach (BannerItemDto item in selectedBanner.items)
+        {
+            if (item == null || item.reward == null || item.reward.type != "Unit")
+                continue;
+            if (!seen.Add(item.reward.definitionId))
+                continue;
+            if (item.isFeatured)
+                limited = true;
+            units.Add(item);
+        }
+
+        GameObject prefab = unitGachaPrefab != null ? unitGachaPrefab : unitContainerPrefab;
+        if (prefab == null)
+            return;
+
+        foreach (BannerItemDto item in units)
+        {
+            if (limited && !item.isFeatured)
+                continue;
+
+            GameObject cardGo = Instantiate(prefab, previewContainer);
+            UnitGachaPrefab card = cardGo.GetComponent<UnitGachaPrefab>();
+            if (card != null)
+            {
+                card.Setup(
+                    GetRewardIcon(item.reward),
+                    GetRewardName(item.reward),
+                    UnitGachaPrefab.TierFromRewardType(item.reward.type),
+                    false);
+            }
+
+            Button button = cardGo.GetComponent<Button>();
+            if (button == null)
+                button = cardGo.GetComponentInChildren<Button>();
+            if (button == null)
+                button = cardGo.AddComponent<Button>();
+            int unitId = item.reward.definitionId;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => ShowUnitDetail(unitId));
+        }
+
+        StartCoroutine(ResetPreviewScroll());
+    }
+
+    IEnumerator ResetPreviewScroll()
+    {
+        yield return null;
+        RectTransform content = previewContainer as RectTransform;
+        if (content != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(content);
+        ScrollRect scroll = previewPanel != null ? previewPanel.GetComponent<ScrollRect>() : null;
+        if (scroll != null)
+            scroll.horizontalNormalizedPosition = 0f;
+    }
+
+    IEnumerator FetchUnitCatalog()
+    {
+        using (var request = UnityWebRequest.Get($"{clientBackendConfig.backendUrl}/api/UnitDefinition"))
+        {
+            clientBackendConfig.SetHeaders(request, PlayerSession.Token);
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                var wrapped = JsonUtility.FromJson<PreviewUnitListDto>("{\"items\":" + request.downloadHandler.text + "}");
+                unitCatalog = wrapped != null && wrapped.items != null
+                    ? new List<PreviewUnitDto>(wrapped.items)
+                    : new List<PreviewUnitDto>();
+            }
+            else
+                Debug.LogError($"[Gacha] Unit catalog failed: {request.error}");
+        }
+
+        using (var request = UnityWebRequest.Get($"{clientBackendConfig.backendUrl}/api/ClassDefinition"))
+        {
+            clientBackendConfig.SetHeaders(request, PlayerSession.Token);
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                var wrapped = JsonUtility.FromJson<PreviewClassListDto>("{\"items\":" + request.downloadHandler.text + "}");
+                classCatalog = wrapped != null && wrapped.items != null
+                    ? new List<PreviewClassDto>(wrapped.items)
+                    : new List<PreviewClassDto>();
+            }
+            else
+                Debug.LogError($"[Gacha] Class catalog failed: {request.error}");
+        }
+    }
+
+    void ShowUnitDetail(int unitId)
+    {
+        EnsureUnitDetailPanel();
+        PreviewUnitDto unit = unitCatalog.Find(u => u.uId == unitId);
+        PreviewClassDto unitClass = null;
+        if (unit != null && unit.classIds != null && unit.classIds.Length > 0)
+            unitClass = classCatalog.Find(c => c.classId == unit.classIds[0]);
+
+        PreviewGradeStatsDto stats = null;
+        if (unit != null && unit.statsByGrade != null)
+        {
+            foreach (PreviewGradeStatsDto entry in unit.statsByGrade)
+            {
+                if (entry != null && entry.grade == 1)
+                    stats = entry;
+            }
+            if (stats == null && unit.statsByGrade.Length > 0)
+                stats = unit.statsByGrade[0];
+        }
+
+        string className = unitClass != null && !string.IsNullOrEmpty(unitClass.name) ? unitClass.name : "-";
+        SkillDefinition roleSkill = unitClass != null && skillLibrary != null ? skillLibrary.Get(unitClass.classSkillId) : null;
+        string role = roleSkill != null ? roleSkill.skillName : className;
+        SkillDefinition passive = unit != null && skillLibrary != null ? skillLibrary.Get(unit.passiveSkillId) : null;
+        string passiveName = passive != null ? passive.skillName : "-";
+        string passiveText = passive != null ? passive.description ?? "" : "";
+        if (passive != null && effectRegistry != null)
+        {
+            var statUnit = new UnitData
+            {
+                MaxHP = stats != null ? stats.maxHP : 0,
+                MaxSkillPoint = stats != null ? stats.maxSkillPoint : 0,
+                Speed = stats != null ? stats.speed : 0,
+                DamageMultiplier = stats != null ? stats.damageMultiplier : 100,
+                DamageReduction = stats != null ? stats.damageReduction : 0
+            };
+            string effects = effectRegistry.Describe(passive.effectIds, statUnit);
+            if (!string.IsNullOrEmpty(effects))
+                passiveText = (passiveText + "\n" + effects).Trim();
+        }
+
+        string statsText = stats == null
+            ? "-"
+            : Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.HpFormat, stats.maxHP) + "\n"
+              + Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.SpFormat, stats.maxSkillPoint) + "\n"
+              + Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.SpeedFormat, stats.speed) + "\n"
+              + Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.DmgPercentFormat, stats.damageMultiplier) + "\n"
+              + Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.DmgReductionFormat, stats.damageReduction);
+
+        if (unitDetailPortrait != null)
+        {
+            Sprite portrait = unit != null ? GetRewardIcon(new RewardDto { type = "Unit", definitionId = unit.uId }) : null;
+            unitDetailPortrait.sprite = portrait;
+            unitDetailPortrait.color = portrait != null ? Color.white : new Color(1f, 1f, 1f, 0f);
+        }
+        if (unitDetailBody != null)
+        {
+            string title = unit != null && !string.IsNullOrEmpty(unit.unitName) ? unit.unitName : GetRewardName(new RewardDto { type = "Unit", definitionId = unitId });
+            unitDetailBody.text =
+                title + "\n\n"
+                + statsText + "\n\n"
+                + "Class: " + className + "\n"
+                + "Role: " + role + "\n\n"
+                + "Passive: " + passiveName + "\n"
+                + passiveText;
+        }
+        unitDetailPanel.SetActive(true);
+        unitDetailPanel.transform.SetAsLastSibling();
+    }
+
+    void EnsureUnitDetailPanel()
+    {
+        if (unitDetailPanel != null)
+            return;
+
+        Transform parent = previewPanel != null ? previewPanel.transform.parent : transform;
+        unitDetailPanel = new GameObject("UnitPreviewDetail", typeof(RectTransform));
+        RectTransform root = unitDetailPanel.GetComponent<RectTransform>();
+        root.SetParent(parent, false);
+        root.anchorMin = Vector2.zero;
+        root.anchorMax = Vector2.one;
+        root.offsetMin = Vector2.zero;
+        root.offsetMax = Vector2.zero;
+
+        Image dim = CreatePreviewImage(root, "Dim", new Color(0f, 0f, 0f, 0.65f));
+        StretchPreview(dim.rectTransform);
+        Button dimButton = dim.gameObject.AddComponent<Button>();
+        dimButton.onClick.AddListener(() => unitDetailPanel.SetActive(false));
+
+        RectTransform card = new GameObject("Card", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<RectTransform>();
+        card.SetParent(root, false);
+        card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
+        card.sizeDelta = new Vector2(720f, 820f);
+        card.GetComponent<Image>().color = new Color(0.16f, 0.12f, 0.1f, 0.96f);
+
+        unitDetailPortrait = CreatePreviewImage(card, "Portrait", Color.white);
+        RectTransform portraitRect = unitDetailPortrait.rectTransform;
+        portraitRect.anchorMin = portraitRect.anchorMax = new Vector2(0.5f, 1f);
+        portraitRect.pivot = new Vector2(0.5f, 1f);
+        portraitRect.anchoredPosition = new Vector2(0f, -28f);
+        portraitRect.sizeDelta = new Vector2(180f, 180f);
+        unitDetailPortrait.preserveAspect = true;
+
+        RectTransform bodyRect = new GameObject("Body", typeof(RectTransform)).GetComponent<RectTransform>();
+        bodyRect.SetParent(card, false);
+        bodyRect.anchorMin = Vector2.zero;
+        bodyRect.anchorMax = Vector2.one;
+        bodyRect.offsetMin = new Vector2(36f, 36f);
+        bodyRect.offsetMax = new Vector2(-36f, -230f);
+        unitDetailBody = bodyRect.gameObject.AddComponent<TextMeshProUGUI>();
+        unitDetailBody.fontSize = 26f;
+        unitDetailBody.alignment = TextAlignmentOptions.TopLeft;
+        unitDetailBody.color = Color.white;
+        unitDetailBody.enableWordWrapping = true;
+        if (gameFont != null)
+            unitDetailBody.font = gameFont;
+
+        unitDetailPanel.SetActive(false);
+    }
+
+    static Image CreatePreviewImage(RectTransform parent, string name, Color color)
+    {
+        var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        var rect = go.GetComponent<RectTransform>();
+        rect.SetParent(parent, false);
+        Image image = go.GetComponent<Image>();
+        image.sprite = PreviewWhiteSprite();
+        image.color = color;
+        return image;
+    }
+
+    static Sprite previewWhite;
+
+    static Sprite PreviewWhiteSprite()
+    {
+        if (previewWhite == null)
+        {
+            Texture2D tex = Texture2D.whiteTexture;
+            previewWhite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
+        }
+        return previewWhite;
+    }
+
+    static void StretchPreview(RectTransform rect)
+    {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+    }
+
+    [System.Serializable]
+    class PreviewUnitListDto { public PreviewUnitDto[] items; }
+
+    [System.Serializable]
+    class PreviewUnitDto
+    {
+        public int uId;
+        public string unitName;
+        public int passiveSkillId;
+        public int[] classIds;
+        public PreviewGradeStatsDto[] statsByGrade;
+    }
+
+    [System.Serializable]
+    class PreviewGradeStatsDto
+    {
+        public int grade;
+        public int maxHP;
+        public int maxSkillPoint;
+        public int speed;
+        public int damageMultiplier;
+        public int damageReduction;
+    }
+
+    [System.Serializable]
+    class PreviewClassListDto { public PreviewClassDto[] items; }
+
+    [System.Serializable]
+    class PreviewClassDto
+    {
+        public int classId;
+        public string name;
+        public int movementSkillId;
+        public int classSkillId;
     }
 
 
@@ -434,6 +756,7 @@ public class GachaManager : MonoBehaviour
 
     IEnumerator SendPullRequest(string pullType)
     {
+        SetRollButtons(false);
         loadingScreen?.Show("Summoning...");
 
         var dto = new GachaPullRequestDto { bannerId = selectedBanner.id, pullType = pullType };
@@ -464,13 +787,53 @@ public class GachaManager : MonoBehaviour
                 
                 Debug.LogError($"[Gacha] Pull failed: {request.error} | Response: {request.downloadHandler.text}");
                 ShowErrorPopup(errMsg);
+                SetRollButtons(true);
                 yield break;
             }
 
             var response = JsonUtility.FromJson<GachaPullResponseDto>(request.downloadHandler.text);
             UpdateGemsDisplay(response.gemsRemaining);
-            DisplayRollResults(response.results);
+            int tier = HighestRewardTier(response.results);
+            if (chestAnimator != null && !chestAnimator.Skip)
+                yield return chestAnimator.PlayAndReveal(tier, () => DisplayRollResults(response.results));
+            else
+                DisplayRollResults(response.results);
+            SetRollButtons(true);
         }
+    }
+
+    void SetRollButtons(bool interactable)
+    {
+        if (roll1Button != null)
+            roll1Button.interactable = interactable;
+        if (roll10Button != null)
+            roll10Button.interactable = interactable;
+    }
+
+    void EnsureChestAnimator()
+    {
+        if (chestAnimator == null)
+            chestAnimator = GetComponent<GachaChestAnimator>();
+        if (chestAnimator == null)
+            chestAnimator = gameObject.AddComponent<GachaChestAnimator>();
+
+        Canvas canvas = roll1Button != null ? roll1Button.GetComponentInParent<Canvas>() : null;
+        if (canvas != null)
+            chestAnimator.Ensure(canvas.transform as RectTransform);
+    }
+
+    static int HighestRewardTier(GachaPullResultItemDto[] results)
+    {
+        int tier = 0;
+        if (results == null)
+            return tier;
+        foreach (GachaPullResultItemDto item in results)
+        {
+            if (item == null || item.reward == null)
+                continue;
+            tier = Mathf.Max(tier, UnitGachaPrefab.TierFromRewardType(item.reward.type));
+        }
+        return tier;
     }
 
     [System.Serializable]

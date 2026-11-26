@@ -1,0 +1,1417 @@
+fileFormatVersion: 2
+guid: 8af555f0b6bb4584d8c4a21dab7f5f0e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6179199154185553390
+    second: Chest_Overlay_0
+  - first:
+      213: -4485574270798353271
+    second: Chest_Overlay_1
+  - first:
+      213: -6492203465585206858
+    second: Chest_Overlay_2
+  - first:
+      213: -973535236537820035
+    second: Chest_Overlay_3
+  - first:
+      213: -1690385963733223773
+    second: Chest_Overlay_4
+  - first:
+      213: 3510653956519199451
+    second: Chest_Overlay_5
+  - first:
+      213: 1786289716291757192
+    second: Chest_Overlay_6
+  - first:
+      213: -6715482841417966597
+    second: Chest_Overlay_7
+  - first:
+      213: 7274397942755659268
+    second: Chest_Overlay_8
+  - first:
+      213: -8810485207938267137
+    second: Chest_Overlay_9
+  - first:
+      213: 5385277962020807672
+    second: Chest_Overlay_10
+  - first:
+      213: -4437369947166838354
+    second: Chest_Overlay_11
+  - first:
+      213: 2267195367960648306
+    second: Chest_Overlay_12
+  - first:
+      213: -1292887955453177356
+    second: Chest_Overlay_13
+  - first:
+      213: -9220676250678548404
+    second: Chest_Overlay_14
+  - first:
+      213: -7115261041614051139
+    second: Chest_Overlay_15
+  - first:
+      213: -7530871141114880677
+    second: Chest_Overlay_16
+  - first:
+      213: 5202025992912869323
+    second: Chest_Overlay_17
+  - first:
+      213: 1902908957742821401
+    second: Chest_Overlay_18
+  - first:
+      213: 3594179388559930139
+    second: Chest_Overlay_19
+  - first:
+      213: 4935925934636558856
+    second: Chest_Overlay_20
+  - first:
+      213: 1219294475269392858
+    second: Chest_Overlay_21
+  - first:
+      213: 8730719392188343203
+    second: Chest_Overlay_22
+  - first:
+      213: -7037206134549123753
+    second: Chest_Overlay_23
+  - first:
+      213: 530053827967023990
+    second: Chest_Overlay_24
+  - first:
+      213: -686499513745888287
+    second: Chest_Overlay_25
+  - first:
+      213: 2196506776002295015
+    second: Chest_Overlay_26
+  - first:
+      213: -7844721565832480614
+    second: Chest_Overlay_27
+  - first:
+      213: 1898234107281130385
+    second: Chest_Overlay_28
+  - first:
+      213: 5720790445618050162
+    second: Chest_Overlay_29
+  - first:
+      213: -4493522715971066635
+    second: Chest_Overlay_30
+  - first:
+      213: 5395291402679398592
+    second: Chest_Overlay_31
+  - first:
+      213: 7256098898353644295
+    second: Chest_Overlay_32
+  - first:
+      213: -1137734696990854039
+    second: Chest_Overlay_33
+  - first:
+      213: 3560147856198726094
+    second: Chest_Overlay_34
+  - first:
+      213: 7187021658888087323
+    second: Chest_Overlay_35
+  - first:
+      213: -3477027164662774428
+    second: Chest_Overlay_36
+  - first:
+      213: 5624107081887187888
+    second: Chest_Overlay_37
+  - first:
+      213: -6312490965946753346
+    second: Chest_Overlay_38
+  - first:
+      213: -6955922818377498380
+    second: Chest_Overlay_39
+  - first:
+      213: 214151437056716740
+    second: Chest_Overlay_40
+  - first:
+      213: 560096695678873794
+    second: Chest_Overlay_41
+  - first:
+      213: 8412154888870423696
+    second: Chest_Overlay_42
+  - first:
+      213: -3968123886283248318
+    second: Chest_Overlay_43
+  - first:
+      213: -9193574708951273760
+    second: Chest_Overlay_44
+  - first:
+      213: 6669902786280057337
+    second: Chest_Overlay_45
+  - first:
+      213: 7474754170665860050
+    second: Chest_Overlay_46
+  - first:
+      213: -3985195859720001924
+    second: Chest_Overlay_47
+  - first:
+      213: -6472717388178880122
+    second: Chest_Overlay_48
+  - first:
+      213: 1825064892208036357
+    second: Chest_Overlay_49
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Chest_Overlay_0
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 933
+        width: 738
+        height: 521
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee5cf9554ece0c550800000000000000
+      internalID: 6179199154185553390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_1
+      rect:
+        serializedVersion: 2
+        x: 807
+        y: 933
+        width: 715
+        height: 557
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98cae6f57f900c1c0800000000000000
+      internalID: -4485574270798353271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_2
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 926
+        width: 614
+        height: 566
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b9db30685f07e5a0800000000000000
+      internalID: -6492203465585206858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_3
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 718
+        width: 141
+        height: 196
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7c56d14cde4d72f0800000000000000
+      internalID: -973535236537820035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_4
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 718
+        width: 147
+        height: 196
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a6ff5a0cea8a88e0800000000000000
+      internalID: -1690385963733223773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_5
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 720
+        width: 145
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd285a75c2958b030800000000000000
+      internalID: 3510653956519199451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_6
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 720
+        width: 148
+        height: 193
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 884e085680d2ac810800000000000000
+      internalID: 1786289716291757192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_7
+      rect:
+        serializedVersion: 2
+        x: 1083
+        y: 719
+        width: 149
+        height: 195
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfb1d069fefcdc2a0800000000000000
+      internalID: -6715482841417966597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_8
+      rect:
+        serializedVersion: 2
+        x: 1298
+        y: 720
+        width: 148
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40e88c4336ad3f460800000000000000
+      internalID: 7274397942755659268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_9
+      rect:
+        serializedVersion: 2
+        x: 1524
+        y: 730
+        width: 558
+        height: 167
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff78102226edab580800000000000000
+      internalID: -8810485207938267137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_10
+      rect:
+        serializedVersion: 2
+        x: 2137
+        y: 730
+        width: 560
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f36df626c95cba40800000000000000
+      internalID: 5385277962020807672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_11
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 40
+        width: 450
+        height: 625
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea170221b8b4b62c0800000000000000
+      internalID: -4437369947166838354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_12
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 579
+        width: 52
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27a94bfcc22b67f10800000000000000
+      internalID: 2267195367960648306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_13
+      rect:
+        serializedVersion: 2
+        x: 1610
+        y: 574
+        width: 48
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f115d8214dbe0ee0800000000000000
+      internalID: -1292887955453177356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_14
+      rect:
+        serializedVersion: 2
+        x: 1757
+        y: 616
+        width: 45
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c48ac61adc3990080800000000000000
+      internalID: -9220676250678548404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_15
+      rect:
+        serializedVersion: 2
+        x: 2357
+        y: 583
+        width: 56
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db82b6ae7c3814d90800000000000000
+      internalID: -7115261041614051139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_16
+      rect:
+        serializedVersion: 2
+        x: 2509
+        y: 590
+        width: 68
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d5b90f898fc7790800000000000000
+      internalID: -7530871141114880677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_17
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 523
+        width: 59
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc79beb341f413840800000000000000
+      internalID: 5202025992912869323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_18
+      rect:
+        serializedVersion: 2
+        x: 1483
+        y: 523
+        width: 37
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9107b227d9d786a10800000000000000
+      internalID: 1902908957742821401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_19
+      rect:
+        serializedVersion: 2
+        x: 1700
+        y: 520
+        width: 39
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1335227c1711e130800000000000000
+      internalID: 3594179388559930139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_20
+      rect:
+        serializedVersion: 2
+        x: 1872
+        y: 547
+        width: 49
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80a66a36c7eef7440800000000000000
+      internalID: 4935925934636558856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_21
+      rect:
+        serializedVersion: 2
+        x: 2171
+        y: 439
+        width: 497
+        height: 161
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad9470b7dddcbe010800000000000000
+      internalID: 1219294475269392858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_22
+      rect:
+        serializedVersion: 2
+        x: 1361
+        y: 498
+        width: 34
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a32005a70fb92970800000000000000
+      internalID: 8730719392188343203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_23
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 476
+        width: 41
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75deffa2e42d65e90800000000000000
+      internalID: -7037206134549123753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_24
+      rect:
+        serializedVersion: 2
+        x: 1651
+        y: 468
+        width: 69
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67b7fcfe5212b5700800000000000000
+      internalID: 530053827967023990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_25
+      rect:
+        serializedVersion: 2
+        x: 1873
+        y: 454
+        width: 55
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1eba2b854501976f0800000000000000
+      internalID: -686499513745888287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_26
+      rect:
+        serializedVersion: 2
+        x: 1987
+        y: 501
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e4fa52764f8b7e10800000000000000
+      internalID: 2196506776002295015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_27
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 255
+        width: 428
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9875ba8c43f12390800000000000000
+      internalID: -7844721565832480614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_28
+      rect:
+        serializedVersion: 2
+        x: 1119
+        y: 242
+        width: 177
+        height: 168
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 193c5010dd1e75a10800000000000000
+      internalID: 1898234107281130385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_29
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 276
+        width: 85
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2743389a994546f40800000000000000
+      internalID: 5720790445618050162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_30
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 276
+        width: 84
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f46564c5ecc3a1c0800000000000000
+      internalID: -4493522715971066635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_31
+      rect:
+        serializedVersion: 2
+        x: 1675
+        y: 354
+        width: 49
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c0bc6cf1fcefda40800000000000000
+      internalID: 5395291402679398592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_32
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 338
+        width: 26
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 703e87be087d2b460800000000000000
+      internalID: 7256098898353644295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_33
+      rect:
+        serializedVersion: 2
+        x: 1952
+        y: 351
+        width: 50
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96439313254f530f0800000000000000
+      internalID: -1137734696990854039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_34
+      rect:
+        serializedVersion: 2
+        x: 2126
+        y: 268
+        width: 584
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec1f79cdc9f286130800000000000000
+      internalID: 3560147856198726094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_35
+      rect:
+        serializedVersion: 2
+        x: 1704
+        y: 276
+        width: 29
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b17201bce1e6db360800000000000000
+      internalID: 7187021658888087323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_36
+      rect:
+        serializedVersion: 2
+        x: 1757
+        y: 304
+        width: 35
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46544ef373e1fbfc0800000000000000
+      internalID: -3477027164662774428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_37
+      rect:
+        serializedVersion: 2
+        x: 1861
+        y: 288
+        width: 26
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b305aad797dc0e40800000000000000
+      internalID: 5624107081887187888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_38
+      rect:
+        serializedVersion: 2
+        x: 1968
+        y: 291
+        width: 89
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebe91e659e68568a0800000000000000
+      internalID: -6312490965946753346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_39
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 40
+        width: 200
+        height: 204
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f0439dfc09977f90800000000000000
+      internalID: -6955922818377498380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_40
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 242
+        width: 44
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cfa7ede891d8f200800000000000000
+      internalID: 214151437056716740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_41
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 49
+        width: 204
+        height: 155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c03fc92afcd5c700800000000000000
+      internalID: 560096695678873794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_42
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 55
+        width: 195
+        height: 157
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09cefaa4d4afdb470800000000000000
+      internalID: 8412154888870423696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_43
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 49
+        width: 128
+        height: 169
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24d285579546ee8c0800000000000000
+      internalID: -3968123886283248318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_44
+      rect:
+        serializedVersion: 2
+        x: 1474
+        y: 52
+        width: 198
+        height: 151
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0eea1f8038cd96080800000000000000
+      internalID: -9193574708951273760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_45
+      rect:
+        serializedVersion: 2
+        x: 1689
+        y: 42
+        width: 187
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f96c96de31409c50800000000000000
+      internalID: 6669902786280057337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_46
+      rect:
+        serializedVersion: 2
+        x: 1864
+        y: 40
+        width: 274
+        height: 184
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2db78e5b059abb760800000000000000
+      internalID: 7474754170665860050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_47
+      rect:
+        serializedVersion: 2
+        x: 2173
+        y: 56
+        width: 188
+        height: 149
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c762805ea7db1b8c0800000000000000
+      internalID: -3985195859720001924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_48
+      rect:
+        serializedVersion: 2
+        x: 2391
+        y: 51
+        width: 142
+        height: 163
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6898a1254d94c26a0800000000000000
+      internalID: -6472717388178880122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chest_Overlay_49
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 52
+        width: 144
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50ab81099dee35910800000000000000
+      internalID: 1825064892208036357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Chest_Overlay_0: 6179199154185553390
+      Chest_Overlay_1: -4485574270798353271
+      Chest_Overlay_10: 5385277962020807672
+      Chest_Overlay_11: -4437369947166838354
+      Chest_Overlay_12: 2267195367960648306
+      Chest_Overlay_13: -1292887955453177356
+      Chest_Overlay_14: -9220676250678548404
+      Chest_Overlay_15: -7115261041614051139
+      Chest_Overlay_16: -7530871141114880677
+      Chest_Overlay_17: 5202025992912869323
+      Chest_Overlay_18: 1902908957742821401
+      Chest_Overlay_19: 3594179388559930139
+      Chest_Overlay_2: -6492203465585206858
+      Chest_Overlay_20: 4935925934636558856
+      Chest_Overlay_21: 1219294475269392858
+      Chest_Overlay_22: 8730719392188343203
+      Chest_Overlay_23: -7037206134549123753
+      Chest_Overlay_24: 530053827967023990
+      Chest_Overlay_25: -686499513745888287
+      Chest_Overlay_26: 2196506776002295015
+      Chest_Overlay_27: -7844721565832480614
+      Chest_Overlay_28: 1898234107281130385
+      Chest_Overlay_29: 5720790445618050162
+      Chest_Overlay_3: -973535236537820035
+      Chest_Overlay_30: -4493522715971066635
+      Chest_Overlay_31: 5395291402679398592
+      Chest_Overlay_32: 7256098898353644295
+      Chest_Overlay_33: -1137734696990854039
+      Chest_Overlay_34: 3560147856198726094
+      Chest_Overlay_35: 7187021658888087323
+      Chest_Overlay_36: -3477027164662774428
+      Chest_Overlay_37: 5624107081887187888
+      Chest_Overlay_38: -6312490965946753346
+      Chest_Overlay_39: -6955922818377498380
+      Chest_Overlay_4: -1690385963733223773
+      Chest_Overlay_40: 214151437056716740
+      Chest_Overlay_41: 560096695678873794
+      Chest_Overlay_42: 8412154888870423696
+      Chest_Overlay_43: -3968123886283248318
+      Chest_Overlay_44: -9193574708951273760
+      Chest_Overlay_45: 6669902786280057337
+      Chest_Overlay_46: 7474754170665860050
+      Chest_Overlay_47: -3985195859720001924
+      Chest_Overlay_48: -6472717388178880122
+      Chest_Overlay_49: 1825064892208036357
+      Chest_Overlay_5: 3510653956519199451
+      Chest_Overlay_6: 1786289716291757192
+      Chest_Overlay_7: -6715482841417966597
+      Chest_Overlay_8: 7274397942755659268
+      Chest_Overlay_9: -8810485207938267137
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
