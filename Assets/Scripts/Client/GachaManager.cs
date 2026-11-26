@@ -60,6 +60,12 @@ public class GachaManager : MonoBehaviour
     [SerializeField] private GameObject previewPanel;
     [SerializeField] private Button previewButton;
     [SerializeField] private Transform previewContainer;
+    [SerializeField] private GameObject previewDetail;
+    [SerializeField] private Button previewDetailCloseButton;
+    [SerializeField] private Image unitPreviewImage;
+    [SerializeField] private TMP_Text unitNameText;
+    [SerializeField] private TMP_Text basicStatText;
+    [SerializeField] private TMP_Text passiveText;
 
     [Header("Error Popup (Wired in Editor)")]
     [SerializeField] public GameObject errorPanel;
@@ -78,9 +84,10 @@ public class GachaManager : MonoBehaviour
     private List<TrinketDefinitionDto> trinketDefinitions = new List<TrinketDefinitionDto>();
     private List<PreviewUnitDto> unitCatalog = new List<PreviewUnitDto>();
     private List<PreviewClassDto> classCatalog = new List<PreviewClassDto>();
-    private GameObject unitDetailPanel;
-    private Image unitDetailPortrait;
-    private TextMeshProUGUI unitDetailBody;
+    private GameObject idleActor;
+    private SpriteRenderer idleBody;
+    private GameObject previewOutsideClick;
+    private GameObject detailOutsideClick;
 
     void Start()
     {
@@ -102,8 +109,13 @@ public class GachaManager : MonoBehaviour
         EnsureChestAnimator();
         if (previewPanel != null)
             previewPanel.SetActive(false);
+        if (previewDetail != null)
+            previewDetail.SetActive(false);
         if (previewButton != null)
             previewButton.onClick.AddListener(OnClickPreview);
+        if (previewDetailCloseButton != null)
+            previewDetailCloseButton.onClick.AddListener(ClosePreviewDetail);
+        EnsurePreviewOutsideClick();
 
         // Start initialization sequence
         StartCoroutine(InitSequence());
@@ -388,8 +400,77 @@ public class GachaManager : MonoBehaviour
             return;
         bool show = !previewPanel.activeSelf;
         previewPanel.SetActive(show);
+        SetOutsideClick(previewOutsideClick, previewPanel, show);
         if (show)
             ShowPreviewUnits();
+        else
+            ClosePreviewDetail();
+    }
+
+    void ClosePreviewDetail()
+    {
+        if (previewDetail != null)
+            previewDetail.SetActive(false);
+        SetOutsideClick(detailOutsideClick, previewDetail, false);
+        if (idleActor != null)
+            Destroy(idleActor);
+        idleActor = null;
+        idleBody = null;
+    }
+
+    void EnsurePreviewOutsideClick()
+    {
+        previewOutsideClick = CreateOutsideClick(previewPanel, "PreviewOutsideClick", ClosePreviewPanel);
+        detailOutsideClick = CreateOutsideClick(previewDetail, "PreviewDetailOutsideClick", ClosePreviewDetail);
+    }
+
+    void ClosePreviewPanel()
+    {
+        if (previewPanel != null)
+            previewPanel.SetActive(false);
+        SetOutsideClick(previewOutsideClick, previewPanel, false);
+        ClosePreviewDetail();
+    }
+
+    GameObject CreateOutsideClick(GameObject panel, string name, System.Action close)
+    {
+        if (panel == null || panel.transform.parent == null)
+            return null;
+
+        GameObject click = new GameObject(name, typeof(RectTransform));
+        click.transform.SetParent(panel.transform.parent, false);
+
+        RectTransform rect = click.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = click.AddComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0f);
+
+        Button button = click.AddComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.onClick.AddListener(() => close());
+
+        CanvasGroup group = click.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        group.blocksRaycasts = false;
+        group.interactable = false;
+        return click;
+    }
+
+    void SetOutsideClick(GameObject click, GameObject panel, bool open)
+    {
+        if (click == null || panel == null)
+            return;
+
+        click.transform.SetSiblingIndex(panel.transform.GetSiblingIndex());
+        CanvasGroup group = click.GetComponent<CanvasGroup>();
+        if (group == null)
+            return;
+        group.blocksRaycasts = open;
+        group.interactable = open;
     }
 
     void ShowPreviewUnits()
@@ -491,13 +572,22 @@ public class GachaManager : MonoBehaviour
         }
     }
 
+    void LateUpdate()
+    {
+        if (idleBody == null || unitPreviewImage == null || idleBody.sprite == null)
+            return;
+        if (previewDetail != null && !previewDetail.activeInHierarchy)
+            return;
+        unitPreviewImage.sprite = idleBody.sprite;
+        unitPreviewImage.color = Color.white;
+    }
+
     void ShowUnitDetail(int unitId)
     {
-        EnsureUnitDetailPanel();
+        if (previewDetail == null)
+            return;
+
         PreviewUnitDto unit = unitCatalog.Find(u => u.uId == unitId);
-        PreviewClassDto unitClass = null;
-        if (unit != null && unit.classIds != null && unit.classIds.Length > 0)
-            unitClass = classCatalog.Find(c => c.classId == unit.classIds[0]);
 
         PreviewGradeStatsDto stats = null;
         if (unit != null && unit.statsByGrade != null)
@@ -511,12 +601,9 @@ public class GachaManager : MonoBehaviour
                 stats = unit.statsByGrade[0];
         }
 
-        string className = unitClass != null && !string.IsNullOrEmpty(unitClass.name) ? unitClass.name : "-";
-        SkillDefinition roleSkill = unitClass != null && skillLibrary != null ? skillLibrary.Get(unitClass.classSkillId) : null;
-        string role = roleSkill != null ? roleSkill.skillName : className;
         SkillDefinition passive = unit != null && skillLibrary != null ? skillLibrary.Get(unit.passiveSkillId) : null;
         string passiveName = passive != null ? passive.skillName : "-";
-        string passiveText = passive != null ? passive.description ?? "" : "";
+        string passiveBody = passive != null ? passive.description ?? "" : "";
         if (passive != null && effectRegistry != null)
         {
             var statUnit = new UnitData
@@ -529,7 +616,7 @@ public class GachaManager : MonoBehaviour
             };
             string effects = effectRegistry.Describe(passive.effectIds, statUnit);
             if (!string.IsNullOrEmpty(effects))
-                passiveText = (passiveText + "\n" + effects).Trim();
+                passiveBody = (passiveBody + "\n" + effects).Trim();
         }
 
         string statsText = stats == null
@@ -540,106 +627,48 @@ public class GachaManager : MonoBehaviour
               + Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.DmgPercentFormat, stats.damageMultiplier) + "\n"
               + Loc.Format(LocTables.UnitConfig, LocKeys.UnitConfig.DmgReductionFormat, stats.damageReduction);
 
-        if (unitDetailPortrait != null)
-        {
-            Sprite portrait = unit != null ? GetRewardIcon(new RewardDto { type = "Unit", definitionId = unit.uId }) : null;
-            unitDetailPortrait.sprite = portrait;
-            unitDetailPortrait.color = portrait != null ? Color.white : new Color(1f, 1f, 1f, 0f);
-        }
-        if (unitDetailBody != null)
-        {
-            string title = unit != null && !string.IsNullOrEmpty(unit.unitName) ? unit.unitName : GetRewardName(new RewardDto { type = "Unit", definitionId = unitId });
-            unitDetailBody.text =
-                title + "\n\n"
-                + statsText + "\n\n"
-                + "Class: " + className + "\n"
-                + "Role: " + role + "\n\n"
-                + "Passive: " + passiveName + "\n"
-                + passiveText;
-        }
-        unitDetailPanel.SetActive(true);
-        unitDetailPanel.transform.SetAsLastSibling();
+        if (unitNameText != null)
+            unitNameText.text = unit != null && !string.IsNullOrEmpty(unit.unitName)
+                ? unit.unitName
+                : GetRewardName(new RewardDto { type = "Unit", definitionId = unitId });
+        if (basicStatText != null)
+            basicStatText.text = statsText;
+        if (passiveText != null)
+            passiveText.text = (passiveName + "\n" + passiveBody).Trim();
+
+        PlayUnitIdle(unitId);
+        previewDetail.SetActive(true);
+        previewDetail.transform.SetAsLastSibling();
+        SetOutsideClick(detailOutsideClick, previewDetail, true);
     }
 
-    void EnsureUnitDetailPanel()
+    void PlayUnitIdle(int unitId)
     {
-        if (unitDetailPanel != null)
+        if (idleActor != null)
+            Destroy(idleActor);
+        idleActor = null;
+        idleBody = null;
+
+        GameObject prefab = unitPrefabRegistry != null ? unitPrefabRegistry.Get(unitId) : null;
+        if (prefab == null)
             return;
 
-        Transform parent = previewPanel != null ? previewPanel.transform.parent : transform;
-        unitDetailPanel = new GameObject("UnitPreviewDetail", typeof(RectTransform));
-        RectTransform root = unitDetailPanel.GetComponent<RectTransform>();
-        root.SetParent(parent, false);
-        root.anchorMin = Vector2.zero;
-        root.anchorMax = Vector2.one;
-        root.offsetMin = Vector2.zero;
-        root.offsetMax = Vector2.zero;
+        idleActor = Instantiate(prefab);
+        idleActor.name = "PreviewIdleActor";
+        idleActor.transform.position = new Vector3(0f, -300f, 0f);
+        foreach (Renderer renderer in idleActor.GetComponentsInChildren<Renderer>(true))
+            renderer.enabled = false;
+        if (unitPreviewImage != null)
+            unitPreviewImage.preserveAspect = true;
 
-        Image dim = CreatePreviewImage(root, "Dim", new Color(0f, 0f, 0f, 0.65f));
-        StretchPreview(dim.rectTransform);
-        Button dimButton = dim.gameObject.AddComponent<Button>();
-        dimButton.onClick.AddListener(() => unitDetailPanel.SetActive(false));
+        ClientUnit visual = idleActor.GetComponent<ClientUnit>();
+        Animator animator = visual != null ? visual.UnitAnimator : idleActor.GetComponentInChildren<Animator>();
+        if (animator == null)
+            return;
 
-        RectTransform card = new GameObject("Card", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image)).GetComponent<RectTransform>();
-        card.SetParent(root, false);
-        card.anchorMin = card.anchorMax = new Vector2(0.5f, 0.5f);
-        card.sizeDelta = new Vector2(720f, 820f);
-        card.GetComponent<Image>().color = new Color(0.16f, 0.12f, 0.1f, 0.96f);
-
-        unitDetailPortrait = CreatePreviewImage(card, "Portrait", Color.white);
-        RectTransform portraitRect = unitDetailPortrait.rectTransform;
-        portraitRect.anchorMin = portraitRect.anchorMax = new Vector2(0.5f, 1f);
-        portraitRect.pivot = new Vector2(0.5f, 1f);
-        portraitRect.anchoredPosition = new Vector2(0f, -28f);
-        portraitRect.sizeDelta = new Vector2(180f, 180f);
-        unitDetailPortrait.preserveAspect = true;
-
-        RectTransform bodyRect = new GameObject("Body", typeof(RectTransform)).GetComponent<RectTransform>();
-        bodyRect.SetParent(card, false);
-        bodyRect.anchorMin = Vector2.zero;
-        bodyRect.anchorMax = Vector2.one;
-        bodyRect.offsetMin = new Vector2(36f, 36f);
-        bodyRect.offsetMax = new Vector2(-36f, -230f);
-        unitDetailBody = bodyRect.gameObject.AddComponent<TextMeshProUGUI>();
-        unitDetailBody.fontSize = 26f;
-        unitDetailBody.alignment = TextAlignmentOptions.TopLeft;
-        unitDetailBody.color = Color.white;
-        unitDetailBody.enableWordWrapping = true;
-        if (gameFont != null)
-            unitDetailBody.font = gameFont;
-
-        unitDetailPanel.SetActive(false);
-    }
-
-    static Image CreatePreviewImage(RectTransform parent, string name, Color color)
-    {
-        var go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        var rect = go.GetComponent<RectTransform>();
-        rect.SetParent(parent, false);
-        Image image = go.GetComponent<Image>();
-        image.sprite = PreviewWhiteSprite();
-        image.color = color;
-        return image;
-    }
-
-    static Sprite previewWhite;
-
-    static Sprite PreviewWhiteSprite()
-    {
-        if (previewWhite == null)
-        {
-            Texture2D tex = Texture2D.whiteTexture;
-            previewWhite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
-        }
-        return previewWhite;
-    }
-
-    static void StretchPreview(RectTransform rect)
-    {
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
+        idleBody = animator.GetComponent<SpriteRenderer>();
+        animator.Play("Idle1", 0, 0f);
+        animator.Update(0f);
     }
 
     [System.Serializable]

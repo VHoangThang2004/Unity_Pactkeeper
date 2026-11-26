@@ -55,6 +55,7 @@ public class GachaChestAnimator : MonoBehaviour
             whiteFlash.raycastTarget = false;
         }
         EnsureSkipToggle(canvas);
+        BindSkipToggle();
         if (chestPivot != null)
         {
             chestRest = chestPivot.anchoredPosition;
@@ -351,6 +352,24 @@ public class GachaChestAnimator : MonoBehaviour
         TMP_Text existing = FindAnyObjectByType<TMP_Text>();
         if (existing != null)
             label.font = existing.font;
+    }
+
+    const string SkipPreferenceKey = "GachaSkipAnimation";
+
+    void BindSkipToggle()
+    {
+        if (skipToggle == null)
+            return;
+
+        skipToggle.onValueChanged.RemoveListener(SaveSkip);
+        skipToggle.SetIsOnWithoutNotify(PlayerPrefs.GetInt(SkipPreferenceKey, 0) == 1);
+        skipToggle.onValueChanged.AddListener(SaveSkip);
+    }
+
+    void SaveSkip(bool on)
+    {
+        PlayerPrefs.SetInt(SkipPreferenceKey, on ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     void Build(RectTransform canvas)
