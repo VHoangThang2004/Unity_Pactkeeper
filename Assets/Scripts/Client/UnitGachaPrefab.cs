@@ -31,14 +31,21 @@ public class UnitGachaPrefab : MonoBehaviour
     // -------------------------------------------------------
 
     [Header("Tier Frame Entries")]
-    [Tooltip("Index 0 = Tier 1 (Gems), Index 1 = Tier 2 (Weapon/Trinket), Index 2 = Tier 3 (Unit/Class)")]
+    [Tooltip("Index 0 = Tier 1 (Gems), Index 1 = Tier 2 (Weapon/Trinket), Index 2 = Tier 3 (Unit/Class). Tier 2 prefab để applyTierFrames tắt để giữ sprite đã gắn sẵn.")]
     [SerializeField] private TierEntry[] tiers = new TierEntry[3];
+    [SerializeField] private bool applyTierFrames = true;
 
     [Header("UI References")]
     [SerializeField] private Image mainFrameImg;
     [SerializeField] private Image halfFrameImg;
     [SerializeField] private Image unitImage;
+    [SerializeField] private Image unitBackgroundImage;
     [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private GameObject tagDup;
+    [SerializeField] private GameObject tagNew;
+
+    static readonly Color Tier1Background = new Color32(0x40, 0xE0, 0xD0, 0xFF);
+    static readonly Color Tier3Background = new Color32(0xFF, 0xEB, 0x04, 0xFF);
 
     // -------------------------------------------------------
     // Public API
@@ -50,11 +57,12 @@ public class UnitGachaPrefab : MonoBehaviour
     /// <param name="icon">Sprite của reward (portrait, weapon icon, gem icon...)</param>
     /// <param name="displayName">Tên hiển thị bên dưới card</param>
     /// <param name="tier">0 = Tier 1 (Gems), 1 = Tier 2 (Weapon/Trinket), 2 = Tier 3 (Unit/Class)</param>
-    /// <param name="isDuplicate">Nếu true, tô tint xanh nhạt lên icon</param>
-    public void Setup(Sprite icon, string displayName, int tier, bool isDuplicate = false)
+    /// <param name="isDuplicate">Item trùng. Chỉ hiện tag khi showOwnershipTag là true.</param>
+    /// <param name="showOwnershipTag">Bật Tag_New hoặc Tag_Dup. Preview để false.</param>
+    public void Setup(Sprite icon, string displayName, int tier, bool isDuplicate = false, bool showOwnershipTag = false)
     {
         // Apply frame sprites từ tier entry
-        if (tier >= 0 && tier < tiers.Length)
+        if (applyTierFrames && tier >= 0 && tier < tiers.Length)
         {
             TierEntry entry = tiers[tier];
 
@@ -75,18 +83,30 @@ public class UnitGachaPrefab : MonoBehaviour
             }
         }
 
-        // Apply icon
+        if (unitBackgroundImage != null)
+        {
+            bool showBackground = tier == 0 || tier == 2;
+            unitBackgroundImage.gameObject.SetActive(showBackground);
+            if (tier == 0)
+                unitBackgroundImage.color = Tier1Background;
+            else if (tier == 2)
+                unitBackgroundImage.color = Tier3Background;
+        }
+
         if (unitImage != null)
         {
             unitImage.sprite = icon;
-            unitImage.color = icon != null
-                ? (isDuplicate ? new Color(0.55f, 0.75f, 1.0f, 1.0f) : Color.white)
-                : new Color(1f, 1f, 1f, 0f);
+            unitImage.color = icon != null ? Color.white : new Color(1f, 1f, 1f, 0f);
         }
 
-        // Apply name
         if (nameText != null)
             nameText.text = displayName;
+
+        bool showTag = showOwnershipTag && tier != 0;
+        if (tagDup != null)
+            tagDup.SetActive(showTag && isDuplicate);
+        if (tagNew != null)
+            tagNew.SetActive(showTag && !isDuplicate);
     }
 
     // -------------------------------------------------------

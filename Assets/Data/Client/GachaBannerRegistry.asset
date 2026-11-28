@@ -17,3 +17,7 @@ MonoBehaviour:
     bannerName: Standard Summon
     listButtonArt: {fileID: 4182218561940668035, guid: bf0bb16cf341df243aedeb186fbc3b11, type: 3}
     promoArt: {fileID: 4200407338226818293, guid: 541cb4dae6b5ae74288531eff38e9cb6, type: 3}
+  - bannerId: 
+    bannerName: Slay em all!
+    listButtonArt: {fileID: 21300000, guid: 8c54ee18d9dff974c95a8b654a55fb6f, type: 3}
+    promoArt: {fileID: 21300000, guid: 0a480414d4d63e744bbfd5ebe9ed1132, type: 3}

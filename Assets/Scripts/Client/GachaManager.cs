@@ -52,6 +52,7 @@ public class GachaManager : MonoBehaviour
     [SerializeField] public Button resultsCloseButton;
     [Tooltip("Prefab UnitGachaPrefab mới dùng cho gacha results. Nếu để null sẽ fallback về unitContainerPrefab cũ.")]
     [SerializeField] public GameObject unitGachaPrefab;
+    [SerializeField] public GameObject unitGachaTier2Prefab;
 
     [Header("Chest Animation")]
     [SerializeField] private GachaChestAnimator chestAnimator;
@@ -878,7 +879,10 @@ public class GachaManager : MonoBehaviour
         foreach (var result in results)
         {
             // Ưu tiên unitGachaPrefab mới; fallback về unitContainerPrefab nếu chưa gán
-            GameObject prefab = unitGachaPrefab != null ? unitGachaPrefab : unitContainerPrefab;
+            int tier = result.reward != null ? UnitGachaPrefab.TierFromRewardType(result.reward.type) : 0;
+            GameObject prefab = tier == 1 && unitGachaTier2Prefab != null
+                ? unitGachaTier2Prefab
+                : (unitGachaPrefab != null ? unitGachaPrefab : unitContainerPrefab);
             if (prefab == null) continue;
 
             GameObject cardGo = Instantiate(prefab, resultsContainer);
@@ -888,12 +892,9 @@ public class GachaManager : MonoBehaviour
             if (gachaCard != null)
             {
                 Sprite icon = GetRewardIcon(result.reward);
-                string displayName = result.isDuplicate
-                    ? $"{result.compensationGems} GEMS (DUP)"
-                    : GetRewardName(result.reward);
-                int tier = UnitGachaPrefab.TierFromRewardType(result.reward.type);
+                string displayName = GetRewardName(result.reward);
 
-                gachaCard.Setup(icon, displayName, tier, result.isDuplicate);
+                gachaCard.Setup(icon, displayName, tier, result.isDuplicate, true);
 
                 // Tắt button nếu có (card gacha không cần click)
                 Button gachaBtn = cardGo.GetComponent<Button>();
@@ -906,9 +907,7 @@ public class GachaManager : MonoBehaviour
             UnitContainer container = cardGo.GetComponent<UnitContainer>();
             if (container != null)
             {
-                string displayText = result.isDuplicate
-                    ? $"{result.compensationGems} Gems (Dup)"
-                    : GetRewardName(result.reward);
+                string displayText = GetRewardName(result.reward);
 
                 container.Setup(
                     $"rolled_{result.reward.definitionId}_{System.Guid.NewGuid().ToString().Substring(0, 4)}",

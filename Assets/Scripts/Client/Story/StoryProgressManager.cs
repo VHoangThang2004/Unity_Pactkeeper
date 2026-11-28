@@ -101,6 +101,20 @@ public class StoryProgressManager : MonoBehaviour
     [SerializeField] private RectTransform popupSceneDropdownContainer;
     [SerializeField] private GameObject    sceneDropdownItemPrefab;
 
+    [Header("Stage Map")]
+    [SerializeField] private Image      popupBackground;
+    [SerializeField] private Sprite[]   chapterBackgrounds;
+    [SerializeField] private Button     playButton;
+    [SerializeField] private GameObject completedStagePrefab;
+    [SerializeField] private GameObject incompleteStagePrefab;
+    [SerializeField] private GameObject lockedStagePrefab;
+    [SerializeField] private Vector2[]  stagePositions = new Vector2[]
+    {
+        new Vector2(-300f, -150f),
+        new Vector2(10f, -10f),
+        new Vector2(310f, 130f)
+    };
+
     [Header("Status Colors (Popup)")]
     [SerializeField] private Color popupColorCompleted  = new Color(0.18f, 0.72f, 0.35f);
     [SerializeField] private Color popupColorInProgress = new Color(0.93f, 0.65f, 0.10f);
@@ -113,6 +127,7 @@ public class StoryProgressManager : MonoBehaviour
     private int  _maxCompletedChapterId = -1;
     private bool _isStartingMatch = false;
     private readonly List<GameObject> _popupSpawnedSceneItems = new();
+    private ChapterDisplayData _openChapter;
 
     public bool HasPopupPanel => popupPanel != null;
 
@@ -122,6 +137,7 @@ public class StoryProgressManager : MonoBehaviour
     {
         if (backButton       != null) backButton.onClick.AddListener(OnBackClick);
         if (popupCloseButton != null) popupCloseButton.onClick.AddListener(ClosePopup);
+        if (playButton       != null) playButton.onClick.AddListener(OnPlayClicked);
 
         HidePopup();
         if (loadingIndicator != null) loadingIndicator.SetActive(true);
@@ -132,6 +148,7 @@ public class StoryProgressManager : MonoBehaviour
     {
         if (backButton       != null) backButton.onClick.RemoveListener(OnBackClick);
         if (popupCloseButton != null) popupCloseButton.onClick.RemoveListener(ClosePopup);
+        if (playButton       != null) playButton.onClick.RemoveListener(OnPlayClicked);
     }
 
     void Start()
@@ -554,17 +571,168 @@ public class StoryProgressManager : MonoBehaviour
             popupSceneListText.text = sb.ToString().TrimEnd();
         }
 
-        // Interactive scene buttons in popup (if container + prefab assigned)
-        BuildPopupInteractiveSceneList(data);
+        ApplyChapterBackground(data.chapterId);
+
+        if (HasStageMap)
+            BuildStageMap(data);
+        else
+            BuildPopupInteractiveSceneList(data);
     }
 
-    private void BuildPopupInteractiveSceneList(ChapterDisplayData data)
+    bool HasStageMap =>
+        completedStagePrefab != null && incompleteStagePrefab != null && lockedStagePrefab != null;
+
+    void ApplyChapterBackground(int chapterId)
+    {
+        if (popupBackground == null || chapterBackgrounds == null)
+            return;
+        if (chapterId < 0 || chapterId >= chapterBackgrounds.Length)
+            return;
+        if (chapterBackgrounds[chapterId] != null)
+            popupBackground.sprite = chapterBackgrounds[chapterId];
+    }
+
+    void OnPlayClicked()
+    {
+        if (_openChapter?.config?.scenes == null || _isStartingMatch)
+            return;
+
+        SceneConfigDto target = FindPlayTarget(_openChapter);
+        if (target == null)
+            return;
+
+        OnSceneSelectedFromDropdown(_openChapter.chapterId, target.sceneId);
+    }
+
+    SceneConfigDto FindPlayTarget(ChapterDisplayData data)
+    {
+        SceneConfigDto[] scenes = data.config.scenes;
+        SceneConfigDto highestCompleted = null;
+        SceneConfigDto firstOpen = null;
+
+        for (int i = 0; i < scenes.Length; i++)
+        {
+            SceneConfigDto scene = scenes[i];
+            if (scene == null)
+                continue;
+
+            StageState state = GetStageState(data, scene);
+            if (state == StageState.Completed)
+                highestCompleted = scene;
+            else if (state == StageState.Incomplete && firstOpen == null)
+                firstOpen = scene;
+        }
+
+        return highestCompleted != null ? highestCompleted : firstOpen;
+    }
+
+    enum StageState { Locked, Incomplete, Completed }
+
+    StageState GetStageState(ChapterDisplayData data, SceneConfigDto scene)
+    {
+        bool isChapterCompleted = data.status == ChapterStatus.Completed ||
+                                  (data.progress != null && data.progress.isChapterCompleted);
+        bool isChapterUnlocked = data.status != ChapterStatus.Locked;
+
+        int firstSceneId = data.config.scenes.Length > 0 ? data.config.scenes[0].sceneId : 0;
+        int unlockedSceneHighWaterMark = firstSceneId;
+        if (data.progress != null)
+        {
+            int rawMark = data.progress.isCompleted
+                ? data.progress.sceneId + 1
+                : data.progress.sceneId;
+            unlockedSceneHighWaterMark = Mathf.Max(firstSceneId, rawMark);
+        }
+
+        bool sceneCompleted = isChapterCompleted ||
+                              (data.progress != null &&
+                               (data.progress.sceneId > scene.sceneId ||
+                                (data.progress.sceneId == scene.sceneId && data.progress.isCompleted)));
+        if (sceneCompleted)
+            return StageState.Completed;
+
+        bool sceneUnlocked = isChapterUnlocked &&
+                             (isChapterCompleted || scene.sceneId <= unlockedSceneHighWaterMark);
+        return sceneUnlocked ? StageState.Incomplete : StageState.Locked;
+    }
+
+    void BuildStageMap(ChapterDisplayData data)
+    {
+        ClearPopupScenes();
+        _openChapter = data;
+
+        if (popupSceneListText != null)
+            popupSceneListText.gameObject.SetActive(false);
+        if (popupSceneDropdownContainer != null)
+        {
+            popupSceneDropdownContainer.gameObject.SetActive(false);
+            Transform scroll = popupSceneDropdownContainer;
+            while (scroll.parent != null && popupPanel != null && scroll.parent != popupPanel.transform)
+                scroll = scroll.parent;
+            if (scroll != popupSceneDropdownContainer)
+                scroll.gameObject.SetActive(false);
+        }
+
+        SceneConfigDto[] scenes = data.config.scenes;
+        System.Array.Sort(scenes, (a, b) => (a != null ? a.sceneId : 0).CompareTo(b != null ? b.sceneId : 0));
+        int count = Mathf.Min(scenes.Length, stagePositions != null ? stagePositions.Length : 0);
+        int lastIndex = scenes.Length - 1;
+        Transform parent = popupBackground != null ? popupBackground.transform : popupPanel.transform;
+
+        for (int i = 0; i < count; i++)
+        {
+            SceneConfigDto scene = scenes[i];
+            if (scene == null)
+                continue;
+
+            bool isLast = i == lastIndex;
+            StageState state = GetStageState(data, scene);
+            GameObject prefab = state switch
+            {
+                StageState.Completed => completedStagePrefab,
+                StageState.Incomplete => incompleteStagePrefab,
+                _ => lockedStagePrefab
+            };
+
+            GameObject node = Instantiate(prefab, parent);
+            _popupSpawnedSceneItems.Add(node);
+
+            RectTransform rect = node.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = stagePositions[i];
+            }
+
+            string sceneName = !string.IsNullOrEmpty(scene.description) ? scene.description : scene.type;
+            StoryStageNode stage = node.GetComponent<StoryStageNode>();
+            if (stage == null)
+                stage = node.AddComponent<StoryStageNode>();
+            stage.Setup(
+                data.chapterId,
+                scene.sceneId,
+                sceneName,
+                isLast,
+                state != StageState.Locked,
+                (chId, scId) => OnSceneSelectedFromDropdown(chId, scId));
+        }
+
+        if (playButton != null)
+            playButton.interactable = FindPlayTarget(data) != null;
+    }
+
+    void ClearPopupScenes()
     {
         foreach (var go in _popupSpawnedSceneItems)
         {
             if (go != null) Destroy(go);
         }
         _popupSpawnedSceneItems.Clear();
+    }
+
+    private void BuildPopupInteractiveSceneList(ChapterDisplayData data)
+    {
+        ClearPopupScenes();
 
         if (popupSceneDropdownContainer == null || sceneDropdownItemPrefab == null || data?.config?.scenes == null)
             return;
@@ -644,6 +812,8 @@ public class StoryProgressManager : MonoBehaviour
 
     void HidePopup()
     {
+        _openChapter = null;
+        ClearPopupScenes();
         if (popupPanel != null) popupPanel.SetActive(false);
     }
 
